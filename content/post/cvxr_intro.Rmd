@@ -1,0 +1,87 @@
+---
+title: Introduction
+author: Balasubramian Narasimhan
+date: '2017-10-29'
+categories:
+  - Simple Least Squares
+slug: cvxr_intro
+---
+
+We begin by generating some synthetic data for a simple least squares
+regression model. 
+
+```{r}
+set.seed(123)
+
+n <- 100
+p <- 10
+beta <- 1:p # beta is just 1 through 10.
+
+X <- matrix(rnorm(p * n), nrow=n)
+colnames(X) <- paste0("beta_", beta)
+Y <- X %*% beta + rnorm(n)
+```
+If we only had the data ($Y$ and $X$) to begin with, we could estimate
+the $\beta$ using `lm` function to get the best least squares fit.
+
+```{r}
+ls.model <- lm(Y ~ 0 + X) ## There is no intercept in our model above
+print(coef(ls.model))
+```
+As can be seen, the estimates are reasonably close to the original
+beta values 1 through 10.
+
+## The `cvxr` formulation
+
+The `cvxr` formulation states the above as an optimization problem.
+
+Given $Y$ and $X$, we seek that $\beta$ that minimizes the squared
+error $\sum_{i=1}^n(Y - X\beta)^2$.  We state the problem pretty much
+that way after loading the package.
+
+```{r}
+suppressWarnings(library(cvxr, warn.conflicts=FALSE))
+```
+
+### 1. Define the variable to be estimated
+
+```{r}
+betaHat <- Variable(p)
+```
+
+### 2. Define the objective to be optimized
+
+```{r}
+objective <- Minimize(sum((Y - X %*% betaHat)^2))
+```
+
+### 3. Create a problem to solve
+
+```{r}
+problem <- Problem(objective)
+```
+
+### 4. Solve it!
+
+```{r}
+result <- solve(problem)
+```
+
+### 5. Extract solution and objective value
+
+```{r, echo = FALSE}
+cat(sprintf("Objective value: %f\n", result$value))
+cat("Solution:\n")
+print(result$getValue(betaHat))
+```
+
+We can indeed satisfy ourselves that the results we got were similar
+to that from `lm`.
+
+```{r}
+cbind(result$getValue(betaHat), coef(ls.model))
+```
+
+## What was gained?
+
+

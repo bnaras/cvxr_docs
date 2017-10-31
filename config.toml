@@ -1,0 +1,47 @@
+baseurl = "https://cvxr.stanford.edu/"
+languageCode = "en-us"
+metadataformat = "yaml"
+title = "CVXR"
+theme = "hugo-alabaster-theme"
+relativeURLs = true
+
+disqusShortname = "cvxr"
+googleAnalytics = ""
+
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.Rhistory$"]
+
+[params]
+	name = "CVXR"
+	description = "Disciplined Convex Programming in R"
+	
+	github_user   = "bnaras"
+	github_repo   = "cvxr_docs"
+	github_banner = false
+
+	custom_css = []
+	custom_js  = []
+
+	favicon = "favicon.ico"
+
+  #highlightjsVersion = "9.11.0"
+  #highlightjsCDN = "//cdn.bootcss.com"
+  #highlightjsLang = ["r", "yaml"]
+  #highlightjsTheme = "github"
+
+  MathJaxCDN = "//cdn.bootcss.com"
+  MathJaxVersion = "2.7.1"
+    
+[params.sidebar]
+	logo = "favicon.ico"
+	
+	github_button  = true
+	travis_button  = false
+	codecov_button = false
+	gratipay = ""
+
+	show_relations = true
+
+[params.footer]
+	copyright = "Anqi Fu, Balasubramanian Narasimhan, Stephen Boyd"
+	show_powered_by = false
+

@@ -1,0 +1,83 @@
+---
+title: Introduction
+author: Balasubramian Narasimhan
+date: '2017-10-29'
+categories:
+  - Simple Least Squares
+slug: cvxr_intro
+---
+
+
+
+<p>We begin by generating some synthetic data for a simple least squares regression model.</p>
+<pre class="r"><code>set.seed(123)
+
+n &lt;- 100
+p &lt;- 10
+beta &lt;- 1:p # beta is just 1 through 10.
+
+X &lt;- matrix(rnorm(p * n), nrow=n)
+colnames(X) &lt;- paste0(&quot;beta_&quot;, beta)
+Y &lt;- X %*% beta + rnorm(n)</code></pre>
+<p>If we only had the data (<span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>) to begin with, we could estimate the <span class="math inline">\(\beta\)</span> using <code>lm</code> function to get the best least squares fit.</p>
+<pre class="r"><code>ls.model &lt;- lm(Y ~ 0 + X) ## There is no intercept in our model above
+print(coef(ls.model))</code></pre>
+<pre><code>##   Xbeta_1   Xbeta_2   Xbeta_3   Xbeta_4   Xbeta_5   Xbeta_6   Xbeta_7 
+##  1.080311  1.988295  2.875176  4.133395  5.091466  5.949045  7.076470 
+##   Xbeta_8   Xbeta_9  Xbeta_10 
+##  8.127228  8.960957 10.134885</code></pre>
+<p>As can be seen, the estimates are reasonably close to the original beta values 1 through 10.</p>
+<div id="the-cvxr-formulation" class="section level2">
+<h2>The <code>cvxr</code> formulation</h2>
+<p>The <code>cvxr</code> formulation states the above as an optimization problem.</p>
+<p>Given <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>, we seek that <span class="math inline">\(\beta\)</span> that minimizes the squared error <span class="math inline">\(\sum_{i=1}^n(Y - X\beta)^2\)</span>. We state the problem pretty much that way after loading the package.</p>
+<pre class="r"><code>suppressWarnings(library(cvxr, warn.conflicts=FALSE))</code></pre>
+<div id="define-the-variable-to-be-estimated" class="section level3">
+<h3>1. Define the variable to be estimated</h3>
+<pre class="r"><code>betaHat &lt;- Variable(p)</code></pre>
+</div>
+<div id="define-the-objective-to-be-optimized" class="section level3">
+<h3>2. Define the objective to be optimized</h3>
+<pre class="r"><code>objective &lt;- Minimize(sum((Y - X %*% betaHat)^2))</code></pre>
+</div>
+<div id="create-a-problem-to-solve" class="section level3">
+<h3>3. Create a problem to solve</h3>
+<pre class="r"><code>problem &lt;- Problem(objective)</code></pre>
+</div>
+<div id="solve-it" class="section level3">
+<h3>4. Solve it!</h3>
+<pre class="r"><code>result &lt;- solve(problem)</code></pre>
+</div>
+<div id="extract-solution-and-objective-value" class="section level3">
+<h3>5. Extract solution and objective value</h3>
+<pre><code>## Objective value: 97.847586</code></pre>
+<pre><code>## Solution:</code></pre>
+<pre><code>##            [,1]
+##  [1,]  1.080311
+##  [2,]  1.988296
+##  [3,]  2.875174
+##  [4,]  4.133395
+##  [5,]  5.091465
+##  [6,]  5.949045
+##  [7,]  7.076469
+##  [8,]  8.127227
+##  [9,]  8.960956
+## [10,] 10.134885</code></pre>
+<p>We can indeed satisfy ourselves that the results we got were similar to that from <code>lm</code>.</p>
+<pre class="r"><code>cbind(result$getValue(betaHat), coef(ls.model))</code></pre>
+<pre><code>##               [,1]      [,2]
+## Xbeta_1   1.080311  1.080311
+## Xbeta_2   1.988296  1.988295
+## Xbeta_3   2.875174  2.875176
+## Xbeta_4   4.133395  4.133395
+## Xbeta_5   5.091465  5.091466
+## Xbeta_6   5.949045  5.949045
+## Xbeta_7   7.076469  7.076470
+## Xbeta_8   8.127227  8.127228
+## Xbeta_9   8.960956  8.960957
+## Xbeta_10 10.134885 10.134885</code></pre>
+</div>
+</div>
+<div id="what-was-gained" class="section level2">
+<h2>What was gained?</h2>
+</div>

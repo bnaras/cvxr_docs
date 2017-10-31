@@ -1,0 +1,341 @@
+---
+title: CVXR Functions
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-10-30'
+slug: cvxr_functions
+---
+
+```{r, echo = FALSE}
+library(stringr)
+emitRow <- function(lines, start, end) {
+    ## Remove "* " from beginning of row
+    content <- gsub("^\\* ", "", lines[start:(end-1)])
+    colStart <- which(grepl("^-", content))
+    colEnd <- c(colStart[-1] - 1, length(content))
+    d <- data.frame(colStart = colStart, colEnd = colEnd)
+    sapply(seq_len(nrow(d)),
+           function(j) emitCol(content, colStart[j], colEnd[j]))
+}
+
+emitCol <- function(lines, start, end) {
+    ## Remove "- " from beginning of column
+    lines <- gsub("^\\- ", "", lines[start:end])
+    ## Strip ref and math and backticks
+    lines <- gsub("^\\:ref\\:", "", lines)
+    lines <- gsub("\\:math\\:", "", lines)
+    lines <- gsub("\\|_\\|", "", lines)
+    lines <- gsub("\\|incr\\|", "![](/img/cvxr_functions_img/increasing.png)", lines)
+    lines <- gsub("\\|decr\\|", "![](/img/cvxr_functions_img/decreasing.png)", lines)
+    lines <- gsub("\\|positive\\|", "![](/img/cvxr_functions_img/positive.png)", lines)
+    lines <- gsub("\\|negative\\|", "![](/img/cvxr_functions_img/negative.png)", lines)
+    lines <- gsub("\\|unknown\\|", "![](/img/cvxr_functions_img/unknown.png)", lines)
+    lines <- gsub("\\|concave\\|", "![](/img/cvxr_functions_img/concave.png)", lines)
+    lines <- gsub("\\|convex\\|", "![](/img/cvxr_functions_img/convex.png)", lines)
+    lines <- gsub("\\|affine\\|", "![](/img/cvxr_functions_img/affine.png)", lines)
+    lines <- gsub("\\`", "$", lines)
+    ## Fix up pnorm
+    lines <- gsub("p == 'inf'", "\\`p = Inf\\`", lines)
+    paste(lines[nchar(lines) > 0], collapse = " ")
+}
+
+inFile <- "cvxr_functions_data/index.rst"
+```
+
+## Functions
+
+Here we This section of the tutorial describes the functions that can
+be applied to `cvxr` expressions. `cvxr` uses the function information
+in this section and
+the [Disciplined Convex Programming tools][http://dcp.stanford.edu/]
+to mark expressions with a sign and curvature.
+
+### Operators
+
+The infix operators `+`, `-`, `*`, `/` are treated as functions. `+`
+and `-` are affine functions. `*` and `/` are affine in `cvxr` because
+`expr1*expr2` is allowed only when one of the expressions is constant
+and `expr1/expr2` is allowed only when `expr2` is a scalar constant.
+
+#### Indexing and slicing
+
+All non-scalar expressions can be indexed using the syntax
+`expr[i, j]`. Indexing is an affine function. The syntax `expr[i]`
+can be used as a shorthand for `expr[i, 0]` when `expr` is a column
+vector. Similarly, `expr[i]` is shorthand for `expr[0, i]` when
+`expr` is a row vector.
+
+Non-scalar expressions can also be sliced into using the standard R
+slicing syntax. For example, `expr[i:j, r]` selects rows `i`
+through `j` of column `r` and returns a vector.
+
+
+`cvxr` supports advanced indexing using lists of indices or boolean
+arrays.  The semantics are the same as R. Any time R might return a
+numeric vector, `cvxr` returns a column vector.
+
+#### Transpose
+
+The transpose of any expression can be obtained using the syntax
+`t(expr)`. Transpose is an affine function.
+
+#### Power
+
+For any `cvxr` expression `expr`, the power operator `expr^p` is
+equivalent to the function `power(expr, p)`.
+
+### Scalar functions
+
+A scalar function takes one or more scalars, vectors, or matrices as arguments
+and returns a scalar.
+
+```{r, echo = FALSE}
+lines <- readLines(inFile)
+## Narrow to region of file that we will process.
+start <- grep("CVXR_START_PROCESSING_MARKER_1", lines) + 1
+end <- grep("CVXR_END_PROCESSING_MARKER_1", lines) - 1
+lines <- lines[start:end]
+
+lines <- stringr::str_trim(lines)
+
+## Fix for pnorm since it uses :ref:
+lines <- gsub("^\\* - \\:ref\\:\\`pnorm\\(X, p\\) <pnorm>\\`", "* - pnorm(X, p)", lines)
+lines <- gsub("\\`\\`p = 'inf'\\`\\`", "p == 'inf'", lines)
+## End of fix
+
+## Fix for geo_mean since it uses :ref:
+lines <- gsub("\\:ref\\:\\`geo_mean\\(x, p\\) <geo_mean>\\`", "geo_mean(x, p)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`geo_mean\\(x\\) <geo_mean>\\`", "* - geo_mean(x)", lines)
+## End of fix
+
+## Fix for y > 0 since that gets escaped as html
+lines <- gsub("y > 0", "y \\\\gt 0", lines)
+## Fix for p < 0 since that gets escaped too
+lines <- gsub("p < 1", "p \\\\lt 1", lines)
+
+start <- which(grepl("^\\*", lines))
+end <- c(start[-1] - 1, length(lines))
+coords <- data.frame(start = start, end = end)
+rows <- lapply(seq_len(nrow(coords)),
+               function(i) emitRow(lines, coords$start[i], coords$end[i]))
+##saveRDS(rows, file = "~/tmp/rows.RDS")
+table <- do.call(rbind, rows)
+colnames(table) <- table[1, ]
+colnames(table)[5] <- "Curvature"
+table <- table[-1, ]
+##saveRDS(table, file="~/tmp/table.RDS")
+```
+
+```{r, echo = FALSE}
+library(kableExtra)
+knitr::kable(table, "html") %>%
+  kable_styling("striped") %>%
+  column_spec(1, background = "#ececec") %>%
+  column_spec(2, background = "#ececec") %>%
+  column_spec(3, background = "#ececec") %>%
+  column_spec(4, background = "#ececec") %>%
+  column_spec(5, background = "#ececec") %>%
+  column_spec(6, background = "#ececec") 
+```
+
+#### Clarifications
+
+The domain $\mathbf{S}^n$ refers to the set of symmetric matrices. The
+domains $\mathbf{S}^n_+$ and $\mathbf{S}^n_-$ refer to the set of
+positive semi-definite and negative semi-definite matrices,
+respectively. Similarly, $\mathbf{S}^n_{++}$ and $\mathbf{S}^n_{--}$
+refer to the set of positive definite and negative definite matrices,
+respectively.
+
+For a vector expression `x`, `norm(x)` and `norm(x, 2)` give the
+Euclidean norm. For a matrix expression `X`, however, `norm(X)` and
+`norm(X, 2)` give the spectral norm.
+
+The function `norm(X, "fro")` is called
+the
+[Frobenius norm](https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm>) and
+`norm(X, "nuc")`
+the
+[nuclear norm](https://en.wikipedia.org/wiki/Matrix_norm#Schatten_norms). The
+nuclear norm can also be defined as the sum of `X`'s singular values.
+
+The functions `max_entries` and `min_entries` give the largest and
+smallest entry, respectively, in a single expression. These functions
+should not be confused with `max_elemwise` and `min_elemwise` (see
+:ref:`elementwise`). Use `max_elemwise` and `min_elemwise` to find the
+max or min of a list of scalar expressions.
+
+The function `sum_entries` sums all the entries in a single
+expression. The built-in Python `sum` should be used to add together a
+list of expressions. For example, the following code sums a list of
+three expressions:
+
+```{r, eval = FALSE}
+expr_list = listexpr1, expr2, expr3)
+expr_sum = sum(expr_list)
+```
+
+### Functions along an axis
+
+The functions `sum_entries`, `norm`, `max_entries`, and `min_entries`
+can be applied along an axis.  Given an `m` by `n` expression `expr`,
+the syntax `func(expr, axis=0)` applies `func` to each column,
+returning a 1 by `n` expression.  The syntax `func(expr, axis=1)`
+applies `func` to each row, returning an `m` by 1 expression. For
+example, the following code sums along the columns and rows of a
+matrix variable:
+
+```{r, eval = FALSE}
+X = Variable(5, 4)
+col_sums = sum_entries(X, axis=0) # Has size (1, 4)
+row_sums = sum_entries(X, axis=1) # Has size (5, 1)
+```
+
+### Elementwise functions
+
+These functions operate on each element of their arguments. For
+example, if `X` is a 5 by 4 matrix variable, then `abs(X)` is a 5 by 4
+matrix expression. `abs(X)[1, 2]` is equivalent to `abs(X[1, 2])`.
+
+Elementwise functions that take multiple arguments, such as
+`max_elemwise` and `mul_elemwise`, operate on the corresponding
+elements of each argument.  For example, if `X` and `Y` are both 3 by
+3 matrix variables, then `max_elemwise(X, Y)` is a 3 by 3 matrix
+expression.  `max_elemwise(X, Y)[2, 0]` is equivalent to
+`max_elemwise(X[2, 0], Y[2, 0])`. This means all arguments must have
+the same dimensions or be scalars, which are promoted.
+
+```{r, echo = FALSE}
+lines <- readLines(inFile)
+## Narrow to region of file that we will process.
+start <- grep("CVXR_START_PROCESSING_MARKER_2", lines) + 1
+end <- grep("CVXR_END_PROCESSING_MARKER_2", lines) - 1
+lines <- lines[start:end]
+
+lines <- stringr::str_trim(lines)
+## Fix for power since it uses :ref:
+lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 0\\) <power>\\`", "* - power(x, 0)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 1\\) <power>\\`", "* - power(x, 1)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, p\\) <power>\\`", "* - power(x, p)", lines)
+## End of fix
+
+## Fix for geo_mean since it uses :ref:
+lines <- gsub("\\:ref\\:\\`geo_mean\\(x, p\\) <geo_mean>\\`", "geo_mean(x, p)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`geo_mean\\(x\\) <geo_mean>\\`", "* - geo_mean(x)", lines)
+## End of fix
+
+## Fix for x > 0 since that gets escaped as html
+lines <- gsub("x > 0", "x \\\\gt 0", lines)
+lines <- gsub("y > 0", "y \\\\gt 0", lines)
+lines <- gsub("x > -1", "x \\\\gt -1", lines)
+lines <- gsub("0 < p < 1", "0 \\\\lt p \\\\lt 1", lines)
+lines <- gsub("p < 0", "p \\\\lt 0", lines)
+lines <- gsub("p > 1", "p \\\\gt 1", lines)
+
+## Fix the cases for huber
+lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
+##lines <- gsub("\\|x\\| >M", "\\|x\\| \\\\gt M", lines)
+lines <- gsub("&\\|x\\|", "\\\\&\\|x\\|", lines)
+
+start <- which(grepl("^\\*", lines))
+end <- c(start[-1] - 1, length(lines))
+coords <- data.frame(start = start, end = end)
+rows <- lapply(seq_len(nrow(coords)),
+               function(i) emitRow(lines, coords$start[i], coords$end[i]))
+##saveRDS(rows, file = "~/tmp/rows.RDS")
+table <- do.call(rbind, rows)
+colnames(table) <- table[1, ]
+colnames(table)[5] <- "Curvature"
+table <- table[-1, ]
+##saveRDS(table, file="~/tmp/table.RDS")
+```
+
+```{r, echo = FALSE}
+knitr::kable(table, "html") %>%
+  kable_styling("striped") %>%
+  column_spec(1, background = "#ececec") %>%
+  column_spec(2, background = "#ececec") %>%
+  column_spec(3, background = "#ececec") %>%
+  column_spec(4, background = "#ececec") %>%
+  column_spec(5, background = "#ececec") %>%
+  column_spec(6, background = "#ececec") 
+```
+
+### Vector/matrix functions
+
+A vector/matrix function takes one or more scalars, vectors, or matrices as arguments
+and returns a vector or matrix.
+
+```{r, echo = FALSE}
+lines <- readLines(inFile)
+## Narrow to region of file that we will process.
+start <- grep("CVXR_START_PROCESSING_MARKER_3", lines) + 1
+end <- grep("CVXR_END_PROCESSING_MARKER_3", lines) - 1
+lines <- lines[start:end]
+
+lines <- stringr::str_trim(lines)
+## Fix for power since it uses :ref:
+lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 0\\) <power>\\`", "* - power(x, 0)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 1\\) <power>\\`", "* - power(x, 1)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, p\\) <power>\\`", "* - power(x, p)", lines)
+## End of fix
+
+## Fix for geo_mean since it uses :ref:
+lines <- gsub("\\:ref\\:\\`geo_mean\\(x, p\\) <geo_mean>\\`", "geo_mean(x, p)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`geo_mean\\(x\\) <geo_mean>\\`", "* - geo_mean(x)", lines)
+## End of fix
+
+## Fix for x > 0 since that gets escaped as html
+lines <- gsub("x > 0", "x \\\\gt 0", lines)
+lines <- gsub("y > 0", "y \\\\gt 0", lines)
+lines <- gsub("x > -1", "x \\\\gt -1", lines)
+lines <- gsub("0 < p < 1", "0 \\\\lt p \\\\lt 1", lines)
+lines <- gsub("p < 0", "p \\\\lt 0", lines)
+lines <- gsub("p > 1", "p \\\\gt 1", lines)
+
+## Fix the cases for huber
+lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
+##lines <- gsub("\\|x\\| >M", "\\|x\\| \\\\gt M", lines)
+lines <- gsub("&\\|x\\|", "\\\\&\\|x\\|", lines)
+
+start <- which(grepl("^\\*", lines))
+end <- c(start[-1] - 1, length(lines))
+coords <- data.frame(start = start, end = end)
+rows <- lapply(seq_len(nrow(coords)),
+               function(i) emitRow(lines, coords$start[i], coords$end[i]))
+##saveRDS(rows, file = "~/tmp/rows.RDS")
+table <- do.call(rbind, rows)
+colnames(table) <- table[1, ]
+colnames(table)[5] <- "Curvature"
+table <- table[-1, ]
+##saveRDS(table, file="~/tmp/table.RDS")
+```
+
+```{r, echo = FALSE}
+knitr::kable(table, "html", escape = FALSE) %>%
+  kable_styling("striped") %>%
+  column_spec(1, background = "#ececec") %>%
+  column_spec(2, background = "#ececec") %>%
+  column_spec(3, background = "#ececec") %>%
+  column_spec(4, background = "#ececec") %>%
+  column_spec(5, background = "#ececec") %>%
+  column_spec(6, background = "#ececec") 
+```
+
+
+#### Clarifications
+
+The input to `bmat` is a list of lists of `cvxr` expressions.  It
+constructs a block matrix.  The elements of each inner list are
+stacked horizontally and then the resulting block matrices are stacked
+vertically.
+
+The output $y$ of `conv(c, x)` has size $`n+m-1$ and is defined as
+$y[k]=\sum_{j=0}^k c[j]x[k-j].$
+
+The output $x$ of `vec(X)` is the matrix $X$ flattened in column-major order into a vector.
+Formally, $x'_i = X_{i \bmod{m}, \left \lfloor{i/m}\right \rfloor }$.
+
+The output $X$ of `reshape(X, m', n')` is the matrix $X$ cast into an $m' \times n'$ matrix.
+The entries are taken from $X$ in column-major order and stored in $X'$ in column-major order.
+Formally, $X'_{ij} = \mathbf{vec}(X)_{m'j + i}$.
+

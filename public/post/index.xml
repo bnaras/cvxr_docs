@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on CVXR</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on CVXR</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 30 Oct 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CVXR Functions</title>
+      <link>/post/cvxr_functions/</link>
+      <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/cvxr_functions/</guid>
+      <description>Functions Here we This section of the tutorial describes the functions that can be applied to cvxr expressions. cvxr uses the function information in this section and the [Disciplined Convex Programming tools][http://dcp.stanford.edu/] to mark expressions with a sign and curvature.
+Operators The infix operators +, -, *, / are treated as functions. + and - are affine functions. * and / are affine in cvxr because expr1*expr2 is allowed only when one of the expressions is constant and expr1/expr2 is allowed only when expr2 is a scalar constant.</description>
+    </item>
+    
+    <item>
+      <title>Introduction</title>
+      <link>/post/cvxr_intro/</link>
+      <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/cvxr_intro/</guid>
+      <description>We begin by generating some synthetic data for a simple least squares regression model.
+set.seed(123) n &amp;lt;- 100 p &amp;lt;- 10 beta &amp;lt;- 1:p # beta is just 1 through 10. X &amp;lt;- matrix(rnorm(p * n), nrow=n) colnames(X) &amp;lt;- paste0(&amp;quot;beta_&amp;quot;, beta) Y &amp;lt;- X %*% beta + rnorm(n) If we only had the data (\(Y\) and \(X\)) to begin with, we could estimate the \(\beta\) using lm function to get the best least squares fit.</description>
+    </item>
+    
+  </channel>
+</rss>

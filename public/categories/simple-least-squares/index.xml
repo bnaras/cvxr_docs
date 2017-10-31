@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Simple Least Squares on CVXR</title>
+    <link>/categories/simple-least-squares/</link>
+    <description>Recent content in Simple Least Squares on CVXR</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 29 Oct 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/simple-least-squares/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Introduction</title>
+      <link>/post/cvxr_intro/</link>
+      <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/cvxr_intro/</guid>
+      <description>We begin by generating some synthetic data for a simple least squares regression model.
+set.seed(123) n &amp;lt;- 100 p &amp;lt;- 10 beta &amp;lt;- 1:p # beta is just 1 through 10. X &amp;lt;- matrix(rnorm(p * n), nrow=n) colnames(X) &amp;lt;- paste0(&amp;quot;beta_&amp;quot;, beta) Y &amp;lt;- X %*% beta + rnorm(n) If we only had the data (\(Y\) and \(X\)) to begin with, we could estimate the \(\beta\) using lm function to get the best least squares fit.</description>
+    </item>
+    
+  </channel>
+</rss>
