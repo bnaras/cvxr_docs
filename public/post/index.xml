@@ -17,7 +17,7 @@
       <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/cvxr_functions/</guid>
-      <description>Functions Here we This section of the tutorial describes the functions that can be applied to cvxr expressions. cvxr uses the function information in this section and the [Disciplined Convex Programming tools][http://dcp.stanford.edu/] to mark expressions with a sign and curvature.
+      <description>Functions Here we describe the functions that can be applied to cvxr expressions. cvxr uses the function information in this section and the Disciplined Convex Programming tools to mark expressions with a sign and curvature.
 Operators The infix operators +, -, *, / are treated as functions. + and - are affine functions. * and / are affine in cvxr because expr1*expr2 is allowed only when one of the expressions is constant and expr1/expr2 is allowed only when expr2 is a scalar constant.</description>
     </item>
     

@@ -6,6 +6,12 @@ slug: cvxr_functions
 ---
 
 ```{r, echo = FALSE}
+## knitr::knit_hooks$set(inline = function(x) {
+##   return(gsub(pattern = "&", 
+##               replacement = "\\\\&", 
+##               x = x, 
+##               fixed = TRUE))
+## })
 library(stringr)
 emitRow <- function(lines, start, end) {
     ## Remove "* " from beginning of row
@@ -43,10 +49,9 @@ inFile <- "cvxr_functions_data/index.rst"
 
 ## Functions
 
-Here we This section of the tutorial describes the functions that can
-be applied to `cvxr` expressions. `cvxr` uses the function information
-in this section and
-the [Disciplined Convex Programming tools][http://dcp.stanford.edu/]
+Here we describe the functions that can be applied to `cvxr`
+expressions. `cvxr` uses the function information in this section and
+the [Disciplined Convex Programming tools](http://dcp.stanford.edu/)
 to mark expressions with a sign and curvature.
 
 ### Operators
@@ -67,7 +72,6 @@ vector. Similarly, `expr[i]` is shorthand for `expr[0, i]` when
 Non-scalar expressions can also be sliced into using the standard R
 slicing syntax. For example, `expr[i:j, r]` selects rows `i`
 through `j` of column `r` and returns a vector.
-
 
 `cvxr` supports advanced indexing using lists of indices or boolean
 arrays.  The semantics are the same as R. Any time R might return a
@@ -232,9 +236,10 @@ lines <- gsub("p < 0", "p \\\\lt 0", lines)
 lines <- gsub("p > 1", "p \\\\gt 1", lines)
 
 ## Fix the cases for huber
-lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
+lines <- gsub(" >M", " \\\\gt M", lines)
+##lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
 ##lines <- gsub("\\|x\\| >M", "\\|x\\| \\\\gt M", lines)
-lines <- gsub("&\\|x\\|", "\\\\&\\|x\\|", lines)
+lines <- gsub("2M\\|x\\|", " 2M\\|x\\|", lines)
 
 start <- which(grepl("^\\*", lines))
 end <- c(start[-1] - 1, length(lines))
@@ -250,7 +255,7 @@ table <- table[-1, ]
 ```
 
 ```{r, echo = FALSE}
-knitr::kable(table, "html") %>%
+s <- knitr::kable(table, "html") %>%
   kable_styling("striped") %>%
   column_spec(1, background = "#ececec") %>%
   column_spec(2, background = "#ececec") %>%
@@ -258,6 +263,8 @@ knitr::kable(table, "html") %>%
   column_spec(4, background = "#ececec") %>%
   column_spec(5, background = "#ececec") %>%
   column_spec(6, background = "#ececec") 
+## Unescape that bloody ampersand.
+gsub("amp;", "", s)    
 ```
 
 ### Vector/matrix functions
@@ -294,6 +301,8 @@ lines <- gsub("p > 1", "p \\\\gt 1", lines)
 
 ## Fix the cases for huber
 lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
+
+lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
 ##lines <- gsub("\\|x\\| >M", "\\|x\\| \\\\gt M", lines)
 lines <- gsub("&\\|x\\|", "\\\\&\\|x\\|", lines)
 
@@ -311,14 +320,16 @@ table <- table[-1, ]
 ```
 
 ```{r, echo = FALSE}
-knitr::kable(table, "html", escape = FALSE) %>%
-  kable_styling("striped") %>%
-  column_spec(1, background = "#ececec") %>%
-  column_spec(2, background = "#ececec") %>%
-  column_spec(3, background = "#ececec") %>%
-  column_spec(4, background = "#ececec") %>%
-  column_spec(5, background = "#ececec") %>%
-  column_spec(6, background = "#ececec") 
+s <- knitr::kable(table, "html", escape = FALSE) %>%
+    kable_styling("striped") %>%
+    column_spec(1, background = "#ececec") %>%
+    column_spec(2, background = "#ececec") %>%
+    column_spec(3, background = "#ececec") %>%
+    column_spec(4, background = "#ececec") %>%
+    column_spec(5, background = "#ececec") %>%
+    column_spec(6, background = "#ececec")
+## Unescape that bloody ampersand.
+gsub("amp;", "", s)    
 ```
 
 

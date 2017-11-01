@@ -9,7 +9,7 @@ slug: cvxr_functions
 
 <div id="functions" class="section level2">
 <h2>Functions</h2>
-<p>Here we This section of the tutorial describes the functions that can be applied to <code>cvxr</code> expressions. <code>cvxr</code> uses the function information in this section and the [Disciplined Convex Programming tools][<a href="http://dcp.stanford.edu/" class="uri">http://dcp.stanford.edu/</a>] to mark expressions with a sign and curvature.</p>
+<p>Here we describe the functions that can be applied to <code>cvxr</code> expressions. <code>cvxr</code> uses the function information in this section and the <a href="http://dcp.stanford.edu/">Disciplined Convex Programming tools</a> to mark expressions with a sign and curvature.</p>
 <div id="operators" class="section level3">
 <h3>Operators</h3>
 <p>The infix operators <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code> are treated as functions. <code>+</code> and <code>-</code> are affine functions. <code>*</code> and <code>/</code> are affine in <code>cvxr</code> because <code>expr1*expr2</code> is allowed only when one of the expressions is constant and <code>expr1/expr2</code> is allowed only when <code>expr2</code> is a scalar constant.</p>
@@ -808,7 +808,7 @@ exp(x)
 huber(x, M=1) <span class="math inline">\(M \geq 0\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\begin{cases}x^2 \&amp;amp;|x| \leq M \\2M|x| - M^2\&amp;amp;|x| \gt M\end{cases}\)</span>
+<span class="math inline">\(\begin{cases}x^2 &amp;|x| \leq M \\ 2M|x| - M^2&amp;|x| \gt M\end{cases}\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(x \in \mathbf{R}\)</span>
@@ -1237,7 +1237,7 @@ Monotonicity
 bmat([[X11, …, X1q], …, [Xp1, …, Xpq]])
 </td>
 <td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\left[\begin{matrix} X^{(1,1)} &amp;amp; \cdots &amp;amp; X^{(1,q)} \\ \vdots &amp;amp; &amp;amp; \vdots \\ X^{(p,1)} &amp;amp; \cdots &amp;amp; X^{(p,q)} \end{matrix}\right]\)</span>
+<span class="math inline">\(\left[\begin{matrix} X^{(1,1)} &amp; \cdots &amp; X^{(1,q)} \\ \vdots &amp; &amp; \vdots \\ X^{(p,1)} &amp; \cdots &amp; X^{(p,q)} \end{matrix}\right]\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(X^{(i,j)} \in\mathbf{R}^{m_i \times n_j}\)</span>
@@ -1297,7 +1297,7 @@ same as X
 diag(x)
 </td>
 <td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\left[\begin{matrix}x_1 &amp;amp; &amp;amp; \\&amp;amp; \ddots &amp;amp; \\&amp;amp; &amp;amp; x_n\end{matrix}\right]\)</span>
+<span class="math inline">\(\left[\begin{matrix}x_1 &amp; &amp; \\&amp; \ddots &amp; \\&amp; &amp; x_n\end{matrix}\right]\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(x \in\mathbf{R}^{n}\)</span>
@@ -1377,7 +1377,7 @@ hstack(X1, …, Xk)
 kron(C, X) <span class="math inline">\(C\in\mathbf{R}^{p \times q}\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\left[\begin{matrix}C_{11}X &amp;amp; \cdots &amp;amp; C_{1q}X \\ \vdots &amp;amp; &amp;amp; \vdots \\ C_{p1}X &amp;amp; \cdots &amp;amp; C_{pq}X \end{matrix}\right]\)</span>
+<span class="math inline">\(\left[\begin{matrix}C_{11}X &amp; \cdots &amp; C_{1q}X \\ \vdots &amp; &amp; \vdots \\ C_{p1}X &amp; \cdots &amp; C_{pq}X \end{matrix}\right]\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(X \in\mathbf{R}^{m \times n}\)</span>
