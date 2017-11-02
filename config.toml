@@ -11,7 +11,7 @@ googleAnalytics = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.Rhistory$"]
 
 [params]
-	name = "CVXR"
+	name = ""
 	description = "Disciplined Convex Programming in R"
 	
 	github_user   = "bnaras"

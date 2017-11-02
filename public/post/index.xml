@@ -6,10 +6,31 @@
     <description>Recent content in Posts on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 Oct 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 02 Nov 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Near Isotonic and Near Convex Regression</title>
+      <link>/post/near-isotonic-and-near-convex-regression/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/near-isotonic-and-near-convex-regression/</guid>
+      <description>The Carbon Dioxide Information Analysis Center (CDIAC) provides some data on global warming. The data points are the annual temperature anomalies relative to the 1961–1990 mean.
+library(readr) cdiac_url &amp;lt;- &amp;quot;http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/global.txt&amp;quot; CDIAC &amp;lt;- read_table(file = cdiac_url, skip=16)[, c(&amp;quot;YEAR&amp;quot;, &amp;quot;ANNUAL&amp;quot;)] ## Parsed with column specification: ## cols( ## YEAR = col_integer(), ## JAN = col_double(), ## FEB = col_double(), ## MAR = col_double(), ## APR = col_double(), ## MAY = col_double(), ## JUN = col_double(), ## JUL = col_double(), ## AUG = col_double(), ## SEP = col_double(), ## OCT = col_double(), ## NOV = col_double(), ## DEC = col_double(), ## ANNUAL = col_double() ## ) str(CDIAC) ## Classes &amp;#39;tbl_df&amp;#39;, &amp;#39;tbl&amp;#39; and &amp;#39;data.</description>
+    </item>
+    
+    <item>
+      <title>Isotonic Regression</title>
+      <link>/post/isotonic-regression/</link>
+      <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/isotonic-regression/</guid>
+      <description>Introduction Isotonic regression is regression with monotonic constraints. There are several packages in R to fit isotonic regression models. We consider isotone which uses a pooled-adjacent-violators algorithm (PAVA) and active set methods to perform the fit.
+ Pituitary Data Example de Leeuw, Hornik and Mair provide an example consisting of data on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.
+library(isotone) data(&amp;quot;pituitary&amp;quot;) str(pituitary) ## &amp;#39;data.</description>
+    </item>
     
     <item>
       <title>CVXR Functions</title>

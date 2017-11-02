@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.30.2" />
+	
+	<title>Near Isotonic and Near Convex Regression &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Near Isotonic and Near Convex Regression</h1>
+	
+	<p>The <a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a> provides some data on global warming. The data points are the annual temperature anomalies relative to the 1961–1990 mean.</p>
+<pre class="r"><code>library(readr)
+cdiac_url &lt;- &quot;http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/global.txt&quot;
+CDIAC &lt;- read_table(file = cdiac_url, skip=16)[, c(&quot;YEAR&quot;, &quot;ANNUAL&quot;)]</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   YEAR = col_integer(),
+##   JAN = col_double(),
+##   FEB = col_double(),
+##   MAR = col_double(),
+##   APR = col_double(),
+##   MAY = col_double(),
+##   JUN = col_double(),
+##   JUL = col_double(),
+##   AUG = col_double(),
+##   SEP = col_double(),
+##   OCT = col_double(),
+##   NOV = col_double(),
+##   DEC = col_double(),
+##   ANNUAL = col_double()
+## )</code></pre>
+<pre class="r"><code>str(CDIAC)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    166 obs. of  2 variables:
+##  $ YEAR  : int  1850 1851 1852 1853 1854 1855 1856 1857 1858 1859 ...
+##  $ ANNUAL: num  -0.375 -0.223 -0.224 -0.271 -0.246 -0.271 -0.352 -0.46 -0.466 -0.286 ...</code></pre>
+<p>Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>, @{TibshiraniHoefling:2011} fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+    \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
+\end{array}
+\]</span> where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. Our <code>cvxr</code> formulation follows directly as shown below. The <code>pos</code> atom evaluates <span class="math inline">\(x_+\)</span> elementwise on the input expression.</p>
+<pre class="r"><code>library(cvxr)</code></pre>
+<pre><code>## Warning: replacing previous import &#39;Matrix::crossprod&#39; by &#39;gmp::crossprod&#39;
+## when loading &#39;cvxr&#39;</code></pre>
+<pre><code>## Warning: replacing previous import &#39;Matrix::tcrossprod&#39; by
+## &#39;gmp::tcrossprod&#39; when loading &#39;cvxr&#39;</code></pre>
+<pre><code>## 
+## Attaching package: &#39;cvxr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     decompose, reshape</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     split, trace</code></pre>
+<pre class="r"><code>neariso_fit &lt;- function(y, lambda) {
+    m &lt;- length(y)
+    beta &lt;- Variable(m)
+    penalty &lt;- sum(pos(diff(beta)))
+    obj &lt;- 0.5 * sum((y - beta)^2) + lambda * penalty
+    prob &lt;- Problem(Minimize(obj))
+    solve(prob)$getValue(beta)
+}</code></pre>
+<pre class="r"><code>neariso_fit_data &lt;- function(data, index, lambda) {
+    sample &lt;- data[index,]                  # Bootstrap sample of rows
+    sample &lt;- sample[order(sample$YEAR),]   # Order ascending by year
+    neariso_fit(sample$ANNUAL, lambda)
+}
+library(boot)
+boot.out &lt;- boot(data = CDIAC, statistic = neariso_fit_data, R = 10, lambda = 0.44)
+
+ci.neariso &lt;- t(sapply(seq_len(nrow(CDIAC)),
+                            function(i) boot.ci(boot.out = boot.out, conf = 0.95,
+                                                type = &quot;norm&quot;, index = i)$normal[-1]))
+data.neariso &lt;- data.frame(year = CDIAC$YEAR, annual = CDIAC$ANNUAL, est = boot.out$t0,
+                              lower = ci.neariso[, 1], upper = ci.neariso[, 2])</code></pre>
+<p>We can now plot the fit and confidence bands</p>
+<pre class="r"><code>library(ggplot2)
+(plot.neariso &lt;- ggplot(data = data.neariso) +
+     geom_point(mapping = aes(year, annual), color = &quot;red&quot;) +
+     geom_line(mapping = aes(year, est), color = &quot;blue&quot;) +
+     geom_ribbon(mapping = aes(x = year, ymin = lower,ymax = upper),alpha=0.3) +
+     labs(x = &quot;Year&quot;, y = &quot;Temperature Anomalies&quot;)
+)</code></pre>
+<p><img src="../../post/near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+
+
+
+						<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../post/isotonic-regression/" title="Isotonic Regression">Isotonic Regression</a></li>
+  
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

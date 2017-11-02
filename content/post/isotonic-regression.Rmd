@@ -1,0 +1,123 @@
+---
+title: Isotonic Regression
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-01'
+slug: isotonic-regression
+categories: []
+tags: []
+---
+
+## Introduction
+
+[Isotonic regression](https://en.wikipedia.org/wiki/Isotonic_regression) is regression with monotonic constraints. There are several packages in R to fit isotonic regression models. We consider  [`isotone`](https://cran.r-project.org/package=isotone) which uses a pooled-adjacent-violators algorithm (PAVA) and active set methods to perform the fit. 
+
+## Pituitary Data Example
+
+[de Leeuw, Hornik and Mair](http://www.jstatsoft.org/v32/i05/)
+provide an example consisting of data on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.
+
+```{r}
+library(isotone)
+data("pituitary")
+str(pituitary)
+```
+
+Since the size is expected to increase with age, an isotonic fit is suggested.
+
+```{r}
+res_p <- with(pituitary, gpava(age, size))
+```
+
+The `cvxr` formulation expresses this pretty much in the mathematical form. 
+
+```{r}
+suppressMessages(suppressWarnings(library(cvxr)))
+x_p <- with(pituitary, {
+      n <- length(size)
+      x <- Variable(n)
+      objective <- Minimize(Pnorm(size - x, 2))
+      constraint <- list(diff(x) >= 0)
+      problem <- Problem(objective, constraint)
+      result <- solve(problem)
+      result$getValue(x)
+})
+```
+
+We define a variable `x` of size `n`, the number of observations. The objective to be minimized is the least-squares error (`Pnorm`). The constraint specifies monotonicity and it uses the `diff` function familiar to R users (see `?diff`), except that it now refers to elements of the `x`. A problem is created and called via `solve`. The resulting optimal value for `x` is retrieved using `getValue(x)`. 
+
+As the output below shows, the results are very close.
+```{r}
+cbind(res_p$x, x_p)
+```
+
+## Other Approached to Tied Data
+
+Package `isotone` provide additional methods for handling tied data besides the default `ties = "primary"` method; `ties = "secondary"` enforces equality within ties, and `ties = "tertiary"`
+enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)
+
+```{r}
+res_s <- with(pituitary, gpava(age, size, ties = "secondary"))
+res_t <- with(pituitary, gpava(age, size, ties = "tertiary"))
+```
+
+In `cvxr`, the secondary method just requires an additional constraint to enforce
+equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using `base::split` and force those `x` values to be equal (i.e. `diff` == 0).
+
+```{r}
+x_s <- with(pituitary, {
+    n <- length(size)
+    x <- Variable(n)
+    objective <- Minimize(Pnorm(size - x, 2))
+    secondary_constraints <- lapply(base::split(x = seq_len(n),
+                                                f = age),
+                                    function(i) diff(x[i]) == 0)
+    constraint <- c(diff(x) >= 0,
+                    secondary_constraints)
+    problem <- Problem(objective, constraint)
+    solve(problem)$getValue(x)
+})
+```
+
+Finally, the tertiary method requires computing the block means to be computed for use
+in enforcing monotonicity. 
+```{r}
+x_t <- with(pituitary, {
+    n <- length(size)
+    x <- Variable(n)
+    objective <- Minimize(Pnorm(size - x, 2))
+    blocks <- base::split(x = seq_len(n),
+                          f = pituitary$age)
+    block_means <- lapply(blocks, function(i) {
+        v <- numeric(n)
+        v[i] <- 1.0 / length(i)
+        matrix(v, nrow = 1) %*% x
+    })
+    block_mean_vector <- do.call(VStack, block_means)
+    constraint <- list(diff(block_mean_vector) >= 0)
+    problem <- Problem(objective, constraint)
+    solve(problem)$getValue(x)
+})
+```
+In the above, we make use of the `VStack` function to create a single vector of the block means.
+
+We can how all three solutions compare.
+
+```{r, echo = FALSE}
+library(kableExtra)
+d <- data.frame(res_p$x, x_p, res_s$x, x_s, res_t$x, x_t)
+names(d) <- c("Isotone (P)", "CVXR (P)", "Isotone (S)", "CVXR(S)",
+              "Isotone (T)", "CVXR (T)")
+knitr::kable(d, digits = 2, format = "html", caption = "P = primary, S = Secondary, T = Tertiary") %>%
+    column_spec(1, background = "#ececec", ) %>%
+    column_spec(2, background = "#ececec") %>%
+    column_spec(3, background = "#ececec") %>%
+    column_spec(4, background = "#ececec") %>%
+    column_spec(5, background = "#ececec") %>%
+    column_spec(6, background = "#ececec")
+    
+```
+
+## Notes
+
+Any other arbitrary behavior can be specified for tied observations.
+
