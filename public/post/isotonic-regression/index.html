@@ -31,7 +31,7 @@
 </div>
 <div id="pituitary-data-example" class="section level2">
 <h2>Pituitary Data Example</h2>
-<p><a href="http://www.jstatsoft.org/v32/i05/">de Leeuw, Hornik and Mair</a> provide an example consisting of data on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.</p>
+<p>We will use data from the <code>isotone</code> package (see <span class="citation">de Leeuw, Hornik, and Mair (<a href="#ref-isotone">2009</a>)</span>) on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.</p>
 <pre class="r"><code>library(isotone)
 data(&quot;pituitary&quot;)
 str(pituitary)</code></pre>
@@ -67,8 +67,8 @@ x_p &lt;- with(pituitary, {
 ## [10,] 23.500 23.50003
 ## [11,] 25.000 25.00004</code></pre>
 </div>
-<div id="other-approached-to-tied-data" class="section level2">
-<h2>Other Approached to Tied Data</h2>
+<div id="handling-ties" class="section level2">
+<h2>Handling Ties</h2>
 <p>Package <code>isotone</code> provide additional methods for handling tied data besides the default <code>ties = &quot;primary&quot;</code> method; <code>ties = &quot;secondary&quot;</code> enforces equality within ties, and <code>ties = &quot;tertiary&quot;</code> enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)</p>
 <pre class="r"><code>res_s &lt;- with(pituitary, gpava(age, size, ties = &quot;secondary&quot;))
 res_t &lt;- with(pituitary, gpava(age, size, ties = &quot;tertiary&quot;))</code></pre>
@@ -358,6 +358,14 @@ CVXR (T)
 <h2>Notes</h2>
 <p>Any other arbitrary behavior can be specified for tied observations.</p>
 </div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-isotone">
+<p>de Leeuw, J., K. Hornik, and P. Mair. 2009. “Isotone Optimization in R: Pool-Adjacent-Violators Algorithm (PAVA) and Active Set Methods.” <em>Journal of Statistical Software</em> 32 (5): 1–24.</p>
+</div>
+</div>
+</div>
 
 
 
@@ -409,12 +417,22 @@ CVXR (T)
 		
 
 		
-		<h3>Related Topics</h3>
+
+<h3>Navigation</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../post/cvxr_functions/" title="CVXR Functions">CVXR Functions</a></li>
-  <li>Next: <a href="../../post/near-isotonic-and-near-convex-regression/" title="Near Isotonic and Near Convex Regression">Near Isotonic and Near Convex Regression</a></li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../">About</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://github.com/anqif/cvxr">GitHub</a>
+	</li>
+	
 </ul>
+
+
+		
 
 	</div>
 </div>

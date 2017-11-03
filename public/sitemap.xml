@@ -8,8 +8,18 @@
   </url>
   
   <url>
+    <loc>/post/catenary/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/isotonic-regression/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/cvxr/</loc>
+    <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -20,10 +30,6 @@
   <url>
     <loc>/post/cvxr_intro/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
   </url>
   
   <url>

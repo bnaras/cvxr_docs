@@ -1,6 +1,6 @@
 ---
 title: Introduction
-author: Balasubramanian Narasimhan
+author: Anqi Fu and Balasubramanian Narasimhan
 date: '2017-10-29'
 categories:
   - Simple Least Squares

@@ -3,6 +3,8 @@ title: Isotonic Regression
 author: Anqi Fu and Balasubramanian Narasimhan
 date: '2017-11-01'
 slug: isotonic-regression
+bibliography: cvxr_refs.bib
+link-citations: true
 categories: []
 tags: []
 ---
@@ -13,8 +15,8 @@ tags: []
 
 ## Pituitary Data Example
 
-[de Leeuw, Hornik and Mair](http://www.jstatsoft.org/v32/i05/)
-provide an example consisting of data on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.
+We will use data from the `isotone` package (see @isotone) on the size
+of pituitary fissures for 11 subjects between 8 and 14 years of age.
 
 ```{r}
 library(isotone)
@@ -50,7 +52,7 @@ As the output below shows, the results are very close.
 cbind(res_p$x, x_p)
 ```
 
-## Other Approached to Tied Data
+## Handling Ties
 
 Package `isotone` provide additional methods for handling tied data besides the default `ties = "primary"` method; `ties = "secondary"` enforces equality within ties, and `ties = "tertiary"`
 enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)
@@ -121,3 +123,4 @@ knitr::kable(d, digits = 2, format = "html", caption = "P = primary, S = Seconda
 
 Any other arbitrary behavior can be specified for tied observations.
 
+## References

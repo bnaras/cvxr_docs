@@ -39,9 +39,16 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	codecov_button = false
 	gratipay = ""
 
-	show_relations = true
+	show_relations = false
 
 [params.footer]
 	copyright = "Anqi Fu, Balasubramanian Narasimhan, Stephen Boyd"
 	show_powered_by = false
+
+[[menu.main]]
+    name = "About"
+        url = "/"
+[[menu.main]]
+    name = "GitHub"
+    url = "https://github.com/anqif/cvxr"
 

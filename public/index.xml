@@ -17,8 +17,18 @@
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/near-isotonic-and-near-convex-regression/</guid>
-      <description>The Carbon Dioxide Information Analysis Center (CDIAC) provides some data on global warming. The data points are the annual temperature anomalies relative to the 1961–1990 mean.
-library(readr) cdiac_url &amp;lt;- &amp;quot;http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/global.txt&amp;quot; CDIAC &amp;lt;- read_table(file = cdiac_url, skip=16)[, c(&amp;quot;YEAR&amp;quot;, &amp;quot;ANNUAL&amp;quot;)] ## Parsed with column specification: ## cols( ## YEAR = col_integer(), ## JAN = col_double(), ## FEB = col_double(), ## MAR = col_double(), ## APR = col_double(), ## MAY = col_double(), ## JUN = col_double(), ## JUL = col_double(), ## AUG = col_double(), ## SEP = col_double(), ## OCT = col_double(), ## NOV = col_double(), ## DEC = col_double(), ## ANNUAL = col_double() ## ) str(CDIAC) ## Classes &amp;#39;tbl_df&amp;#39;, &amp;#39;tbl&amp;#39; and &amp;#39;data.</description>
+      <description>Given a set of data points \(y \in {\mathbf R}^m\), R. J. Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving $$ \[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array}\] $$ where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in cvxr. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
+    </item>
+    
+    <item>
+      <title>The Catenary Problem</title>
+      <link>/post/catenary/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/catenary/</guid>
+      <description>Introduction A chain with uniformly distributed mass hangs from the endpoints \((0,1)\) and \((1,1)\) on a 2-D plane. Gravitational force acts in the negative \(y\) direction. Our goal is to find the shape of the chain in equilibrium, which is equivalent to determining the \((x,y)\) coordinates of every point along its curve when its potential energy is minimized.
+This is the famous catenary problem.
+ A Discrete Version To formulate as an optimization problem, we parameterize the chain by its arc length and divide it into \(m\) discrete links.</description>
     </item>
     
     <item>
@@ -28,8 +38,16 @@ library(readr) cdiac_url &amp;lt;- &amp;quot;http://cdiac.ess-dive.lbl.gov/ftp/t
       
       <guid>/post/isotonic-regression/</guid>
       <description>Introduction Isotonic regression is regression with monotonic constraints. There are several packages in R to fit isotonic regression models. We consider isotone which uses a pooled-adjacent-violators algorithm (PAVA) and active set methods to perform the fit.
- Pituitary Data Example de Leeuw, Hornik and Mair provide an example consisting of data on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.
-library(isotone) data(&amp;quot;pituitary&amp;quot;) str(pituitary) ## &amp;#39;data.</description>
+ Pituitary Data Example We will use data from the isotone package (see de Leeuw, Hornik, and Mair (2009)) on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.</description>
+    </item>
+    
+    <item>
+      <title>CVXR</title>
+      <link>/cvxr/</link>
+      <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/cvxr/</guid>
+      <description>What is cvxr?   cvxr is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
     </item>
     
     <item>
@@ -50,15 +68,6 @@ Operators The infix operators +, -, *, / are treated as functions. + and - are a
       <guid>/post/cvxr_intro/</guid>
       <description>We begin by generating some synthetic data for a simple least squares regression model.
 set.seed(123) n &amp;lt;- 100 p &amp;lt;- 10 beta &amp;lt;- 1:p # beta is just 1 through 10. X &amp;lt;- matrix(rnorm(p * n), nrow=n) colnames(X) &amp;lt;- paste0(&amp;quot;beta_&amp;quot;, beta) Y &amp;lt;- X %*% beta + rnorm(n) If we only had the data (\(Y\) and \(X\)) to begin with, we could estimate the \(\beta\) using lm function to get the best least squares fit.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/</guid>
-      <description>What is cvxr? cvxr is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
     </item>
     
   </channel>
