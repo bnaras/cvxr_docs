@@ -16,7 +16,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	
 	github_user   = "bnaras"
 	github_repo   = "cvxr_docs"
-	github_banner = false
+	github_banner = true
 
 	custom_css = []
 	custom_js  = []
@@ -43,12 +43,24 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 
 [params.footer]
 	copyright = "Anqi Fu, Balasubramanian Narasimhan, Stephen Boyd"
-	show_powered_by = false
+	show_powered_by = true
 
 [[menu.main]]
-    name = "About"
-        url = "/"
-[[menu.main]]
-    name = "GitHub"
-    url = "https://github.com/anqif/cvxr"
+    name = "Github"
+    	 url = "https://github.com/anqif/cvxr"
+	 weight = -20
 
+[[menu.main]]
+    name = "Getting Started"
+    	 url = "/post/cvxr_intro/"
+	 weight = -19
+
+[[menu.main]]
+    name = "Examples"
+    	 url = "/post/cvxr_examples/"
+	 weight = -18
+
+[[menu.main]]
+    name = "Functions"
+    	 url = "/post/cvxr_functions/"
+	 weight = -17

@@ -1,0 +1,69 @@
+---
+title: Convex Optimization in R
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-10-30'
+slug: cvxr
+type: homepage
+---
+
+## What is `cvxr`?
+
+`cvxr` is an R package that provides an object-oriented modeling
+language for convex optimization, similar to `CVX`, `CVXPY`, `YALMIP`,
+and `Convex.jl`. It allows the user to formulate convex optimization
+problems in a natural mathematical syntax rather than the restrictive
+standard form required by most solvers. The user specifies an
+objective and set of constraints by combining constants, variables,
+and parameters using a library of functions with known mathematical
+properties. `cvxr` then applies signed disciplined convex programming
+(DCP) to verify the problem’s convexity. Once verified, the problem is
+converted into standard conic form using graph implementations and
+passed to a cone solver such
+as [ECOS](https://github.com/embotech/ecos) or 
+[SCS](https://github.com/cvxgrp/scs).
+
+## Status
+
+Although `cvxr` continues to be developed
+on [Github](https://github.com/anqif), the current release implements all of
+the `CVXPY` atoms except for `geo_mean` and parameters. The latter is
+not an impediment since any parameter can be replaced by a variable.
+
+The focus of the development is mostly on speeding up the
+canonicalization and construction of problem data in `cvxr`.
+
+## Installing `cvxr`
+
+`cvxr` is installed like any other R package
+from [CRAN](https://cloud.r-project.org).
+
+## Documentation
+
+A large set of examples, many ported from `CVXPY` are available in
+the [Examples](/examples) section. 
+
+## Citing `cvxr`
+
+If you use `cvxr` in your work, please consider citing the paper.
+
+
+## Acknowledgements
+
+We are grateful
+to
+[Steven Diamond](https://web.stanford.edu/~stevend2/),
+[John Miller](https://people.eecs.berkeley.edu/~miller_john/), and
+Paul K. Rosenfield for their contributions to the software’s
+development. In particular, we are indebted to Steven Diamond for his
+work on [CVXPY](http://www.cvxpy.org/en/latest/); most of `cvxr` code,
+documentation, and examples were ported from his Python library.
+
+## About this site
+
+This site was constructed
+using [R markdown documents](http://rmarkdown.rstudio.com/), the
+wonderful [blogdown](https://cloud.r-package.org/package="blogdown")
+package by [Yihui Xie](https://yihui.name/) and
+the
+[Hugo Alabaster theme](https://themes.gohugo.io/theme/hugo-alabaster-theme/).
+

@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/post/cvxr_examples/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/near-isotonic-and-near-convex-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
@@ -13,17 +18,22 @@
   </url>
   
   <url>
+    <loc>/post/direct-standardization/</loc>
+    <lastmod>2017-11-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/isotonic-regression/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr/</loc>
+    <loc>/post/cvxr_functions/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/cvxr_functions/</loc>
+    <loc>/post/cvxr/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   

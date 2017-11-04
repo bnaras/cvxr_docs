@@ -12,12 +12,24 @@
     
     
     <item>
+      <title>Examples</title>
+      <link>/post/cvxr_examples/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/cvxr_examples/</guid>
+      <description>Many of the examples here have been ported over from the CVXPY site, although we have several others too.
+Basic Examples  Introduction Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization   References  </description>
+    </item>
+    
+    <item>
       <title>Near Isotonic and Near Convex Regression</title>
       <link>/post/near-isotonic-and-near-convex-regression/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/near-isotonic-and-near-convex-regression/</guid>
-      <description>Given a set of data points \(y \in {\mathbf R}^m\), R. J. Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving $$ \[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array}\] $$ where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in cvxr. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
+      <description>Given a set of data points \(y \in {\mathbf R}^m\), R. J. Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving
+$$ \[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array}\] $$
+where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in cvxr. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
     </item>
     
     <item>
@@ -32,12 +44,21 @@ This is the famous catenary problem.
     </item>
     
     <item>
+      <title>Direct Standardization</title>
+      <link>/post/direct-standardization/</link>
+      <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/direct-standardization/</guid>
+      <description>Consider a set of observations \((x_i,y_i)\) drawn non-uniformly from an unknown distribution. We know the expected value of the columns of \(X\), denoted by \(b \in {\mathbf R}^n\), and want to estimate the true distribution of \(y\). This situation may arise, for instance, if we wish to analyze the health of a population based on a sample skewed toward young males, knowing the average population-level sex, age, etc. The empirical distribution that places equal probability \(1/m\) on each \(y_i\) is not a good estimate.</description>
+    </item>
+    
+    <item>
       <title>Isotonic Regression</title>
       <link>/post/isotonic-regression/</link>
       <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/isotonic-regression/</guid>
-      <description>Introduction Isotonic regression is regression with monotonic constraints. There are several packages in R to fit isotonic regression models. We consider isotone which uses a pooled-adjacent-violators algorithm (PAVA) and active set methods to perform the fit.
+      <description>Introduction Isotonic regression is regression with monotonic constraints. There are several packages in R to fit isotonic regression models. In this example, we consider isotone which uses a pooled-adjacent-violators algorithm (PAVA) and active set methods to perform the fit.
  Pituitary Data Example We will use data from the isotone package (see de Leeuw, Hornik, and Mair (2009)) on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.</description>
     </item>
     
@@ -52,13 +73,25 @@ Operators The infix operators +, -, *, / are treated as functions. + and - are a
     </item>
     
     <item>
+      <title>Convex Optimization in R</title>
+      <link>/post/cvxr/</link>
+      <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/cvxr/</guid>
+      <description>What is cvxr? cvxr is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
+    </item>
+    
+    <item>
       <title>Introduction</title>
       <link>/post/cvxr_intro/</link>
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/cvxr_intro/</guid>
-      <description>We begin by generating some synthetic data for a simple least squares regression model.
-set.seed(123) n &amp;lt;- 100 p &amp;lt;- 10 beta &amp;lt;- 1:p # beta is just 1 through 10. X &amp;lt;- matrix(rnorm(p * n), nrow=n) colnames(X) &amp;lt;- paste0(&amp;quot;beta_&amp;quot;, beta) Y &amp;lt;- X %*% beta + rnorm(n) If we only had the data (\(Y\) and \(X\)) to begin with, we could estimate the \(\beta\) using lm function to get the best least squares fit.</description>
+      <description>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.
+We generate some synthetic data where we know the model completely, that is
+\[ Y = X\beta + \epsilon \]
+where \(Y\) is a \(100\times 1\) vector, \(X\) is a \(100\times 10\) matrix, \(\beta = -4,\ldots ,-1, 0, 1, \ldots 5\) and \(\epsilon \sim N(0, 1).\)
+set.seed(123) n &amp;lt;- 100 p &amp;lt;- 10 beta &amp;lt;- -4:5 # beta is just -4 through 5.</description>
     </item>
     
   </channel>

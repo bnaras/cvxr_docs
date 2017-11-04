@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.30.2" />
+	
+	<title>Direct Standardization &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Direct Standardization</h1>
+	
+	<p>Consider a set of observations <span class="math inline">\((x_i,y_i)\)</span> drawn non-uniformly from an unknown distribution. We know the expected value of the columns of <span class="math inline">\(X\)</span>, denoted by <span class="math inline">\(b \in {\mathbf R}^n\)</span>, and want to estimate the true distribution of <span class="math inline">\(y\)</span>. This situation may arise, for instance, if we wish to analyze the health of a population based on a sample skewed toward young males, knowing the average population-level sex, age, etc. The empirical distribution that places equal probability <span class="math inline">\(1/m\)</span> on each <span class="math inline">\(y_i\)</span> is not a good estimate. Instead, we must determine the weights <span class="math inline">\(w \in {\mathbf R}^m\)</span> of a weighted empirical distribution, <span class="math inline">\(y = y_i\)</span> with probability <span class="math inline">\(w_i\)</span>, which rectifies the skewness of the sample <span class="citation">(Fleiss, Levin, and Paik <a href="#ref-dirstd">2003</a>, 19.5)</span>. We can pose this problem as</p>
+<p><span class="math display">\[
+    \begin{array}{ll} \underset{w}{\mbox{maximize}} &amp; \sum_{i=1}^m -w_i\log w_i \\
+    \mbox{subject to} &amp; w \geq 0, \quad \sum_{i=1}^m w_i = 1,\quad X^Tw = b.
+    \end{array}
+\]</span></p>
+<p>Our objective is the total entropy, which is concave on <span class="math inline">\({\mathbf R}_+^m\)</span>, and our constraints ensure <span class="math inline">\(w\)</span> is a probability distribution that implies our known expectations on <span class="math inline">\(X\)</span>.</p>
+<p>To illustrate this method, we generate <span class="math inline">\(m = 1000\)</span> data points <span class="math inline">\(x_{i,1} \sim \mbox{Bernoulli}(0.5)\)</span>, <span class="math inline">\(x_{i,2} \sim \mbox{Uniform}(10,60)\)</span>, and <span class="math inline">\(y_i \sim N(5x_{i,1} + 0.1x_{i,2},1)\)</span>. Then we construct a skewed sample of <span class="math inline">\(m = 100\)</span> points that overrepresent small values of <span class="math inline">\(y_i\)</span>, thus biasing its distribution downwards. This can be seen in Figure , where the sample probability distribution peaks around <span class="math inline">\(y = 2.0\)</span>, and its cumulative distribution is shifted left from the population’s curve. Using direct standardization, we estimate <span class="math inline">\(w_i\)</span> and reweight our sample; the new empirical distribution cleaves much closer to the true distribution shown in red.</p>
+<p>In the <code>cvxr</code> code below, we import data from the package and solve for <span class="math inline">\(w\)</span>.</p>
+<pre class="r"><code>suppressWarnings(library(cvxr, warn.conflicts=FALSE))
+
+## Import problem data
+data(dspop)   # Population
+data(dssamp)  # Skewed sample
+
+ypop &lt;- dspop[,1]
+Xpop &lt;- dspop[,-1]
+y &lt;- dssamp[,1]
+X &lt;- dssamp[,-1]
+m &lt;- nrow(X)
+
+## Given population mean of features
+b &lt;- as.matrix(apply(Xpop, 2, mean))
+
+## Construct the direct standardization problem
+w &lt;- Variable(m)
+objective &lt;- sum(Entr(w))
+constraints &lt;- list(w &gt;= 0, sum(w) == 1, t(X) %*% w == b)
+prob &lt;- Problem(Maximize(objective), constraints)
+
+## Solve for the distribution weights
+result &lt;- solve(prob)</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre class="r"><code>weights &lt;- result$getValue(w)
+result$value</code></pre>
+<pre><code>## [1] 4.223305</code></pre>
+<p>We can plot the density functions using linear approximations for the range of <span class="math inline">\(y\)</span>.</p>
+<pre class="r"><code>library(ggplot2)
+## Plot probability density functions
+dens1 &lt;- density(ypop)
+dens2 &lt;- density(y)
+dens3 &lt;- density(y, weights = weights)
+yrange &lt;- seq(-3, 15, 0.01)
+d &lt;- data.frame(x = yrange,
+                True = approx(x = dens1$x, y = dens1$y, xout = yrange)$y,
+                Sample = approx(x = dens2$x, y = dens2$y, xout = yrange)$y,
+                Weighted = approx(x = dens3$x, y = dens3$y, xout = yrange)$y)
+library(tidyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;tidyr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:Matrix&#39;:
+## 
+##     expand</code></pre>
+<pre class="r"><code>plot.data &lt;- gather(data = d, key = &quot;Type&quot;, value = &quot;Estimate&quot;, True, Sample, Weighted,
+                    factor_key = TRUE)
+ggplot(plot.data) +
+    geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
+    theme(legend.position = &quot;top&quot;)</code></pre>
+<pre><code>## Warning: Removed 300 rows containing missing values (geom_path).</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-2"></span>
+<img src="../../post/direct-standardization_files/figure-html/unnamed-chunk-2-1.png" alt="Probability distribution functions population, skewed sample and reweighted sample" width="672" />
+<p class="caption">
+Figure 1: Probability distribution functions population, skewed sample and reweighted sample
+</p>
+</div>
+<p>Followed by the cumulative distribution function.</p>
+<pre class="r"><code>## Return the cumulative distribution function
+get_cdf &lt;- function(data, probs, color = &#39;k&#39;) {
+    if(missing(probs))
+        probs &lt;- rep(1.0/length(data), length(data))
+    distro &lt;- cbind(data, probs)
+    dsort &lt;- distro[order(distro[,1]),]
+    ecdf &lt;- base::cumsum(dsort[,2])
+    cbind(dsort[,1], ecdf)
+}
+
+## Plot cumulative distribution functions
+d1 &lt;- data.frame(&quot;True&quot;, get_cdf(ypop))
+d2 &lt;- data.frame(&quot;Sample&quot;, get_cdf(y))
+d3 &lt;- data.frame(&quot;Weighted&quot;, get_cdf(y, weights))
+
+names(d1) &lt;- names(d2) &lt;- names(d3) &lt;- c(&quot;Type&quot;, &quot;x&quot;, &quot;Estimate&quot;)
+plot.data &lt;- rbind(d1, d2, d3)
+
+ggplot(plot.data) +
+    geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
+    theme(legend.position = &quot;top&quot;)</code></pre>
+<p><img src="../../post/direct-standardization_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-dirstd">
+<p>Fleiss, J. L., B. Levin, and M. C. Paik. 2003. <em>Statistical Methods for Rates and Proportions</em>. Wiley-Interscience.</p>
+</div>
+</div>
+</div>
+
+
+
+						<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../post/cvxr_intro/">Getting Started</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../post/cvxr_examples/">Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../post/cvxr_functions/">Functions</a>
+	</li>
+	
+</ul>
+
+
+		
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

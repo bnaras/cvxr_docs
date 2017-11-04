@@ -1,31 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head lang="en-us">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.30.2" />
-	
-	<title> CVXR</title>
-	
-	<link rel="stylesheet" href="./css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="./css/pygments.css" type="text/css" />
+---
+title: Convex Optimization in R
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-10-30'
+slug: cvxr
+type: homepage
+---
 
-	
 
-	<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon"/>
-</head>
 
-	<body role="document">
-		<div class="document">
-			<div class="documentwrapper">
-				<div class="bodywrapper">
-					<div class="body" role="main">
-						
-	
-		<h1>Convex Optimization in R</h1>
-		<div id="what-is-cvxr" class="section level2">
+<div id="what-is-cvxr" class="section level2">
 <h2>What is <code>cvxr</code>?</h2>
 <p><code>cvxr</code> is an R package that provides an object-oriented modeling language for convex optimization, similar to <code>CVX</code>, <code>CVXPY</code>, <code>YALMIP</code>, and <code>Convex.jl</code>. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties. <code>cvxr</code> then applies signed disciplined convex programming (DCP) to verify the problem’s convexity. Once verified, the problem is converted into standard conic form using graph implementations and passed to a cone solver such as <a href="https://github.com/embotech/ecos">ECOS</a> or <a href="https://github.com/cvxgrp/scs">SCS</a>.</p>
 </div>
@@ -40,7 +23,7 @@
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
-<p>A large set of examples, many ported from <code>CVXPY</code> are available in the <a href="./examples">Examples</a> section.</p>
+<p>A large set of examples, many ported from <code>CVXPY</code> are available in the <a href="/examples">Examples</a> section.</p>
 </div>
 <div id="citing-cvxr" class="section level2">
 <h2>Citing <code>cvxr</code></h2>
@@ -54,77 +37,3 @@
 <h2>About this site</h2>
 <p>This site was constructed using <a href="http://rmarkdown.rstudio.com/">R markdown documents</a>, the wonderful <a href="https://cloud.r-package.org/package=%22blogdown%22">blogdown</a> package by <a href="https://yihui.name/">Yihui Xie</a> and the <a href="https://themes.gohugo.io/theme/hugo-alabaster-theme/">Hugo Alabaster theme</a>.</p>
 </div>
-
-	
-
-
-						
-					</div>
-				</div>
-			</div>
-			
-			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-	<div class="sphinxsidebarwrapper">
-		<p class="logo">
-			<a href="./">
-				<img class="logo" src="./favicon.ico" alt="Logo"/>
-				<h1 class="logo logo-name"></h1>
-			</a>
-		</p>
-		
-		<p class="blurb">Disciplined Convex Programming in R</p>
-
-		
-
-	<p>
-		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
-		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-	</p>
-
-	
-
-	
-		
-
-		
-
-<h3>Navigation</h3>
-<ul>
-	
-	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
-	</li>
-	
-	<li class="toctree-l1">
-		<a class="reference internal" href="./post/cvxr_intro/">Getting Started</a>
-	</li>
-	
-	<li class="toctree-l1">
-		<a class="reference internal" href="./post/cvxr_examples/">Examples</a>
-	</li>
-	
-	<li class="toctree-l1">
-		<a class="reference internal" href="./post/cvxr_functions/">Functions</a>
-	</li>
-	
-</ul>
-
-
-		
-
-	</div>
-</div>
-<div class="clearer"></div>
-</div>
-			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-
-
-			
-
-			
-
-			
-		</div>
-	</body>
-</html>

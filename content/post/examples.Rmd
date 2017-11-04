@@ -1,0 +1,24 @@
+---
+title: Examples
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_examples
+bibliography: cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+Many of the examples here have been ported over from
+the [`CVXPY`](https://cvxpy.org) site, although we have several others
+too.
+
+## Basic Examples
+
+- [Introduction](/post/cvxr_intro/)
+- [Catenary Problem](/post/catenary/)
+- [Isotonic Regression](/post/isotonic-regression/)
+- [Near Isotonic and Near Convex Regression](/post/near-isotonic-and-near-convex-regression/)
+- [Direct Standardization](/post/direct-standardization/)
+
+## References

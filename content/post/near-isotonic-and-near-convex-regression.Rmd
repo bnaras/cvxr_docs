@@ -12,6 +12,7 @@ tags: []
 Given a set of data points $y \in {\mathbf R}^m$,
 @TibshiraniHoefling:2011 fit a nearly-isotonic approximation $\beta
 \in {\mathbf R}^m$ by solving
+
 $$
 \begin{array}{ll}
 
@@ -20,6 +21,7 @@ $$
 
 \end{array}
 $$
+
 where $\lambda \geq 0$ is a penalty parameter and $x_+
 =\max(x,0)$. This can be directly formulated in `cvxr`.  As an
 example, we use global warming data from
@@ -35,17 +37,16 @@ CDIAC <- read_table(file = cdiac_url, skip=16)[, c("YEAR", "ANNUAL")]
 str(CDIAC)
 ```
 
-We plan to not only fit the regression, but also get some idea of the
-standard errors, so we write a function that computes the fit for use
-in bootstrapping. (We use a small number of bootstrap samples here as
-the fits are time consuming.)
+Since we plan to fit the regression and also get some idea of the
+standard errors, we write a function that computes the fit for use in
+bootstrapping. In what follows, we use a very small number of
+bootstrap samples as the fits are time consuming.
 
 ```{r}
 suppressMessages(suppressWarnings(library(cvxr)))
 neariso_fit <- function(y, lambda) {
     m <- length(y)
     beta <- Variable(m)
-    penalty <- sum(pos(diff(beta)))
     obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
     prob <- Problem(Minimize(obj))
     solve(prob)$getValue(beta)
@@ -53,9 +54,10 @@ neariso_fit <- function(y, lambda) {
 ```
 The `pos` atom evaluates $x_+$ elementwise on the input expression.
 
-We will use the `boot` library for bootstrapping which requires
-passing the data frame and the bootstrap indices and a statistic
-function that computes the fit.
+The `boot` library provides all the tools for bootstrapping but
+requires a statistic function that takes particular arguments: a data
+frame, followed by the bootstrap indices and any other arguments
+($\lambda$ for instance). This is shown below.
 
 ```{r}
 neariso_fit_stat <- function(data, index, lambda) {
@@ -89,6 +91,8 @@ library(ggplot2)
      labs(x = "Year", y = "Temperature Anomalies")
 )
 ```
+The curve follows the data well, but exhibits some choppiness in
+regions with a steep trend. 
 
 For a smoother curve, we can solve for the nearly-convex fit described
 in the same paper: 
@@ -132,10 +136,8 @@ data.nearconvex <- data.frame(year = CDIAC$YEAR, annual = CDIAC$ANNUAL, est = bo
 
 The resulting curve for the near convex fit is depicted below with
 95\% confidence bands generated from $R = 5$ samples. Note the jagged
-staircase pattern has been smoothed out. We can easily extend this
-example to higher-order differences or lags. To make this easy, the function `diff` takes
-an argument `differences` is by default 1; a third-order difference is
-specified as `diff(x, differences = 3)`.
+staircase pattern has been smoothed out. 
+
 
 ```{r}
 (plot.nearconvex <- ggplot(data = data.nearconvex) +
@@ -145,5 +147,13 @@ specified as `diff(x, differences = 3)`.
      labs(x = "Year", y = "Temperature Anomalies")
 )
 ```
+
+## Notes
+
+We can easily extend this example to higher-order differences or
+lags. To make this easy, the function `diff` takes an argument
+`differences` is by default 1; a third-order difference is specified
+as `diff(x, differences = 3)`.
+
 
 ## References

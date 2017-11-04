@@ -25,14 +25,16 @@
 						
 	<h1>Near Isotonic and Near Convex Regression</h1>
 	
-	Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>, <span class="citation">R. J. Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving $$
+	<p>Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>, <span class="citation">R. J. Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving</p>
+$$
 <span class="math display">\[\begin{array}{ll}
 
 \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i -
 \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
 
 \end{array}\]</span>
-<p>$$ where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. This can be directly formulated in <code>cvxr</code>. As an example, we use global warming data from the <a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a>. The data points are the annual temperature anomalies relative to the 1961–1990 mean.</p>
+<p>$$</p>
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. This can be directly formulated in <code>cvxr</code>. As an example, we use global warming data from the <a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a>. The data points are the annual temperature anomalies relative to the 1961–1990 mean.</p>
 <pre class="r"><code>library(readr)
 cdiac_url &lt;- &quot;http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/global.txt&quot;
 CDIAC &lt;- read_table(file = cdiac_url, skip=16)[, c(&quot;YEAR&quot;, &quot;ANNUAL&quot;)]</code></pre>
@@ -57,18 +59,17 @@ CDIAC &lt;- read_table(file = cdiac_url, skip=16)[, c(&quot;YEAR&quot;, &quot;AN
 <pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    166 obs. of  2 variables:
 ##  $ YEAR  : int  1850 1851 1852 1853 1854 1855 1856 1857 1858 1859 ...
 ##  $ ANNUAL: num  -0.375 -0.223 -0.224 -0.271 -0.246 -0.271 -0.352 -0.46 -0.466 -0.286 ...</code></pre>
-<p>We plan to not only fit the regression, but also get some idea of the standard errors, so we write a function that computes the fit for use in bootstrapping. (We use a small number of bootstrap samples here as the fits are time consuming.)</p>
+<p>Since we plan to fit the regression and also get some idea of the standard errors, we write a function that computes the fit for use in bootstrapping. In what follows, we use a very small number of bootstrap samples as the fits are time consuming.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
 neariso_fit &lt;- function(y, lambda) {
     m &lt;- length(y)
     beta &lt;- Variable(m)
-    penalty &lt;- sum(pos(diff(beta)))
     obj &lt;- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
     prob &lt;- Problem(Minimize(obj))
     solve(prob)$getValue(beta)
 }</code></pre>
 <p>The <code>pos</code> atom evaluates <span class="math inline">\(x_+\)</span> elementwise on the input expression.</p>
-<p>We will use the <code>boot</code> library for bootstrapping which requires passing the data frame and the bootstrap indices and a statistic function that computes the fit.</p>
+<p>The <code>boot</code> library provides all the tools for bootstrapping but requires a statistic function that takes particular arguments: a data frame, followed by the bootstrap indices and any other arguments (<span class="math inline">\(\lambda\)</span> for instance). This is shown below.</p>
 <pre class="r"><code>neariso_fit_stat &lt;- function(data, index, lambda) {
     sample &lt;- data[index,]                  # Bootstrap sample of rows
     sample &lt;- sample[order(sample$YEAR),]   # Order ascending by year
@@ -91,7 +92,7 @@ data.neariso &lt;- data.frame(year = CDIAC$YEAR, annual = CDIAC$ANNUAL, est = bo
      geom_ribbon(mapping = aes(x = year, ymin = lower,ymax = upper),alpha=0.3) +
      labs(x = &quot;Year&quot;, y = &quot;Temperature Anomalies&quot;)
 )</code></pre>
-<p><img src="../../post/near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="../../post/near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /> The curve follows the data well, but exhibits some choppiness in regions with a steep trend.</p>
 <p>For a smoother curve, we can solve for the nearly-convex fit described in the same paper:</p>
 <p><span class="math display">\[
 \begin{array}{ll}
@@ -122,7 +123,7 @@ ci.nearconvex &lt;- t(sapply(seq_len(nrow(CDIAC)),
                                               type = &quot;norm&quot;, index = i)$normal[-1]))
 data.nearconvex &lt;- data.frame(year = CDIAC$YEAR, annual = CDIAC$ANNUAL, est = boot.nearconvex$t0,
                               lower = ci.nearconvex[, 1], upper = ci.nearconvex[, 2])</code></pre>
-<p>The resulting curve for the near convex fit is depicted below with 95% confidence bands generated from <span class="math inline">\(R = 5\)</span> samples. Note the jagged staircase pattern has been smoothed out. We can easily extend this example to higher-order differences or lags. To make this easy, the function <code>diff</code> takes an argument <code>differences</code> is by default 1; a third-order difference is specified as <code>diff(x, differences = 3)</code>.</p>
+<p>The resulting curve for the near convex fit is depicted below with 95% confidence bands generated from <span class="math inline">\(R = 5\)</span> samples. Note the jagged staircase pattern has been smoothed out.</p>
 <pre class="r"><code>(plot.nearconvex &lt;- ggplot(data = data.nearconvex) +
      geom_point(mapping = aes(year, annual), color = &quot;red&quot;) +
      geom_line(mapping = aes(year, est), color = &quot;blue&quot;) +
@@ -130,6 +131,10 @@ data.nearconvex &lt;- data.frame(year = CDIAC$YEAR, annual = CDIAC$ANNUAL, est =
      labs(x = &quot;Year&quot;, y = &quot;Temperature Anomalies&quot;)
 )</code></pre>
 <p><img src="../../post/near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<p>We can easily extend this example to higher-order differences or lags. To make this easy, the function <code>diff</code> takes an argument <code>differences</code> is by default 1; a third-order difference is specified as <code>diff(x, differences = 3)</code>.</p>
+</div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
@@ -194,11 +199,19 @@ data.nearconvex &lt;- data.frame(year = CDIAC$YEAR, annual = CDIAC$ANNUAL, est =
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">About</a>
+		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/cvxr">GitHub</a>
+		<a class="reference internal" href="../../post/cvxr_intro/">Getting Started</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../post/cvxr_examples/">Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../post/cvxr_functions/">Functions</a>
 	</li>
 	
 </ul>
