@@ -44,7 +44,7 @@ emitCol <- function(lines, start, end) {
     paste(lines[nchar(lines) > 0], collapse = " ")
 }
 
-inFile <- "cvxr_functions_data/index.rst"
+inFile <- "functions_data/index.rst"
 ```
 
 ## Functions
@@ -121,12 +121,10 @@ end <- c(start[-1] - 1, length(lines))
 coords <- data.frame(start = start, end = end)
 rows <- lapply(seq_len(nrow(coords)),
                function(i) emitRow(lines, coords$start[i], coords$end[i]))
-##saveRDS(rows, file = "~/tmp/rows.RDS")
 table <- do.call(rbind, rows)
 colnames(table) <- table[1, ]
 colnames(table)[5] <- "Curvature"
 table <- table[-1, ]
-##saveRDS(table, file="~/tmp/table.RDS")
 ```
 
 ```{r, echo = FALSE}
@@ -174,8 +172,8 @@ list of expressions. For example, the following code sums a list of
 three expressions:
 
 ```{r, eval = FALSE}
-expr_list = listexpr1, expr2, expr3)
-expr_sum = sum(expr_list)
+expr_list <- list(expr1, expr2, expr3)
+expr_sum <- sum(expr_list)
 ```
 
 ### Functions along an axis
@@ -189,9 +187,9 @@ example, the following code sums along the columns and rows of a
 matrix variable:
 
 ```{r, eval = FALSE}
-X = Variable(5, 4)
-col_sums = sum_entries(X, axis=0) # Has size (1, 4)
-row_sums = sum_entries(X, axis=1) # Has size (5, 1)
+X <- Variable(5, 4)
+col_sums <- sum_entries(X, axis=0) # Has size (1, 4)
+row_sums <- sum_entries(X, axis=1) # Has size (5, 1)
 ```
 
 ### Elementwise functions

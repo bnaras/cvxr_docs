@@ -1,0 +1,139 @@
+---
+title: The Catenary Problem
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_catenary
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+## Introduction
+
+A chain with uniformly distributed mass hangs from the endpoints
+$(0,1)$ and $(1,1)$ on a 2-D plane. Gravitational force acts in the
+negative $y$ direction. Our goal is to find the shape of the chain in
+equilibrium, which is equivalent to determining the $(x,y)$
+coordinates of every point along its curve when its potential energy
+is minimized.
+
+This is the
+famous [catenary problem](https://en.wikipedia.org/wiki/Catenary).
+
+
+## A Discrete Version
+
+To formulate as an optimization problem, we parameterize the chain by
+its arc length and divide it into $m$ discrete links. The length of
+each link must be no more than $h > 0$. Since mass is uniform, the
+total potential energy is simply the sum of the
+$y$-coordinates. Therefore, our (discretized) problem is
+
+$$ \begin{array}{ll} \underset{x,y}{\mbox{minimize}} & \sum_{i=1}^m
+y_i \\ \mbox{subject to} & x_1 = 0, \quad y_1 = 1, \quad x_m = 1,
+\quad y_m = 1 \\ & (x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2 \leq h^2,
+\quad i = 1,\ldots,m-1 \end{array} 
+$$
+
+with variables $x \in {\mathbf R}^m$ and $y \in {\mathbf R}^m$. 
+
+This basic catenary problem has a well-known analytical solution
+(see @GelfandFomin:1963) which we can easily verify with `cvxr`. 
+
+```{r}
+suppressMessages(suppressWarnings(library(cvxr)))
+
+## Problem data
+m <- 101
+L <- 2
+h <- L / (m - 1)
+
+## Form objective
+x <- Variable(m)
+y <- Variable(m)
+objective <- Minimize(sum(y))
+
+## Form constraints
+constraints <- list(x[1] == 0, y[1] == 1,
+                    x[m] == 1, y[m] == 1,
+                    diff(x)^2 + diff(y)^2 <= h^2)
+
+## Solve the catenary problem
+prob <- Problem(objective, constraints)
+result <- solve(prob)
+```
+
+We can now plot it and compare it with the ideal solution. Below we
+use alpha blending and differing line thickness to show the ideal in red and the computed solution in blue.
+
+
+```{r, fig.cap = "Analytic (red) and computed solution (blue) to the catenary problem"}
+library(ggplot2)
+xs <- result$getValue(x)
+ys <- result$getValue(y)
+
+catenary <- ggplot(data.frame(x = xs, y = ys)) +
+    geom_line(mapping = aes(x = x, y = y), color = "blue", size = 1) +
+    geom_point(data = data.frame(x = c(xs[1], ys[1]), y = c(xs[m], ys[m])),
+               mapping = aes(x = x, y = y), color = "red") 
+
+ideal <- function(x) { 0.22964 *cosh((x -0.5) / 0.22964) - 0.02603 }
+
+catenary + stat_function(fun = ideal , colour = "brown", alpha = 0.5, size = 3)
+```
+
+## Additional Ground Constraints
+
+A more interesting situation arises when the ground is not flat. Let
+$g \in {\mathbf R}^m$ be the elevation vector (relative to the $x$-axis),
+and suppose the right endpoint of our chain has been lowered by
+$\Delta y_m = 0.5$. The analytical solution in this case would be
+difficult to calculate. However, we need only add two lines to our
+constraint definition,
+
+```{r, eval = FALSE}
+constr[[4]] <- (y[m] == 0.5)
+constr <- c(constr, y >= g)
+```
+to obtain the new result.
+
+Below, we define $g$ as a staircase function and solve the problem.
+
+```{r}
+## Lower right endpoint and add staircase structure
+ground <- sapply(seq(0, 1, length.out = m), function(x) {
+    if(x < 0.2)
+        return(0.6)
+    else if(x >= 0.2 && x < 0.4)
+        return(0.4)
+    else if(x >= 0.4 && x < 0.6)
+        return(0.2)
+    else
+        return(0)
+})
+constraints <- c(constraints, y >= ground)
+constraints[[4]] <- (y[m] == 0.5)
+prob <- Problem(objective, constraints)
+result <- solve(prob)
+```
+to obtain the new result. 
+
+The figure below shows the solution of this modified catenary problem
+for $m = 101$ and $h = 0.04$. The chain is shown hanging in blue,
+bounded below by the red staircase structure, which represents the
+ground.
+
+```{r, fig.cap="Asymmetric catenary problem with ground constraints."}
+xs <- result$getValue(x)
+ys <- result$getValue(y)
+
+ggplot(data.frame(x = xs, y = ys)) +
+    geom_line(mapping = aes(x = x, y = y), color = "blue") +
+    geom_point(data = data.frame(x = c(xs[1], ys[1]), y = c(xs[m], ys[m])),
+               mapping = aes(x = x, y = y), color = "red") +
+    geom_line(data.frame(x = xs, y = ground),
+              mapping = aes(x = x, y = y), color = "brown")
+```
+
+## References

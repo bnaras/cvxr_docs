@@ -722,16 +722,16 @@ None
 <p>The function <code>norm(X, &quot;fro&quot;)</code> is called the <a href="https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm%3E">Frobenius norm</a> and <code>norm(X, &quot;nuc&quot;)</code> the <a href="https://en.wikipedia.org/wiki/Matrix_norm#Schatten_norms">nuclear norm</a>. The nuclear norm can also be defined as the sum of <code>X</code>’s singular values.</p>
 <p>The functions <code>max_entries</code> and <code>min_entries</code> give the largest and smallest entry, respectively, in a single expression. These functions should not be confused with <code>max_elemwise</code> and <code>min_elemwise</code> (see :ref:<code>elementwise</code>). Use <code>max_elemwise</code> and <code>min_elemwise</code> to find the max or min of a list of scalar expressions.</p>
 <p>The function <code>sum_entries</code> sums all the entries in a single expression. The built-in Python <code>sum</code> should be used to add together a list of expressions. For example, the following code sums a list of three expressions:</p>
-<pre class="r"><code>expr_list = listexpr1, expr2, expr3)
-expr_sum = sum(expr_list)</code></pre>
+<pre class="r"><code>expr_list &lt;- list(expr1, expr2, expr3)
+expr_sum &lt;- sum(expr_list)</code></pre>
 </div>
 </div>
 <div id="functions-along-an-axis" class="section level3">
 <h3>Functions along an axis</h3>
 <p>The functions <code>sum_entries</code>, <code>norm</code>, <code>max_entries</code>, and <code>min_entries</code> can be applied along an axis. Given an <code>m</code> by <code>n</code> expression <code>expr</code>, the syntax <code>func(expr, axis=0)</code> applies <code>func</code> to each column, returning a 1 by <code>n</code> expression. The syntax <code>func(expr, axis=1)</code> applies <code>func</code> to each row, returning an <code>m</code> by 1 expression. For example, the following code sums along the columns and rows of a matrix variable:</p>
-<pre class="r"><code>X = Variable(5, 4)
-col_sums = sum_entries(X, axis=0) # Has size (1, 4)
-row_sums = sum_entries(X, axis=1) # Has size (5, 1)</code></pre>
+<pre class="r"><code>X &lt;- Variable(5, 4)
+col_sums &lt;- sum_entries(X, axis=0) # Has size (1, 4)
+row_sums &lt;- sum_entries(X, axis=1) # Has size (5, 1)</code></pre>
 </div>
 <div id="elementwise-functions" class="section level3">
 <h3>Elementwise functions</h3>
@@ -1541,21 +1541,34 @@ vstack(X1, …, Xk)
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../post/cvxr_intro/">Getting Started</a>
+		<a class="reference internal" href="../../post/examples/cvxr_intro/">A Quick Intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../post/cvxr_examples/">Examples</a>
+		<a class="reference internal" href="../../post/examples/cvxr_gentle-intro/">A Longer Intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../post/cvxr_functions/">Functions</a>
+		<a class="reference internal" href="../../post/cvxr_examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../post/cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../post/cvxr_functions/">Function Reference</a>
 	</li>
 	
 </ul>
 
 
-		
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../post/cvxr/" title="Convex Optimization in R">Convex Optimization in R</a></li>
+  <li>Next: <a href="../../post/examples/cvxr_isotonic-regression/" title="Isotonic Regression">Isotonic Regression</a></li>
+</ul>
 
 	</div>
 </div>

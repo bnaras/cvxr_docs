@@ -1,0 +1,142 @@
+---
+title: Fastest Mixing Markov Chain
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_fast-mixing-mc
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+## Introduction
+
+This example is derived from the results in [@FMMC, section 2]. Let
+$\mathcal{G} = (\mathcal{V}, \mathcal{E})$ be a connected graph with
+vertices $\mathcal{V} = \{1,\ldots,n\}$ and edges
+$\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}$. Assume that
+$(i,i) \in \mathcal{E}$ for all $i = 1,\ldots,n$, and
+$(i,j) \in \mathcal{E}$ implies $(j,i) \in \mathcal{E}$. Under these
+conditions, a discrete-time Markov chain on $\mathcal{V}$ will have
+the uniform distribution as one of its equilibrium distributions. We
+are interested in finding the Markov chain, \ie constructing the
+transition probability matrix $P \in {\mathbf R}_+^{n \times n}$, that
+minimizes its asymptotic convergence rate to the uniform
+distribution. This is an important problem in Markov chain Monte Carlo
+(MCMC) simulations, as it directly affects the sampling efficiency of
+an algorithm.
+
+The asymptotic rate of convergence is determined by the second largest
+eigenvalue of $P$, which in our case is
+$\mu(P) := \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T)$ where
+$\lambda_{\max}(A)$ denotes the maximum eigenvalue of $A$. As $\mu(P)$
+decreases, the mixing rate increases and the Markov chain converges
+faster to equilibrium. Thus, our optimization problem is
+
+
+\begin{array}{ll}
+\underset{P}{\mbox{minimize}} & \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T) \\
+\mbox{subject to} & P \geq 0, \quad P{\mathbf 1} = {\mathbf 1}, \quad P = P^T \\
+& P_{ij} = 0, \quad (i,j) \notin \mathcal{E}.
+\end{array}
+
+The element $P_{ij}$ of our transition matrix is the probability of
+moving from state $i$ to state $j$. Our assumptions imply that $P$ is
+nonnegative, symmetric, and doubly stochastic. The last constraint
+ensures transitions do not occur between unconnected vertices.
+
+## Example
+
+In order to reproduce some of the examples from @FMMC, we create
+functions to build up the graph, solve the optimization problem and
+finally display the chain graphically. 
+
+```{r}
+suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(markovchain)))
+## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
+## Form the complementary graph
+antiadjacency <- function(g) {
+    n <- max(as.numeric(names(g)))   ## Assumes names are integers starting from 1
+    a <- lapply(1:n, function(i) c())
+    names(a) <- 1:n
+    for(x in names(g)) {
+        for(y in 1:n) {
+            if(!(y %in% g[[x]]))
+                a[[x]] <- c(a[[x]], y)
+        }
+    }
+    a
+}
+
+## Fastest mixing Markov chain on graph g
+FMMC <- function(g, verbose = FALSE) {
+    a <- antiadjacency(g)
+    n <- length(names(a))
+    P <- Variable(n, n)
+    o <- rep(1, n)
+    objective <- Minimize(norm(P - 1.0/n, "2"))
+    constraints <- list(P %*% o == o, t(P) == P, P >= 0)
+    for(i in names(a)) {
+        for(j in a[[i]]) {  ## (i-j) is a not-edge of g!
+            idx <- as.numeric(i)
+            if(idx != j)
+                constraints <- c(constraints, P[idx,j] == 0)
+        }
+    }
+    prob <- Problem(objective, constraints)
+    result <- solve(prob)
+    if(verbose)
+        cat("Status: ", result$status, ", Optimal Value = ", result$value)
+    list(status = result$status, value = result$value, P = result$getValue(P))
+}
+
+disp_result <- function(states, P, tol = 1e-3) {
+    if(!("markovchain" %in% rownames(installed.packages()))) {
+        rownames(P) <- states
+        colnames(P) <- states
+        print(P)
+    } else {
+        P[P < tol] <- 0
+        P <- P/apply(P, 1, sum)   ## Normalize so rows sum to exactly 1
+        mc <- new("markovchain", states = states, transitionMatrix = P)
+        plot(mc)
+    }
+}
+```
+
+
+### Results
+
+Table 1 from @FMMC is reproduced below. 
+
+![](../../../img/fmmc/table1.png)
+
+
+We reproduce the results for various rows of the table.
+
+```{r, fig.cap="Row 1, line graph", out.width="100%"}
+g <- list("1" = 2, "2" = c(1,3), "3" = c(2,4), "4" = 3)
+result <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result$P)
+```
+
+```{r, fig.cap="Row 2, triangle plus one edge", out.width="100%"}
+g <- list("1" = 2, "2" = c(1,3,4), "3" = c(2,4), "4" = c(2,3))
+result <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result$P)
+```
+
+```{r, fig.cap="Bipartite 2 plus 3", out.width="100%"}
+g <- list("1" = c(2,4,5), "2" = c(1,3), "3" = c(2,4,5), "4" = c(1,3), "5" = c(1,3))
+result <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result$P)
+```
+
+```{r, fig.cap="Square plus central point", out.width="100%"}
+g <- list("1" = c(2,3,5), "2" = c(1,4,5), "3" = c(1,4,5), "4" = c(2,3,5), "5" = c(1,2,3,4,5))
+result <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result$P)
+```
+
+## References

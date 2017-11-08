@@ -3,6 +3,7 @@ title: Convex Optimization in R
 author: Anqi Fu and Balasubramanian Narasimhan
 date: '2017-10-30'
 slug: cvxr
+bibliography: bibtex/cvxr_refs.bib
 type: homepage
 ---
 
@@ -40,11 +41,12 @@ from [CRAN](https://cloud.r-project.org).
 ## Documentation
 
 A large set of examples, many ported from `CVXPY` are available in
-the [Examples](/examples) section. 
+the [Examples](/post/cvxr_examples/) section. 
 
 ## Citing `cvxr`
 
-If you use `cvxr` in your work, please consider citing the paper.
+If you use `cvxr` in your work, please consider citing the paper
+by @fu:naras:boyd:2017 below.
 
 
 ## Acknowledgements
@@ -67,3 +69,4 @@ package by [Yihui Xie](https://yihui.name/) and
 the
 [Hugo Alabaster theme](https://themes.gohugo.io/theme/hugo-alabaster-theme/).
 
+## References

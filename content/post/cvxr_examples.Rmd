@@ -1,0 +1,26 @@
+---
+title: Tutorial Examples
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_examples
+bibliography: bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+Many of the examples here have been ported over from
+the [`CVXPY`](https://cvxpy.org) site, although we have several others
+too.
+
+- [Catenary Problem](/post/examples/cvxr_catenary/)
+- [Isotonic Regression](/post/examples/cvxr_isotonic-regression/)
+- [Near Isotonic and Near Convex Regression](/post/examples/cvxr_near-isotonic-and-near-convex-regression/)
+- [Direct Standardization](/post/examples/cvxr_direct-standardization/)
+- [Log-Concave Density Estimation](/post/examples/cvxr_log-concave/)
+- [Kelly Gambling](/post/examples/cvxr_kelly-strategy/)
+- [Fastest Mixing Markov Chain](/post/examples/cvxr_fast-mixing-mc/)
+- [Portfolio Optimization](/post/examples/cvxr_portfolio-optimization/)
+
+
+## References

@@ -1,0 +1,282 @@
+---
+title: Discplined Convex Programming
+author: "Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
+date: '2017-10-29'
+slug: cvxr_dcp
+bibliography: bibtex/cvxr_refs.bib
+---
+
+Disciplined convex programming (DCP) is a system for constructing
+mathematical expressions with known curvature from a given library of
+base functions. `cvxr` uses DCP to ensure that the specified
+optimization problems are convex.
+
+This section of the tutorial explains the rules of DCP and how they
+are applied by `cvxr`.
+
+Visit [dcp.stanford.edu](https://dcp.stanford.edu) for a more
+interactive introduction to DCP.
+
+## Expressions
+
+Expressions in `cvxr` are formed from variables, parameters, numerical
+constants such as Python floats and Numpy matrices, the standard
+arithmetic operators `+, -, *, /`, and a library
+of [functions](/post/cvxr_functions/). Here are some examples of
+`cvxr` expressions:
+
+```{r}
+suppressWarnings(suppressMessages(library(cvxr)))
+## Create variables and parameters.
+x <- Variable(); y <- Variable()
+a <- Parameter(); b <- Parameter()
+## Examples of cvxr expressions.
+3.69 + b / 3
+x - 4 * a
+sqrt(x) - min_elemwise(y, x - a)
+max_elemwise(2.66 - sqrt(y), square(x + 2 * y))
+```
+
+Expressions can be scalars, vectors, or matrices. The dimensions of an
+expression can be obtained using the function `size`. `cvxr` will
+raise an exception if an expression is used in a way that doesn't make
+sense given its dimensions, for example adding matrices of different
+size.
+
+```{r}
+X <- Variable(5, 4)
+A <- matrix(1, nrow = 2, ncol = 5)
+
+## Use size to get the dimensions.
+cat("dimensions of X:", size(X), "\n")
+cat("dimensions of sum_entries(X):", size(sum_entries(X)), "\n")
+cat("dimensions of A*X:", size(A %*% X), "\n")
+```
+
+Error raised for invalid dimensions.
+
+```{r, error= TRUE)
+tryCatch(A + X, error = function(e) geterrmessage())
+```
+
+`cvxr` uses DCP analysis to determine the sign and curvature of each
+expression.
+
+## Sign
+
+Each (sub)expression is flagged as *positive* (non-negative), *negative*
+(non-positive), *zero*, or *unknown*.
+
+The signs of larger expressions are determined from the signs of their
+subexpressions. For example, the sign of the expression `expr1 * expr2` is
+
+-  Zero if either expression has sign zero.
+-  Positive if `expr1` and `expr2` have the same (known) sign.
+-  Negative if `expr1` and `expr2` have opposite (known) signs.
+-  Unknown if either expression has unknown sign.
+
+The sign given to an expression is always correct. But DCP sign analysis
+may flag an expression as unknown sign when the sign could be figured
+out through more complex analysis. For instance, `x * x` is positive but
+has unknown sign by the rules above.
+
+`cvxr` determines the sign of constants by looking at their value. For
+scalar constants, this is straightforward. Vector and matrix constants
+with all positive (negative) entries are marked as positive
+(negative). Vector and matrix constants with both positive and
+negative entries are marked as unknown sign.
+
+The sign of an expression is obtained via the `sign` function:
+
+```{r}
+x <- Variable()
+a <- Parameter(sign = "negative")
+c <- matrix(c(1, -1), ncol = 1)
+
+cat("sign of x:", sign(x), "\n")
+cat("sign of a:", sign(a), "\n")
+cat("sign of square(x):", sign(square(x)), "\n")
+cat("sign of c*a:", sign(c * a), "\n")
+```
+
+## Curvature
+
+Each (sub)expression is flagged as one of the following curvatures
+(with respect to its variables)
+
+```{r, echo = FALSE}
+d <- data.frame(
+    Curvature = c('constant', 'affine', 'convex', 'concave', 'unknown'),
+    Meaning = c(
+    '$f(x)$ independent of $x$',
+    '$f(\\theta x + (1-\\theta)y) = \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]$',
+    '$f(\\theta x + (1-\\theta)y) \\leq \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]$',
+    '$f(\\theta x + (1-\\theta)y) \\geq \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]$',
+    'DCP analysis cannot determine the curvature'),
+    stringsAsFactors = FALSE)
+library(kableExtra)
+knitr::kable(d, "html") %>%
+  kable_styling("striped") %>%
+  column_spec(1, background = "#ececec") %>%
+  column_spec(2, background = "#ececec")
+```
+using the curvature rules given below. As with sign analysis, the
+conclusion is always correct, but the simple analysis can flag
+expressions as unknown even when they are convex or concave. Note that
+any constant expression is also affine, and any affine expression is
+convex and concave.
+
+## Curvature rules
+
+DCP analysis is based on applying a general composition theorem from
+convex analysis to each (sub)expression.
+
+$f(e_1, e_2, \ldots, e_n)$ is convex if $f$
+is a convex function and for each $e_{i}$ one of the following
+conditions holds:
+
+-  $f$ is increasing in argument $i$ and $e_i$ is convex.
+-  $f$ is decreasing in argument $i$ and $e_i$ is
+   concave.
+-  $e_i$ is affine or constant.
+
+:math:`f(expr_1, expr_2, ..., expr_n)` is concave if :math:`\text{ } f`
+is a concave function and for each $e_i$ one of the following
+conditions holds:
+
+-  $f$ is increasing in argument $i$ and $e_i$ is
+   concave.
+-  $f$ is decreasing in argument $i$ and $e_i$ is convex.
+-  $e_i$ is affine or constant.
+
+$f(e_1, e_2, \ldots, e_n)$ is affine if $f$
+is an affine function and each $e_i$ is affine.
+
+If none of the three rules apply, the expression $f(e_1, e_2,\ldots,
+e_n)$ is marked as having unknown curvature.
+
+Whether a function is increasing or decreasing in an argument may depend
+on the sign of the argument. For instance, `square` is increasing for
+positive arguments and decreasing for negative arguments.
+
+The curvature of an expression is determined using the `curvature`
+function:
+
+```{r}
+x <- Variable()
+a <- Parameter(sign="positive")
+
+cat("curvature of x:", curvature(x), "\n")
+cat("curvature of a:", curvature(a), "\n")
+cat("curvature of square(x):", curvature(square(x)), "\n")
+cat("curvature of sqrt(x):", curvature(sqrt(x)), "\n")
+```
+
+## Infix operators
+
+The infix operators `+, -, *, /` are treated exactly like functions.
+The infix operators `+` and `-` are affine, so the rules above are
+used to flag the curvature. For example, `expr1 + expr2` is flagged as
+convex if `expr1` and `expr2` are convex.
+
+`expr1*expr2` is allowed only when one of the expressions is constant.
+If both expressions are non-constant, `cvxr` will raise an exception.
+`expr1/expr2` is allowed only when `expr2` is a scalar constant. The
+curvature rules above apply. For example, `expr1/expr2` is convex when
+`expr1` is concave and `expr2` is negative and constant.
+
+### Example 1
+
+DCP analysis breaks expressions down into subexpressions. The tree
+visualization below shows how this works for the expression
+`2 *square(x) + 3`. Each subexpression is shown in a blue box. We mark
+its curvature on the left and its sign on the right.
+
+![](../../img/dcp_files/example1.png)
+
+### Example 2
+
+We'll walk through the application of the DCP rules to the expression
+`sqrt(1 + square(x))`.
+
+![](../../img/dcp_files/example2.png)
+
+The variable `x` has affine curvature and unknown sign. The `square`
+function is convex and non-monotone for arguments of unknown sign. It
+can take the affine expression `x` as an argument; the result
+`square(x)` is convex.
+
+The arithmetic operator `+` is affine and increasing, so the
+composition `1 + square(x)` is convex by the curvature rule for convex
+functions. The function `sqrt` is concave and increasing, which means
+it can only take a concave argument. Since `1 + square(x)` is convex,
+`sqrt(1 + square(x))` violates the DCP rules and cannot be verified as
+convex.
+
+In fact, `sqrt(1 + square(x))` is a convex function of `x`, but the
+DCP rules are not able to verify convexity. If the expression is
+written as `norm(vstack(1, x), 2)`, the L2 norm of the vector $[1,x]$,
+which has the same value as `sqrt(1 + square(x))`, then it will be
+certified as convex using the DCP rules.
+
+```{r}
+cat("sqrt(1 + square(x)) curvature:", curvature(sqrt(1 + square(x))), "\n")
+cat("norm(vstack(1, x), 2) curvature:", curvature(p_norm(vstack(1, x), 2)), "\n")
+```
+
+## DCP problems
+
+A problem is constructed from an objective and a list of constraints. If
+a problem follows the DCP rules, it is guaranteed to be convex and
+solvable by `cvxr`. The DCP rules require that the problem objective have
+one of two forms:
+
+-  Minimize(convex)
+-  Maximize(concave)
+
+The only valid constraints under the DCP rules are
+
+-  affine == affine
+-  convex <= concave
+-  concave >= convex
+
+You can check that a problem, constraint, or objective satisfies the DCP
+rules by calling `is_dcp(object)`. Here are some examples of DCP and
+non-DCP problems:
+
+```{r}
+x <- Variable()
+y <- Variable()
+
+## DCP problems.
+prob1 <- Problem(Minimize(square(x - y)), list(x + y >= 0))
+prob2 <- Problem(Maximize(sqrt(x - y)),
+                 list(2 * x - 3 == y,
+                      square(x) <= 2))
+
+cat("prob1 is DCP:", is_dcp(prob1), "\n")
+cat("prob2 is DCP:", is_dcp(prob2), "\n")
+
+## Non-DCP problems.
+
+## A non-DCP objective.
+prob3 <- Problem(Maximize(square(x)))
+
+cat("prob3 is DCP:", is_dcp(prob3), "\n")
+cat("Maximize(square(x)) is DCP:", is_dcp(Maximize(square(x))), "\n")
+
+## A non-DCP constraint.
+prob4 <- Problem(Minimize(square(x)), list(sqrt(x) <= 2))
+
+cat("prob4 is DCP:", is_dcp(prob4), "\n")
+cat("sqrt(x) <= 2 is DCP:", is_dcp(sqrt(x) <= 2), "\n")
+```
+
+`cvxr` will raise an exception if you call `solve()` on a non-DCP
+problem.
+
+```{r}
+## A non-DCP problem.
+prob <- Problem(Minimize(sqrt(x)))
+tryCatch(solve(prob), error = function(e) geterrmessage())
+```

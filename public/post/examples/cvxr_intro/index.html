@@ -1,0 +1,515 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.30.2" />
+	
+	<title>Introduction &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Introduction</h1>
+	
+	<p>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.</p>
+<p>We generate some synthetic data where we know the model completely, that is</p>
+<p><span class="math display">\[ Y = X\beta + \epsilon \]</span></p>
+<p>where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(100\times 1\)</span> vector, <span class="math inline">\(X\)</span> is a <span class="math inline">\(100\times 10\)</span> matrix, <span class="math inline">\(\beta = -4,\ldots ,-1, 0, 1, \ldots 5\)</span> and <span class="math inline">\(\epsilon \sim N(0, 1).\)</span></p>
+<pre class="r"><code>set.seed(123)
+
+n &lt;- 100
+p &lt;- 10
+beta &lt;- -4:5 # beta is just -4 through 5.
+
+X &lt;- matrix(rnorm(n * p), nrow=n)
+colnames(X) &lt;- paste0(&quot;beta_&quot;, beta)
+Y &lt;- X %*% beta + rnorm(n)</code></pre>
+<p>Given the data <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, we can estimate the <span class="math inline">\(\beta\)</span> using <code>lm</code> function in R that fits a standard regression model.</p>
+<pre class="r"><code>ls.model &lt;- lm(Y ~ 0 + X) ## There is no intercept in our model above
+m &lt;- matrix(coef(ls.model), ncol = 1)
+rownames(m) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
+library(kableExtra)
+knitr::kable(m, format = &quot;html&quot;) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1, background = &quot;#ececec&quot;) %&gt;%
+    column_spec(2, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{1}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-3.9196886
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{2}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-3.0117048
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{3}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-2.1248242
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{4}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.8666048
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{5}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.0914658
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{6}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.9490454
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{7}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+2.0764700
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{8}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+3.1272275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{9}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+3.9609565
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{10}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+5.1348845
+</td>
+</tr>
+</tbody>
+</table>
+<p>These are the least-squares estimates and can be seen to be reasonably close to the original <span class="math inline">\(\beta\)</span> values -4 through 5.</p>
+<div id="the-cvxr-formulation" class="section level2">
+<h2>The <code>cvxr</code> formulation</h2>
+<p>The <code>cvxr</code> formulation states the above as an optimization problem:</p>
+<p><span class="math display">\[
+  \begin{array}{ll}
+    \underset{\beta}{\mbox{minimize}} &amp; \|y - X\beta\|_2^2,
+  \end{array}
+\]</span> which directly translates into a problem that <code>cvxr</code> can solve as shown in the steps below.</p>
+<ul>
+<li>Step 0. Load the <code>cvxr</code> library</li>
+</ul>
+<pre class="r"><code>suppressWarnings(library(cvxr, warn.conflicts=FALSE))</code></pre>
+<ul>
+<li>Step 1. Define the variable to be estimated</li>
+</ul>
+<pre class="r"><code>betaHat &lt;- Variable(p)</code></pre>
+<ul>
+<li>Step 2. Define the objective to be optimized</li>
+</ul>
+<pre class="r"><code>objective &lt;- Minimize(sum((Y - X %*% betaHat)^2))</code></pre>
+<p>Notice how the objective is specified using functions such as <code>sum</code>, <code>*%*</code> and <code>^</code>, that are familiar to R users despite that fact that <code>betaHat</code> is no ordinary R expression but a <code>cvxr</code> expression.</p>
+<ul>
+<li>Step 3. Create a problem to solve</li>
+</ul>
+<pre class="r"><code>problem &lt;- Problem(objective)</code></pre>
+<ul>
+<li>Step 4. Solve it!</li>
+</ul>
+<pre class="r"><code>result &lt;- solve(problem)</code></pre>
+<ul>
+<li>Step 5. Extract solution and objective value</li>
+</ul>
+<pre><code>## Objective value: 97.847586</code></pre>
+<p>We can indeed satisfy ourselves that the results we get matches that from <code>lm</code>.</p>
+<pre class="r"><code>m &lt;- cbind(result$getValue(betaHat), coef(ls.model))
+colnames(m) &lt;- c(&quot;cvxr est.&quot;, &quot;lm est.&quot;)
+rownames(m) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
+knitr::kable(m, format = &quot;html&quot;) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1, background = &quot;#ececec&quot;) %&gt;%
+    column_spec(2, background = &quot;#ececec&quot;) %&gt;%
+    column_spec(3, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+cvxr est.
+</th>
+<th style="text-align:right;">
+lm est.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{1}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-3.9196887
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-3.9196886
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{2}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-3.0117041
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-3.0117048
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{3}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-2.1248257
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-2.1248242
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{4}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.8666045
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.8666048
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{5}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.0914653
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.0914658
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{6}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.9490453
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.9490454
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{7}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+2.0764693
+</td>
+<td style="text-align:right;background-color: #ececec;">
+2.0764700
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{8}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+3.1272271
+</td>
+<td style="text-align:right;background-color: #ececec;">
+3.1272275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{9}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+3.9609564
+</td>
+<td style="text-align:right;background-color: #ececec;">
+3.9609565
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{10}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+5.1348848
+</td>
+<td style="text-align:right;background-color: #ececec;">
+5.1348845
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="wait-a-minute-what-have-we-gained" class="section level2">
+<h2>Wait a minute! What have we gained?</h2>
+<p>On the surface it appears that we have replaced one call to <code>lm</code> with at least five or six lines of new R code. On top of that, the code actually runs slower and so it is not clear what was really achieved.</p>
+<p>So suppose we knew for a fact that the <span class="math inline">\(\beta\)</span>s were increasing and we wish to take this fact into account. This is a special case of <a href="https://en.wikipedia.org/wiki/Isotonic_regression">isotonic regression</a> and <code>lm</code> would no longer do the job. One would have to find a package such as <code>isotone</code> to perform the fit.</p>
+<p>The modified problem merely requires the addition of a constraint to the problem definition; no other modification is necessary.</p>
+<pre class="r"><code>problem &lt;- Problem(objective, constraints = list(betaHat &gt;= 0))
+result &lt;- solve(problem)
+m &lt;- matrix(result$getValue(betaHat), ncol = 1)
+rownames(m) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
+knitr::kable(m, format = &quot;html&quot;) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1, background = &quot;#ececec&quot;) %&gt;%
+    column_spec(2, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{1}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{2}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{3}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{4}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{5}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+1.2374544
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{6}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6234659
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{7}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+2.1230714
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{8}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+2.8035606
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{9}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+4.4448008
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{10}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+5.2073465
+</td>
+</tr>
+</tbody>
+</table>
+<p>This example demonstrates the chief advantage of <code>cvxr</code>: flexibility. Users can quickly modify and re-solve a problem, making our package ideal for prototyping new statistical methods. Its syntax is simple and mathematically intuitive. Furthermore, <code>cvxr</code> combines seamlessly with native R code as well as several popular packages, allowing it to be incorporated easily into a larger analytical framework. The user is free to construct statistical estimators that are solutions to a convex optimization problem where there may not be a closed form solution or even an implementation. Such solutions can then be combined with resampling techniques like the bootstrap to estimate variability.</p>
+</div>
+<div id="further-reading" class="section level2">
+<h2>Further Reading</h2>
+<p>We hope we have vetted your appetite. You may wish to read <a href="../../../post/examples/cvxr_gentle-intro/">a longer introduction</a> with more examples.</p>
+<p>We also have a number of <a href="../../../post/examples/">tutorial examples</a> are available to study and mimic.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>
+
+
+
+						<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../../">
+				<img class="logo" src="../../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../">Documentation overview</a><ul>
+  
+  <li>Next: <a href="../../../post/cvxr_dcp/" title="Discplined Convex Programming">Discplined Convex Programming</a></li>
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

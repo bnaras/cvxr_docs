@@ -1,0 +1,116 @@
+---
+title: The Catenary Problem
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_catenary
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>A chain with uniformly distributed mass hangs from the endpoints <span class="math inline">\((0,1)\)</span> and <span class="math inline">\((1,1)\)</span> on a 2-D plane. Gravitational force acts in the negative <span class="math inline">\(y\)</span> direction. Our goal is to find the shape of the chain in equilibrium, which is equivalent to determining the <span class="math inline">\((x,y)\)</span> coordinates of every point along its curve when its potential energy is minimized.</p>
+<p>This is the famous <a href="https://en.wikipedia.org/wiki/Catenary">catenary problem</a>.</p>
+</div>
+<div id="a-discrete-version" class="section level2">
+<h2>A Discrete Version</h2>
+<p>To formulate as an optimization problem, we parameterize the chain by its arc length and divide it into <span class="math inline">\(m\)</span> discrete links. The length of each link must be no more than <span class="math inline">\(h &gt; 0\)</span>. Since mass is uniform, the total potential energy is simply the sum of the <span class="math inline">\(y\)</span>-coordinates. Therefore, our (discretized) problem is</p>
+<p><span class="math display">\[ \begin{array}{ll} \underset{x,y}{\mbox{minimize}} &amp; \sum_{i=1}^m
+y_i \\ \mbox{subject to} &amp; x_1 = 0, \quad y_1 = 1, \quad x_m = 1,
+\quad y_m = 1 \\ &amp; (x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2 \leq h^2,
+\quad i = 1,\ldots,m-1 \end{array} 
+\]</span></p>
+<p>with variables <span class="math inline">\(x \in {\mathbf R}^m\)</span> and <span class="math inline">\(y \in {\mathbf R}^m\)</span>.</p>
+<p>This basic catenary problem has a well-known analytical solution (see <span class="citation">Gelfand and Fomin (<a href="#ref-GelfandFomin:1963">1963</a>)</span>) which we can easily verify with <code>cvxr</code>.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+
+## Problem data
+m &lt;- 101
+L &lt;- 2
+h &lt;- L / (m - 1)
+
+## Form objective
+x &lt;- Variable(m)
+y &lt;- Variable(m)
+objective &lt;- Minimize(sum(y))
+
+## Form constraints
+constraints &lt;- list(x[1] == 0, y[1] == 1,
+                    x[m] == 1, y[m] == 1,
+                    diff(x)^2 + diff(y)^2 &lt;= h^2)
+
+## Solve the catenary problem
+prob &lt;- Problem(objective, constraints)
+result &lt;- solve(prob)</code></pre>
+<p>We can now plot it and compare it with the ideal solution. Below we use alpha blending and differing line thickness to show the ideal in red and the computed solution in blue.</p>
+<pre class="r"><code>library(ggplot2)
+xs &lt;- result$getValue(x)
+ys &lt;- result$getValue(y)
+
+catenary &lt;- ggplot(data.frame(x = xs, y = ys)) +
+    geom_line(mapping = aes(x = x, y = y), color = &quot;blue&quot;, size = 1) +
+    geom_point(data = data.frame(x = c(xs[1], ys[1]), y = c(xs[m], ys[m])),
+               mapping = aes(x = x, y = y), color = &quot;red&quot;) 
+
+ideal &lt;- function(x) { 0.22964 *cosh((x -0.5) / 0.22964) - 0.02603 }
+
+catenary + stat_function(fun = ideal , colour = &quot;brown&quot;, alpha = 0.5, size = 3)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-2"></span>
+<img src="/post/examples/cvxr_catenary_files/figure-html/unnamed-chunk-2-1.png" alt="Analytic (red) and computed solution (blue) to the catenary problem" width="672" />
+<p class="caption">
+Figure 1: Analytic (red) and computed solution (blue) to the catenary problem
+</p>
+</div>
+</div>
+<div id="additional-ground-constraints" class="section level2">
+<h2>Additional Ground Constraints</h2>
+<p>A more interesting situation arises when the ground is not flat. Let <span class="math inline">\(g \in {\mathbf R}^m\)</span> be the elevation vector (relative to the <span class="math inline">\(x\)</span>-axis), and suppose the right endpoint of our chain has been lowered by <span class="math inline">\(\Delta y_m = 0.5\)</span>. The analytical solution in this case would be difficult to calculate. However, we need only add two lines to our constraint definition,</p>
+<pre class="r"><code>constr[[4]] &lt;- (y[m] == 0.5)
+constr &lt;- c(constr, y &gt;= g)</code></pre>
+<p>to obtain the new result.</p>
+<p>Below, we define <span class="math inline">\(g\)</span> as a staircase function and solve the problem.</p>
+<pre class="r"><code>## Lower right endpoint and add staircase structure
+ground &lt;- sapply(seq(0, 1, length.out = m), function(x) {
+    if(x &lt; 0.2)
+        return(0.6)
+    else if(x &gt;= 0.2 &amp;&amp; x &lt; 0.4)
+        return(0.4)
+    else if(x &gt;= 0.4 &amp;&amp; x &lt; 0.6)
+        return(0.2)
+    else
+        return(0)
+})
+constraints &lt;- c(constraints, y &gt;= ground)
+constraints[[4]] &lt;- (y[m] == 0.5)
+prob &lt;- Problem(objective, constraints)
+result &lt;- solve(prob)</code></pre>
+<p>to obtain the new result.</p>
+<p>The figure below shows the solution of this modified catenary problem for <span class="math inline">\(m = 101\)</span> and <span class="math inline">\(h = 0.04\)</span>. The chain is shown hanging in blue, bounded below by the red staircase structure, which represents the ground.</p>
+<pre class="r"><code>xs &lt;- result$getValue(x)
+ys &lt;- result$getValue(y)
+
+ggplot(data.frame(x = xs, y = ys)) +
+    geom_line(mapping = aes(x = x, y = y), color = &quot;blue&quot;) +
+    geom_point(data = data.frame(x = c(xs[1], ys[1]), y = c(xs[m], ys[m])),
+               mapping = aes(x = x, y = y), color = &quot;red&quot;) +
+    geom_line(data.frame(x = xs, y = ground),
+              mapping = aes(x = x, y = y), color = &quot;brown&quot;)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-5"></span>
+<img src="/post/examples/cvxr_catenary_files/figure-html/unnamed-chunk-5-1.png" alt="Asymmetric catenary problem with ground constraints." width="672" />
+<p class="caption">
+Figure 2: Asymmetric catenary problem with ground constraints.
+</p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-GelfandFomin:1963">
+<p>Gelfand, I. M., and S. V. Fomin. 1963. <em>Calculus of Variations</em>. Prentice-Hall.</p>
+</div>
+</div>
+</div>

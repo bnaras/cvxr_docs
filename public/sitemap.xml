@@ -3,27 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/post/examples/cvxr_fast-mixing-mc/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/examples/cvxr_kelly-strategy/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/examples/cvxr_log-concave/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/examples/cvxr_near-isotonic-and-near-convex-regression/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/examples/cvxr_portfolio-optimization/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/examples/cvxr_catenary/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/cvxr_examples/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/near-isotonic-and-near-convex-regression/</loc>
-    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/catenary/</loc>
-    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/direct-standardization/</loc>
+    <loc>/post/examples/cvxr_direct-standardization/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/isotonic-regression/</loc>
+    <loc>/post/examples/cvxr_isotonic-regression/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
   </url>
   
@@ -38,7 +58,17 @@
   </url>
   
   <url>
-    <loc>/post/cvxr_intro/</loc>
+    <loc>/post/examples/cvxr_gentle-intro/</loc>
+    <lastmod>2017-10-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/cvxr_dcp/</loc>
+    <lastmod>2017-10-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/examples/cvxr_intro/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   

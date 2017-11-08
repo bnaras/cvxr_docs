@@ -39,7 +39,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	codecov_button = false
 	gratipay = ""
 
-	show_relations = false
+	show_relations = true
 
 [params.footer]
 	copyright = "Anqi Fu, Balasubramanian Narasimhan, Stephen Boyd"
@@ -51,16 +51,26 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	 weight = -20
 
 [[menu.main]]
-    name = "Getting Started"
-    	 url = "/post/cvxr_intro/"
+    name = "A Quick Intro"
+    	 url = "/post/examples/cvxr_intro/"
 	 weight = -19
 
 [[menu.main]]
-    name = "Examples"
-    	 url = "/post/cvxr_examples/"
+    name = "A Longer Intro"
+    	 url = "/post/examples/cvxr_gentle-intro/"
 	 weight = -18
 
 [[menu.main]]
-    name = "Functions"
-    	 url = "/post/cvxr_functions/"
+    name = "Tutorial Examples"
+    	 url = "/post/cvxr_examples/"
 	 weight = -17
+
+[[menu.main]]
+    name = "DCP"
+    	 url = "/post/cvxr_dcp/"
+	 weight = -16
+
+[[menu.main]]
+    name = "Function Reference"
+    	 url = "/post/cvxr_functions/"
+	 weight = -15
