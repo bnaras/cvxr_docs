@@ -1,6 +1,6 @@
-dimensions of X: (5, 4)
-dimensions of sum(X): (1, 1)
-dimensions of A*X: (3, 4)
-sum(X) is a scalar: True
-A*X is a vector: False
+dimensions of Z: (5, 4)
+dimensions of sum_entries(Z): (1, 1)
+dimensions of A %*% Z: (3, 4)
+sum_entries(Z) is a scalar: True
+A %*% Z is a vector: False
 Incompatible dimensions (3, 5) (5, 4)

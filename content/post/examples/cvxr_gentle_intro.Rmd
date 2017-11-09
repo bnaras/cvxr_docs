@@ -272,9 +272,9 @@ modified problem:
 
 ```{r}
 # Modify the problem from example 1
-prob2.2 <- prob2.1
-prob2.2@objective <- Minimize(x^2 + y^2 + abs(x-y))
-prob2.2@constraints <- c(prob2.2@constraints, y <= 1)
+objective <- Minimize(x^2 + y^2 + abs(x-y))
+constraints <- c(constraints(prob2.1), y <= 1)
+prob2.2 <- Problem(objective, constraints)
 
 # Solve the modified problem
 solution2.2 <- solve(prob2.2)
@@ -294,13 +294,13 @@ handled. For example, if we tried to `Maximize()' the objective from
 example 2.1, we get an error:
 
 ```{r, error = TRUE}
-prob2.3 <- prob2.1
-prob2.3@objective <- Maximize(x^2 + y^2)
+objective <- Maximize(x^2 + y^2)
+prob2.3 <- Problem(objective, constraints(prob2.1))
 solve(prob2.3)
 ```
 
 We would get a similar error if we tried to add the constraint
-`norm2(x) == 1`. This is because `cvxr` uses a strict set of rules
+`p_norm(x,2) == 1`. This is because `cvxr` uses a strict set of rules
 called Disciplined Convex Programming (DCP) to evaluate the convexity
 of any given problem. If you follow these rules, you are guaranteed
 that your problem is convex. If you don't follow these rules, `cvxr`
@@ -341,7 +341,7 @@ y <- X %*% trueBeta + rnorm(n, 0, s)
 
 ```{r}
 beta <- Variable(m)
-objective <- Minimize(sum_squares(y - X %*% beta))
+objective <- Minimize(sum((y - X %*% beta)^2))
 prob3.1 <- Problem(objective)
 ```
 

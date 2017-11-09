@@ -16,6 +16,7 @@ that is
 $$ Y = X\beta + \epsilon $$ 
 
 where $Y$ is a $100\times 1$ vector, $X$ is a $100\times 10$ matrix,
+
 $\beta = -4,\ldots ,-1, 0, 1, \ldots 5$ is a $10\times 1$ vector, and
 $\epsilon \sim N(0, 1).$
 
@@ -25,7 +26,7 @@ set.seed(123)
 
 n <- 100
 p <- 10
-beta <- -4:5 # beta is just -4 through 5.
+beta <- -4:5   # beta is just -4 through 5.
 
 X <- matrix(rnorm(n * p), nrow=n)
 colnames(X) <- paste0("beta_", beta)
@@ -36,7 +37,7 @@ Given the data $X$ and $Y$, we can estimate the $\beta$ vector using
 `lm` function in R that fits a standard regression model.
 
 ```{r}
-ls.model <- lm(Y ~ 0 + X) ## There is no intercept in our model above
+ls.model <- lm(Y ~ 0 + X)   # There is no intercept in our model above
 m <- matrix(coef(ls.model), ncol = 1)
 rownames(m) <- paste0("$\\beta_{", 1:p, "}$")
 library(kableExtra)
@@ -114,9 +115,9 @@ knitr::kable(m, format = "html") %>%
 
 ## Wait a minute! What have we gained?
 
-On the surface it appears that we have replaced one call to `lm` with
+On the surface, it appears that we have replaced one call to `lm` with
 at least five or six lines of new R code. On top of that, the code
-actually runs slower and so it is not clear what was really achieved.
+actually runs slower, and so it is not clear what was really achieved.
 
 So suppose we knew for a fact that the $\beta$s were nonnegative and
 we wish to take this fact into account. This
@@ -124,8 +125,8 @@ is
 [nonnegative least squares regression](https://en.wikipedia.org/wiki/Non-negative_least_squares) and
 `lm` would no longer do the job. 
 
-The modified problem merely requires the addition of a constraint to the
-problem definition; no other modification is necessary. 
+In `cvxr`, the modified problem merely requires the addition of a constraint to the
+problem definition.
 
 ```{r}
 problem <- Problem(objective, constraints = list(betaHat >= 0))
@@ -255,7 +256,7 @@ variability.
 
 ## Further Reading
 
-We hope we have vetted your appetite. You may wish to
+We hope we have whet your appetite. You may wish to
 read [a longer introduction](/post/examples/cvxr_gentle-intro/)
 with more examples. 
 
