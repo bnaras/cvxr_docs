@@ -50,7 +50,7 @@ x_p <- with(pituitary, {
 })
 ```
 
-We define a variable `x` of size `n`, the number of observations. The objective to be minimized is the least-squares error (`Pnorm`). The constraint specifies monotonicity and it uses the `diff` function familiar to R users (see `?diff`), except that it now refers to elements of the `x`. A problem is created and called via `solve`. The resulting optimal value for `x` is retrieved using `getValue(x)`. 
+We define a variable `x` of size `n`, the number of observations. The objective to be minimized is the least-squares error (`p_norm`). The constraint specifies monotonicity and it uses the `diff` function familiar to R users (see `?diff`), except that it now refers to elements of the `x`. A problem is created and called via `solve`. The resulting optimal value for `x` is retrieved using `getValue(x)`. 
 
 As the output below shows, the results are very close.
 ```{r}
@@ -105,7 +105,7 @@ x_t <- with(pituitary, {
     solve(problem)$getValue(x)
 })
 ```
-In the above, we make use of the `VStack` function to create a single vector of the block means.
+In the above, we make use of the `vstack` function to create a single vector of the block means.
 
 We can how all three solutions compare.
 
@@ -115,13 +115,7 @@ d <- data.frame(res_p$x, x_p, res_s$x, x_s, res_t$x, x_t)
 names(d) <- c("Isotone (P)", "CVXR (P)", "Isotone (S)", "CVXR(S)",
               "Isotone (T)", "CVXR (T)")
 knitr::kable(d, digits = 2, format = "html", caption = "P = primary, S = Secondary, T = Tertiary") %>%
-    column_spec(1, background = "#ececec", ) %>%
-    column_spec(2, background = "#ececec") %>%
-    column_spec(3, background = "#ececec") %>%
-    column_spec(4, background = "#ececec") %>%
-    column_spec(5, background = "#ececec") %>%
-    column_spec(6, background = "#ececec")
-    
+    column_spec(1:5, background = "#ececec", )
 ```
 
 ## Notes

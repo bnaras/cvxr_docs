@@ -25,28 +25,19 @@
 						
 	<h1>A Gentle Introduction to `cvxr`</h1>
 	
-	<p>Welcome to <code>cvxr</code>: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to <code>cvxr</code> and to generate excitement its possibilities in the field of statistics.</p>
+	<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Welcome to <code>cvxr</code>: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to <code>cvxr</code> and to generate excitement its possibilities in the field of statistics.</p>
 <p>Convex optimization is a powerful and very general tool. As a practical matter, the set of convex optimization problems includes almost every optimization problem that can be solved exactly and efficiently (i.e. without requiring an exhaustive search). If an optimization problem can be solved, it is probably convex. This family of problems becomes even larger if you include those that can be solved <em>approximately</em> and efficiently. To learn more about the mathematics and application of convex optimization, see <a href="http://stanford.edu/~boyd/cvxbook/">Boyd and Vandenberghe 2009</a>.</p>
 <p>Convex optimization systems written in other languages are already widely used in practical applications. These include <a href="http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Main.WhatIsYALMIP">YALMIP</a> and <a href="http://cvxr.com/cvx/">CVX</a> (Matlab), <a href="http://www.cvxpy.org/en/latest/">CVXPY</a> (Python), and <a href="http://convexjl.readthedocs.org/en/latest/">Convex.jl</a> (Julia). <code>cvxr</code> Shares a lot of its code base with <a href="http://stanford.edu/class/ee364b/projects/2015projects/reports/miller_quigley_zhu_report.pdf">CVXcannon</a> and CVXPY. As far as we know, this is the first full-featured general convex optimization package for R.</p>
 <p>One of the great headaches of conventional numerical optimization is the process of deciding which algorithm to use and how to set its parameters. In convex optimization, the particular algorithm matters much less. So while a user of <code>cvxr</code> is still free to choose from a number of different algorithms and to set algorithm parameters as they please, the vast majority of users will not need to do this. <code>cvxr</code> will just work.</p>
 <p>The uses for convex optimization in statistics are many and varied. Many parameter-fitting methods are convex, including least-squares, ridge, lasso, and isotonic regression, as well as many other kinds of problems such as maximum entropy or minimum Kullback-Leibler divergence over a finite set.</p>
 <p>All of these examples, at least in their most basic forms, are established enough that they already have well-crafted R packages devoted to them. If you use <code>cvxr</code> to solve these problems, it will work. It will probably be slower than a custom-built algorithm—for example glmnet for fitting lasso or ridge regression models—but it will work. However, this is not the true purpose of <code>cvxr</code>. If you want to build a well-established model, you should use one of the well-established packages for doing so. If you want to build your <em>own</em> model—one that is a refinement of an existing method, or perhaps even something that has never been tried before—then <code>cvxr</code> is the place to do it. The advantage of <code>cvxr</code> over glmnet and the like comes from its flexibility: A few lines of code can transform a problem from commonplace to state-of-the-art, and can often do the work of an entire package in the process. (We present an example in section 3 where this is literally the case.)</p>
-<p>This document is meant to be a complete introduction to the <code>cvxr</code> package. It assumes basic knowledge of convex optimization and statistics as well as proficiency with R. A potential user of <code>cvxr</code> should read all of it, but especially sections 2 and 4. Section 5 can be skimmed and then used as a reference when necessary. The sections may be summarized as follows:</p>
-<blockquote>
-<p>Section 2: Thoroughly describes the most important aspects of <code>cvxr</code> for a new user to get started with a simple example.</p>
-</blockquote>
-<blockquote>
-<p>Section 3: Presents a sequence of more sophisticated examples which are meant to illustrate the ease with which <code>cvxr</code> can handle a diverse set of problems.</p>
-</blockquote>
-<blockquote>
-<p>Section 4: While the family of convex optimization problems is very large, it nonetheless has severe limitations which you must understand in order to be an effective user of <code>cvxr</code>. This section lays out these limitations and how they are handled through a system called Disciplined Convex Programming (DCP).</p>
-</blockquote>
-<blockquote>
-<p>Section 5: Presents the complete set of functions that have been implemented in <code>cvxr</code> so far along with some of their most essential properties.</p>
-</blockquote>
+<p>This document is meant to familiarize you with the <code>cvxr</code> package. It assumes basic knowledge of convex optimization and statistics as well as proficiency with R. A potential user of <code>cvxr</code> should read all of this document and then refer to the tutorial examples.</p>
 <p>Happy optimizing!</p>
+</div>
 <div id="convex-optimization" class="section level2">
-<h2>2 Convex Optimization</h2>
+<h2>Convex Optimization</h2>
 <p>A convex optimization problem has the following form:</p>
 <p><span class="math display">\[
 \begin{array}{ll} \mbox{minimize} &amp; f_0(x)\\
@@ -61,7 +52,7 @@
 <p>You can learn much more about convex optimization via <span class="citation">Boyd and Vandenberghe (2004)</span> as well as the <a href="https://lagunita.stanford.edu/courses/Engineering/CVX101/Winter2014/about">CVX101 MOOC</a>.</p>
 </div>
 <div id="hello-world" class="section level2">
-<h2>3 ‘Hello World’</h2>
+<h2>‘Hello World’</h2>
 <p>We begin with one of the simplest possible problems that presents all three of these features:</p>
 <p><span class="math display">\[
 \begin{array}{ll}
@@ -122,7 +113,7 @@ y &lt;- Variable(1)</code></pre>
 <li><p><code>solution$status == &quot;unbounded&quot;</code>: The problem was <em>not</em> solved because the Objective can be made arbitrarily small for a minimization problem or arbitrarily large for a maximization problem. Hence there is no optimal solution because for any given solution it is always possible to find something even more optimal. In this case, <code>solution$opt.val</code> is <code>-Inf</code> for a minimization problem and <code>+Inf</code> for a maximization problem, indicating infinite satisfaction with the result. Again, no values are returned for the input variables.</p></li>
 </ol>
 <div id="modifying-a-cvxr-problem" class="section level3">
-<h3>2.2 Modifying a CVXR Problem</h3>
+<h3>Modifying a CVXR Problem</h3>
 <p>Like any normal R object, the <code>Problem</code>, <code>Objective</code>, <code>Constraint</code>, and <code>Solution</code> objects can all be modified and computed upon after creation. Here is an example where we modify the problem we created above by changing its objective and adding a constraint, print the modified problem, check whether it is still convex, and then solve the modified problem:</p>
 <pre class="r"><code># Modify the problem from example 1
 prob2.2 &lt;- prob2.1
@@ -143,7 +134,7 @@ solution2.2$status</code></pre>
 <pre><code>## [1] 0.3333333</code></pre>
 </div>
 <div id="an-invalid-problem" class="section level3">
-<h3>2.3 An Invalid Problem</h3>
+<h3>An Invalid Problem</h3>
 <p>Unfortunately, you can’t just type any arbitrary problem you like into <code>cvxr</code>. There are severe restrictions on what kinds of problems can be handled. For example, if we tried to `Maximize()’ the objective from example 2.1, we get an error:</p>
 <pre class="r"><code>prob2.3 &lt;- prob2.1
 prob2.3@objective &lt;- Maximize(x^2 + y^2)
@@ -152,11 +143,11 @@ solve(prob2.3)</code></pre>
 <p>We would get a similar error if we tried to add the constraint <code>norm2(x) == 1</code>. This is because <code>cvxr</code> uses a strict set of rules called Disciplined Convex Programming (DCP) to evaluate the convexity of any given problem. If you follow these rules, you are guaranteed that your problem is convex. If you don’t follow these rules, <code>cvxr</code> will throw an exception. See section 5 for a complete description of DCP.</p>
 </div>
 </div>
-<div id="introductory-examples" class="section level2">
-<h2>3 Introductory Examples</h2>
+<div id="simple-examples" class="section level2">
+<h2>Simple Examples</h2>
 <p>We begin by showing what a standard linear regression problem looks like in <code>cvxr</code>:</p>
 <div id="ordinary-least-squares" class="section level3">
-<h3>3.1 Ordinary Least Squares</h3>
+<h3>Ordinary Least Squares</h3>
 <p>For illustration, we generate some synthetic data for use in this example.</p>
 <pre><code>## 
 ## Attaching package: &#39;MASS&#39;</code></pre>
@@ -173,7 +164,7 @@ lm_solution3.1 &lt;- lm(y ~ 0 + X)</code></pre>
 <p>Obviously, if all you want to do is least-squares linear regression, you should simply use <code>lm</code>. The chief advantage of <code>cvxr</code> is its flexibility, as we will demonstrate with the rest of section 3.</p>
 </div>
 <div id="non-negative-least-squares" class="section level3">
-<h3>3.2 Non-Negative Least Squares</h3>
+<h3>Non-Negative Least Squares</h3>
 <p>Looking at Example 3.1, you may notice that the OLS regression problem has an objective, but no constraints. In many contexts, we can greatly improve our model by constraining the solution to reflect our prior knowledge. For example, we may know that the coefficients <code>beta</code> must be non-negative.</p>
 <pre class="r"><code>prob3.2 &lt;- prob3.1
 prob3.2@constraints &lt;- list(beta &gt;= 0)
@@ -183,7 +174,7 @@ solution3.2 &lt;- solve(prob3.2)</code></pre>
 <p>Like with OLS, there are already R packages available which implement non-negative least squares, such as the package <code>nnls</code>. But that is actually an excellent demonstration of the power of <code>cvxr</code>: A single line of code here, namely <code>prob3.2$constraints &lt;- list(beta &gt;= 0)</code>, is doing the work of an entire package.</p>
 </div>
 <div id="support-vector-classifiers" class="section level3">
-<h3>3.3 Support Vector Classifiers</h3>
+<h3>Support Vector Classifiers</h3>
 <p>Another common statistical tool is the support vector classifier (SVC). The SVC is an affine function (hyperplane) that separates two sets of points by the widest margin. When the sets are not linearly separable, the SVC is determined by a trade-off between the width of the margin and the number of points that are misclassified.</p>
 <p>For the binary case, where the response <span class="math inline">\(y_i \in \{-1,1\}\)</span>, the SVC is obtained by solving</p>
 <p><span class="math display">\[
@@ -217,10 +208,10 @@ solution3.3 &lt;- solve(prob3.3)</code></pre>
 </div>
 </div>
 <div id="disciplined-convex-programming-dcp" class="section level2">
-<h2>4 Disciplined Convex Programming (DCP)</h2>
+<h2>Disciplined Convex Programming (DCP)</h2>
 <p>Disciplined convex programming (DCP) is a system for constructing mathematical expressions with known curvature from a given library of base functions. <code>cvxr</code> uses DCP to ensure that the specified optimization problems are convex.</p>
 <p>You may also find it helpful to read about the DCP rules are applied in other languages such as <a href="http://www.cvxpy.org/en/latest/tutorial/dcp/index.html">Python</a>, <a href="http://cvxr.com/cvx/doc/dcp.html#">Matlab</a>, and <a href="http://convexjl.readthedocs.io/en/latest/types.html">Julia</a>.</p>
-<p><code>cvxr</code> implements the same rules.</p>
+<p><code>cvxr</code> implements the same rules and a short introduction is <a href="../../../post/cvxr_dcp">available here</a>.</p>
 </div>
 <div id="dcp-functions" class="section level2">
 <h2>5. DCP functions</h2>
@@ -288,6 +279,10 @@ solution3.3 &lt;- solve(prob3.3)</code></pre>
 
 <h3>Navigation</h3>
 <ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../index.html">Home</a>
+	</li>
 	
 	<li class="toctree-l1">
 		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>

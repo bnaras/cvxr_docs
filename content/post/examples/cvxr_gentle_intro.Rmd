@@ -11,6 +11,7 @@ library(ggplot2)
 library(tidyr)
 library(cvxr)
 ```
+## Introduction
 
 Welcome to `cvxr`: a modeling language for describing and solving
 convex optimization problems that follows the natural, mathematical
@@ -72,34 +73,15 @@ problem from commonplace to state-of-the-art, and can often do the
 work of an entire package in the process. (We present an example in
 section 3 where this is literally the case.)
 
-This document is meant to be a complete introduction to the `cvxr`
-package. It assumes basic knowledge of convex optimization and
-statistics as well as proficiency with R. A potential user of `cvxr`
-should read all of it, but especially sections 2 and 4. Section 5 can
-be skimmed and then used as a reference when necessary. The sections
-may be summarized as follows:
-
-> Section 2: Thoroughly describes the most important aspects of `cvxr`
-> for a new user to get started with a simple example.
-
-> Section 3: Presents a sequence of more sophisticated examples which
-> are meant to illustrate the ease with which `cvxr` can handle a
-> diverse set of problems.
-
-> Section 4: While the family of convex optimization problems is very
-> large, it nonetheless has severe limitations which you must
-> understand in order to be an effective user of `cvxr`. This section
-> lays out these limitations and how they are handled through a system
-> called Disciplined Convex Programming (DCP).
-
-> Section 5: Presents the complete set of functions that have been
-> implemented in `cvxr` so far along with some of their most essential
-> properties.
+This document is meant to familiarize you with the `cvxr` package. It
+assumes basic knowledge of convex optimization and statistics as well
+as proficiency with R. A potential user of `cvxr` should read all of
+this document and then refer to the tutorial examples.
 
 Happy optimizing!
 
 
-## 2 Convex Optimization
+## Convex Optimization
 
 A convex optimization problem has the following form:
 
@@ -132,7 +114,7 @@ the
 [CVX101 MOOC](https://lagunita.stanford.edu/courses/Engineering/CVX101/Winter2014/about). 
 
 
-## 3 'Hello World'
+## 'Hello World'
 
 We begin with one of the simplest possible problems that presents all
 three of these features:
@@ -279,7 +261,7 @@ things can happen:
    indicating infinite satisfaction with the result. Again, no values
    are returned for the input variables.
 
-### 2.2 Modifying a CVXR Problem
+### Modifying a CVXR Problem
 
 Like any normal R object, the `Problem`, `Objective`, `Constraint`, and
 `Solution` objects can all be modified and computed upon after
@@ -304,7 +286,7 @@ solution2.2$getValue(x)
 solution2.2$getValue(y)
 ```
 
-### 2.3 An Invalid Problem
+### An Invalid Problem
 
 Unfortunately, you can't just type any arbitrary problem you like into
 `cvxr`. There are severe restrictions on what kinds of problems can be
@@ -325,12 +307,12 @@ that your problem is convex. If you don't follow these rules, `cvxr`
 will throw an exception. See section 5 for a complete description of
 DCP.
 
-## 3 Introductory Examples
+## Simple Examples
 
 We begin by showing what a standard linear regression problem looks
 like in `cvxr`:
 
-### 3.1 Ordinary Least Squares
+### Ordinary Least Squares
 
 For illustration, we generate some synthetic data for use in this
 example.
@@ -391,7 +373,7 @@ Obviously, if all you want to do is least-squares linear regression,
 you should simply use `lm`. The chief advantage of `cvxr` is its
 flexibility, as we will demonstrate with the rest of section 3.
 
-### 3.2 Non-Negative Least Squares
+### Non-Negative Least Squares
 
 Looking at Example 3.1, you may notice that the OLS regression problem
 has an objective, but no constraints. In many contexts, we can greatly
@@ -433,7 +415,7 @@ line of code here, namely `prob3.2$constraints <- list(beta >= 0)`, is
 doing the work of an entire package.
 
 
-### 3.3 Support Vector Classifiers
+### Support Vector Classifiers
 
 Another common statistical tool is the support vector classifier
 (SVC). The SVC is an affine function (hyperplane) that separates two
@@ -496,7 +478,7 @@ ggplot(data = plotdata, aes(x = X1, y = X2)) +
 ```
 
 
-## 4 Disciplined Convex Programming (DCP)
+## Disciplined Convex Programming (DCP)
 
 Disciplined convex programming (DCP) is a system for constructing
 mathematical expressions with known curvature from a given library of
@@ -510,7 +492,8 @@ as
 [Matlab](http://cvxr.com/cvx/doc/dcp.html#),
 and [Julia](http://convexjl.readthedocs.io/en/latest/types.html).
 
-`cvxr` implements the same rules. 
+`cvxr` implements the same rules and a short introduction
+is [available here](/post/cvxr_dcp). 
 
 ## 5. DCP functions
 

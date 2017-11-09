@@ -117,8 +117,7 @@ d <- data.frame(
 library(kableExtra)
 knitr::kable(d, "html") %>%
   kable_styling("striped") %>%
-  column_spec(1, background = "#ececec") %>%
-  column_spec(2, background = "#ececec")
+  column_spec(1:2, background = "#ececec")
 ```
 using the curvature rules given below. As with sign analysis, the
 conclusion is always correct, but the simple analysis can flag
@@ -140,7 +139,7 @@ conditions holds:
    concave.
 -  $e_i$ is affine or constant.
 
-:math:`f(expr_1, expr_2, ..., expr_n)` is concave if :math:`\text{ } f`
+$f(e_1, e_2,\ldots, e_n)$ is concave if $f$
 is a concave function and for each $e_i$ one of the following
 conditions holds:
 

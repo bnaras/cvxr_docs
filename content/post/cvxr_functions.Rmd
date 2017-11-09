@@ -131,12 +131,7 @@ table <- table[-1, ]
 library(kableExtra)
 knitr::kable(table, "html") %>%
   kable_styling("striped") %>%
-  column_spec(1, background = "#ececec") %>%
-  column_spec(2, background = "#ececec") %>%
-  column_spec(3, background = "#ececec") %>%
-  column_spec(4, background = "#ececec") %>%
-  column_spec(5, background = "#ececec") %>%
-  column_spec(6, background = "#ececec") 
+  column_spec(1:6, background = "#ececec")
 ```
 
 #### Clarifications
@@ -255,12 +250,7 @@ table <- table[-1, ]
 ```{r, echo = FALSE}
 s <- knitr::kable(table, "html") %>%
   kable_styling("striped") %>%
-  column_spec(1, background = "#ececec") %>%
-  column_spec(2, background = "#ececec") %>%
-  column_spec(3, background = "#ececec") %>%
-  column_spec(4, background = "#ececec") %>%
-  column_spec(5, background = "#ececec") %>%
-  column_spec(6, background = "#ececec") 
+  column_spec(1:6, background = "#ececec")
 ## Unescape that bloody ampersand.
 gsub("amp;", "", s)    
 ```
@@ -320,12 +310,7 @@ table <- table[-1, ]
 ```{r, echo = FALSE}
 s <- knitr::kable(table, "html", escape = FALSE) %>%
     kable_styling("striped") %>%
-    column_spec(1, background = "#ececec") %>%
-    column_spec(2, background = "#ececec") %>%
-    column_spec(3, background = "#ececec") %>%
-    column_spec(4, background = "#ececec") %>%
-    column_spec(5, background = "#ececec") %>%
-    column_spec(6, background = "#ececec")
+    column_spec(1:6, background = "#ececec")
 ## Unescape that bloody ampersand.
 gsub("amp;", "", s)    
 ```

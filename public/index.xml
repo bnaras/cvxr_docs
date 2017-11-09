@@ -61,6 +61,17 @@ We have \(n\) assets or stocks in our portfolio and must determine the amount of
     </item>
     
     <item>
+      <title>Test 1 2 3</title>
+      <link>/post/test/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/test/</guid>
+      <description>This is a test of math.
+\[ e^{i\pi}+1 = 0 \]
+plot(1:10) </description>
+    </item>
+    
+    <item>
       <title>The Catenary Problem</title>
       <link>/post/examples/cvxr_catenary/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -125,7 +136,7 @@ Operators The infix operators +, -, *, / are treated as functions. + and - are a
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/examples/cvxr_gentle-intro/</guid>
-      <description>Welcome to cvxr: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to cvxr and to generate excitement its possibilities in the field of statistics.
+      <description>Introduction Welcome to cvxr: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to cvxr and to generate excitement its possibilities in the field of statistics.
 Convex optimization is a powerful and very general tool. As a practical matter, the set of convex optimization problems includes almost every optimization problem that can be solved exactly and efficiently (i.</description>
     </item>
     
@@ -150,8 +161,7 @@ Expressions Expressions in cvxr are formed from variables, parameters, numerical
       <description>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.
 We generate some synthetic data where we know the model completely, that is
 \[ Y = X\beta + \epsilon \]
-where \(Y\) is a \(100\times 1\) vector, \(X\) is a \(100\times 10\) matrix, \(\beta = -4,\ldots ,-1, 0, 1, \ldots 5\) and \(\epsilon \sim N(0, 1).\)
-set.seed(123) n &amp;lt;- 100 p &amp;lt;- 10 beta &amp;lt;- -4:5 # beta is just -4 through 5.</description>
+where \(Y\) is a \(100\times 1\) vector, \(X\) is a \(100\times 10\) matrix, \(\beta = -4,\ldots ,-1, 0, 1, \ldots 5\) is a \(10\times 1\) vector, and \(\epsilon \sim N(0, 1).</description>
     </item>
     
   </channel>

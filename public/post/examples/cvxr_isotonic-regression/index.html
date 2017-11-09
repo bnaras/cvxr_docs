@@ -51,7 +51,7 @@ x_p &lt;- with(pituitary, {
       result &lt;- solve(problem)
       result$getValue(x)
 })</code></pre>
-<p>We define a variable <code>x</code> of size <code>n</code>, the number of observations. The objective to be minimized is the least-squares error (<code>Pnorm</code>). The constraint specifies monotonicity and it uses the <code>diff</code> function familiar to R users (see <code>?diff</code>), except that it now refers to elements of the <code>x</code>. A problem is created and called via <code>solve</code>. The resulting optimal value for <code>x</code> is retrieved using <code>getValue(x)</code>.</p>
+<p>We define a variable <code>x</code> of size <code>n</code>, the number of observations. The objective to be minimized is the least-squares error (<code>p_norm</code>). The constraint specifies monotonicity and it uses the <code>diff</code> function familiar to R users (see <code>?diff</code>), except that it now refers to elements of the <code>x</code>. A problem is created and called via <code>solve</code>. The resulting optimal value for <code>x</code> is retrieved using <code>getValue(x)</code>.</p>
 <p>As the output below shows, the results are very close.</p>
 <pre class="r"><code>cbind(res_p$x, x_p)</code></pre>
 <pre><code>##         [,1]     [,2]
@@ -102,7 +102,7 @@ res_t &lt;- with(pituitary, gpava(age, size, ties = &quot;tertiary&quot;))</code
     problem &lt;- Problem(objective, constraint)
     solve(problem)$getValue(x)
 })</code></pre>
-<p>In the above, we make use of the <code>VStack</code> function to create a single vector of the block means.</p>
+<p>In the above, we make use of the <code>vstack</code> function to create a single vector of the block means.</p>
 <p>We can how all three solutions compare.</p>
 <table>
 <caption>
@@ -147,7 +147,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 20.72
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 20.72
 </td>
 </tr>
@@ -167,7 +167,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 23.22
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 23.22
 </td>
 </tr>
@@ -187,7 +187,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 22.72
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 22.72
 </td>
 </tr>
@@ -207,7 +207,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 22.89
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 22.89
 </td>
 </tr>
@@ -227,7 +227,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 19.89
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 19.89
 </td>
 </tr>
@@ -247,7 +247,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 23.89
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 23.89
 </td>
 </tr>
@@ -267,7 +267,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 22.89
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 22.89
 </td>
 </tr>
@@ -287,7 +287,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 23.39
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 23.39
 </td>
 </tr>
@@ -307,7 +307,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 20.39
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 20.39
 </td>
 </tr>
@@ -327,7 +327,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 23.50
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 23.50
 </td>
 </tr>
@@ -347,7 +347,7 @@ CVXR (T)
 <td style="text-align:right;background-color: #ececec;">
 25.00
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;">
 25.00
 </td>
 </tr>
@@ -420,6 +420,10 @@ CVXR (T)
 
 <h3>Navigation</h3>
 <ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../index.html">Home</a>
+	</li>
 	
 	<li class="toctree-l1">
 		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>

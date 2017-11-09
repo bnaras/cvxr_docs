@@ -41,6 +41,12 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 
 	show_relations = true
 
+[[menu.main]]
+    name = "Home"
+         identifier = "Level-01"
+    	 url = "/index.html"
+	 weight = -22
+
 [params.footer]
 	copyright = "Anqi Fu, Balasubramanian Narasimhan, Stephen Boyd"
 	show_powered_by = true
@@ -48,6 +54,13 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 [[menu.main]]
     name = "Github"
     	 url = "https://github.com/anqif/cvxr"
+	 weight = -21
+
+[[menu.main]]
+    name = "Tutorial"
+         identifier = "tutorial"
+	 parent = "Level-01"
+    	 url = "/post/cvxr_examples/"
 	 weight = -20
 
 [[menu.main]]
