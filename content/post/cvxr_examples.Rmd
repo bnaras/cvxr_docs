@@ -9,9 +9,8 @@ categories: []
 tags: []
 ---
 
-Many of the examples here have been ported over from
-the [`CVXPY`](https://cvxpy.org) site, although we have several others
-too.
+Many of the examples here were ported from
+the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as well.
 
 - [Catenary Problem](/post/examples/cvxr_catenary/)
 - [Isotonic Regression](/post/examples/cvxr_isotonic-regression/)
@@ -21,6 +20,5 @@ too.
 - [Kelly Gambling](/post/examples/cvxr_kelly-strategy/)
 - [Fastest Mixing Markov Chain](/post/examples/cvxr_fast-mixing-mc/)
 - [Portfolio Optimization](/post/examples/cvxr_portfolio-optimization/)
-
 
 ## References

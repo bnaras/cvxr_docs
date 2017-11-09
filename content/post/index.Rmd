@@ -40,7 +40,7 @@ from [CRAN](https://cloud.r-project.org).
 
 ## Documentation
 
-A large set of examples, many ported from `CVXPY` are available in
+A large set of examples, many ported from `CVXPY`, are available in
 the [Examples](/post/cvxr_examples/) section. 
 
 ## Citing `cvxr`
@@ -55,9 +55,9 @@ We are grateful
 to
 [Steven Diamond](https://web.stanford.edu/~stevend2/),
 [John Miller](https://people.eecs.berkeley.edu/~miller_john/), and
-Paul K. Rosenfield for their contributions to the software’s
+Paul Kunsberg Rosenfield for their contributions to the software’s
 development. In particular, we are indebted to Steven Diamond for his
-work on [CVXPY](http://www.cvxpy.org/en/latest/); most of `cvxr` code,
+work on [CVXPY](http://www.cvxpy.org/en/latest/). Most of `cvxr`'s code,
 documentation, and examples were ported from his Python library.
 
 ## About this site
@@ -65,7 +65,7 @@ documentation, and examples were ported from his Python library.
 This site was constructed
 using [R markdown documents](http://rmarkdown.rstudio.com/), the
 wonderful [blogdown](https://cloud.r-package.org/package="blogdown")
-package by [Yihui Xie](https://yihui.name/) and
+package by [Yihui Xie](https://yihui.name/), and
 the
 [Hugo Alabaster theme](https://themes.gohugo.io/theme/hugo-alabaster-theme/).
 

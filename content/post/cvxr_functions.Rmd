@@ -56,17 +56,17 @@ to mark expressions with a sign and curvature.
 
 ### Operators
 
-The infix operators `+`, `-`, `*`, `/` are treated as functions. `+`
+The infix operators `+`, `-`, `*`, `%*%`, `/` are treated as functions. `+`
 and `-` are affine functions. `*` and `/` are affine in `cvxr` because
-`expr1*expr2` is allowed only when one of the expressions is constant
+`expr1*expr2` and `expr1 %*% expr2` are allowed only when one of the expressions is constant
 and `expr1/expr2` is allowed only when `expr2` is a scalar constant.
 
 #### Indexing and slicing
 
 All non-scalar expressions can be indexed using the syntax
 `expr[i, j]`. Indexing is an affine function. The syntax `expr[i]`
-can be used as a shorthand for `expr[i, 0]` when `expr` is a column
-vector. Similarly, `expr[i]` is shorthand for `expr[0, i]` when
+can be used as a shorthand for `expr[i, 1]` when `expr` is a column
+vector. Similarly, `expr[i]` is shorthand for `expr[1, i]` when
 `expr` is a row vector.
 
 Non-scalar expressions can also be sliced into using the standard R
@@ -74,7 +74,7 @@ slicing syntax. For example, `expr[i:j, r]` selects rows `i`
 through `j` of column `r` and returns a vector.
 
 `cvxr` supports advanced indexing using lists of indices or boolean
-arrays.  The semantics are the same as R. Any time R might return a
+arrays. The semantics are the same as in R. Any time R might return a
 numeric vector, `cvxr` returns a column vector.
 
 #### Transpose
@@ -148,14 +148,14 @@ respectively. Similarly, $\mathbf{S}^n_{++}$ and $\mathbf{S}^n_{--}$
 refer to the set of positive definite and negative definite matrices,
 respectively.
 
-For a vector expression `x`, `norm(x)` and `norm(x, 2)` give the
-Euclidean norm. For a matrix expression `X`, however, `norm(X)` and
-`norm(X, 2)` give the spectral norm.
+For a vector expression `x`, `cvxr_norm(x)` and `cvxr_norm(x, 2)` give the
+Euclidean norm. For a matrix expression `X`, however, `cvxr_norm(X)` and
+`cvxr_norm(X, 2)` give the spectral norm.
 
-The function `norm(X, "fro")` is called
+The function `cvxr_norm(X, "fro")` is called
 the
 [Frobenius norm](https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm>) and
-`norm(X, "nuc")`
+`cvxr_norm(X, "nuc")`
 the
 [nuclear norm](https://en.wikipedia.org/wiki/Matrix_norm#Schatten_norms). The
 nuclear norm can also be defined as the sum of `X`'s singular values.
@@ -164,32 +164,31 @@ The functions `max_entries` and `min_entries` give the largest and
 smallest entry, respectively, in a single expression. These functions
 should not be confused with `max_elemwise` and `min_elemwise` (see
 :ref:`elementwise`). Use `max_elemwise` and `min_elemwise` to find the
-max or min of a list of scalar expressions.
+maximum or minimum of a list of scalar expressions.
 
 The function `sum_entries` sums all the entries in a single
-expression. The built-in Python `sum` should be used to add together a
-list of expressions. For example, the following code sums a list of
+expression. The built-in R `sum` should be used to add together a
+list of expressions. For example, the following code sums
 three expressions:
 
 ```{r, eval = FALSE}
-expr_list <- list(expr1, expr2, expr3)
-expr_sum <- sum(expr_list)
+expr_sum <- sum(expr1, expr2, expr3)
 ```
 
 ### Functions along an axis
 
-The functions `sum_entries`, `norm`, `max_entries`, and `min_entries`
+The functions `sum_entries`, `cvxr_norm`, `max_entries`, and `min_entries`
 can be applied along an axis.  Given an `m` by `n` expression `expr`,
-the syntax `func(expr, axis=0)` applies `func` to each column,
-returning a 1 by `n` expression.  The syntax `func(expr, axis=1)`
-applies `func` to each row, returning an `m` by 1 expression. For
+the syntax `func(expr, axis=1)` applies `func` to each row,
+returning a `m` by 1 expression.  The syntax `func(expr, axis=2)`
+applies `func` to each column, returning a 1 by `n` expression. For
 example, the following code sums along the columns and rows of a
 matrix variable:
 
 ```{r, eval = FALSE}
 X <- Variable(5, 4)
-col_sums <- sum_entries(X, axis=0) # Has size (1, 4)
 row_sums <- sum_entries(X, axis=1) # Has size (5, 1)
+col_sums <- sum_entries(X, axis=2) # Has size (1, 4)
 ```
 
 ### Elementwise functions
@@ -202,8 +201,8 @@ Elementwise functions that take multiple arguments, such as
 `max_elemwise` and `mul_elemwise`, operate on the corresponding
 elements of each argument.  For example, if `X` and `Y` are both 3 by
 3 matrix variables, then `max_elemwise(X, Y)` is a 3 by 3 matrix
-expression.  `max_elemwise(X, Y)[2, 0]` is equivalent to
-`max_elemwise(X[2, 0], Y[2, 0])`. This means all arguments must have
+expression. `max_elemwise(X, Y)[2, 1]` is equivalent to
+`max_elemwise(X[2, 1], Y[2, 1])`. This means all arguments must have
 the same dimensions or be scalars, which are promoted.
 
 ```{r, echo = FALSE}
@@ -330,21 +329,20 @@ s <- knitr::kable(table, "html", escape = FALSE) %>%
 gsub("amp;", "", s)    
 ```
 
-
 #### Clarifications
 
-The input to `bmat` is a list of lists of `cvxr` expressions.  It
-constructs a block matrix.  The elements of each inner list are
-stacked horizontally and then the resulting block matrices are stacked
+The input to `bmat` is a list of lists of `cvxr` expressions. It
+constructs a block matrix. The elements of each inner list are
+stacked horizontally, and then the resulting block matrices are stacked
 vertically.
 
-The output $y$ of `conv(c, x)` has size $`n+m-1$ and is defined as
+The output $y$ of `conv(c, x)` has size $n+m-1$ and is defined as
 $y[k]=\sum_{j=0}^k c[j]x[k-j].$
 
 The output $x$ of `vec(X)` is the matrix $X$ flattened in column-major order into a vector.
 Formally, $x'_i = X_{i \bmod{m}, \left \lfloor{i/m}\right \rfloor }$.
 
-The output $X$ of `reshape(X, m', n')` is the matrix $X$ cast into an $m' \times n'$ matrix.
+The output $X$ of `reshape_expr(X, m', n')` is the matrix $X$ cast into an $m' \times n'$ matrix.
 The entries are taken from $X$ in column-major order and stored in $X'$ in column-major order.
 Formally, $X'_{ij} = \mathbf{vec}(X)_{m'j + i}$.
 
