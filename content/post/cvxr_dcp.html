@@ -13,33 +13,33 @@ bibliography: bibtex/cvxr_refs.bib
 <p>Visit <a href="https://dcp.stanford.edu">dcp.stanford.edu</a> for a more interactive introduction to DCP.</p>
 <div id="expressions" class="section level2">
 <h2>Expressions</h2>
-<p>Expressions in <code>cvxr</code> are formed from variables, parameters, numerical constants such as Python floats and Numpy matrices, the standard arithmetic operators <code>+, -, *, /</code>, and a library of <a href="/post/cvxr_functions/">functions</a>. Here are some examples of <code>cvxr</code> expressions:</p>
+<p>Expressions in <code>cvxr</code> are formed from variables, numerical constants such as R vectors and matrices, the standard arithmetic operators <code>+, -, *, %*%, /</code>, and a library of <a href="/post/cvxr_functions/">functions</a>. Here are some examples of <code>cvxr</code> expressions:</p>
 <pre class="r"><code>suppressWarnings(suppressMessages(library(cvxr)))
-## Create variables and parameters.
-x &lt;- Variable(); y &lt;- Variable()
-a &lt;- Parameter(); b &lt;- Parameter()
+## Create variables.
+x &lt;- Variable()
+y &lt;- Variable()
 ## Examples of cvxr expressions.
-3.69 + b / 3</code></pre>
-<pre><code>## AddExpression(c(&quot;Expression(CONSTANT, UNKNOWN, 1)&quot;, &quot;Expression(CONSTANT, UNKNOWN, 1)&quot;), Constant(CONSTANT, POSITIVE, (1,1)))</code></pre>
-<pre class="r"><code>x - 4 * a</code></pre>
-<pre><code>## AddExpression(Variable(1, 1), c(&quot;Expression(CONSTANT, UNKNOWN, 1)&quot;, &quot;Expression(CONSTANT, UNKNOWN, 1)&quot;))</code></pre>
-<pre class="r"><code>sqrt(x) - min_elemwise(y, x - a)</code></pre>
+3.69 + x / 3</code></pre>
+<pre><code>## AddExpression(c(&quot;Expression(AFFINE, UNKNOWN, 1)&quot;, &quot;Expression(AFFINE, UNKNOWN, 1)&quot;), Constant(CONSTANT, POSITIVE, (1,1)))</code></pre>
+<pre class="r"><code>x - 4 * y</code></pre>
+<pre><code>## AddExpression(Variable(1, 1), c(&quot;Expression(AFFINE, UNKNOWN, 1)&quot;, &quot;Expression(AFFINE, UNKNOWN, 1)&quot;))</code></pre>
+<pre class="r"><code>sqrt(x) - min_elemwise(y, x - 2.5)</code></pre>
 <pre><code>## AddExpression(c(&quot;Expression(CONCAVE, POSITIVE, 1)&quot;, &quot;Expression(CONCAVE, POSITIVE, 1)&quot;), c(&quot;Expression(CONVEX, UNKNOWN, 1)&quot;, &quot;Expression(CONVEX, UNKNOWN, 1)&quot;))</code></pre>
-<pre class="r"><code>max_elemwise(2.66 - sqrt(y), square(x + 2 * y))</code></pre>
+<pre class="r"><code>max_elemwise(2.66 - sqrt(y), abs(x + 2 * y))</code></pre>
 <pre><code>## MaxElemwise(c(&quot;Expression(CONVEX, UNKNOWN, 1)&quot;, &quot;Expression(CONVEX, UNKNOWN, 1)&quot;), c(&quot;Expression(CONVEX, POSITIVE, 1)&quot;, &quot;Expression(CONVEX, POSITIVE, 1)&quot;))</code></pre>
-<p>Expressions can be scalars, vectors, or matrices. The dimensions of an expression can be obtained using the function <code>size</code>. <code>cvxr</code> will raise an exception if an expression is used in a way that doesn’t make sense given its dimensions, for example adding matrices of different size.</p>
-<pre class="r"><code>X &lt;- Variable(5, 4)
+<p>Expressions can be scalars, vectors, or matrices. The dimensions of an expression can be obtained using the function <code>size</code>. <code>cvxr</code> will raise an exception if an expression is used in a way that doesn’t make sense given its dimensions, e.g. adding matrices of different sizes.</p>
+<pre class="r"><code>Z &lt;- Variable(5, 4)
 A &lt;- matrix(1, nrow = 2, ncol = 5)
 
 ## Use size to get the dimensions.
-cat(&quot;dimensions of X:&quot;, size(X), &quot;\n&quot;)</code></pre>
-<pre><code>## dimensions of X: 5 4</code></pre>
-<pre class="r"><code>cat(&quot;dimensions of sum_entries(X):&quot;, size(sum_entries(X)), &quot;\n&quot;)</code></pre>
-<pre><code>## dimensions of sum_entries(X): 1 1</code></pre>
-<pre class="r"><code>cat(&quot;dimensions of A*X:&quot;, size(A %*% X), &quot;\n&quot;)</code></pre>
-<pre><code>## dimensions of A*X: 2 4</code></pre>
+cat(&quot;dimensions of Z:&quot;, size(Z), &quot;\n&quot;)</code></pre>
+<pre><code>## dimensions of Z: 5 4</code></pre>
+<pre class="r"><code>cat(&quot;dimensions of sum_entries(Z):&quot;, size(sum_entries(Z)), &quot;\n&quot;)</code></pre>
+<pre><code>## dimensions of sum_entries(Z): 1 1</code></pre>
+<pre class="r"><code>cat(&quot;dimensions of A %*% Z:&quot;, size(A %*% Z), &quot;\n&quot;)</code></pre>
+<pre><code>## dimensions of A %*% Z: 2 4</code></pre>
 <p>Error raised for invalid dimensions.</p>
-<p><code>{r, error= TRUE) tryCatch(A + X, error = function(e) geterrmessage())</code></p>
+<p><code>{r, error= TRUE) tryCatch(A + Z, error = function(e) geterrmessage())</code></p>
 <p><code>cvxr</code> uses DCP analysis to determine the sign and curvature of each expression.</p>
 </div>
 <div id="sign" class="section level2">
@@ -52,19 +52,19 @@ cat(&quot;dimensions of X:&quot;, size(X), &quot;\n&quot;)</code></pre>
 <li>Negative if <code>expr1</code> and <code>expr2</code> have opposite (known) signs.</li>
 <li>Unknown if either expression has unknown sign.</li>
 </ul>
-<p>The sign given to an expression is always correct. But DCP sign analysis may flag an expression as unknown sign when the sign could be figured out through more complex analysis. For instance, <code>x * x</code> is positive but has unknown sign by the rules above.</p>
+<p>The sign given to an expression is always correct. However, DCP sign analysis may flag an expression as unknown sign when the sign could be figured out through more complex analysis. For instance, <code>x * x</code> is positive but has unknown sign by the rules above.</p>
 <p><code>cvxr</code> determines the sign of constants by looking at their value. For scalar constants, this is straightforward. Vector and matrix constants with all positive (negative) entries are marked as positive (negative). Vector and matrix constants with both positive and negative entries are marked as unknown sign.</p>
 <p>The sign of an expression is obtained via the <code>sign</code> function:</p>
 <pre class="r"><code>x &lt;- Variable()
-a &lt;- Parameter(sign = &quot;negative&quot;)
+a &lt;- Constant(-1)
 c &lt;- matrix(c(1, -1), ncol = 1)
 
 cat(&quot;sign of x:&quot;, sign(x), &quot;\n&quot;)</code></pre>
 <pre><code>## sign of x: UNKNOWN</code></pre>
 <pre class="r"><code>cat(&quot;sign of a:&quot;, sign(a), &quot;\n&quot;)</code></pre>
 <pre><code>## sign of a: NEGATIVE</code></pre>
-<pre class="r"><code>cat(&quot;sign of square(x):&quot;, sign(square(x)), &quot;\n&quot;)</code></pre>
-<pre><code>## sign of square(x): POSITIVE</code></pre>
+<pre class="r"><code>cat(&quot;sign of abs(x):&quot;, sign(abs(x)), &quot;\n&quot;)</code></pre>
+<pre><code>## sign of abs(x): POSITIVE</code></pre>
 <pre class="r"><code>cat(&quot;sign of c*a:&quot;, sign(c * a), &quot;\n&quot;)</code></pre>
 <pre><code>## sign of c*a: UNKNOWN</code></pre>
 </div>
@@ -130,7 +130,7 @@ DCP analysis cannot determine the curvature
 <div id="curvature-rules" class="section level2">
 <h2>Curvature rules</h2>
 <p>DCP analysis is based on applying a general composition theorem from convex analysis to each (sub)expression.</p>
-<p><span class="math inline">\(f(e_1, e_2, \ldots, e_n)\)</span> is convex if <span class="math inline">\(f\)</span> is a convex function and for each <span class="math inline">\(e_{i}\)</span> one of the following conditions holds:</p>
+<p><span class="math inline">\(f(e_1, e_2, \ldots, e_n)\)</span> is convex if <span class="math inline">\(f\)</span> is a convex function and for each <span class="math inline">\(e_{i}\)</span>, one of the following conditions holds:</p>
 <ul>
 <li><span class="math inline">\(f\)</span> is increasing in argument <span class="math inline">\(i\)</span> and <span class="math inline">\(e_i\)</span> is convex.</li>
 <li><span class="math inline">\(f\)</span> is decreasing in argument <span class="math inline">\(i\)</span> and <span class="math inline">\(e_i\)</span> is concave.</li>
@@ -144,27 +144,27 @@ DCP analysis cannot determine the curvature
 </ul>
 <p><span class="math inline">\(f(e_1, e_2, \ldots, e_n)\)</span> is affine if <span class="math inline">\(f\)</span> is an affine function and each <span class="math inline">\(e_i\)</span> is affine.</p>
 <p>If none of the three rules apply, the expression <span class="math inline">\(f(e_1, e_2,\ldots, e_n)\)</span> is marked as having unknown curvature.</p>
-<p>Whether a function is increasing or decreasing in an argument may depend on the sign of the argument. For instance, <code>square</code> is increasing for positive arguments and decreasing for negative arguments.</p>
+<p>Whether a function is increasing or decreasing in an argument may depend on the sign of the argument. For instance, <code>abs</code> is increasing for positive arguments and decreasing for negative arguments.</p>
 <p>The curvature of an expression is determined using the <code>curvature</code> function:</p>
 <pre class="r"><code>x &lt;- Variable()
-a &lt;- Parameter(sign=&quot;positive&quot;)
+a &lt;- Constant(5)
 
 cat(&quot;curvature of x:&quot;, curvature(x), &quot;\n&quot;)</code></pre>
 <pre><code>## curvature of x: AFFINE</code></pre>
 <pre class="r"><code>cat(&quot;curvature of a:&quot;, curvature(a), &quot;\n&quot;)</code></pre>
 <pre><code>## curvature of a: CONSTANT</code></pre>
-<pre class="r"><code>cat(&quot;curvature of square(x):&quot;, curvature(square(x)), &quot;\n&quot;)</code></pre>
-<pre><code>## curvature of square(x): CONVEX</code></pre>
+<pre class="r"><code>cat(&quot;curvature of abs(x):&quot;, curvature(abs(x)), &quot;\n&quot;)</code></pre>
+<pre><code>## curvature of abs(x): CONVEX</code></pre>
 <pre class="r"><code>cat(&quot;curvature of sqrt(x):&quot;, curvature(sqrt(x)), &quot;\n&quot;)</code></pre>
 <pre><code>## curvature of sqrt(x): CONCAVE</code></pre>
 </div>
 <div id="infix-operators" class="section level2">
 <h2>Infix operators</h2>
-<p>The infix operators <code>+, -, *, /</code> are treated exactly like functions. The infix operators <code>+</code> and <code>-</code> are affine, so the rules above are used to flag the curvature. For example, <code>expr1 + expr2</code> is flagged as convex if <code>expr1</code> and <code>expr2</code> are convex.</p>
-<p><code>expr1*expr2</code> is allowed only when one of the expressions is constant. If both expressions are non-constant, <code>cvxr</code> will raise an exception. <code>expr1/expr2</code> is allowed only when <code>expr2</code> is a scalar constant. The curvature rules above apply. For example, <code>expr1/expr2</code> is convex when <code>expr1</code> is concave and <code>expr2</code> is negative and constant.</p>
+<p>The infix operators <code>+, -, *, %*%, /</code> are treated exactly like functions. The infix operators <code>+</code> and <code>-</code> are affine, so the rules above are used to flag the curvature. For example, <code>expr1 + expr2</code> is flagged as convex if <code>expr1</code> and <code>expr2</code> are convex.</p>
+<p><code>expr1*expr2</code> and <code>expr1 %*% expr2</code> are allowed only when one of the expressions is constant. If both expressions are non-constant, <code>cvxr</code> will raise an exception. <code>expr1/expr2</code> is allowed only when <code>expr2</code> is a scalar constant. The curvature rules above apply. For example, <code>expr1/expr2</code> is convex when <code>expr1</code> is concave and <code>expr2</code> is negative and constant.</p>
 <div id="example-1" class="section level3">
 <h3>Example 1</h3>
-<p>DCP analysis breaks expressions down into subexpressions. The tree visualization below shows how this works for the expression <code>2 *square(x) + 3</code>. Each subexpression is shown in a blue box. We mark its curvature on the left and its sign on the right.</p>
+<p>DCP analysis breaks expressions down into subexpressions. The tree visualization below shows how this works for the expression <code>2*square(x) + 3</code>. Here <code>square</code> is synonymous with squaring each element of the input <code>x</code>. Each subexpression is displayed in a blue box. We mark its curvature on the left and its sign on the right.</p>
 <div class="figure">
 <img src="../../img/dcp_files/example1.png" />
 
@@ -179,11 +179,11 @@ cat(&quot;curvature of x:&quot;, curvature(x), &quot;\n&quot;)</code></pre>
 </div>
 <p>The variable <code>x</code> has affine curvature and unknown sign. The <code>square</code> function is convex and non-monotone for arguments of unknown sign. It can take the affine expression <code>x</code> as an argument; the result <code>square(x)</code> is convex.</p>
 <p>The arithmetic operator <code>+</code> is affine and increasing, so the composition <code>1 + square(x)</code> is convex by the curvature rule for convex functions. The function <code>sqrt</code> is concave and increasing, which means it can only take a concave argument. Since <code>1 + square(x)</code> is convex, <code>sqrt(1 + square(x))</code> violates the DCP rules and cannot be verified as convex.</p>
-<p>In fact, <code>sqrt(1 + square(x))</code> is a convex function of <code>x</code>, but the DCP rules are not able to verify convexity. If the expression is written as <code>norm(vstack(1, x), 2)</code>, the L2 norm of the vector <span class="math inline">\([1,x]\)</span>, which has the same value as <code>sqrt(1 + square(x))</code>, then it will be certified as convex using the DCP rules.</p>
+<p>In fact, <code>sqrt(1 + square(x))</code> is a convex function of <code>x</code>, but the DCP rules are not able to verify convexity. If the expression is written as <code>p_norm(vstack(1, x), 2)</code>, the l2 norm of the vector <span class="math inline">\([1,x]\)</span>, which has the same value as <code>sqrt(1 + square(x))</code>, then it will be certified as convex using the DCP rules.</p>
 <pre class="r"><code>cat(&quot;sqrt(1 + square(x)) curvature:&quot;, curvature(sqrt(1 + square(x))), &quot;\n&quot;)</code></pre>
 <pre><code>## sqrt(1 + square(x)) curvature: UNKNOWN</code></pre>
-<pre class="r"><code>cat(&quot;norm(vstack(1, x), 2) curvature:&quot;, curvature(p_norm(vstack(1, x), 2)), &quot;\n&quot;)</code></pre>
-<pre><code>## norm(vstack(1, x), 2) curvature: CONVEX</code></pre>
+<pre class="r"><code>cat(&quot;p_norm(vstack(1, x), 2) curvature:&quot;, curvature(p_norm(vstack(1, x), 2)), &quot;\n&quot;)</code></pre>
+<pre><code>## p_norm(vstack(1, x), 2) curvature: CONVEX</code></pre>
 </div>
 </div>
 <div id="dcp-problems" class="section level2">
@@ -204,10 +204,10 @@ cat(&quot;curvature of x:&quot;, curvature(x), &quot;\n&quot;)</code></pre>
 y &lt;- Variable()
 
 ## DCP problems.
-prob1 &lt;- Problem(Minimize(square(x - y)), list(x + y &gt;= 0))
+prob1 &lt;- Problem(Minimize((x - y)^2), list(x + y &gt;= 0))
 prob2 &lt;- Problem(Maximize(sqrt(x - y)),
                  list(2 * x - 3 == y,
-                      square(x) &lt;= 2))
+                      x^2 &lt;= 2))
 
 cat(&quot;prob1 is DCP:&quot;, is_dcp(prob1), &quot;\n&quot;)</code></pre>
 <pre><code>## prob1 is DCP: TRUE</code></pre>
@@ -216,14 +216,14 @@ cat(&quot;prob1 is DCP:&quot;, is_dcp(prob1), &quot;\n&quot;)</code></pre>
 <pre class="r"><code>## Non-DCP problems.
 
 ## A non-DCP objective.
-prob3 &lt;- Problem(Maximize(square(x)))
+prob3 &lt;- Problem(Maximize(x^2))
 
 cat(&quot;prob3 is DCP:&quot;, is_dcp(prob3), &quot;\n&quot;)</code></pre>
 <pre><code>## prob3 is DCP: FALSE</code></pre>
-<pre class="r"><code>cat(&quot;Maximize(square(x)) is DCP:&quot;, is_dcp(Maximize(square(x))), &quot;\n&quot;)</code></pre>
-<pre><code>## Maximize(square(x)) is DCP: FALSE</code></pre>
+<pre class="r"><code>cat(&quot;Maximize(x^2) is DCP:&quot;, is_dcp(Maximize(x^2)), &quot;\n&quot;)</code></pre>
+<pre><code>## Maximize(x^2) is DCP: FALSE</code></pre>
 <pre class="r"><code>## A non-DCP constraint.
-prob4 &lt;- Problem(Minimize(square(x)), list(sqrt(x) &lt;= 2))
+prob4 &lt;- Problem(Minimize(x^2), list(sqrt(x) &lt;= 2))
 
 cat(&quot;prob4 is DCP:&quot;, is_dcp(prob4), &quot;\n&quot;)</code></pre>
 <pre><code>## prob4 is DCP: FALSE</code></pre>
