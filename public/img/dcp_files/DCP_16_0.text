@@ -1,0 +1,4 @@
+curvature of x: AFFINE
+curvature of a: CONSTANT
+curvature of abs(x) CONVEX
+curvature of sqrt(x) CONCAVE

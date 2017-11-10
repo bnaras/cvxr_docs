@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.30.2" />
+	
+	<title>Kelly Gambling &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Kelly Gambling</h1>
+	
+	<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>In Kelly gambling <span class="citation">(Kelly <a href="#ref-kelly">1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span> possible outcomes, which yield a random non-negative return of <span class="math inline">\(r \in {\mathbf R}_+^n\)</span>. The return <span class="math inline">\(r\)</span> takes on exactly <span class="math inline">\(K\)</span> values <span class="math inline">\(r_1,\ldots,r_K\)</span> with known probabilities <span class="math inline">\(\pi_1,\ldots,\pi_K\)</span>. This gamble is repeated over <span class="math inline">\(T\)</span> periods. In a given period <span class="math inline">\(t\)</span>, let <span class="math inline">\(b_i \geq 0\)</span> denote the fraction of our wealth bet on outcome <span class="math inline">\(i\)</span>. Assuming the <span class="math inline">\(n\)</span>th outcome is equivalent to not wagering (it returns one with certainty), the fractions must satisfy <span class="math inline">\(\sum_{i=1}^n b_i = 1\)</span>. Thus, at the end of the period, our cumulative wealth is <span class="math inline">\(w_t = (r^Tb)w_{t-1}\)</span>. Our goal is to maximize the average growth rate with respect to <span class="math inline">\(b \in {\mathbf R}^n\)</span>:</p>
+<span class="math display">\[\begin{array}{ll}
+\underset{b}{\mbox{maximize}} &amp; \sum_{j=1}^K \pi_j\log(r_j^Tb) \\
+\mbox{subject to} &amp; b \geq 0, \quad \sum_{i=1}^n b_i = 1.  
+\end{array}\]</span>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We solve the Kelly gambling problem for <span class="math inline">\(K = 100\)</span> and <span class="math inline">\(n = 20\)</span>. The probabilities <span class="math inline">\(\pi_j \sim \mbox{Uniform}(0,1)\)</span>, and the potential returns <span class="math inline">\(r_j \sim \mbox{Uniform}(0.5,1.5)\)</span> except for <span class="math inline">\(r_n = {\mathbf 1}\)</span>, which represents the payoff from not wagering. With an initial wealth of <span class="math inline">\(w_0 = 1\)</span>, we simulate the growth trajectory of our Kelly optimal bets over <span class="math inline">\(P = 100\)</span> periods, assuming returns are i.i.d. over time. In the following code, <code>rets</code> is the <span class="math inline">\(K \times n\)</span> matrix of possible returns with row <span class="math inline">\(r_i\)</span>, while <code>ps</code> is the vector of return probabilities <span class="math inline">\((\pi_1,\ldots,\pi_K)\)</span>.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+set.seed(1)
+n &lt;- 20      # Total bets
+K &lt;- 100     # Number of possible returns
+PERIODS &lt;- 100
+TRIALS &lt;- 5
+
+## Generate return probabilities
+ps &lt;- runif(K)
+ps &lt;- ps/sum(ps)
+
+## Generate matrix of possible returns
+rets &lt;- runif(K*(n-1), 0.5, 1.5)
+shuff &lt;- sample(1:length(rets), size = length(rets), replace = FALSE)
+rets[shuff[1:30]] &lt;- 0    # Set 30 returns to be relatively low
+rets[shuff[31:60]] &lt;- 5     # Set 30 returns to be relatively high
+rets &lt;- matrix(rets, nrow = K, ncol = n-1)
+rets &lt;- cbind(rets, rep(1, K))   # Last column represents not betting
+
+## Solve for Kelly optimal bets
+b &lt;- Variable(n)
+obj &lt;- Maximize(t(ps) %*% log(rets %*% b))
+constraints &lt;- list(sum(b) == 1, b &gt;= 0)
+prob &lt;- Problem(obj, constraints)
+result &lt;- solve(prob)
+bets &lt;- result$getValue(b)
+
+## Naive betting scheme: bet in proportion to expected return
+bets_cmp &lt;- matrix(0, nrow = n)
+bets_cmp[n] &lt;- 0.15                  # Hold 15% of wealth
+rets_avg &lt;- ps %*% rets
+## tidx &lt;- order(rets_avg[-n], decreasing = TRUE)[1:9]
+tidx &lt;- 1:(n-1)
+fracs &lt;- rets_avg[tidx]/sum(rets_avg[tidx])
+bets_cmp[tidx] &lt;- fracs*(1-bets_cmp[n])
+
+## Calculate wealth over time
+wealth &lt;- matrix(0, nrow = PERIODS, ncol = TRIALS)
+wealth_cmp &lt;- matrix(0, nrow = PERIODS, ncol = TRIALS)
+for(i in seq_len(TRIALS)) {
+    sidx &lt;- sample(K, size = PERIODS, replace = TRUE, prob = ps)
+    winnings &lt;- rets[sidx,] %*% bets
+    wealth[,i] &lt;- cumprod(winnings)
+    
+    winnings_cmp &lt;- rets[sidx,] %*% bets_cmp
+    wealth_cmp[,i] &lt;- cumprod(winnings_cmp)
+}</code></pre>
+<p>Growth curves for five independent trials are plotted in the figures below. Red lines represent the wealth each period from the Kelly bets, while cyan lines are the result of the naive bets. Clearly, Kelly optimal bets perform better, producing greater net wealth by the final period.</p>
+<pre class="r"><code>library(ggplot2)
+library(tidyr)
+df &lt;- data.frame(seq_len(PERIODS), wealth)
+names(df) &lt;- c(&quot;x&quot;, paste0(&quot;kelly&quot;, seq_len(TRIALS)))
+plot.data1 &lt;- gather(df, key = &quot;trial&quot;, value = &quot;wealth&quot;,
+                     paste0(&quot;kelly&quot;, seq_len(TRIALS)),
+                     factor_key = TRUE)
+plot.data1$Strategy &lt;- &quot;Kelly Optimal Bets&quot;
+df &lt;- data.frame(seq_len(PERIODS), wealth_cmp)
+names(df) &lt;- c(&quot;x&quot;, paste0(&quot;naive&quot;, seq_len(TRIALS)))
+plot.data2 &lt;- gather(df, key = &quot;trial&quot;, value = &quot;wealth&quot;,
+                     paste0(&quot;naive&quot;, seq_len(TRIALS)),
+                     factor_key = TRUE)
+plot.data2$Strategy &lt;- &quot;Naive Bets&quot;
+plot.data &lt;- rbind(plot.data1, plot.data2)
+ggplot(data = plot.data) +
+    geom_line(mapping = aes(x = x, y = wealth, group = trial, color = Strategy)) +
+    scale_y_log10() +
+    labs(x = &quot;Time&quot;, y = &quot;Wealth&quot;) +
+    theme(legend.position = &quot;top&quot;)</code></pre>
+<p><img src="../../../post/examples/cvxr_kelly-strategy_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="extensions" class="section level2">
+<h2>Extensions</h2>
+<p>As observed in some trajectories above, wealth tends to drop by a significant amount before increasing eventually. One way to reduce this drawdown risk is to add a convex constraint as described in <span class="citation">Busseti, Ryu, and Boyd (<a href="#ref-RCK">2016</a>, 5.3)</span></p>
+<p><span class="math display">\[
+\log\left(\sum_{j=1}^K \exp(\log\pi_j - \lambda
+\log(r_j^Tb))\right) \leq 0 
+\]</span></p>
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is the risk-aversion parameter. With <code>cvxr</code>, this can be accomplished in a single line using the <code>log_sum_exp</code> atom. Other extensions like wealth goals, betting restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-RCK">
+<p>Busseti, E., E. K. Ryu, and S. Boyd. 2016. “Risk–Constrained Kelly Gambling.” <em>Journal of Investing</em> 25 (3): 118–34.</p>
+</div>
+<div id="ref-kelly">
+<p>Kelly, J. L. 1956. “A New Interpretation of Information Rate.” <em>Bell System Technical Journal</em> 35 (4): 917–26.</p>
+</div>
+</div>
+</div>
+
+
+
+						<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../../">
+				<img class="logo" src="../../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../index.html">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../../post/examples/cvxr_log-concave/" title="Log-Concave Distribution Estimation">Log-Concave Distribution Estimation</a></li>
+  <li>Next: <a href="../../../post/examples/cvxr_fast-mixing-mc/" title="Fastest Mixing Markov Chain">Fastest Mixing Markov Chain</a></li>
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>
