@@ -16,9 +16,8 @@ that is
 $$ Y = X\beta + \epsilon $$ 
 
 where $Y$ is a $100\times 1$ vector, $X$ is a $100\times 10$ matrix,
-
-$\beta = -4,\ldots ,-1, 0, 1, \ldots 5$ is a $10\times 1$ vector, and
-$\epsilon \sim N(0, 1).$
+$\beta = [-4,\ldots ,-1, 0, 1, \ldots, 5]$ is a $10\times 1$ vector, and
+$\epsilon \sim N(0, 1)$.
 
 
 ```{r}
@@ -264,7 +263,5 @@ We also have a number of [tutorial examples](/post/examples/)
 available to study and mimic.
 
 ## References
-
-
 
 

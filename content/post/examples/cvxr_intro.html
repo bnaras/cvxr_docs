@@ -12,18 +12,18 @@ slug: cvxr_intro
 <p>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.</p>
 <p>We generate some synthetic data where we know the model completely, that is</p>
 <p><span class="math display">\[ Y = X\beta + \epsilon \]</span></p>
-<p>where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(100\times 1\)</span> vector, <span class="math inline">\(X\)</span> is a <span class="math inline">\(100\times 10\)</span> matrix, <span class="math inline">\(\beta = -4,\ldots ,-1, 0, 1, \ldots 5\)</span> is a <span class="math inline">\(10\times 1\)</span> vector, and <span class="math inline">\(\epsilon \sim N(0, 1).\)</span></p>
+<p>where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(100\times 1\)</span> vector, <span class="math inline">\(X\)</span> is a <span class="math inline">\(100\times 10\)</span> matrix, <span class="math inline">\(\beta = [-4,\ldots ,-1, 0, 1, \ldots, 5]\)</span> is a <span class="math inline">\(10\times 1\)</span> vector, and <span class="math inline">\(\epsilon \sim N(0, 1)\)</span>.</p>
 <pre class="r"><code>set.seed(123)
 
 n &lt;- 100
 p &lt;- 10
-beta &lt;- -4:5 # beta is just -4 through 5.
+beta &lt;- -4:5   # beta is just -4 through 5.
 
 X &lt;- matrix(rnorm(n * p), nrow=n)
 colnames(X) &lt;- paste0(&quot;beta_&quot;, beta)
 Y &lt;- X %*% beta + rnorm(n)</code></pre>
 <p>Given the data <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, we can estimate the <span class="math inline">\(\beta\)</span> vector using <code>lm</code> function in R that fits a standard regression model.</p>
-<pre class="r"><code>ls.model &lt;- lm(Y ~ 0 + X) ## There is no intercept in our model above
+<pre class="r"><code>ls.model &lt;- lm(Y ~ 0 + X)   # There is no intercept in our model above
 m &lt;- matrix(coef(ls.model), ncol = 1)
 rownames(m) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
 library(kableExtra)
@@ -284,9 +284,9 @@ lm est.
 </div>
 <div id="wait-a-minute-what-have-we-gained" class="section level2">
 <h2>Wait a minute! What have we gained?</h2>
-<p>On the surface it appears that we have replaced one call to <code>lm</code> with at least five or six lines of new R code. On top of that, the code actually runs slower and so it is not clear what was really achieved.</p>
+<p>On the surface, it appears that we have replaced one call to <code>lm</code> with at least five or six lines of new R code. On top of that, the code actually runs slower, and so it is not clear what was really achieved.</p>
 <p>So suppose we knew for a fact that the <span class="math inline">\(\beta\)</span>s were nonnegative and we wish to take this fact into account. This is <a href="https://en.wikipedia.org/wiki/Non-negative_least_squares">nonnegative least squares regression</a> and <code>lm</code> would no longer do the job.</p>
-<p>The modified problem merely requires the addition of a constraint to the problem definition; no other modification is necessary.</p>
+<p>In <code>cvxr</code>, the modified problem merely requires the addition of a constraint to the problem definition.</p>
 <pre class="r"><code>problem &lt;- Problem(objective, constraints = list(betaHat &gt;= 0))
 result &lt;- solve(problem)
 m &lt;- matrix(result$getValue(betaHat), ncol = 1)
@@ -1102,7 +1102,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 </div>
 <div id="further-reading" class="section level2">
 <h2>Further Reading</h2>
-<p>We hope we have vetted your appetite. You may wish to read <a href="/post/examples/cvxr_gentle-intro/">a longer introduction</a> with more examples.</p>
+<p>We hope we have whet your appetite. You may wish to read <a href="/post/examples/cvxr_gentle-intro/">a longer introduction</a> with more examples.</p>
 <p>We also have a number of <a href="/post/examples/">tutorial examples</a> available to study and mimic.</p>
 </div>
 <div id="references" class="section level2">
