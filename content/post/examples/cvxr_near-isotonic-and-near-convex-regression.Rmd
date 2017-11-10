@@ -13,14 +13,12 @@ Given a set of data points $y \in {\mathbf R}^m$,
 @TibshiraniHoefling:2011 fit a nearly-isotonic approximation $\beta
 \in {\mathbf R}^m$ by solving
 
-$$
 \begin{array}{ll}
 
 \underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i -
 \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
 
 \end{array}
-$$
 
 where $\lambda \geq 0$ is a penalty parameter and $x_+
 =\max(x,0)$. This can be directly formulated in `cvxr`.  As an
@@ -38,8 +36,7 @@ str(cdiac)
 
 Since we plan to fit the regression and also get some idea of the
 standard errors, we write a function that computes the fit for use in
-bootstrapping. In what follows, we use a very small number of
-bootstrap samples as the fits are time consuming.
+bootstrapping. 
 
 ```{r}
 neariso_fit <- function(y, lambda) {
@@ -56,6 +53,9 @@ The `boot` library provides all the tools for bootstrapping but
 requires a statistic function that takes particular arguments: a data
 frame, followed by the bootstrap indices and any other arguments
 ($\lambda$ for instance). This is shown below.
+
+_NOTE_ In what follows, we use a very small number of bootstrap
+samples as the fits are time consuming.
 
 ```{r}
 neariso_fit_stat <- function(data, index, lambda) {

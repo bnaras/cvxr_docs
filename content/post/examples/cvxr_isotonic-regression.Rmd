@@ -109,13 +109,13 @@ In the above, we make use of the `vstack` function to create a single vector of 
 
 We can how all three solutions compare.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap="Comparison of Solutions(P = Primary, S = Secondary, T = Tertiary)"}
 library(kableExtra)
 d <- data.frame(res_p$x, x_p, res_s$x, x_s, res_t$x, x_t)
 names(d) <- c("Isotone (P)", "CVXR (P)", "Isotone (S)", "CVXR(S)",
               "Isotone (T)", "CVXR (T)")
 knitr::kable(d, digits = 2, format = "html", caption = "P = primary, S = Secondary, T = Tertiary") %>%
-    column_spec(1:5, background = "#ececec", )
+    column_spec(1:6, background = "#ececec")
 ```
 
 ## Notes

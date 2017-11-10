@@ -1,4 +1,4 @@
-baseurl = "https://cvxr.stanford.edu/"
+baseurl = "https://cvxr.rbind.io/"
 languageCode = "en-us"
 metadataformat = "yaml"
 title = "CVXR"
