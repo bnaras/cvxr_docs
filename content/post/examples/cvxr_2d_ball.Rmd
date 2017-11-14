@@ -59,7 +59,7 @@ cat(sprintf("The radius is %0.5f for an area %0.5f\n", radius, pi * radius^2))
 
 ## A Plot
 
-```{r, fig.width=5, fig.height=5}
+```{r, fig.width=6, fig.height=6}
 library(ggplot2)
 library(ggforce)
 ggplot() +
@@ -69,6 +69,10 @@ ggplot() +
     geom_abline(slope = -a4[1] / a4[2], intercept = b[4] / a4[2]) +
     geom_circle(mapping = aes(x0 = center[1], y0 = center[2], r = radius), color = "blue") +
     geom_point(mapping = aes(x = center[1], y = center[2]), color = "red", size = 2) +
+    geom_line(mapping = aes(x = c(center[1], center[1] - radius), y = c(center[2], center[2])),
+              arrow = arrow(length = unit(0.03, "npc"), ends = "first", type = "closed"),
+              color = "brown") +
+    annotate("text", x = -0.2, y = 0.04, label = sprintf("r = %0.5f", radius)) +
     labs(x = "x", y = "y") +
     xlim(-1, 1) + ylim(-1, 1)
 ```

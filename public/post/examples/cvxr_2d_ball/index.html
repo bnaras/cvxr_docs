@@ -69,9 +69,13 @@ ggplot() +
     geom_abline(slope = -a4[1] / a4[2], intercept = b[4] / a4[2]) +
     geom_circle(mapping = aes(x0 = center[1], y0 = center[2], r = radius), color = &quot;blue&quot;) +
     geom_point(mapping = aes(x = center[1], y = center[2]), color = &quot;red&quot;, size = 2) +
+    geom_line(mapping = aes(x = c(center[1], center[1] - radius), y = c(center[2], center[2])),
+              arrow = arrow(length = unit(0.03, &quot;npc&quot;), ends = &quot;first&quot;, type = &quot;closed&quot;),
+              color = &quot;brown&quot;) +
+    annotate(&quot;text&quot;, x = -0.2, y = 0.04, label = sprintf(&quot;r = %0.5f&quot;, radius)) +
     labs(x = &quot;x&quot;, y = &quot;y&quot;) +
     xlim(-1, 1) + ylim(-1, 1)</code></pre>
-<p><img src="../../../post/examples/cvxr_2d_ball_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+<p><img src="../../../post/examples/cvxr_2d_ball_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
