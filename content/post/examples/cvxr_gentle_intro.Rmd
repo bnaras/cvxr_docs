@@ -358,12 +358,14 @@ lm_solution3.1 <- lm(y ~ 0 + X)
 library(ggplot2)
 lmBeta <- coef(lm_solution3.1)
 cvxrBeta <- CVXR_solution3.1$getValue(beta)
-coefs <- data.frame( estimate = c(lmBeta, cvxrBeta),
-                     method = c(rep("lm", 10), rep("CVXR", 10)),
-                     beta = rep(paste("beta", 0:9, sep = ""), 2))
-ggplot(data = coefs, aes(x = as.factor(beta), y = estimate, fill = method)) + 
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Comparison of CVXR to lm", x = "coefficient", y = "")
+coeff <- cbind(lmBeta, cvxrBeta)
+colnames(coeff) <- c("OLS", "CVXR")
+rownames(coeff) <- paste0("beta[", seq_along(lmBeta) - 1L, "]")
+d <- data.frame(coeff = rownames(coeff), coeff)
+tidyD <- gather(d, key="type", value="value", OLS, CVXR, factor_key = TRUE)
+ggplot(data = tidyD, mapping = aes(x = coeff, y = value)) +
+    geom_bar(mapping = aes(fill = type), stat = "identity", position = "dodge") +
+    scale_x_discrete(labels = parse(text = levels(tidyD$coeff)))
 ```
 
 Obviously, if all you want to do is least-squares linear regression,
@@ -391,7 +393,6 @@ coeff <- cbind(trueBeta, lmBeta, cvxrBetaNNLS)
 colnames(coeff) <- c("Actual", "OLS", "NNLS")
 rownames(coeff) <- paste0("beta[", seq_along(trueBeta) - 1L, "]")
 d <- data.frame(coeff = rownames(coeff), coeff)
-library(tidyr)
 tidyD <- gather(d, key="type", value="value", Actual, OLS, NNLS, factor_key = TRUE)
 ggplot(data = tidyD, mapping = aes(x = coeff, y = value)) +
     geom_bar(mapping = aes(fill = type), stat = "identity", position = "dodge") +
