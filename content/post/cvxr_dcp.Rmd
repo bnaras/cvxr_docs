@@ -55,7 +55,7 @@ cat("dimensions of A %*% Z:", size(A %*% Z), "\n")
 
 Error raised for invalid dimensions.
 
-```{r, error= TRUE)
+```{r, error=TRUE}
 tryCatch(A + Z, error = function(e) geterrmessage())
 ```
 

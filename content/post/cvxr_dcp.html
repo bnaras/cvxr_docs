@@ -39,7 +39,8 @@ cat(&quot;dimensions of Z:&quot;, size(Z), &quot;\n&quot;)</code></pre>
 <pre class="r"><code>cat(&quot;dimensions of A %*% Z:&quot;, size(A %*% Z), &quot;\n&quot;)</code></pre>
 <pre><code>## dimensions of A %*% Z: 2 4</code></pre>
 <p>Error raised for invalid dimensions.</p>
-<p><code>{r, error= TRUE) tryCatch(A + Z, error = function(e) geterrmessage())</code></p>
+<pre class="r"><code>tryCatch(A + Z, error = function(e) geterrmessage())</code></pre>
+<pre><code>## [1] &quot;Incompatible dimensions&quot;</code></pre>
 <p><code>CVXR</code> uses DCP analysis to determine the sign and curvature of each expression.</p>
 </div>
 <div id="sign" class="section level2">
