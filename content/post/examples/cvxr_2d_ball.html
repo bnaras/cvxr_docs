@@ -1,0 +1,69 @@
+---
+title: Largest Ball in a Polyhedron in 2D
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_2d_ball
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+
+
+<div id="problem" class="section level2">
+<h2>Problem</h2>
+<p>The following is a problem from <span class="citation">Boyd and Vandenberghe (<a href="#ref-BoydVandenberghe:2004">2004</a>)</span>, section 4.3.1.</p>
+<p>Find the largest Euclidean ball (i.e. its center and radius) that lies in a polyhedron described by affine inequalites:</p>
+<p><span class="math display">\[
+P = {x : a_i&#39;*x &lt;= b_i, i=1,...,m} 
+\]</span></p>
+<p>where x is in <span class="math inline">\({\mathbf R}^2\)</span>.</p>
+<p>We define variables that determine the polyhedron.</p>
+<pre class="r"><code>a1 &lt;- matrix(c(2,1))
+a2 &lt;- matrix(c(2,-1))
+a3 &lt;- matrix(c(-1,2))
+a4 &lt;- matrix(c(-1,-2))
+b &lt;- rep(1,4)</code></pre>
+<p>Next, we formulate the <code>CVXR</code> problem.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
+r &lt;- Variable(name = &quot;radius&quot;)
+x_c &lt;- Variable(2, name = &quot;center&quot;)
+obj &lt;- Maximize(r)
+constraints &lt;- list(
+    t(a1) %*% x_c + p_norm(a1, 2) * r &lt;= b[1],
+    t(a2) %*% x_c + p_norm(a2, 2) * r &lt;= b[2],
+    t(a3) %*% x_c + p_norm(a3, 2) * r &lt;= b[3],
+    t(a4) %*% x_c + p_norm(a4, 2) * r &lt;= b[4]
+)
+p &lt;- Problem(obj, constraints)</code></pre>
+<p>All that remains is to solve the problem and read off the solution.</p>
+<pre class="r"><code>result &lt;- solve(p)
+radius &lt;- result$getValue(r)
+center &lt;- result$getValue(x_c)
+cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * radius^2))    </code></pre>
+<pre><code>## The radius is 0.44721 for an area 0.62832</code></pre>
+</div>
+<div id="a-plot" class="section level2">
+<h2>A Plot</h2>
+<pre class="r"><code>library(ggplot2)
+library(ggforce)
+ggplot() +
+    geom_abline(slope = -a1[1] / a1[2], intercept = b[1] / a1[2]) +
+    geom_abline(slope = -a2[1] / a2[2], intercept = b[2] / a2[2]) +
+    geom_abline(slope = -a3[1] / a3[2], intercept = b[3] / a3[2]) +
+    geom_abline(slope = -a4[1] / a4[2], intercept = b[4] / a4[2]) +
+    geom_circle(mapping = aes(x0 = center[1], y0 = center[2], r = radius), color = &quot;blue&quot;) +
+    geom_point(mapping = aes(x = center[1], y = center[2]), color = &quot;red&quot;, size = 2) +
+    labs(x = &quot;x&quot;, y = &quot;y&quot;) +
+    xlim(-1, 1) + ylim(-1, 1)</code></pre>
+<p><img src="/post/examples/cvxr_2d_ball_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-BoydVandenberghe:2004">
+<p>Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge University Press.</p>
+</div>
+</div>
+</div>

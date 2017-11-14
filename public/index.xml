@@ -30,6 +30,20 @@
     </item>
     
     <item>
+      <title>Largest Ball in a Polyhedron in 2D</title>
+      <link>/post/examples/cvxr_2d_ball/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_2d_ball/</guid>
+      <description>Problem The following is a problem from Boyd and Vandenberghe (2004), section 4.3.1.
+Find the largest Euclidean ball (i.e. its center and radius) that lies in a polyhedron described by affine inequalites:
+\[ P = {x : a_i&amp;#39;*x &amp;lt;= b_i, i=1,...,m} \]
+where x is in \({\mathbf R}^2\).
+We define variables that determine the polyhedron.
+a1 &amp;lt;- matrix(c(2,1)) a2 &amp;lt;- matrix(c(2,-1)) a3 &amp;lt;- matrix(c(-1,2)) a4 &amp;lt;- matrix(c(-1,-2)) b &amp;lt;- rep(1,4) Next, we formulate the CVXR problem.</description>
+    </item>
+    
+    <item>
       <title>Log-Concave Distribution Estimation</title>
       <link>/post/examples/cvxr_log-concave/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -77,7 +91,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization Log-Concave Density Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+ Largest Euclidean ball lying in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization Log-Concave Density Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
     </item>
     
     <item>
