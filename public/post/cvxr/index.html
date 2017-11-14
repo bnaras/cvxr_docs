@@ -29,6 +29,10 @@
 <h2>What is <code>CVXR</code>?</h2>
 <p><code>CVXR</code> is an R package that provides an object-oriented modeling language for convex optimization, similar to <code>CVX</code>, <code>CVXPY</code>, <code>YALMIP</code>, and <code>Convex.jl</code>. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties. <code>CVXR</code> then applies signed <a href="../../post/cvxr_dcp">disciplined convex programming (DCP)</a> to verify the problem’s convexity. Once verified, the problem is converted into standard conic form using graph implementations and passed to a cone solver such as <a href="https://github.com/embotech/ecos">ECOS</a> or <a href="https://github.com/cvxgrp/scs">SCS</a>.</p>
 </div>
+<div id="cvxr-paper" class="section level2">
+<h2><code>CVXR</code> paper</h2>
+<p>A preliminary draft our paper is available <a href="https://web.stanford.edu/~boyd/papers/cvxr_paper.html">here</a>.</p>
+</div>
 <div id="status" class="section level2">
 <h2>Status</h2>
 <p>Although <code>CVXR</code> continues to be developed on <a href="https://github.com/anqif">Github</a>, the current release implements all of the <code>CVXPY</code> atoms except for <code>geo_mean</code> and parameters. The latter is not an impediment since any parameter can be replaced by a variable.</p>

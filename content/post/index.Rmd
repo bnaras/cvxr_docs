@@ -24,6 +24,12 @@ passed to a cone solver such
 as [ECOS](https://github.com/embotech/ecos)
 or [SCS](https://github.com/cvxgrp/scs).
 
+## `CVXR` paper
+
+A preliminary draft our paper is
+available
+[here](https://web.stanford.edu/~boyd/papers/cvxr_paper.html). 
+
 ## Status
 
 Although `CVXR` continues to be developed
