@@ -158,7 +158,7 @@ nuclear norm can also be defined as the sum of `X`'s singular values.
 The functions `max_entries` and `min_entries` give the largest and
 smallest entry, respectively, in a single expression. These functions
 should not be confused with `max_elemwise` and `min_elemwise` (see
-:ref:`elementwise`). Use `max_elemwise` and `min_elemwise` to find the
+`elementwise`). Use `max_elemwise` and `min_elemwise` to find the
 maximum or minimum of a list of scalar expressions.
 
 The function `sum_entries` sums all the entries in a single
