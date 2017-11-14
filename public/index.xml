@@ -46,7 +46,7 @@
       
       <guid>/post/examples/cvxr_near-isotonic-and-near-convex-regression/</guid>
       <description>Given a set of data points \(y \in {\mathbf R}^m\), R. J. Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving
-\[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array}\] where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in cvxr. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
+\[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array}\] where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in CVXR. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
     </item>
     
     <item>
@@ -105,8 +105,8 @@ This is the famous catenary problem.
       <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/cvxr_functions/</guid>
-      <description>Functions Here we describe the functions that can be applied to cvxr expressions. cvxr uses the function information in this section and the Disciplined Convex Programming tools to mark expressions with a sign and curvature.
-Operators The infix operators +, -, *, %*%, / are treated as functions. + and - are affine functions. * and / are affine in cvxr because expr1*expr2 and expr1 %*% expr2 are allowed only when one of the expressions is constant and expr1/expr2 is allowed only when expr2 is a scalar constant.</description>
+      <description>Functions Here we describe the functions that can be applied to CVXR expressions. CVXR uses the function information in this section and the Disciplined Convex Programming tools to mark expressions with a sign and curvature.
+Operators The infix operators +, -, *, %*%, / are treated as functions. + and - are affine functions. * and / are affine in CVXR because expr1*expr2 and expr1 %*% expr2 are allowed only when one of the expressions is constant and expr1/expr2 is allowed only when expr2 is a scalar constant.</description>
     </item>
     
     <item>
@@ -115,16 +115,16 @@ Operators The infix operators +, -, *, %*%, / are treated as functions. + and - 
       <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/cvxr/</guid>
-      <description>What is cvxr? cvxr is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
+      <description>What is CVXR? CVXR is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
     </item>
     
     <item>
-      <title>A Gentle Introduction to `cvxr`</title>
+      <title>A Gentle Introduction to `CVXR`</title>
       <link>/post/examples/cvxr_gentle-intro/</link>
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/examples/cvxr_gentle-intro/</guid>
-      <description>Introduction Welcome to cvxr: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to cvxr and to generate excitement for its possibilities in the field of statistics.
+      <description>Introduction Welcome to CVXR: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to CVXR and to generate excitement for its possibilities in the field of statistics.
 Convex optimization is a powerful and very general tool. As a practical matter, the set of convex optimization problems includes almost every optimization problem that can be solved exactly and efficiently (i.</description>
     </item>
     
@@ -134,10 +134,10 @@ Convex optimization is a powerful and very general tool. As a practical matter, 
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/cvxr_dcp/</guid>
-      <description>Disciplined convex programming (DCP) is a system for constructing mathematical expressions with known curvature from a given library of base functions. cvxr uses DCP to ensure that the specified optimization problems are convex.
-This section of the tutorial explains the rules of DCP and how they are applied by cvxr.
+      <description>Disciplined convex programming (DCP) is a system for constructing mathematical expressions with known curvature from a given library of base functions. CVXR uses DCP to ensure that the specified optimization problems are convex.
+This section of the tutorial explains the rules of DCP and how they are applied by CVXR.
 Visit dcp.stanford.edu for a more interactive introduction to DCP.
-Expressions Expressions in cvxr are formed from variables, numerical constants such as R vectors and matrices, the standard arithmetic operators +, -, *, %*%, /, and a library of functions.</description>
+Expressions Expressions in CVXR are formed from variables, numerical constants such as R vectors and matrices, the standard arithmetic operators +, -, *, %*%, /, and a library of functions.</description>
     </item>
     
     <item>

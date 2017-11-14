@@ -41,7 +41,7 @@ $\mu$ and $\Sigma^{1/2}$ drawn from a standard normal
 distribution.
 
 ```{r}
-suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(CVXR)))
 ## Problem data
 set.seed(10)
 n <- 10
@@ -138,7 +138,7 @@ the risk. To account for transaction costs, we could add a term to the
 objective that penalizes deviations of $w$ from the previous
 portfolio. These extensions and more are described in
 @BoydBusseti:2017. The key takeaway is that all of these convex
-problems can be easily solved in `cvxr` with just a few alterations
+problems can be easily solved in `CVXR` with just a few alterations
 to the code above.
 
 

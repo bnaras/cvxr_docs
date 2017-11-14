@@ -26,8 +26,8 @@ str(pituitary)</code></pre>
 ##  $ size: num  21 23.5 23 24 21 25 21.5 22 19 23.5 ...</code></pre>
 <p>Since the size is expected to increase with age, an isotonic fit is suggested.</p>
 <pre class="r"><code>res_p &lt;- with(pituitary, gpava(age, size))</code></pre>
-<p>The <code>cvxr</code> formulation expresses this pretty much in the mathematical form.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+<p>The <code>CVXR</code> formulation expresses this pretty much in the mathematical form.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 x_p &lt;- with(pituitary, {
       n &lt;- length(size)
       x &lt;- Variable(n)
@@ -58,7 +58,7 @@ x_p &lt;- with(pituitary, {
 <p>Package <code>isotone</code> provides additional methods for handling tied data besides the default <code>ties = &quot;primary&quot;</code> method; <code>ties = &quot;secondary&quot;</code> enforces equality within ties, and <code>ties = &quot;tertiary&quot;</code> enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)</p>
 <pre class="r"><code>res_s &lt;- with(pituitary, gpava(age, size, ties = &quot;secondary&quot;))
 res_t &lt;- with(pituitary, gpava(age, size, ties = &quot;tertiary&quot;))</code></pre>
-<p>In <code>cvxr</code>, the secondary method just requires an additional constraint to enforce equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
+<p>In <code>CVXR</code>, the secondary method just requires an additional constraint to enforce equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
 <pre class="r"><code>x_s &lt;- with(pituitary, {
     n &lt;- length(size)
     x &lt;- Variable(n)

@@ -36,8 +36,8 @@
 \]</span></p>
 <p>Our objective is the total entropy, which is concave on <span class="math inline">\({\mathbf R}_+^m\)</span>, and our constraints ensure <span class="math inline">\(w\)</span> is a probability distribution that implies our known expectations on <span class="math inline">\(X\)</span>.</p>
 <p>To illustrate this method, we generate <span class="math inline">\(m = 1000\)</span> data points <span class="math inline">\(x_{i,1} \sim \mbox{Bernoulli}(0.5)\)</span>, <span class="math inline">\(x_{i,2} \sim \mbox{Uniform}(10,60)\)</span>, and <span class="math inline">\(y_i \sim N(5x_{i,1} + 0.1x_{i,2},1)\)</span>. Then we construct a skewed sample of <span class="math inline">\(m = 100\)</span> points that overrepresent small values of <span class="math inline">\(y_i\)</span>, thus biasing its distribution downwards. This can be seen in Figure , where the sample probability distribution peaks around <span class="math inline">\(y = 2.0\)</span>, and its cumulative distribution is shifted left from the population’s curve. Using direct standardization, we estimate <span class="math inline">\(w_i\)</span> and reweight our sample; the new empirical distribution cleaves much closer to the true distribution shown in red.</p>
-<p>In the <code>cvxr</code> code below, we import data from the package and solve for <span class="math inline">\(w\)</span>.</p>
-<pre class="r"><code>suppressWarnings(library(cvxr, warn.conflicts=FALSE))
+<p>In the <code>CVXR</code> code below, we import data from the package and solve for <span class="math inline">\(w\)</span>.</p>
+<pre class="r"><code>suppressWarnings(library(CVXR, warn.conflicts=FALSE))
 
 ## Import problem data
 data(dspop)   # Population
@@ -179,7 +179,7 @@ ggplot(plot.data) +
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
+		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
 	</li>
 	
 	<li class="toctree-l1">

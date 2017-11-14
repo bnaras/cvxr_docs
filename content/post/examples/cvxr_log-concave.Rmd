@@ -46,7 +46,7 @@ $\{0,\ldots,100\}$. We then estimate the probability mass function
 using the above method and compare it with the empirical distribution.
 
 ```{r}
-suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(CVXR)))
 set.seed(1)
 ## Calculate a piecewise linear function
 pwl_fun <- function(x, knots) {
@@ -92,7 +92,7 @@ pmf <- result$getValue(exp(u))
 
 The above lines transform the variables $u_k$ to $e^{u_k}$ before
 calculating their resulting values. This is possible because `exp` is
-a member of the `cvxr` library of atoms, so it can operate directly on
+a member of the `CVXR` library of atoms, so it can operate directly on
 a `Variable` object such as `u`.
 
 Below are the comparison plots of pmf and cdf. 

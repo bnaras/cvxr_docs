@@ -35,10 +35,10 @@ Since the size is expected to increase with age, an isotonic fit is suggested.
 res_p <- with(pituitary, gpava(age, size))
 ```
 
-The `cvxr` formulation expresses this pretty much in the mathematical form. 
+The `CVXR` formulation expresses this pretty much in the mathematical form. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(CVXR)))
 x_p <- with(pituitary, {
       n <- length(size)
       x <- Variable(n)
@@ -67,7 +67,7 @@ res_s <- with(pituitary, gpava(age, size, ties = "secondary"))
 res_t <- with(pituitary, gpava(age, size, ties = "tertiary"))
 ```
 
-In `cvxr`, the secondary method just requires an additional constraint to enforce
+In `CVXR`, the secondary method just requires an additional constraint to enforce
 equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using `base::split` and force those `x` values to be equal (i.e. `diff` == 0).
 
 ```{r}

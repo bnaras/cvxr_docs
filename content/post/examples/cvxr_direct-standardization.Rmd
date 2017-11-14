@@ -47,11 +47,11 @@ the population's curve. Using direct standardization, we estimate
 $w_i$ and reweight our sample; the new empirical distribution cleaves
 much closer to the true distribution shown in red.
 
-In the `cvxr` code below, we import data from the package and solve
+In the `CVXR` code below, we import data from the package and solve
 for $w$.
 
 ```{r}
-suppressWarnings(library(cvxr, warn.conflicts=FALSE))
+suppressWarnings(library(CVXR, warn.conflicts=FALSE))
 
 ## Import problem data
 data(dspop)   # Population

@@ -21,7 +21,7 @@ Given a set of data points $y \in {\mathbf R}^m$,
 \end{array}
 
 where $\lambda \geq 0$ is a penalty parameter and $x_+
-=\max(x,0)$. This can be directly formulated in `cvxr`.  As an
+=\max(x,0)$. This can be directly formulated in `CVXR`.  As an
 example, we use global warming data from
 the
 [Carbon Dioxide Information Analysis Center (CDIAC)](http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/). The
@@ -29,7 +29,7 @@ data points are the annual temperature anomalies relative to the
 1961--1990 mean.
 
 ```{r}
-suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(CVXR)))
 data(cdiac)
 str(cdiac)
 ```
@@ -67,7 +67,7 @@ neariso_fit_stat <- function(data, index, lambda) {
 
 ```{r}
 library(boot)
-
+set.seed(123)
 boot.neariso <- boot(data = cdiac, statistic = neariso_fit_stat, R = 10, lambda = 0.44)
 
 ci.neariso <- t(sapply(seq_len(nrow(cdiac)),
@@ -103,7 +103,7 @@ $$
 $$
 
 This replaces the first difference term with an approximation to the
-second derivative at $\beta_{i+1}$. In `cvxr`, the only change
+second derivative at $\beta_{i+1}$. In `CVXR`, the only change
 necessary is the penalty line: replacing `diff(x)` by `diff(diff(x))`.
 
 ```{r}
@@ -122,6 +122,7 @@ nearconvex_fit_stat <- function(data, index, lambda) {
     nearconvex_fit(sample$annual, lambda)
 }
 
+set.seed(987)
 boot.nearconvex <- boot(data = cdiac, statistic = nearconvex_fit_stat, R = 5, lambda = 0.44)
 
 ci.nearconvex <- t(sapply(seq_len(nrow(cdiac)),

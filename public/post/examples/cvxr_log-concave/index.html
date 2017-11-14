@@ -43,7 +43,7 @@
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>We draw <span class="math inline">\(m = 25\)</span> observations from a log-concave distribution on <span class="math inline">\(\{0,\ldots,100\}\)</span>. We then estimate the probability mass function using the above method and compare it with the empirical distribution.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 set.seed(1)
 ## Calculate a piecewise linear function
 pwl_fun &lt;- function(x, knots) {
@@ -82,7 +82,7 @@ constraints &lt;- list(sum(exp(u)) &lt;= 1, diff(u[1:K]) &gt;= diff(u[2:(K+1)]))
 prob &lt;- Problem(Maximize(obj), constraints)
 result &lt;- solve(prob)
 pmf &lt;- result$getValue(exp(u))</code></pre>
-<p>The above lines transform the variables <span class="math inline">\(u_k\)</span> to <span class="math inline">\(e^{u_k}\)</span> before calculating their resulting values. This is possible because <code>exp</code> is a member of the <code>cvxr</code> library of atoms, so it can operate directly on a <code>Variable</code> object such as <code>u</code>.</p>
+<p>The above lines transform the variables <span class="math inline">\(u_k\)</span> to <span class="math inline">\(e^{u_k}\)</span> before calculating their resulting values. This is possible because <code>exp</code> is a member of the <code>CVXR</code> library of atoms, so it can operate directly on a <code>Variable</code> object such as <code>u</code>.</p>
 <p>Below are the comparison plots of pmf and cdf.</p>
 <pre class="r"><code>library(ggplot2)
 library(tidyr)
@@ -169,7 +169,7 @@ ggplot(plot.data) +
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
+		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
 	</li>
 	
 	<li class="toctree-l1">

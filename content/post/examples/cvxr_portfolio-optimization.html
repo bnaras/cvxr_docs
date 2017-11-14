@@ -24,7 +24,7 @@ tags: []
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>We construct the risk-return trade-off curve for <span class="math inline">\(n = 10\)</span> assets and <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\Sigma^{1/2}\)</span> drawn from a standard normal distribution.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 ## Problem data
 set.seed(10)
 n &lt;- 10
@@ -95,7 +95,7 @@ ggplot(data = tidyW, mapping = aes(x = gamma, y = fraction)) +
 <h2>Discussion</h2>
 <p>Many variations on the classical portfolio problem exist. For instance, we could allow long and short positions, but impose a leverage limit <span class="math inline">\(\|w\|_1 \leq L^{max}\)</span> by changing</p>
 <pre class="r"><code>constr &lt;- list(p_norm(w,1) &lt;= Lmax, sum(w) == 1)</code></pre>
-<p>An alternative is to set a lower bound on the return and minimize just the risk. To account for transaction costs, we could add a term to the objective that penalizes deviations of <span class="math inline">\(w\)</span> from the previous portfolio. These extensions and more are described in <span class="citation">Boyd et al. (<a href="#ref-BoydBusseti:2017">2017</a>)</span>. The key takeaway is that all of these convex problems can be easily solved in <code>cvxr</code> with just a few alterations to the code above.</p>
+<p>An alternative is to set a lower bound on the return and minimize just the risk. To account for transaction costs, we could add a term to the objective that penalizes deviations of <span class="math inline">\(w\)</span> from the previous portfolio. These extensions and more are described in <span class="citation">Boyd et al. (<a href="#ref-BoydBusseti:2017">2017</a>)</span>. The key takeaway is that all of these convex problems can be easily solved in <code>CVXR</code> with just a few alterations to the code above.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>

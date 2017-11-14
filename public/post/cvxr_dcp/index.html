@@ -25,13 +25,13 @@
 						
 	<h1>Discplined Convex Programming</h1>
 	
-	<p>Disciplined convex programming (DCP) is a system for constructing mathematical expressions with known curvature from a given library of base functions. <code>cvxr</code> uses DCP to ensure that the specified optimization problems are convex.</p>
-<p>This section of the tutorial explains the rules of DCP and how they are applied by <code>cvxr</code>.</p>
+	<p>Disciplined convex programming (DCP) is a system for constructing mathematical expressions with known curvature from a given library of base functions. <code>CVXR</code> uses DCP to ensure that the specified optimization problems are convex.</p>
+<p>This section of the tutorial explains the rules of DCP and how they are applied by <code>CVXR</code>.</p>
 <p>Visit <a href="https://dcp.stanford.edu">dcp.stanford.edu</a> for a more interactive introduction to DCP.</p>
 <div id="expressions" class="section level2">
 <h2>Expressions</h2>
-<p>Expressions in <code>cvxr</code> are formed from variables, numerical constants such as R vectors and matrices, the standard arithmetic operators <code>+, -, *, %*%, /</code>, and a library of <a href="../../post/cvxr_functions/">functions</a>. Here are some examples of <code>cvxr</code> expressions:</p>
-<pre class="r"><code>suppressWarnings(suppressMessages(library(cvxr)))
+<p>Expressions in <code>CVXR</code> are formed from variables, numerical constants such as R vectors and matrices, the standard arithmetic operators <code>+, -, *, %*%, /</code>, and a library of <a href="../../post/cvxr_functions/">functions</a>. Here are some examples of <code>CVXR</code> expressions:</p>
+<pre class="r"><code>suppressWarnings(suppressMessages(library(CVXR)))
 ## Create variables.
 x &lt;- Variable()
 y &lt;- Variable()
@@ -44,7 +44,7 @@ y &lt;- Variable()
 <pre><code>## AddExpression(c(&quot;Expression(CONCAVE, POSITIVE, 1)&quot;, &quot;Expression(CONCAVE, POSITIVE, 1)&quot;), c(&quot;Expression(CONVEX, UNKNOWN, 1)&quot;, &quot;Expression(CONVEX, UNKNOWN, 1)&quot;))</code></pre>
 <pre class="r"><code>max_elemwise(2.66 - sqrt(y), abs(x + 2 * y))</code></pre>
 <pre><code>## MaxElemwise(c(&quot;Expression(CONVEX, UNKNOWN, 1)&quot;, &quot;Expression(CONVEX, UNKNOWN, 1)&quot;), c(&quot;Expression(CONVEX, POSITIVE, 1)&quot;, &quot;Expression(CONVEX, POSITIVE, 1)&quot;))</code></pre>
-<p>Expressions can be scalars, vectors, or matrices. The dimensions of an expression can be obtained using the function <code>size</code>. <code>cvxr</code> will raise an exception if an expression is used in a way that doesn’t make sense given its dimensions, e.g. adding matrices of different sizes.</p>
+<p>Expressions can be scalars, vectors, or matrices. The dimensions of an expression can be obtained using the function <code>size</code>. <code>CVXR</code> will raise an exception if an expression is used in a way that doesn’t make sense given its dimensions, e.g. adding matrices of different sizes.</p>
 <pre class="r"><code>Z &lt;- Variable(5, 4)
 A &lt;- matrix(1, nrow = 2, ncol = 5)
 
@@ -57,7 +57,7 @@ cat(&quot;dimensions of Z:&quot;, size(Z), &quot;\n&quot;)</code></pre>
 <pre><code>## dimensions of A %*% Z: 2 4</code></pre>
 <p>Error raised for invalid dimensions.</p>
 <p><code>{r, error= TRUE) tryCatch(A + Z, error = function(e) geterrmessage())</code></p>
-<p><code>cvxr</code> uses DCP analysis to determine the sign and curvature of each expression.</p>
+<p><code>CVXR</code> uses DCP analysis to determine the sign and curvature of each expression.</p>
 </div>
 <div id="sign" class="section level2">
 <h2>Sign</h2>
@@ -70,7 +70,7 @@ cat(&quot;dimensions of Z:&quot;, size(Z), &quot;\n&quot;)</code></pre>
 <li>Unknown if either expression has unknown sign.</li>
 </ul>
 <p>The sign given to an expression is always correct. However, DCP sign analysis may flag an expression as unknown sign when the sign could be figured out through more complex analysis. For instance, <code>x * x</code> is positive but has unknown sign by the rules above.</p>
-<p><code>cvxr</code> determines the sign of constants by looking at their value. For scalar constants, this is straightforward. Vector and matrix constants with all positive (negative) entries are marked as positive (negative). Vector and matrix constants with both positive and negative entries are marked as unknown sign.</p>
+<p><code>CVXR</code> determines the sign of constants by looking at their value. For scalar constants, this is straightforward. Vector and matrix constants with all positive (negative) entries are marked as positive (negative). Vector and matrix constants with both positive and negative entries are marked as unknown sign.</p>
 <p>The sign of an expression is obtained via the <code>sign</code> function:</p>
 <pre class="r"><code>x &lt;- Variable()
 a &lt;- Constant(-1)
@@ -178,7 +178,7 @@ cat(&quot;curvature of x:&quot;, curvature(x), &quot;\n&quot;)</code></pre>
 <div id="infix-operators" class="section level2">
 <h2>Infix operators</h2>
 <p>The infix operators <code>+, -, *, %*%, /</code> are treated exactly like functions. The infix operators <code>+</code> and <code>-</code> are affine, so the rules above are used to flag the curvature. For example, <code>expr1 + expr2</code> is flagged as convex if <code>expr1</code> and <code>expr2</code> are convex.</p>
-<p><code>expr1*expr2</code> and <code>expr1 %*% expr2</code> are allowed only when one of the expressions is constant. If both expressions are non-constant, <code>cvxr</code> will raise an exception. <code>expr1/expr2</code> is allowed only when <code>expr2</code> is a scalar constant. The curvature rules above apply. For example, <code>expr1/expr2</code> is convex when <code>expr1</code> is concave and <code>expr2</code> is negative and constant.</p>
+<p><code>expr1*expr2</code> and <code>expr1 %*% expr2</code> are allowed only when one of the expressions is constant. If both expressions are non-constant, <code>CVXR</code> will raise an exception. <code>expr1/expr2</code> is allowed only when <code>expr2</code> is a scalar constant. The curvature rules above apply. For example, <code>expr1/expr2</code> is convex when <code>expr1</code> is concave and <code>expr2</code> is negative and constant.</p>
 <div id="example-1" class="section level3">
 <h3>Example 1</h3>
 <p>DCP analysis breaks expressions down into subexpressions. The tree visualization below shows how this works for the expression <code>2*square(x) + 3</code>. Here <code>square</code> is synonymous with squaring each element of the input <code>x</code>. Each subexpression is displayed in a blue box. We mark its curvature on the left and its sign on the right.</p>
@@ -205,7 +205,7 @@ cat(&quot;curvature of x:&quot;, curvature(x), &quot;\n&quot;)</code></pre>
 </div>
 <div id="dcp-problems" class="section level2">
 <h2>DCP problems</h2>
-<p>A problem is constructed from an objective and a list of constraints. If a problem follows the DCP rules, it is guaranteed to be convex and solvable by <code>cvxr</code>. The DCP rules require that the problem objective have one of two forms:</p>
+<p>A problem is constructed from an objective and a list of constraints. If a problem follows the DCP rules, it is guaranteed to be convex and solvable by <code>CVXR</code>. The DCP rules require that the problem objective have one of two forms:</p>
 <ul>
 <li>Minimize(convex)</li>
 <li>Maximize(concave)</li>
@@ -246,7 +246,7 @@ cat(&quot;prob4 is DCP:&quot;, is_dcp(prob4), &quot;\n&quot;)</code></pre>
 <pre><code>## prob4 is DCP: FALSE</code></pre>
 <pre class="r"><code>cat(&quot;sqrt(x) &lt;= 2 is DCP:&quot;, is_dcp(sqrt(x) &lt;= 2), &quot;\n&quot;)</code></pre>
 <pre><code>## sqrt(x) &lt;= 2 is DCP: FALSE</code></pre>
-<p><code>cvxr</code> will raise an exception if you call <code>solve()</code> on a non-DCP problem.</p>
+<p><code>CVXR</code> will raise an exception if you call <code>solve()</code> on a non-DCP problem.</p>
 <pre class="r"><code>## A non-DCP problem.
 prob &lt;- Problem(Minimize(sqrt(x)))
 tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
@@ -312,7 +312,7 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/cvxr">Github</a>
+		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -342,7 +342,7 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 <ul>
   <li><a href="../../">Documentation overview</a><ul>
   <li>Previous: <a href="../../post/examples/cvxr_intro/" title="Introduction">Introduction</a></li>
-  <li>Next: <a href="../../post/examples/cvxr_gentle-intro/" title="A Gentle Introduction to `cvxr`">A Gentle Introduction to `cvxr`</a></li>
+  <li>Next: <a href="../../post/examples/cvxr_gentle-intro/" title="A Gentle Introduction to `CVXR`">A Gentle Introduction to `CVXR`</a></li>
 </ul>
 
 	</div>

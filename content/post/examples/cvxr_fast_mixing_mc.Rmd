@@ -46,7 +46,7 @@ nonnegative, symmetric, and doubly stochastic. The last constraint
 ensures transitions do not occur between unconnected vertices.
 
 The function $\lambda_{\max}$ is convex, so this problem is solvable
-in `cvxr`. For instance, the code for the Markov chain in Figure 2
+in `CVXR`. For instance, the code for the Markov chain in Figure 2
 below (the triangle plus one edge) is
 
 ```{r, eval = FALSE}
@@ -70,7 +70,7 @@ functions to build up the graph, solve the optimization problem and
 finally display the chain graphically. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(CVXR)))
 suppressMessages(suppressWarnings(library(markovchain)))
 ## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
 ## Form the complementary graph

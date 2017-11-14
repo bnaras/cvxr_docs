@@ -8,25 +8,25 @@ bibliography: bibtex/cvxr_refs.bib
 
 Disciplined convex programming (DCP) is a system for constructing
 mathematical expressions with known curvature from a given library of
-base functions. `cvxr` uses DCP to ensure that the specified
+base functions. `CVXR` uses DCP to ensure that the specified
 optimization problems are convex.
 
 This section of the tutorial explains the rules of DCP and how they
-are applied by `cvxr`.
+are applied by `CVXR`.
 
 Visit [dcp.stanford.edu](https://dcp.stanford.edu) for a more
 interactive introduction to DCP.
 
 ## Expressions
 
-Expressions in `cvxr` are formed from variables, numerical
+Expressions in `CVXR` are formed from variables, numerical
 constants such as R vectors and matrices, the standard
 arithmetic operators `+, -, *, %*%, /`, and a library
 of [functions](/post/cvxr_functions/). Here are some examples of
-`cvxr` expressions:
+`CVXR` expressions:
 
 ```{r}
-suppressWarnings(suppressMessages(library(cvxr)))
+suppressWarnings(suppressMessages(library(CVXR)))
 ## Create variables.
 x <- Variable()
 y <- Variable()
@@ -38,7 +38,7 @@ max_elemwise(2.66 - sqrt(y), abs(x + 2 * y))
 ```
 
 Expressions can be scalars, vectors, or matrices. The dimensions of an
-expression can be obtained using the function `size`. `cvxr` will
+expression can be obtained using the function `size`. `CVXR` will
 raise an exception if an expression is used in a way that doesn't make
 sense given its dimensions, e.g. adding matrices of different
 sizes.
@@ -59,7 +59,7 @@ Error raised for invalid dimensions.
 tryCatch(A + Z, error = function(e) geterrmessage())
 ```
 
-`cvxr` uses DCP analysis to determine the sign and curvature of each
+`CVXR` uses DCP analysis to determine the sign and curvature of each
 expression.
 
 ## Sign
@@ -80,7 +80,7 @@ may flag an expression as unknown sign when the sign could be figured
 out through more complex analysis. For instance, `x * x` is positive but
 has unknown sign by the rules above.
 
-`cvxr` determines the sign of constants by looking at their value. For
+`CVXR` determines the sign of constants by looking at their value. For
 scalar constants, this is straightforward. Vector and matrix constants
 with all positive (negative) entries are marked as positive
 (negative). Vector and matrix constants with both positive and
@@ -179,7 +179,7 @@ used to flag the curvature. For example, `expr1 + expr2` is flagged as
 convex if `expr1` and `expr2` are convex.
 
 `expr1*expr2` and `expr1 %*% expr2` are allowed only when one of the expressions is constant.
-If both expressions are non-constant, `cvxr` will raise an exception.
+If both expressions are non-constant, `CVXR` will raise an exception.
 `expr1/expr2` is allowed only when `expr2` is a scalar constant. The
 curvature rules above apply. For example, `expr1/expr2` is convex when
 `expr1` is concave and `expr2` is negative and constant.
@@ -227,7 +227,7 @@ cat("p_norm(vstack(1, x), 2) curvature:", curvature(p_norm(vstack(1, x), 2)), "\
 
 A problem is constructed from an objective and a list of constraints. If
 a problem follows the DCP rules, it is guaranteed to be convex and
-solvable by `cvxr`. The DCP rules require that the problem objective have
+solvable by `CVXR`. The DCP rules require that the problem objective have
 one of two forms:
 
 -  Minimize(convex)
@@ -271,7 +271,7 @@ cat("prob4 is DCP:", is_dcp(prob4), "\n")
 cat("sqrt(x) <= 2 is DCP:", is_dcp(sqrt(x) <= 2), "\n")
 ```
 
-`cvxr` will raise an exception if you call `solve()` on a non-DCP
+`CVXR` will raise an exception if you call `solve()` on a non-DCP
 problem.
 
 ```{r}

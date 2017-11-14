@@ -44,7 +44,7 @@ probabilities $(\pi_1,\ldots,\pi_K)$.
 
 
 ```{r}
-suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(CVXR)))
 set.seed(1)
 n <- 20      # Total bets
 K <- 100     # Number of possible returns
@@ -134,7 +134,7 @@ $$
 \log(r_j^Tb))\right) \leq 0 
 $$
 
-where $\lambda \geq 0$ is the risk-aversion parameter. With `cvxr`,
+where $\lambda \geq 0$ is the risk-aversion parameter. With `CVXR`,
 this can be accomplished in a single line using the
 `log_sum_exp` atom. Other extensions like wealth goals, betting
 restrictions, and VaR/CVaR bounds are also readily incorporated.

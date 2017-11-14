@@ -21,7 +21,7 @@ tags: []
 &amp; P_{ij} = 0, \quad (i,j) \notin \mathcal{E}.
 \end{array}\]</span>
 <p>The element <span class="math inline">\(P_{ij}\)</span> of our transition matrix is the probability of moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span>. Our assumptions imply that <span class="math inline">\(P\)</span> is nonnegative, symmetric, and doubly stochastic. The last constraint ensures transitions do not occur between unconnected vertices.</p>
-<p>The function <span class="math inline">\(\lambda_{\max}\)</span> is convex, so this problem is solvable in <code>cvxr</code>. For instance, the code for the Markov chain in Figure 2 below (the triangle plus one edge) is</p>
+<p>The function <span class="math inline">\(\lambda_{\max}\)</span> is convex, so this problem is solvable in <code>CVXR</code>. For instance, the code for the Markov chain in Figure 2 below (the triangle plus one edge) is</p>
 <pre class="r"><code>P &lt;- Variable(n,n)
 ones &lt;- matrix(1, nrow = n, ncol = 1)
 
@@ -35,7 +35,7 @@ result &lt;- solve(prob)</code></pre>
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>In order to reproduce some of the examples from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, we create functions to build up the graph, solve the optimization problem and finally display the chain graphically.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 suppressMessages(suppressWarnings(library(markovchain)))
 ## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
 ## Form the complementary graph

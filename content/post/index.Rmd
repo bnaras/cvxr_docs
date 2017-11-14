@@ -7,16 +7,16 @@ bibliography: bibtex/cvxr_refs.bib
 type: homepage
 ---
 
-## What is `cvxr`?
+## What is `CVXR`?
 
-`cvxr` is an R package that provides an object-oriented modeling
+`CVXR` is an R package that provides an object-oriented modeling
 language for convex optimization, similar to `CVX`, `CVXPY`, `YALMIP`,
 and `Convex.jl`. It allows the user to formulate convex optimization
 problems in a natural mathematical syntax rather than the restrictive
 standard form required by most solvers. The user specifies an
 objective and set of constraints by combining constants, variables,
 and parameters using a library of functions with known mathematical
-properties. `cvxr` then applies
+properties. `CVXR` then applies
 signed [disciplined convex programming (DCP)](/post/cvxr_dcp) to
 verify the problem’s convexity. Once verified, the problem is
 converted into standard conic form using graph implementations and
@@ -26,17 +26,17 @@ or [SCS](https://github.com/cvxgrp/scs).
 
 ## Status
 
-Although `cvxr` continues to be developed
+Although `CVXR` continues to be developed
 on [Github](https://github.com/anqif), the current release implements all of
 the `CVXPY` atoms except for `geo_mean` and parameters. The latter is
 not an impediment since any parameter can be replaced by a variable.
 
 The focus of the development is mostly on speeding up the
-canonicalization and construction of problem data in `cvxr`.
+canonicalization and construction of problem data in `CVXR`.
 
-## Installing `cvxr`
+## Installing `CVXR`
 
-`cvxr` is installed like any other R package
+`CVXR` is installed like any other R package
 from [CRAN](https://cloud.r-project.org).
 
 ## Documentation
@@ -44,9 +44,9 @@ from [CRAN](https://cloud.r-project.org).
 A large set of examples, many ported from `CVXPY`, are available in
 the [Examples](/post/cvxr_examples/) section. 
 
-## Citing `cvxr`
+## Citing `CVXR`
 
-If you use `cvxr` in your work, please consider citing the paper
+If you use `CVXR` in your work, please consider citing the paper
 by @fu:naras:boyd:2017 below.
 
 
@@ -58,7 +58,7 @@ to
 [John Miller](https://people.eecs.berkeley.edu/~miller_john/), and
 Paul Kunsberg Rosenfield for their contributions to the software’s
 development. In particular, we are indebted to Steven Diamond for his
-work on [CVXPY](http://www.cvxpy.org/en/latest/). Most of `cvxr`'s code,
+work on [CVXPY](http://www.cvxpy.org/en/latest/). Most of `CVXR`'s code,
 documentation, and examples were ported from his Python library.
 
 ## About this site

@@ -25,8 +25,8 @@ y_i \\ \mbox{subject to} &amp; x_1 = 0, \quad y_1 = 1, \quad x_m = 1,
 \quad i = 1,\ldots,m-1 \end{array} 
 \]</span></p>
 <p>with variables <span class="math inline">\(x \in {\mathbf R}^m\)</span> and <span class="math inline">\(y \in {\mathbf R}^m\)</span>.</p>
-<p>This basic catenary problem has a well-known analytical solution (see <span class="citation">Gelfand and Fomin (<a href="#ref-GelfandFomin:1963">1963</a>)</span>) which we can easily verify with <code>cvxr</code>.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+<p>This basic catenary problem has a well-known analytical solution (see <span class="citation">Gelfand and Fomin (<a href="#ref-GelfandFomin:1963">1963</a>)</span>) which we can easily verify with <code>CVXR</code>.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 
 ## Problem data
 m &lt;- 101

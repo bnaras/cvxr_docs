@@ -49,15 +49,15 @@ inFile <- "functions_data/index.rst"
 
 ## Functions
 
-Here we describe the functions that can be applied to `cvxr`
-expressions. `cvxr` uses the function information in this section and
+Here we describe the functions that can be applied to `CVXR`
+expressions. `CVXR` uses the function information in this section and
 the [Disciplined Convex Programming tools](http://dcp.stanford.edu/)
 to mark expressions with a sign and curvature.
 
 ### Operators
 
 The infix operators `+`, `-`, `*`, `%*%`, `/` are treated as functions. `+`
-and `-` are affine functions. `*` and `/` are affine in `cvxr` because
+and `-` are affine functions. `*` and `/` are affine in `CVXR` because
 `expr1*expr2` and `expr1 %*% expr2` are allowed only when one of the expressions is constant
 and `expr1/expr2` is allowed only when `expr2` is a scalar constant.
 
@@ -73,9 +73,9 @@ Non-scalar expressions can also be sliced into using the standard R
 slicing syntax. For example, `expr[i:j, r]` selects rows `i`
 through `j` of column `r` and returns a vector.
 
-`cvxr` supports advanced indexing using lists of indices or boolean
+`CVXR` supports advanced indexing using lists of indices or boolean
 arrays. The semantics are the same as in R. Any time R might return a
-numeric vector, `cvxr` returns a column vector.
+numeric vector, `CVXR` returns a column vector.
 
 #### Transpose
 
@@ -84,7 +84,7 @@ The transpose of any expression can be obtained using the syntax
 
 #### Power
 
-For any `cvxr` expression `expr`, the power operator `expr^p` is
+For any `CVXR` expression `expr`, the power operator `expr^p` is
 equivalent to the function `power(expr, p)`.
 
 ### Scalar functions
@@ -316,7 +316,7 @@ gsub("amp;", "", s)
 
 #### Clarifications
 
-The input to `bmat` is a list of lists of `cvxr` expressions. It
+The input to `bmat` is a list of lists of `CVXR` expressions. It
 constructs a block matrix. The elements of each inner list are
 stacked horizontally, and then the resulting block matrices are stacked
 vertically.

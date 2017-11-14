@@ -22,7 +22,7 @@ tags: []
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>We solve the Kelly gambling problem for <span class="math inline">\(K = 100\)</span> and <span class="math inline">\(n = 20\)</span>. The probabilities <span class="math inline">\(\pi_j \sim \mbox{Uniform}(0,1)\)</span>, and the potential returns <span class="math inline">\(r_j \sim \mbox{Uniform}(0.5,1.5)\)</span> except for <span class="math inline">\(r_n = {\mathbf 1}\)</span>, which represents the payoff from not wagering. With an initial wealth of <span class="math inline">\(w_0 = 1\)</span>, we simulate the growth trajectory of our Kelly optimal bets over <span class="math inline">\(P = 100\)</span> periods, assuming returns are i.i.d. over time. In the following code, <code>rets</code> is the <span class="math inline">\(K \times n\)</span> matrix of possible returns with row <span class="math inline">\(r_i\)</span>, while <code>ps</code> is the vector of return probabilities <span class="math inline">\((\pi_1,\ldots,\pi_K)\)</span>.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 set.seed(1)
 n &lt;- 20      # Total bets
 K &lt;- 100     # Number of possible returns
@@ -99,7 +99,7 @@ ggplot(data = plot.data) +
 \log\left(\sum_{j=1}^K \exp(\log\pi_j - \lambda
 \log(r_j^Tb))\right) \leq 0 
 \]</span></p>
-<p>where <span class="math inline">\(\lambda \geq 0\)</span> is the risk-aversion parameter. With <code>cvxr</code>, this can be accomplished in a single line using the <code>log_sum_exp</code> atom. Other extensions like wealth goals, betting restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is the risk-aversion parameter. With <code>CVXR</code>, this can be accomplished in a single line using the <code>log_sum_exp</code> atom. Other extensions like wealth goals, betting restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>

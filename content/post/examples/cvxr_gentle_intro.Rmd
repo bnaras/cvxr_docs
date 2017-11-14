@@ -1,5 +1,5 @@
 ---
-title: A Gentle Introduction to `cvxr`
+title: A Gentle Introduction to `CVXR`
 author: "Paul Rosenfield, Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
 date: '2017-10-29'
 slug: cvxr_gentle-intro
@@ -9,15 +9,15 @@ bibliography: ../bibtex/cvxr_refs.bib
 ```{r, message=FALSE, warning=FALSE, echo = FALSE}
 library(ggplot2)
 library(tidyr)
-library(cvxr)
+library(CVXR)
 ```
 ## Introduction
 
-Welcome to `cvxr`: a modeling language for describing and solving
+Welcome to `CVXR`: a modeling language for describing and solving
 convex optimization problems that follows the natural, mathematical
 notation of convex optimization rather than the requirements of any
 particular solver. The purpose of this document is both to introduce
-the reader to `cvxr` and to generate excitement for its possibilities in
+the reader to `CVXR` and to generate excitement for its possibilities in
 the field of statistics.
 
 Convex optimization is a powerful and very general tool. As a
@@ -37,7 +37,7 @@ include
 [CVX](http://cvxr.com/cvx/)
 (Matlab), [CVXPY](http://www.cvxpy.org/en/latest/) (Python),
 and [Convex.jl](http://convexjl.readthedocs.org/en/latest/)
-(Julia). `cvxr` Shares a lot of its code base
+(Julia). `CVXR` Shares a lot of its code base
 with
 [CVXcanon](http://stanford.edu/class/ee364b/projects/2015projects/reports/miller_quigley_zhu_report.pdf) and
 CVXPY. As far as we know, this is the first full-featured general
@@ -46,9 +46,9 @@ convex optimization package for R.
 One of the great headaches of conventional numerical optimization is
 the process of deciding which algorithm to use and how to set its
 parameters. In convex optimization, the particular algorithm matters
-much less. So while a user of `cvxr` is still free to choose from a
+much less. So while a user of `CVXR` is still free to choose from a
 number of different algorithms and to set algorithm parameters as they
-please, the vast majority of users will not need to do this. `cvxr`
+please, the vast majority of users will not need to do this. `CVXR`
 will just work.
 
 The uses for convex optimization in statistics are many and
@@ -59,23 +59,23 @@ Kullback-Leibler divergence over a finite set.
 
 All of these examples, at least in their most basic forms, are
 established enough that they already have well-crafted R packages
-devoted to them. If you use `cvxr` to solve these problems, it will
+devoted to them. If you use `CVXR` to solve these problems, it will
 work. It will probably be slower than a custom-built algorithm---for
 example, glmnet for fitting lasso or ridge regression models---but it
-will work. However, this is not the true purpose of `cvxr`. If you
+will work. However, this is not the true purpose of `CVXR`. If you
 want to build a well-established model, you should use one of the
 well-established packages for doing so. If you want to build your
 _own_ model---one that is a refinement of an existing method, or
-perhaps even something that has never been tried before---then `cvxr`
-is the package to do it. The advantage of `cvxr` over glmnet and the
+perhaps even something that has never been tried before---then `CVXR`
+is the package to do it. The advantage of `CVXR` over glmnet and the
 like comes from its flexibility: A few lines of code can transform a
 problem from commonplace to state-of-the-art, and can often do the
 work of an entire package in the process. (We present an example in
 section 3 where this is literally the case.)
 
-This document is meant to familiarize you with the `cvxr` package. It
+This document is meant to familiarize you with the `CVXR` package. It
 assumes basic knowledge of convex optimization and statistics as well
-as proficiency with R. A potential user of `cvxr` should read this entire
+as proficiency with R. A potential user of `CVXR` should read this entire
 document and then refer to the tutorial examples.
 
 Happy optimizing!
@@ -97,7 +97,7 @@ $g_1,...,g_p$ are affine. $f_0$ is called the objective function, $f_i
 \leq 0$ are called the inequality constraints, and $g_i = 0$ are
 called the equality constraints.
 
-In `cvxr`, you will specify convex optimization problems in a more
+In `CVXR`, you will specify convex optimization problems in a more
 convenient format than the one above.
 
 A convex function is one that is upward curving. A concave function is
@@ -131,8 +131,8 @@ problem with objective $f_0(x,y) = x^2 + y^2$ and constraint functions
 $f_1(x,y) = -x$ and $g_1(x,y) = 2x - y - 1$.
 
 Note that this problem is simple enough to be solved analytically, so
-we can confirm that `cvxr` has produced the correct answer. Here's how
-we formulate the problem in `cvxr`.
+we can confirm that `CVXR` has produced the correct answer. Here's how
+we formulate the problem in `CVXR`.
 
 ```{r}
 # Variables minimized over
@@ -286,7 +286,7 @@ solution2.2$getValue(y)
 ### An Invalid Problem
 
 Unfortunately, you can't just type any arbitrary problem you like into
-`cvxr`. There are restrictions on what kinds of problems can be
+`CVXR`. There are restrictions on what kinds of problems can be
 handled. For example, if we tried to `Maximize()' the objective from
 example 2.1, we get an error:
 
@@ -297,17 +297,17 @@ solve(prob2.3)
 ```
 
 We would get a similar error if we tried to add the constraint
-`p_norm(x,2) == 1`. This is because `cvxr` uses a strict set of rules
+`p_norm(x,2) == 1`. This is because `CVXR` uses a strict set of rules
 called Disciplined Convex Programming (DCP) to evaluate the convexity
 of any given problem. If you follow these rules, you are guaranteed
-that your problem is convex. If you don't follow these rules, `cvxr`
+that your problem is convex. If you don't follow these rules, `CVXR`
 will throw an exception. See section 5 for a complete description of
 DCP.
 
 ## Simple Examples
 
 We begin by showing what a standard linear regression problem looks
-like in `cvxr`:
+like in `CVXR`:
 
 ### Ordinary Least Squares
 
@@ -346,7 +346,7 @@ Here, `y` is the response, `X` is the matrix of predictors, `n` is the
 number of predictors, and `beta` is a vector of coefficients on the
 predictors. The Ordinary Least-Squares (OLS) solution for `beta`
 minimizes the $l_2$-norm of the residuals (i.e. the
-root-mean-squared error). As we can see below, `cvxr`'s solution
+root-mean-squared error). As we can see below, `CVXR`'s solution
 matches the solution obtained by using `lm`.
 
 ```{r}
@@ -367,7 +367,7 @@ ggplot(data = coefs, aes(x = as.factor(beta), y = estimate, fill = method)) +
 ```
 
 Obviously, if all you want to do is least-squares linear regression,
-you should simply use `lm`. The chief advantage of `cvxr` is its
+you should simply use `lm`. The chief advantage of `CVXR` is its
 flexibility, as we will demonstrate in the rest of this section.
 
 ### Non-Negative Least Squares
@@ -407,7 +407,7 @@ correct sparsity structure in this case.
 
 Like with OLS, there are already R packages available which implement
 non-negative least squares, such as `nnls`. But that is
-actually an excellent demonstration of the power of `cvxr`: A single
+actually an excellent demonstration of the power of `CVXR`: A single
 line of code here, namely `prob3.2$constraints <- list(beta >= 0)`, is
 doing the work of an entire package.
 
@@ -434,7 +434,7 @@ point can violate the separating hyperplane, and $C > 0$ is a
 user-chosen penalty on the total violation. As $C$ increases, fewer
 misclassifications will be allowed.
 
-Below, we fit a SVC in `cvxr` with $C = 10$.
+Below, we fit a SVC in `CVXR` with $C = 10$.
 
 ```{r}
 ## Generate data
@@ -479,7 +479,7 @@ ggplot(data = plotdata, aes(x = X1, y = X2)) +
 
 Disciplined convex programming (DCP) is a system for constructing
 mathematical expressions with known sign and curvature from a given library of
-base functions. `cvxr` uses DCP to ensure that the specified
+base functions. `CVXR` uses DCP to ensure that the specified
 optimization problems are convex.
 
 The user may find it helpful to read about how the DCP rules are applied
@@ -489,7 +489,7 @@ as
 [Matlab](http://cvxr.com/cvx/doc/dcp.html#),
 and [Julia](http://convexjl.readthedocs.io/en/latest/types.html).
 
-`cvxr` implements the same rules, and a short introduction
+`CVXR` implements the same rules, and a short introduction
 is [available here](/post/cvxr_dcp). 
 
 ## 5. DCP functions

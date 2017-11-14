@@ -18,8 +18,8 @@ tags: []
 \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
 
 \end{array}\]</span>
-<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. This can be directly formulated in <code>cvxr</code>. As an example, we use global warming data from the <a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a>. The data points are the annual temperature anomalies relative to the 1961–1990 mean.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(cvxr)))
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. This can be directly formulated in <code>CVXR</code>. As an example, we use global warming data from the <a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a>. The data points are the annual temperature anomalies relative to the 1961–1990 mean.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 data(cdiac)
 str(cdiac)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    166 obs. of  14 variables:
@@ -54,7 +54,7 @@ str(cdiac)</code></pre>
     neariso_fit(sample$annual, lambda)
 }</code></pre>
 <pre class="r"><code>library(boot)
-
+set.seed(123)
 boot.neariso &lt;- boot(data = cdiac, statistic = neariso_fit_stat, R = 10, lambda = 0.44)
 
 ci.neariso &lt;- t(sapply(seq_len(nrow(cdiac)),
@@ -78,7 +78,7 @@ data.neariso &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est = bo
 \beta_i)^2 + \lambda \sum_{i=1}^{m-2}(\beta_i - 2\beta_{i+1} +
 \beta_{i+2})_+ \end{array} 
 \]</span></p>
-<p>This replaces the first difference term with an approximation to the second derivative at <span class="math inline">\(\beta_{i+1}\)</span>. In <code>cvxr</code>, the only change necessary is the penalty line: replacing <code>diff(x)</code> by <code>diff(diff(x))</code>.</p>
+<p>This replaces the first difference term with an approximation to the second derivative at <span class="math inline">\(\beta_{i+1}\)</span>. In <code>CVXR</code>, the only change necessary is the penalty line: replacing <code>diff(x)</code> by <code>diff(diff(x))</code>.</p>
 <pre class="r"><code>nearconvex_fit &lt;- function(y, lambda) {
     m &lt;- length(y)
     beta &lt;- Variable(m)
@@ -94,6 +94,7 @@ nearconvex_fit_stat &lt;- function(data, index, lambda) {
     nearconvex_fit(sample$annual, lambda)
 }
 
+set.seed(987)
 boot.nearconvex &lt;- boot(data = cdiac, statistic = nearconvex_fit_stat, R = 5, lambda = 0.44)
 
 ci.nearconvex &lt;- t(sapply(seq_len(nrow(cdiac)),

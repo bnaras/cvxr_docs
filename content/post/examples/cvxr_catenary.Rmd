@@ -39,10 +39,10 @@ $$
 with variables $x \in {\mathbf R}^m$ and $y \in {\mathbf R}^m$. 
 
 This basic catenary problem has a well-known analytical solution
-(see @GelfandFomin:1963) which we can easily verify with `cvxr`. 
+(see @GelfandFomin:1963) which we can easily verify with `CVXR`. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(cvxr)))
+suppressMessages(suppressWarnings(library(CVXR)))
 
 ## Problem data
 m <- 101
