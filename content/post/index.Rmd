@@ -48,7 +48,7 @@ from [CRAN](https://cloud.r-project.org).
 ## Documentation
 
 A [video of the talk](http://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/CVXR-An-R-Package-for-Modeling-Convex-Optimization-Problems) by [Anqi Fu](https://web.stanford.edu/~anqif)
-at [useR! 2016](https://user2016.r-project.org) provides a good
+at [useR! 2016](http://user2016.r-project.org) provides a good
 overview.
 
 An introductory vignette is installed with the package and can be
