@@ -112,7 +112,42 @@ data.nearconvex &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est =
 <p><img src="/post/examples/cvxr_near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <div id="notes" class="section level2">
 <h2>Notes</h2>
-<p>We can easily extend this example to higher-order differences or lags. To make this easy, the function <code>diff</code> takes an argument <code>differences</code> is by default 1; a third-order difference is specified as <code>diff(x, differences = 3)</code>.</p>
+<p>We can easily extend this example to higher-order differences or lags. To make this easy, the function <code>diff</code> takes an argument <code>differences</code> that 1 by default; a third-order difference is specified as <code>diff(x, differences = 3)</code>.</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.4.2 (2017-09-28)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.1
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] methods   stats     graphics  grDevices datasets  utils     base     
+## 
+## other attached packages:
+## [1] ggplot2_2.2.1 boot_1.3-20   CVXR_0.94-2  
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.1      Rcpp_0.12.13      compiler_3.4.2   
+##  [4] plyr_1.8.4        R.methodsS3_1.7.1 R.utils_2.6.0    
+##  [7] tools_3.4.2       digest_0.6.12     bit_1.1-12       
+## [10] evaluate_0.10.1   tibble_1.3.4      gtable_0.2.0     
+## [13] lattice_0.20-35   rlang_0.1.2       Matrix_1.2-11    
+## [16] yaml_2.1.14       blogdown_0.1.7    Rmpfr_0.6-1      
+## [19] ECOSolveR_0.3-2   stringr_1.2.0     knitr_1.17       
+## [22] rprojroot_1.2     bit64_0.9-7       grid_3.4.2       
+## [25] R6_2.2.2          rmarkdown_1.6     bookdown_0.5     
+## [28] magrittr_1.5      backports_1.1.1   scales_0.5.0     
+## [31] htmltools_0.3.6   scs_1.1-1         colorspace_1.3-2 
+## [34] labeling_0.3      stringi_1.1.5     lazyeval_0.2.1   
+## [37] munsell_0.4.3     R.oo_1.21.0</code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>

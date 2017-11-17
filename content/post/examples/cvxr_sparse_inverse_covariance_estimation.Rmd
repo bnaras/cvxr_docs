@@ -165,7 +165,7 @@ undefined for a `Semidef` object.
 
 The figures below depict the solutions for the above dataset with $m =
 1000, n = 10$, and $S$ containing 26% non-zero entries, represented by
-the green squares in the images below. The sparsity of our inverse
+the dark squares in the images below. The sparsity of our inverse
 covariance estimate decreases for higher $\alpha$, so that when
 $\alpha = 1$, most of the off-diagonal entries are zero, while if
 $\alpha = 10$, over half the matrix is dense. At $\alpha = 4$, we
@@ -179,9 +179,10 @@ plotSpMat <- function(S, alpha) {
     df$z = as.character(as.numeric(S) != 0)
     p <- ggplot(data = df, mapping = aes(x = i, y = j, fill = z)) +
         geom_tile(color = "black") +
+        scale_fill_brewer(type = "qual", palette = "Paired") +
         scale_y_reverse()
     if (missing(alpha)) {
-        p <- p + xlab("True")
+        p <- p + xlab("Truth")
     } else {
         p <- p + xlab(parse(text=(paste0("alpha == ", alpha))))
     }
@@ -192,7 +193,7 @@ plotSpMat <- function(S, alpha) {
 ```{r, fig.width=6, fig.height=4}
 do.call(multiplot, args = c(list(plotSpMat(Strue)),
                             mapply(plotSpMat, S.est, alphas, SIMPLIFY = FALSE),
-                            list(cols = 3)))
+                            list(layout = matrix(1:6, nrow = 2, byrow = TRUE))))
 ```
 
 ## Session Info
