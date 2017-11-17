@@ -74,6 +74,15 @@ We have \(n\) assets or stocks in our portfolio and must determine the amount of
     </item>
     
     <item>
+      <title>Saturating Hinges Fit</title>
+      <link>/post/examples/cvxr_saturating_hinges/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_saturating_hinges/</guid>
+      <description>Introduction The following example comes from work on saturating splines in N. Boyd et al. (2016). Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they saturate: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a saturating hinge.</description>
+    </item>
+    
+    <item>
       <title>Sparse Inverse Covariance Estimation</title>
       <link>/post/examples/cvxr_sparse_inverse_covariance_estimation/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -100,7 +109,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Largest Euclidean ball lying in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+ Largest Euclidean ball lying in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
     </item>
     
     <item>

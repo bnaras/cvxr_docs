@@ -33,6 +33,11 @@
   </url>
   
   <url>
+    <loc>/post/examples/cvxr_saturating_hinges/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/examples/cvxr_sparse_inverse_covariance_estimation/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
