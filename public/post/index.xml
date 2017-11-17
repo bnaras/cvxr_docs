@@ -109,7 +109,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Largest Euclidean ball lying in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+ Largest Euclidean ball in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
     </item>
     
     <item>
