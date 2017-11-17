@@ -84,6 +84,8 @@ using [R markdown documents](http://rmarkdown.rstudio.com/), the
 wonderful [blogdown](https://cloud.r-package.org/package="blogdown")
 package by [Yihui Xie](https://yihui.name/), and
 the
-[Hugo Alabaster theme](https://themes.gohugo.io/theme/hugo-alabaster-theme/).
+[Hugo Alabaster theme](https://themes.gohugo.io/theme/hugo-alabaster-theme/). The
+pages are served out of
+the [CVXR docs](https://github.com/bnaras/cvxr_docs) repository.
 
 ## References
