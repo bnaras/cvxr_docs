@@ -498,5 +498,11 @@ is [available here](/post/cvxr_dcp).
 The set of DCP functions are described in
 [Function Reference](/post/cvxr_functions/).
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
 ## References
 

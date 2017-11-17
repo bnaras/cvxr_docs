@@ -127,4 +127,10 @@ contrast, the empirical probability mass function oscillates, failing
 to be log-concave on parts of its domain. These differences are
 reflected in the cumulative distribution functions as well.
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
 ## References

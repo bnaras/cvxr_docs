@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.30.2" />
+	
+	<title>Sparse Inverse Covariance Estimation &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Sparse Inverse Covariance Estimation</h1>
+	
+	<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Assume we are given i.i.d. observations <span class="math inline">\(x_i \sim N(0,\Sigma)\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span>, and the covariance matrix <span class="math inline">\(\Sigma \in {\mathbf S}_+^n\)</span>, the set of symmetric positive semidefinite matrices, has a sparse inverse <span class="math inline">\(S = \Sigma^{-1}\)</span>. Let <span class="math inline">\(Q = \frac{1}{m-1}\sum_{i=1}^m (x_i - \bar x)(x_i - \bar x)^T\)</span> be our sample covariance. One way to estimate <span class="math inline">\(\Sigma\)</span> is to maximize the log-likelihood with the prior knowledge that <span class="math inline">\(S\)</span> is sparse <span class="citation">(Friedman, Hastie, and Tibshirani <a href="#ref-spinvcov">2008</a>)</span>, which amounts to the optimization problem:</p>
+<span class="math display">\[\begin{array}{ll} \underset{S}{\mbox{maximize}} &amp; \log\det(S) - \mbox{tr}(SQ) \\
+\mbox{subject to} &amp; S \in {\mathbf S}_+^n, \quad \sum_{i=1}^n \sum_{j=1}^n |S_{ij}| \leq \alpha.
+\end{array}\]</span>
+<p>The parameter <span class="math inline">\(\alpha \geq 0\)</span> controls the degree of sparsity. The problem is convex, so we can solve it using <code>CVXR</code>.</p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We’ll create a sparse positive semi-definite matrix <span class="math inline">\(S\)</span> using synthetic data</p>
+<pre class="r"><code>suppressWarnings(suppressMessages(library(CVXR)))
+suppressWarnings(suppressMessages(library(Matrix)))
+suppressWarnings(suppressMessages(library(expm)))
+
+set.seed(1)
+n &lt;- 10      ## Dimension of matrix
+m &lt;- 1000    ## Number of samples
+
+## Create sparse, symmetric PSD matrix S
+A &lt;- rsparsematrix(n, n, 0.15, rand.x = stats::rnorm)
+Strue &lt;- A %*% t(A) + 0.05 * diag(rep(1, n))    ## Force matrix to be strictly positive definite</code></pre>
+<p>We can now create the covariance matrix <span class="math inline">\(R\)</span> as the inverse of <span class="math inline">\(S\)</span>.</p>
+<pre class="r"><code>R &lt;- base::solve(Strue)</code></pre>
+<p>As test data, we sample from a multivariate normal with the fact that if <span class="math inline">\(Y \sim N(0, I)\)</span>, then <span class="math inline">\(R^{1/2}Y \sim N(0, R)\)</span> since <span class="math inline">\(R\)</span> is symmetric.</p>
+<pre class="r"><code>x_sample &lt;- matrix(stats::rnorm(n * m), nrow = m, ncol = n) %*% t(expm::sqrtm(R))
+Q &lt;- cov(x_sample)    ## Sample covariance matrix</code></pre>
+<p>Finally, we solve our convex program for a set of <span class="math inline">\(\alpha\)</span> values.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
+
+alphas &lt;- c(10, 8, 6, 4, 1)
+S &lt;- Semidef(n)    ## Variable constrained to positive semidefinite cone
+obj &lt;- Maximize(log_det(S) - matrix_trace(S %*% Q))
+
+S.est &lt;- lapply(alphas,
+                function(alpha) {
+                    constraints &lt;- list(sum(abs(S)) &lt;= alpha)
+                    ## Form and solve optimization problem
+                    prob &lt;- Problem(obj, constraints)
+                    result &lt;- solve(prob)
+                    
+                    ## Create covariance matrix
+                    R_hat &lt;- base::solve(result$getValue(S))
+                    Sres &lt;- result$getValue(S)
+                    Sres[abs(Sres) &lt;= 1e-4] &lt;- 0
+                    Sres
+                })</code></pre>
+<p>In the code above, the <code>Semidef</code> constructor restricts <code>S</code> to the positive semidefinite cone. In our objective, we use <code>CVXR</code> functions for the log-determinant and trace. The expression <code>matrix_trace(S %*\ Q)</code> is equivalent to `sum(diag(S %*% Q))}, but the former is preferred because it is more efficient than making nested function calls.</p>
+<p>However, a standalone atom does not exist for the determinant, so we cannot replace <code>log_det(S)</code> with <code>log(det(S))</code> since <code>det</code> is undefined for a <code>Semidef</code> object.</p>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<p>The figures below depict the solutions for the above dataset with <span class="math inline">\(m = 1000, n = 10\)</span>, and <span class="math inline">\(S\)</span> containing 26% non-zero entries, represented by the green squares in the images below. The sparsity of our inverse covariance estimate decreases for higher <span class="math inline">\(\alpha\)</span>, so that when <span class="math inline">\(\alpha = 1\)</span>, most of the off-diagonal entries are zero, while if <span class="math inline">\(\alpha = 10\)</span>, over half the matrix is dense. At <span class="math inline">\(\alpha = 4\)</span>, we achieve the true percentage of non-zeros.</p>
+<pre class="r"><code>do.call(multiplot, args = c(list(plotSpMat(Strue)),
+                            mapply(plotSpMat, S.est, alphas, SIMPLIFY = FALSE),
+                            list(cols = 3)))</code></pre>
+<p><img src="../../../post/examples/cvxr_sparse_inverse_covariance_estimation_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.4.2 (2017-09-28)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.1
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] grid      methods   stats     graphics  grDevices datasets  utils    
+## [8] base     
+## 
+## other attached packages:
+## [1] expm_0.999-2  Matrix_1.2-11 CVXR_0.94-2   ggplot2_2.2.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.1      Rcpp_0.12.13      compiler_3.4.2   
+##  [4] plyr_1.8.4        R.methodsS3_1.7.1 R.utils_2.6.0    
+##  [7] tools_3.4.2       digest_0.6.12     bit_1.1-12       
+## [10] evaluate_0.10.1   tibble_1.3.4      gtable_0.2.0     
+## [13] lattice_0.20-35   rlang_0.1.2       yaml_2.1.14      
+## [16] blogdown_0.1.7    Rmpfr_0.6-1       ECOSolveR_0.3-2  
+## [19] stringr_1.2.0     knitr_1.17        rprojroot_1.2    
+## [22] bit64_0.9-7       R6_2.2.2          rmarkdown_1.6    
+## [25] bookdown_0.5      magrittr_1.5      backports_1.1.1  
+## [28] scales_0.5.0      htmltools_0.3.6   scs_1.1-1        
+## [31] colorspace_1.3-2  labeling_0.3      stringi_1.1.5    
+## [34] lazyeval_0.2.1    munsell_0.4.3     R.oo_1.21.0</code></pre>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-spinvcov">
+<p>Friedman, J., T. Hastie, and R. Tibshirani. 2008. “Sparse Inverse Covariance Estimation with the Graphical Lasso.” <em>Biostatistics</em> 9 (3): 432–41.</p>
+</div>
+</div>
+</div>
+
+
+
+						<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../../">
+				<img class="logo" src="../../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../index.html">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../../post/examples/cvxr_catenary/" title="The Catenary Problem">The Catenary Problem</a></li>
+  <li>Next: <a href="../../../post/examples/cvxr_portfolio-optimization/" title="Portfolio Optimization">Portfolio Optimization</a></li>
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

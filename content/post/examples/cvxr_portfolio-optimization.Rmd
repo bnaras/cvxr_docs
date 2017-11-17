@@ -141,5 +141,10 @@ portfolio. These extensions and more are described in
 problems can be easily solved in `CVXR` with just a few alterations
 to the code above.
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
 
 ## References

@@ -127,5 +127,11 @@ ggplot(plot.data) +
     theme(legend.position = "top")
 ```
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
 
 ## References

@@ -261,6 +261,12 @@ with more examples.
 We also have a number of [tutorial examples](/post/examples/)
 available to study and mimic.
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
 ## References
 
 

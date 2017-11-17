@@ -136,4 +136,10 @@ ggplot(data.frame(x = xs, y = ys)) +
               mapping = aes(x = x, y = y), color = "brown")
 ```
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
 ## References

@@ -279,3 +279,9 @@ problem.
 prob <- Problem(Minimize(sqrt(x)))
 tryCatch(solve(prob), error = function(e) geterrmessage())
 ```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```

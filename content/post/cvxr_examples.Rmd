@@ -18,6 +18,7 @@ the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as w
 - [Near Isotonic and Near Convex Regression](/post/examples/cvxr_near-isotonic-and-near-convex-regression/)
 - [Direct Standardization](/post/examples/cvxr_direct-standardization/)
 - [Log-Concave Density Estimation](/post/examples/cvxr_log-concave/)
+- [Sparse Inverse Covariance Estimation](/post/examples/cvxr_sparse_inverse_covariance_estimation/)
 - [Kelly Gambling](/post/examples/cvxr_kelly-strategy/)
 - [Fastest Mixing Markov Chain](/post/examples/cvxr_fast-mixing-mc/)
 - [Portfolio Optimization](/post/examples/cvxr_portfolio-optimization/)

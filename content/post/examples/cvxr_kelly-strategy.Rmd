@@ -139,4 +139,10 @@ this can be accomplished in a single line using the
 `log_sum_exp` atom. Other extensions like wealth goals, betting
 restrictions, and VaR/CVaR bounds are also readily incorporated.
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
 ## References

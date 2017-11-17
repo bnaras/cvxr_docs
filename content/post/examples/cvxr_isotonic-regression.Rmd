@@ -123,4 +123,10 @@ knitr::kable(d, digits = 2, format = "html", caption = "P = primary, S = Seconda
 Other arbitrary desired behavior can be specified for tied
 observations using the above as a guide.
 
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
 ## References
