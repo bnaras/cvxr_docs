@@ -47,8 +47,15 @@ from [CRAN](https://cloud.r-project.org).
 
 ## Documentation
 
-A large set of examples, many ported from `CVXPY`, are available in
-the [Examples](/post/cvxr_examples/) section. 
+A [video of the talk](http://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/CVXR-An-R-Package-for-Modeling-Convex-Optimization-Problems) by [Anqi Fu](https://web.stanford.edu/~anqif)
+at [useR! 2016](https//user2016.r-project.org) provides a good
+overview.
+
+An introductory vignette is installed with the package and can be
+viewed using `vignette("cvxr_intro", package = "CVXR")`.
+
+A large set of examples, many ported from `CVXPY`, are available on
+this site in the [Examples](/post/cvxr_examples/) section.
 
 ## Citing `CVXR`
 
