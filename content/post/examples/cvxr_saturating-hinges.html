@@ -83,7 +83,7 @@ ggplot() +
                          labels = sprintf(&quot;%0.2f&quot;, lambdas)) +
     labs(x = &quot;Age&quot;, y = &quot;Change in Bone Density&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="/post/examples/cvxr_saturating_hinges_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/post/examples/cvxr_saturating-hinges_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The squared error loss works well in this case, but the Huber loss is preferred when the dataset contains large outliers. To see this, we add 50 randomly generated outliers to the bone density data and re-estimate the saturating hinges.</p>
 <pre class="r"><code>## Add outliers to data
 set.seed(1)
@@ -119,7 +119,7 @@ ggplot() +
                          labels = c(&quot;Huber&quot;, &quot;Squared&quot;)) +
     labs(x = &quot;Age&quot;, y = &quot;Change in Bone Density&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="/post/examples/cvxr_saturating_hinges_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/post/examples/cvxr_saturating-hinges_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -158,6 +158,10 @@ ggplot() +
 ## [40] assertthat_0.2.0  colorspace_1.3-2  labeling_0.3     
 ## [43] stringi_1.1.5     lazyeval_0.2.1    munsell_0.4.3    
 ## [46] R.oo_1.21.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_saturating-hinges.Rmd">R Markdown</a></p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>

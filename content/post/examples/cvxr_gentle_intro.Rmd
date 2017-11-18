@@ -70,8 +70,7 @@ perhaps even something that has never been tried before---then `CVXR`
 is the package to do it. The advantage of `CVXR` over glmnet and the
 like comes from its flexibility: A few lines of code can transform a
 problem from commonplace to state-of-the-art, and can often do the
-work of an entire package in the process. (We present an example in
-section 3 where this is literally the case.)
+work of an entire package in the process.
 
 This document is meant to familiarize you with the `CVXR` package. It
 assumes basic knowledge of convex optimization and statistics as well
@@ -301,8 +300,8 @@ We would get a similar error if we tried to add the constraint
 called Disciplined Convex Programming (DCP) to evaluate the convexity
 of any given problem. If you follow these rules, you are guaranteed
 that your problem is convex. If you don't follow these rules, `CVXR`
-will throw an exception. See section 5 for a complete description of
-DCP.
+will throw an exception. See the last section for further information
+on DCP.
 
 ## Simple Examples
 
@@ -491,18 +490,18 @@ as
 and [Julia](http://convexjl.readthedocs.io/en/latest/types.html).
 
 `CVXR` implements the same rules, and a short introduction
-is [available here](/post/cvxr_dcp). 
-
-## 5. DCP functions
-
-The set of DCP functions are described in
-[Function Reference](/post/cvxr_functions/).
+is [available here](/post/cvxr_dcp).  The set of DCP functions are
+described in [Function Reference](/post/cvxr_functions/).
 
 ## Session Info
 
 ```{r}
 sessionInfo()
 ```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_gentle_intro.Rmd)
 
 ## References
 

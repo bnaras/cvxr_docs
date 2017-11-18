@@ -193,5 +193,8 @@ ggplot() +
 sessionInfo()
 ```
 
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_saturating-hinges.Rmd)
 
 ## References

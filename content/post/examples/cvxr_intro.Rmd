@@ -267,6 +267,10 @@ available to study and mimic.
 sessionInfo()
 ```
 
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_intro.Rmd)
+
 ## References
 
 

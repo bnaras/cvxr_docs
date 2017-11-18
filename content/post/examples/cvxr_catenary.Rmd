@@ -142,4 +142,8 @@ ggplot(data.frame(x = xs, y = ys)) +
 sessionInfo()
 ```
 
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_catenary.Rmd)
+
 ## References

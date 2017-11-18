@@ -145,4 +145,8 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.
 sessionInfo()
 ```
 
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_kelly-strategy.Rmd)
+
 ## References

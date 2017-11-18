@@ -129,4 +129,8 @@ observations using the above as a guide.
 sessionInfo()
 ```
 
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_isotonic-regression.Rmd)
+
 ## References

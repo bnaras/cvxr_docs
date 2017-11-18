@@ -202,6 +202,10 @@ do.call(multiplot, args = c(list(plotSpMat(Strue)),
 sessionInfo()
 ```
 
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_sparse-inverse-covariance-estimation.Rmd)
+
 ## References
 
 

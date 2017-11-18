@@ -67,7 +67,7 @@ S.est &lt;- lapply(alphas,
 <pre class="r"><code>do.call(multiplot, args = c(list(plotSpMat(Strue)),
                             mapply(plotSpMat, S.est, alphas, SIMPLIFY = FALSE),
                             list(layout = matrix(1:6, nrow = 2, byrow = TRUE))))</code></pre>
-<p><img src="/post/examples/cvxr_sparse_inverse_covariance_estimation_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
+<p><img src="/post/examples/cvxr_sparse-inverse-covariance-estimation_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -104,6 +104,10 @@ S.est &lt;- lapply(alphas,
 ## [31] scs_1.1-1          colorspace_1.3-2   labeling_0.3      
 ## [34] stringi_1.1.5      lazyeval_0.2.1     munsell_0.4.3     
 ## [37] R.oo_1.21.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_sparse-inverse-covariance-estimation.Rmd">R Markdown</a></p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>

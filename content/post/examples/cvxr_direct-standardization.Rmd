@@ -133,5 +133,9 @@ ggplot(plot.data) +
 sessionInfo()
 ```
 
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_direct-standardization.Rmd)
+
 
 ## References
