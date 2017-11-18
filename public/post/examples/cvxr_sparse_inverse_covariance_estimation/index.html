@@ -72,7 +72,7 @@ S.est &lt;- lapply(alphas,
                     Sres[abs(Sres) &lt;= 1e-4] &lt;- 0
                     Sres
                 })</code></pre>
-<p>In the code above, the <code>Semidef</code> constructor restricts <code>S</code> to the positive semidefinite cone. In our objective, we use <code>CVXR</code> functions for the log-determinant and trace. The expression <code>matrix_trace(S %*\ Q)</code> is equivalent to `sum(diag(S %*% Q))}, but the former is preferred because it is more efficient than making nested function calls.</p>
+<p>In the code above, the <code>Semidef</code> constructor restricts <code>S</code> to the positive semidefinite cone. In our objective, we use <code>CVXR</code> functions for the log-determinant and trace. The expression <code>matrix_trace(S %*% Q)</code> is equivalent to `sum(diag(S %*% Q))}, but the former is preferred because it is more efficient than making nested function calls.</p>
 <p>However, a standalone atom does not exist for the determinant, so we cannot replace <code>log_det(S)</code> with <code>log(det(S))</code> since <code>det</code> is undefined for a <code>Semidef</code> object.</p>
 </div>
 <div id="results" class="section level2">

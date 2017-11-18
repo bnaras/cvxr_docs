@@ -152,10 +152,9 @@ S.est <- lapply(alphas,
 
 In the code above, the `Semidef` constructor restricts `S` to the
 positive semidefinite cone. In our objective, we use `CVXR` functions
-for the log-determinant and trace. The expression `matrix_trace(S %*\
+for the log-determinant and trace. The expression `matrix_trace(S %*%
 Q)` is equivalent to `sum(diag(S %*% Q))}, but the former is preferred
-because it is more efficient than making nested function
-calls. 
+because it is more efficient than making nested function calls.
 
 However, a standalone atom does not exist for the determinant, so we
 cannot replace `log_det(S)` with `log(det(S))` since `det` is
