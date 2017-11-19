@@ -107,7 +107,7 @@ x_t <- with(pituitary, {
 ```
 In the above, we make use of the `vstack` function to create a single vector of the block means.
 
-We can how all three solutions compare.
+We can now compare all three solutions.
 
 ```{r, echo = FALSE, fig.cap="Comparison of Solutions(P = Primary, S = Secondary, T = Tertiary)"}
 library(kableExtra)
