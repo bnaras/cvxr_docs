@@ -151,7 +151,7 @@ staircase pattern has been smoothed out.
 
 We can easily extend this example to higher-order differences or
 lags. To make this easy, the function `diff` takes an argument
-`differences` that 1 by default; a third-order difference is specified
+`differences` that is 1 by default; a third-order difference is specified
 as `diff(x, differences = 3)`.
 
 ## Session Info

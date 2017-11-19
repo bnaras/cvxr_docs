@@ -112,7 +112,7 @@ data.nearconvex &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est =
 <p><img src="/post/examples/cvxr_near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <div id="notes" class="section level2">
 <h2>Notes</h2>
-<p>We can easily extend this example to higher-order differences or lags. To make this easy, the function <code>diff</code> takes an argument <code>differences</code> that 1 by default; a third-order difference is specified as <code>diff(x, differences = 3)</code>.</p>
+<p>We can easily extend this example to higher-order differences or lags. To make this easy, the function <code>diff</code> takes an argument <code>differences</code> that is 1 by default; a third-order difference is specified as <code>diff(x, differences = 3)</code>.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -132,7 +132,7 @@ data.nearconvex &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est =
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] ggplot2_2.2.1 boot_1.3-20   CVXR_0.94-2  
+## [1] ggplot2_2.2.1 boot_1.3-20   CVXR_0.94-4  
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.5-13.1      Rcpp_0.12.13      compiler_3.4.2   
