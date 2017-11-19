@@ -118,11 +118,11 @@ On the surface, it appears that we have replaced one call to `lm` with
 at least five or six lines of new R code. On top of that, the code
 actually runs slower, and so it is not clear what was really achieved.
 
-So suppose we knew for a fact that the $\beta$s were nonnegative and
-we wish to take this fact into account. This
+So suppose we knew that the $\beta$s were nonnegative and we wish to
+take this fact into account. This
 is
 [nonnegative least squares regression](https://en.wikipedia.org/wiki/Non-negative_least_squares) and
-`lm` would no longer do the job. 
+`lm` would no longer do the job.
 
 In `CVXR`, the modified problem merely requires the addition of a constraint to the
 problem definition.
@@ -160,10 +160,9 @@ knitr::kable(m, format = "html") %>%
 As you no doubt noticed, we have done nothing that other R packages
 could not do.
 
-So now suppose that we know, for some extraneous reason, that the sum
-of 
-$\beta_2$ and $\beta_3$ is negative and but all other $\beta$s are
-positive.
+So now suppose further, for some extraneous reason, that the sum of
+$\beta_2$ and $\beta_3$ is known to be negative and but all other
+$\beta$s are positive.
 
 It is clear that this problem would not fit into any standard
 package. But in `CVXR`, this is easily done by adding a few
@@ -239,7 +238,7 @@ knitr::kable(m, format = "html") %>%
     column_spec(1:2, background = "#ececec")
 ```
 
-This demonstrates the chief advantage of `CVXR`: flexibility. Users
+This demonstrates the chief advantage of `CVXR`: _flexibility_. Users
 can quickly modify and re-solve a problem, making our package ideal
 for prototyping new statistical methods. Its syntax is simple and
 mathematically intuitive. Furthermore, `CVXR` combines seamlessly with
