@@ -17,6 +17,7 @@ the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as w
 - [Isotonic Regression](/post/examples/cvxr_isotonic-regression/)
 - [Near Isotonic and Near Convex Regression](/post/examples/cvxr_near-isotonic-and-near-convex-regression/)
 - [Direct Standardization](/post/examples/cvxr_direct-standardization/)
+- [$L_1$ Trend Filtering](/post/examples/cvxr_l1-trend-filtering/)
 - [Log-Concave Density Estimation](/post/examples/cvxr_log-concave/)
 - [Sparse Inverse Covariance Estimation](/post/examples/cvxr_sparse_inverse_covariance_estimation/)
 - [Saturating Hinges](/post/examples/cvxr_saturating_hinges/)

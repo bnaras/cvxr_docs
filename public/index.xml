@@ -30,6 +30,17 @@
     </item>
     
     <item>
+      <title>L1 Trend Filtering</title>
+      <link>/post/examples/cvxr_l1-trend-filtering/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_l1-trend-filtering/</guid>
+      <description>Introduction Kim et al. (2009) propose the \(l_1\) trend filtering method for trend estimation. The method solves an optimization problem of the form
+\[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1 \end{array}\] where the variable to be estimated is \(\beta\) and we are given the problem data \(y\) and \(\lambda\). The matrix \(D\) is the second-order difference matrix,
+\[ D = \left[ \begin{matrix} 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; \ddots &amp;amp; \ddots &amp;amp; \ddots &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1\\ \end{matrix} \right].</description>
+    </item>
+    
+    <item>
       <title>Largest Ball in a Polyhedron in 2D</title>
       <link>/post/examples/cvxr_2d_ball/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -109,7 +120,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Largest Euclidean ball in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+ Largest Euclidean ball in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
     </item>
     
     <item>
