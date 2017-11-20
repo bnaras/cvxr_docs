@@ -13,7 +13,7 @@ tags: []
 
 Let $n = 1$ and suppose $x_i$ are i.i.d. samples from a log-concave
 discrete distribution on $\{0,\ldots,K\}$ for some
-$K \in \integers_+$. Define $p_k := \Prob(X = k)$ to be the
+$K \in {\mathbf Z}_+$. Define $p_k := {\mathbf {Prob}}(X = k)$ to be the
 probability mass function. One method for estimating
 $\{p_0,\ldots,p_K\}$ is to maximize the log-likelihood function
 subject to a log-concavity constraint \citep{mlelogcave}, i.e.,
@@ -75,9 +75,16 @@ xprobs <- exp(xprobs)/sum(exp(xprobs))
 x <- sample(xrange, size = m, replace = TRUE, prob = xprobs)
 
 K <- max(xrange)
-xhist <- hist(x, breaks = -1:K, right = TRUE, include.lowest = FALSE)
-counts <- xhist$counts
+counts <- hist(x, breaks = -1:K, right = TRUE, include.lowest = FALSE,
+               plot = FALSE)$counts
 ```
+
+```{r}
+library(ggplot2)
+ggplot() +
+    geom_histogram(mapping = aes(x = x), breaks = -1:K, color = "blue", fill = "orange")
+```
+
 
 We now solve problem with log-concave constraint.
 

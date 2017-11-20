@@ -27,7 +27,7 @@
 	
 	<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Let <span class="math inline">\(n = 1\)</span> and suppose <span class="math inline">\(x_i\)</span> are i.i.d. samples from a log-concave discrete distribution on <span class="math inline">\(\{0,\ldots,K\}\)</span> for some <span class="math inline">\(K \in \integers_+\)</span>. Define <span class="math inline">\(p_k := \Prob(X = k)\)</span> to be the probability mass function. One method for estimating <span class="math inline">\(\{p_0,\ldots,p_K\}\)</span> is to maximize the log-likelihood function subject to a log-concavity constraint , i.e.,</p>
+<p>Let <span class="math inline">\(n = 1\)</span> and suppose <span class="math inline">\(x_i\)</span> are i.i.d. samples from a log-concave discrete distribution on <span class="math inline">\(\{0,\ldots,K\}\)</span> for some <span class="math inline">\(K \in {\mathbf Z}_+\)</span>. Define <span class="math inline">\(p_k := {\mathbf {Prob}}(X = k)\)</span> to be the probability mass function. One method for estimating <span class="math inline">\(\{p_0,\ldots,p_K\}\)</span> is to maximize the log-likelihood function subject to a log-concavity constraint , i.e.,</p>
 <span class="math display">\[\begin{array}{ll}
 \underset{p}{\mbox{maximize}} &amp; \sum_{k=0}^K M_k\log p_k \\
 \mbox{subject to} &amp; p \geq 0, \quad \sum_{k=0}^K p_k = 1, \\
@@ -72,9 +72,12 @@ xprobs &lt;- exp(xprobs)/sum(exp(xprobs))
 x &lt;- sample(xrange, size = m, replace = TRUE, prob = xprobs)
 
 K &lt;- max(xrange)
-xhist &lt;- hist(x, breaks = -1:K, right = TRUE, include.lowest = FALSE)</code></pre>
-<p><img src="../../../post/examples/cvxr_log-concave_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<pre class="r"><code>counts &lt;- xhist$counts</code></pre>
+counts &lt;- hist(x, breaks = -1:K, right = TRUE, include.lowest = FALSE,
+               plot = FALSE)$counts</code></pre>
+<pre class="r"><code>library(ggplot2)
+ggplot() +
+    geom_histogram(mapping = aes(x = x), breaks = -1:K, color = &quot;blue&quot;, fill = &quot;orange&quot;)</code></pre>
+<p><img src="../../../post/examples/cvxr_log-concave_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>We now solve problem with log-concave constraint.</p>
 <pre class="r"><code>u &lt;- Variable(K+1)
 obj &lt;- t(counts) %*% u
@@ -94,7 +97,7 @@ plot.data &lt;- gather(data = d, key = &quot;Type&quot;, value = &quot;Estimate&
 ggplot(plot.data) +
     geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="../../../post/examples/cvxr_log-concave_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="../../../post/examples/cvxr_log-concave_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>d &lt;- data.frame(x = xrange, True = cumsum(xprobs),
                 Empirical = cumsum(counts) / sum(counts),
                 Optimal = cumsum(pmf))
@@ -103,7 +106,7 @@ plot.data &lt;- gather(data = d, key = &quot;Type&quot;, value = &quot;Estimate&
 ggplot(plot.data) +
     geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="../../../post/examples/cvxr_log-concave_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="../../../post/examples/cvxr_log-concave_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>From the figures we see that the estimated curve is much closer to the true distribution, exhibiting a similar shape and number of peaks. In contrast, the empirical probability mass function oscillates, failing to be log-concave on parts of its domain. These differences are reflected in the cumulative distribution functions as well.</p>
 </div>
 <div id="session-info" class="section level2">
