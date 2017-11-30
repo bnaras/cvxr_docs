@@ -8,28 +8,25 @@ bibliography: bibtex/cvxr_refs.bib
 
 ## Questions
 
-1. [Where can I go for help?](#help)
-2. [My problem is not DCP compliant? Help!](#dcp-help)
+1. [Where can I go for help?](#gen-help)
+2. [How do I reformulate my problem to be DCP compliant?](#dcp-help)
 3. [I want to report a bug.](#bug)
 
 ## Answers
 
-1. <a name="help"></a>Where can I go for help?
+1. <a name="gen-help"></a>Where can I go for help?
 
-Please use the [Stackoverflow `cvx`
-forum](https://stackoverflow.com/questions/tagged/cvx) for posting
-questions.
+Please post questions to the `cvx` tag on [StackOverflow](https://stackoverflow.com/questions/tagged/cvx).
 
-2. <a name="dcp-help"></a>My problem is not DCP compliant? Help!
+2. <a name="dcp-help"></a>My problem is not DCP compliant. How do I reformulate it?
 
-Your best bet is the reference @BoydVandenberghe:2004 book. It is just
-not possible for us to analyze every individual problem and determine
-how to reformulate it in DCP form.
+It is impossible for us to analyze every individual problem and determine whether it can be reformulated as a DCP problem.
+Your best bet is to go through the examples in the @BoydVandenberghe:2004 book and its [additional exercises](http://stanford.edu/~boyd/cvxbook/).
 
 3. <a name="bug"></a>I want to report a bug.
 
-Please open an issue on [Github
-Issues](https://github.com/anqif/CVXR/issues) and include a
+Please open an issue on the [CVXR Github
+Issues](https://github.com/anqif/CVXR/issues) page with a
 reproducible example. 
 
 
