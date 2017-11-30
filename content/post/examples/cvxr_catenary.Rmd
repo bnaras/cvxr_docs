@@ -18,8 +18,8 @@ equilibrium, which is equivalent to determining the $(x,y)$
 coordinates of every point along its curve when its potential energy
 is minimized.
 
-This is the
-famous [catenary problem](https://en.wikipedia.org/wiki/Catenary).
+This is the famous [catenary
+problem](https://en.wikipedia.org/wiki/Catenary).
 
 
 ## A Discrete Version
@@ -36,9 +36,12 @@ y_i \\ \mbox{subject to} & x_1 = 0, \quad y_1 = 1, \quad x_m = 1,
 \quad i = 1,\ldots,m-1 \end{array} 
 $$
 
-with variables $x \in {\mathbf R}^m$ and $y \in {\mathbf R}^m$. 
+with variables $x \in {\mathbf R}^m$ and $y \in {\mathbf R}^m$. This
+discretized version which has been studied by @catenary was suggested
+to us by [Hans Werner
+Borchers](http://hwborchers.lima-city.de/Presents/catenary.html).
 
-This basic catenary problem has a well-known analytical solution
+The basic catenary problem has a well-known analytical solution
 (see @GelfandFomin:1963) which we can easily verify with `CVXR`. 
 
 ```{r}
