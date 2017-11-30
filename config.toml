@@ -79,6 +79,11 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	 weight = -17
 
 [[menu.main]]
+    name = "FAQ"
+    	 url = "/post/cvxr_faq/"
+	 weight = -16
+
+[[menu.main]]
     name = "DCP"
     	 url = "/post/cvxr_dcp/"
 	 weight = -16

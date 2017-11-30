@@ -184,6 +184,16 @@ Expressions Expressions in CVXR are formed from variables, numerical constants s
     </item>
     
     <item>
+      <title>Frequently Asked Questions</title>
+      <link>/post/cvxr_faq/</link>
+      <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/cvxr_faq/</guid>
+      <description>Questions Where can I go for help? My problem is not DCP compliant? Help! I want to report a bug.   Answers Where can I go for help?  Please use the Stackoverflow cvx forum for posting questions.
+My problem is not DCP compliant? Help!  Your best bet is the reference Boyd and Vandenberghe (2004) book. It is just not possible for us to analyze every individual problem and determine how to reformulate it in DCP form.</description>
+    </item>
+    
+    <item>
       <title>Introduction</title>
       <link>/post/examples/cvxr_intro/</link>
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>

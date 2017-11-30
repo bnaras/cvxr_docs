@@ -1,0 +1,35 @@
+---
+title: Frequently Asked Questions
+author: "Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
+date: '2017-10-29'
+slug: cvxr_faq
+bibliography: bibtex/cvxr_refs.bib
+---
+
+## Questions
+
+1. [Where can I go for help?](#help)
+2. [My problem is not DCP compliant? Help!](#dcp-help)
+3. [I want to report a bug.](#bug)
+
+## Answers
+
+1. <a name="help"></a>Where can I go for help?
+
+Please use the [Stackoverflow `cvx`
+forum](https://stackoverflow.com/questions/tagged/cvx) for posting
+questions.
+
+2. <a name="dcp-help"></a>My problem is not DCP compliant? Help!
+
+Your best bet is the reference @BoydVandenberghe:2004 book. It is just
+not possible for us to analyze every individual problem and determine
+how to reformulate it in DCP form.
+
+3. <a name="bug"></a>I want to report a bug.
+
+Please open an issue on [Github
+Issues](https://github.com/anqif/CVXR/issues) and include a
+reproducible example. 
+
+
