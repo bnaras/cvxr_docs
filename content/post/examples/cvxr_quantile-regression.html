@@ -1,0 +1,285 @@
+---
+title: Quantile Regression
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_quantile-regression
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Quantile regression is another variation on least squares is quantile regression . The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
+<p><span class="math display">\[
+    \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
+\]</span></p>
+<p>where <span class="math inline">\(\tau \in (0,1)\)</span> specifies the quantile. The problem as before is to minimize the total residual loss. This model is commonly used in ecology, healthcare, and other fields where the mean alone is not enough to capture complex relationships between variables. <code>CVXR</code> allows us to create a function to represent the loss and integrate it seamlessly into the problem definition, as illustrated below.</p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We will use an example from the <code>quantreg</code> package. The vignette provides an example of the estimation and plot.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(quantreg)))
+data(engel)
+library(ggplot2)
+p &lt;- ggplot(data = engel) +
+    geom_point(mapping = aes(x = income, y = foodexp), color = &quot;blue&quot;)
+taus &lt;- c(0.1, 0.25, 0.5, 0.75, 0.90, 0.95)
+fits &lt;- data.frame(
+    coef(lm(foodexp ~ income, data = engel)),
+    sapply(taus, function(x) coef(rq(formula = foodexp ~ income, data = engel, tau = x))))
+names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))
+
+nf &lt;- ncol(fits)
+colors &lt;- colorRampPalette(colors = c(&quot;black&quot;, &quot;red&quot;))(nf)
+p &lt;- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)
+for (i in seq_len(nf)[-1]) {
+    p &lt;- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
+}</code></pre>
+<p>The above plot shows the quantile regression fits for <span class="math inline">\(\tau = (0.1, 0.25, 0.5, 0.75, 0.90, 0.95)\)</span>. The OLS fit is the thick black line.</p>
+<p>The following is a table of the estimates.</p>
+<pre class="r"><code>library(kableExtra)
+knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `quantreg`&quot;) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1:8, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-2">Table 1: </span>Fits from OLS and <code>quantreg</code>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+OLS
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.10}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.25}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.50}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.75}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.90}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.95}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+(Intercept)
+</td>
+<td style="text-align:right;background-color: #ececec;">
+147.4753885
+</td>
+<td style="text-align:right;background-color: #ececec;">
+110.1415742
+</td>
+<td style="text-align:right;background-color: #ececec;">
+95.4835396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+81.4822474
+</td>
+<td style="text-align:right;background-color: #ececec;">
+62.3965855
+</td>
+<td style="text-align:right;background-color: #ececec;">
+67.3508721
+</td>
+<td style="text-align:right;background-color: #ececec;">
+64.1039632
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+income
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4851784
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4017658
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4741032
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.5601806
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6440141
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6862995
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.7090685
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>CVXR</code> formulation follows. Note we make use of <code>model.matrix</code> to get the intercept column painlessly.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
+X &lt;- model.matrix(foodexp ~ income, data = engel)
+y &lt;- matrix(engel[, &quot;foodexp&quot;], ncol = 1)
+beta &lt;- Variable(2)
+quant_loss &lt;- function(u, tau) { 0.5 * abs(u) + (tau - 0.5) * u }
+solutions &lt;- sapply(taus, function(tau) {
+    obj &lt;- sum(quant_loss(y - X %*% beta, t = tau))
+    prob &lt;- Problem(Minimize(obj))
+    solve(prob)$getValue(beta)
+})
+solutions &lt;- data.frame(coef(lm(foodexp ~ income, data = engel)),
+                        solutions)
+names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))</code></pre>
+<p>Here is a table similar to the above with the OLS estimate added in for easy comparison.</p>
+<pre class="r"><code>knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `CVXR`&quot;) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1:8, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-4">Table 2: </span>Fits from OLS and <code>CVXR</code>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+OLS
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.10}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.25}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.50}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.75}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.90}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.95}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+(Intercept)
+</td>
+<td style="text-align:right;background-color: #ececec;">
+147.4753885
+</td>
+<td style="text-align:right;background-color: #ececec;">
+110.1415742
+</td>
+<td style="text-align:right;background-color: #ececec;">
+95.4835396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+81.4822474
+</td>
+<td style="text-align:right;background-color: #ececec;">
+62.3965855
+</td>
+<td style="text-align:right;background-color: #ececec;">
+67.3508721
+</td>
+<td style="text-align:right;background-color: #ececec;">
+64.1039632
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+income
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4851784
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4017658
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4741032
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.5601806
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6440141
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6862995
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.7090685
+</td>
+</tr>
+</tbody>
+</table>
+<p>The results match.</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.4.2 (2017-09-28)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.1
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] methods   stats     graphics  grDevices datasets  utils     base     
+## 
+## other attached packages:
+## [1] CVXR_0.94-4      kableExtra_0.6.1 ggplot2_2.2.1    quantreg_5.34   
+## [5] SparseM_1.77    
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.1       Rcpp_0.12.14       highr_0.6         
+##  [4] compiler_3.4.2     plyr_1.8.4         R.methodsS3_1.7.1 
+##  [7] R.utils_2.6.0      tools_3.4.2        bit_1.1-12        
+## [10] digest_0.6.12      evaluate_0.10.1    tibble_1.3.4      
+## [13] gtable_0.2.0       lattice_0.20-35    viridisLite_0.2.0 
+## [16] pkgconfig_2.0.1    rlang_0.1.4        Matrix_1.2-12     
+## [19] yaml_2.1.14        blogdown_0.3       Rmpfr_0.6-1       
+## [22] ECOSolveR_0.3-2    stringr_1.2.0      httr_1.3.1        
+## [25] knitr_1.17         xml2_1.1.1         MatrixModels_0.4-1
+## [28] hms_0.4.0          bit64_0.9-7        rprojroot_1.2     
+## [31] grid_3.4.2         R6_2.2.2           rmarkdown_1.8     
+## [34] bookdown_0.5       readr_1.1.1        magrittr_1.5      
+## [37] scs_1.1-1          backports_1.1.1    scales_0.5.0      
+## [40] htmltools_0.3.6    rvest_0.3.2        colorspace_1.3-2  
+## [43] stringi_1.1.6      lazyeval_0.2.1     munsell_0.4.3     
+## [46] R.oo_1.21.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_quantile-regression.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>

@@ -75,6 +75,16 @@ a1 &amp;lt;- matrix(c(2,1)) a2 &amp;lt;- matrix(c(2,-1)) a3 &amp;lt;- matrix(c(-
     </item>
     
     <item>
+      <title>Logistic Regression</title>
+      <link>/post/examples/cvxr_logistic-regression/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_logistic-regression/</guid>
+      <description>Introduction In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression (Cox 1958, Freedman (2009)).
+Suppose now that \(y_i \in \{0,1\}\) is a binary class indicator. The conditional response is modeled as \(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\), where \(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\) is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</description>
+    </item>
+    
+    <item>
       <title>Near Isotonic and Near Convex Regression</title>
       <link>/post/examples/cvxr_near-isotonic-and-near-convex-regression/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -92,6 +102,17 @@ a1 &amp;lt;- matrix(c(2,1)) a2 &amp;lt;- matrix(c(2,-1)) a3 &amp;lt;- matrix(c(-
       <guid>/post/examples/cvxr_portfolio-optimization/</guid>
       <description>Introduction In this example, we solve the Markowitz portfolio problem under various constraints (Markowitz 1952; Roy 1952; Lobo, Fazel, and Boyd 2007).
 We have \(n\) assets or stocks in our portfolio and must determine the amount of money to invest in each. Let \(w_i\) denote the fraction of our budget invested in asset \(i = 1,\ldots,m\), and let \(r_i\) be the returns (, fractional change in price) over the period of interest.</description>
+    </item>
+    
+    <item>
+      <title>Quantile Regression</title>
+      <link>/post/examples/cvxr_quantile-regression/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_quantile-regression/</guid>
+      <description>Introduction Quantile regression is another variation on least squares is quantile regression . The loss is the tilted \(l_1\) function,
+\[ \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u, \]
+where \(\tau \in (0,1)\) specifies the quantile. The problem as before is to minimize the total residual loss. This model is commonly used in ecology, healthcare, and other fields where the mean alone is not enough to capture complex relationships between variables.</description>
     </item>
     
     <item>
@@ -130,7 +151,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Largest Euclidean ball in a 2D polyhedron Huber Regression Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+ Largest Euclidean ball in a 2D polyhedron Huber Regression Logistic Regression Quantile Regression Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
     </item>
     
     <item>

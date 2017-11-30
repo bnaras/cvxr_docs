@@ -33,12 +33,22 @@
   </url>
   
   <url>
+    <loc>/post/examples/cvxr_logistic-regression/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/examples/cvxr_near-isotonic-and-near-convex-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/post/examples/cvxr_portfolio-optimization/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/examples/cvxr_quantile-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   

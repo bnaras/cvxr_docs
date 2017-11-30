@@ -1,0 +1,107 @@
+---
+title: Quantile Regression
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_quantile-regression
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+## Introduction
+
+Quantile regression is another variation on least squares is quantile regression
+\citep{quantile}. The loss is the tilted $l_1$ function,
+
+\[
+	\phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
+\]
+
+where $\tau \in (0,1)$ specifies the quantile. The problem as before
+is to minimize the total residual loss. This model is commonly used in
+ecology, healthcare, and other fields where the mean alone is not
+enough to capture complex relationships between variables. `CVXR`
+allows us to create a function to represent the loss and integrate it
+seamlessly into the problem definition, as illustrated below.
+
+
+## Example
+
+We will use an example from the `quantreg` package. The vignette
+provides an example of the estimation and plot.
+
+```{r}
+suppressMessages(suppressWarnings(library(quantreg)))
+data(engel)
+library(ggplot2)
+p <- ggplot(data = engel) +
+    geom_point(mapping = aes(x = income, y = foodexp), color = "blue")
+taus <- c(0.1, 0.25, 0.5, 0.75, 0.90, 0.95)
+fits <- data.frame(
+    coef(lm(foodexp ~ income, data = engel)),
+    sapply(taus, function(x) coef(rq(formula = foodexp ~ income, data = engel, tau = x))))
+names(fits) <- c("OLS", sprintf("$\\tau_{%0.2f}$", taus))
+
+nf <- ncol(fits)
+colors <- colorRampPalette(colors = c("black", "red"))(nf)
+p <- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)
+for (i in seq_len(nf)[-1]) {
+    p <- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
+}
+```
+
+The above plot shows the quantile regression fits for $\tau = (0.1,
+0.25, 0.5, 0.75, 0.90, 0.95)$. The OLS fit is the thick black line.
+    
+The following is a table of the estimates.
+
+```{r}
+library(kableExtra)
+knitr::kable(fits, format = "html", caption = "Fits from OLS and `quantreg`") %>%
+    kable_styling("striped") %>%
+    column_spec(1:8, background = "#ececec")
+```
+
+The `CVXR` formulation follows. Note we make use of `model.matrix` to
+get the intercept column painlessly. 
+
+```{r}
+suppressMessages(suppressWarnings(library(CVXR)))
+X <- model.matrix(foodexp ~ income, data = engel)
+y <- matrix(engel[, "foodexp"], ncol = 1)
+beta <- Variable(2)
+quant_loss <- function(u, tau) { 0.5 * abs(u) + (tau - 0.5) * u }
+solutions <- sapply(taus, function(tau) {
+    obj <- sum(quant_loss(y - X %*% beta, t = tau))
+    prob <- Problem(Minimize(obj))
+    solve(prob)$getValue(beta)
+})
+solutions <- data.frame(coef(lm(foodexp ~ income, data = engel)),
+                        solutions)
+names(fits) <- c("OLS", sprintf("$\\tau_{%0.2f}$", taus))
+```
+
+Here is a table similar to the above with the OLS estimate added in
+for easy comparison.
+
+
+```{r}
+knitr::kable(fits, format = "html", caption = "Fits from OLS and `CVXR`") %>%
+    kable_styling("striped") %>%
+    column_spec(1:8, background = "#ececec")
+```
+
+The results match.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_quantile-regression.Rmd)
+
+## References

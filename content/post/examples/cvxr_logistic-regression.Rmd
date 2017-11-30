@@ -1,0 +1,123 @@
+---
+title: Logistic Regression
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_logistic-regression
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+## Introduction
+
+In classification problems, the goal is to predict the class
+membership based on predictors. Often there are two classes and one of
+the most popular methods for binary classification is logistic
+regression [@Cox:1958, @Freedman:2009].  
+
+Suppose now that $y_i \in \{0,1\}$ is a binary class indicator. The
+conditional response is modeled as $y|x \sim
+\mbox{Bernoulli}(g_{\beta}(x))$, where $g_{\beta}(x) = \frac{1}{1 +
+e^{-x^T\beta}}$ is the logistic function, and maximize the
+log-likelihood function, yielding the optimization problem
+
+\[
+\begin{array}{ll} 
+\underset{\beta}{\mbox{maximize}} & \sum_{i=1}^m \{
+y_i\log(g_{\beta}(x_i)) + (1-y_i)\log(1 - g_{\beta}(x_i)) \}.
+\end{array} 
+\]
+
+`CVXR` provides the `logistic` atom as a shortcut for $f(z) =
+\log(1 + e^z)$ to express the optimization problem.  One may be
+tempted to use `log(1 + exp(X %*% beta))` as in conventional
+`R` syntax. However, this representation of $f(z)$ violates
+the DCP composition rule, so the `CVXR` parser will reject the
+problem even though the objective is convex. Users who wish to employ
+a function that is convex, but not DCP compliant should check the
+documentation for a custom atom or consider a different formulation.
+
+## Example
+
+The formulation is very similar to OLS, except for the specification
+of the objective. 
+
+In the example below, we demonstrate a _key feature_ of `CVXR`, that
+of evaluating various functions of the variables that are solutions to
+the optimization problem. For instance, the log-odds, $X\hat{\beta}$,
+where $\hat{\beta}$ is the logistic regression estimate, is simply
+specified as `X %*% beta` below, and the `getValue` function of the
+result will compute its value.  (Any other function of the estimate
+can be similarly computed.)
+
+```{r}
+suppressMessages(suppressWarnings(library(CVXR)))
+n <- 20
+m <- 1000
+offset <- 0
+sigma <- 45
+DENSITY <- 0.2
+
+set.seed(183991)
+beta_true <- stats::rnorm(n)
+idxs <- sample(n, size = floor((1-DENSITY)*n), replace = FALSE)
+beta_true[idxs] <- 0
+X <- matrix(stats::rnorm(m*n, 0, 5), nrow = m, ncol = n)
+y <- sign(X %*% beta_true + offset + stats::rnorm(m, 0, sigma))
+
+beta <- Variable(n)
+obj <- -sum(logistic(-X[y <= 0, ] %*% beta)) - sum(logistic(X[y == 1, ] %*% beta))
+prob <- Problem(Maximize(obj))
+result <- solve(prob)
+
+log_odds <- result$getValue(X %*% beta)
+beta_res <- result$getValue(beta)
+y_probs <- 1/(1 + exp(-X %*% beta_res))
+```
+
+We can compare with the standard `stats::glm` estimate.
+
+```{r}
+d <- data.frame(y = as.numeric(y > 0), X = X)
+glm <- stats::glm(formula = y ~ 0 + X, family = "binomial", data = d)
+est.table <- data.frame("CVXR.est" = beta_res, "GLM.est" = coef(glm))
+rownames(est.table) <- paste0("$\\beta_{", 1:n, "}$")
+library(kableExtra)
+knitr::kable(est.table, format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(1:3, background = "#ececec")
+```
+
+The sign difference is due to the coding of $y$ as $(-1, 1)$ for
+`CVXR` rather than $(0, 1)$ for `stats::glm`. 
+
+So, for completeness, if we were to code the $y$ as $(0, 1)$, the
+objective will have to be modified as below. 
+
+
+```{r}
+obj <- -sum(X[y <= 0, ] %*% beta) - sum(logistic(-X %*% beta))
+prob <- Problem(Maximize(obj))
+result <- solve(prob)
+beta_log <- result$getValue(beta)
+est.table <- data.frame("CVXR.est" = beta_log, "GLM.est" = coef(glm))
+rownames(est.table) <- paste0("$\\beta_{", 1:n, "}$")
+knitr::kable(est.table, format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(1:3, background = "#ececec")
+```
+
+Now, the results match perfectly.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_logistic-regression.Rmd)
+
+## References
