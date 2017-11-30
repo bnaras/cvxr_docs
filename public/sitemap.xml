@@ -8,6 +8,11 @@
   </url>
   
   <url>
+    <loc>/post/examples/cvxr_huber-regression/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/examples/cvxr_kelly-strategy/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>

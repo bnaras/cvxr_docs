@@ -21,6 +21,16 @@
     </item>
     
     <item>
+      <title>Huber Regression</title>
+      <link>/post/examples/cvxr_huber-regression/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_huber-regression/</guid>
+      <description>Introduction Huber regression (Huber 1964) is a regression technique that is robust to outliers. The idea is to use a different loss function rather than the traditional least-squares; we solve
+\[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \sum_{i=1}^m \phi(y_i - x_i^T\beta) \end{array}\] for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber function with threshold \(M &amp;gt; 0\), \[ \phi(u) = \begin{cases} u^2 &amp;amp; \mbox{if } |u| \leq M \\ 2Mu - M^2 &amp;amp; \mbox{if } |u| &amp;gt; M.</description>
+    </item>
+    
+    <item>
       <title>Kelly Gambling</title>
       <link>/post/examples/cvxr_kelly-strategy/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -120,7 +130,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Largest Euclidean ball in a 2D polyhedron Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+ Largest Euclidean ball in a 2D polyhedron Huber Regression Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
     </item>
     
     <item>

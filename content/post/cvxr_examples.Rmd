@@ -13,6 +13,7 @@ Many of the examples here were ported from
 the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as well.
 
 - [Largest Euclidean ball in a 2D polyhedron](/post/examples/cvxr_2d_ball/)
+- [Huber Regression](/post/examples/cvxr_huber-regression/)
 - [Catenary Problem](/post/examples/cvxr_catenary/)
 - [Isotonic Regression](/post/examples/cvxr_isotonic-regression/)
 - [Near Isotonic and Near Convex Regression](/post/examples/cvxr_near-isotonic-and-near-convex-regression/)
