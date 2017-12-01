@@ -12,19 +12,31 @@ tags: []
 Many of the examples here were ported from
 the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as well.
 
+## Basic Examples
+
 - [Largest Euclidean ball in a 2D polyhedron](/post/examples/cvxr_2d_ball/)
 - [Catenary Problem](/post/examples/cvxr_catenary/)
+
+## Regression Examples
+
 - [Huber Regression](/post/examples/cvxr_huber-regression/)
 - [Logistic Regression](/post/examples/cvxr_logistic-regression/)
 - [Quantile Regression](/post/examples/cvxr_quantile-regression/)
+- [Censored Regression](/post/examples/cvxr_censored-regression/)
 - [Isotonic Regression](/post/examples/cvxr_isotonic-regression/)
+
+## Penalized Models
+
 - [Near Isotonic and Near Convex Regression](/post/examples/cvxr_near-isotonic-and-near-convex-regression/)
-- [Direct Standardization](/post/examples/cvxr_direct-standardization/)
 - [$L_1$ Trend Filtering](/post/examples/cvxr_l1-trend-filtering/)
 - [Elastic Net](/post/examples/cvxr_elastic-net/)
+- [Saturating Hinges](/post/examples/cvxr_saturating_hinges/)
+  
+## Miscellaneous
+
+- [Direct Standardization](/post/examples/cvxr_direct-standardization/)
 - [Log-Concave Density Estimation](/post/examples/cvxr_log-concave/)
 - [Sparse Inverse Covariance Estimation](/post/examples/cvxr_sparse_inverse_covariance_estimation/)
-- [Saturating Hinges](/post/examples/cvxr_saturating_hinges/)
 - [Kelly Gambling](/post/examples/cvxr_kelly-strategy/)
 - [Fastest Mixing Markov Chain](/post/examples/cvxr_fast-mixing-mc/)
 - [Portfolio Optimization](/post/examples/cvxr_portfolio-optimization/)

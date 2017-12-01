@@ -1,0 +1,138 @@
+---
+title: Censored Regression
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_censored-regression
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+
+```{r, echo = FALSE}
+library(ggplot2)
+```
+
+## Introduction
+
+Data collected from an experimental study is sometimes censored, so
+that only partial information is known about a subset of
+observations. For instance, when measuring the lifespan of mice, we
+may find a number of subjects live beyond the duration of the
+project. Thus, all we know is the lower bound on their lifespan. This
+right censoring can be incorporated into a regression model via convex
+optimization.
+
+Suppose that only $K$ of our observations $(x_i,y_i)$ are fully
+observed, and the remaining are censored such that we observe $x_i$,
+but only know $y_i \geq D$ for $i = K+1,\ldots,m$ and some constant $D
+\in {\mathbf R}$. We can build an OLS model using the uncensored data,
+restricting the fitted values $\hat y_i = x_i^T\beta$ to lie above $D$
+for the censored observations:
+
+\[
+\begin{array}{ll} \underset{\beta}{\mbox{minimize}} & \sum_{i=1}^K (y_i - x_i^T\beta)^2 \\
+\mbox{subject to} & x_i^T\beta \geq D, \quad i = K+1,\ldots,m.
+\end{array}
+\]
+
+This avoids the bias introduced by standard OLS, while still utilizing
+all of the data points in the regression. The constraint requires only
+one more line in `CVXR`.
+
+## Example
+
+We will generate synthetic data for this example, censoring
+observations beyond a value $D$.
+
+```{r}
+## Problem data
+n <- 30
+M <- 50
+K <- 200
+
+set.seed(n * M * K)
+X <- matrix(stats::rnorm(K * n), nrow = K, ncol = n)
+beta_true <- matrix(stats::rnorm(n), nrow = n, ncol = 1)
+y <- X %*% beta_true + 0.3 * sqrt(n) * stats::rnorm(K)
+
+## Order variables based on y
+idx <- order(y, decreasing = FALSE)
+y_ordered <- y[idx]
+X_ordered <- X[idx, ]
+
+## Find cutoff and censor
+D <- (y_ordered[M] + y_ordered[M + 1]) / 2
+censored <- (y_ordered > D)
+y_censored <- pmin(y_ordered, D)
+```
+
+We now fit regular OLS, OLS using just the censored data and finally
+the censored regression.
+
+```{r}
+suppressWarnings(suppressMessages(library(CVXR)))
+## Regular OLS
+beta <- Variable(n)
+obj <- sum((y_censored - X_ordered %*% beta)^2)
+prob <- Problem(Minimize(obj))
+result <- solve(prob)
+beta_ols <- result$getValue(beta)
+
+## OLS using uncensored data
+obj <- sum((y_censored[1:M] - X_ordered[1:M,] %*% beta)^2)
+prob <- Problem(Minimize(obj))
+result <- solve(prob)
+beta_unc <- result$getValue(beta)
+
+## Censored regression
+obj <- sum((y_censored[1:M] - X_ordered[1:M,] %*% beta)^2)
+constr <- list(X_ordered[(M+1):K,] %*% beta >= D)
+prob <- Problem(Minimize(obj), constr)
+result <- solve(prob)
+beta_cens <- result$getValue(beta)
+```
+
+Here's are some plots comparing the results. The blue diamond points
+are estimates.
+
+```{r}
+plot_results <- function(beta_res, title) {
+    d <- data.frame(index = seq_len(K),
+                    y_ordered = y_ordered,
+                    y_fit = as.numeric(X_ordered %*% beta_res),
+                    censored = as.factor(censored))
+    ggplot(data = d) +
+        geom_point(mapping = aes(x = index, y = y_ordered, color = censored)) +
+        geom_point(mapping = aes(x = index, y = y_fit), color = "blue", shape = 23) +
+        geom_abline(intercept = D, slope = 0, lty = "dashed") +
+        labs(x = "Observations", y = "y") +
+        ggtitle(title)
+}
+```
+
+```{r}
+plot_results(beta_ols, "Regular OLS.")
+```
+
+```{r}
+plot_results(beta_unc, "OLS using uncensored data.")
+```
+
+```{r}
+plot_results(beta_cens, "Censored Regression.")
+```
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_censored-regression.Rmd)
+
+## References

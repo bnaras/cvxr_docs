@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/post/examples/cvxr_censored-regression/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/examples/cvxr_elastic-net/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>

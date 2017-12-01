@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.30.2" />
+	
+	<title>Censored Regression &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Censored Regression</h1>
+	
+	<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Data collected from an experimental study is sometimes censored, so that only partial information is known about a subset of observations. For instance, when measuring the lifespan of mice, we may find a number of subjects live beyond the duration of the project. Thus, all we know is the lower bound on their lifespan. This right censoring can be incorporated into a regression model via convex optimization.</p>
+<p>Suppose that only <span class="math inline">\(K\)</span> of our observations <span class="math inline">\((x_i,y_i)\)</span> are fully observed, and the remaining are censored such that we observe <span class="math inline">\(x_i\)</span>, but only know <span class="math inline">\(y_i \geq D\)</span> for <span class="math inline">\(i = K+1,\ldots,m\)</span> and some constant <span class="math inline">\(D \in {\mathbf R}\)</span>. We can build an OLS model using the uncensored data, restricting the fitted values <span class="math inline">\(\hat y_i = x_i^T\beta\)</span> to lie above <span class="math inline">\(D\)</span> for the censored observations:</p>
+<p><span class="math display">\[
+\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp; \sum_{i=1}^K (y_i - x_i^T\beta)^2 \\
+\mbox{subject to} &amp; x_i^T\beta \geq D, \quad i = K+1,\ldots,m.
+\end{array}
+\]</span></p>
+<p>This avoids the bias introduced by standard OLS, while still utilizing all of the data points in the regression. The constraint requires only one more line in <code>CVXR</code>.</p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We will generate synthetic data for this example, censoring observations beyond a value <span class="math inline">\(D\)</span>.</p>
+<pre class="r"><code>## Problem data
+n &lt;- 30
+M &lt;- 50
+K &lt;- 200
+
+set.seed(n * M * K)
+X &lt;- matrix(stats::rnorm(K * n), nrow = K, ncol = n)
+beta_true &lt;- matrix(stats::rnorm(n), nrow = n, ncol = 1)
+y &lt;- X %*% beta_true + 0.3 * sqrt(n) * stats::rnorm(K)
+
+## Order variables based on y
+idx &lt;- order(y, decreasing = FALSE)
+y_ordered &lt;- y[idx]
+X_ordered &lt;- X[idx, ]
+
+## Find cutoff and censor
+D &lt;- (y_ordered[M] + y_ordered[M + 1]) / 2
+censored &lt;- (y_ordered &gt; D)
+y_censored &lt;- pmin(y_ordered, D)</code></pre>
+<p>We now fit regular OLS, OLS using just the censored data and finally the censored regression.</p>
+<pre class="r"><code>suppressWarnings(suppressMessages(library(CVXR)))
+## Regular OLS
+beta &lt;- Variable(n)
+obj &lt;- sum((y_censored - X_ordered %*% beta)^2)
+prob &lt;- Problem(Minimize(obj))
+result &lt;- solve(prob)
+beta_ols &lt;- result$getValue(beta)
+
+## OLS using uncensored data
+obj &lt;- sum((y_censored[1:M] - X_ordered[1:M,] %*% beta)^2)
+prob &lt;- Problem(Minimize(obj))
+result &lt;- solve(prob)
+beta_unc &lt;- result$getValue(beta)
+
+## Censored regression
+obj &lt;- sum((y_censored[1:M] - X_ordered[1:M,] %*% beta)^2)
+constr &lt;- list(X_ordered[(M+1):K,] %*% beta &gt;= D)
+prob &lt;- Problem(Minimize(obj), constr)
+result &lt;- solve(prob)
+beta_cens &lt;- result$getValue(beta)</code></pre>
+<p>Here’s are some plots comparing the results. The blue diamond points are estimates.</p>
+<pre class="r"><code>plot_results &lt;- function(beta_res, title) {
+    d &lt;- data.frame(index = seq_len(K),
+                    y_ordered = y_ordered,
+                    y_fit = as.numeric(X_ordered %*% beta_res),
+                    censored = as.factor(censored))
+    ggplot(data = d) +
+        geom_point(mapping = aes(x = index, y = y_ordered, color = censored)) +
+        geom_point(mapping = aes(x = index, y = y_fit), color = &quot;blue&quot;, shape = 23) +
+        geom_abline(intercept = D, slope = 0, lty = &quot;dashed&quot;) +
+        labs(x = &quot;Observations&quot;, y = &quot;y&quot;) +
+        ggtitle(title)
+}</code></pre>
+<pre class="r"><code>plot_results(beta_ols, &quot;Regular OLS.&quot;)</code></pre>
+<p><img src="../../../post/examples/cvxr_censored-regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>plot_results(beta_unc, &quot;OLS using uncensored data.&quot;)</code></pre>
+<p><img src="../../../post/examples/cvxr_censored-regression_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>plot_results(beta_cens, &quot;Censored Regression.&quot;)</code></pre>
+<p><img src="../../../post/examples/cvxr_censored-regression_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.4.2 (2017-09-28)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.1
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] methods   stats     graphics  grDevices datasets  utils     base     
+## 
+## other attached packages:
+## [1] CVXR_0.94-4   ggplot2_2.2.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.1      Rcpp_0.12.14      compiler_3.4.2   
+##  [4] plyr_1.8.4        R.methodsS3_1.7.1 R.utils_2.6.0    
+##  [7] tools_3.4.2       digest_0.6.12     bit_1.1-12       
+## [10] evaluate_0.10.1   tibble_1.3.4      gtable_0.2.0     
+## [13] lattice_0.20-35   rlang_0.1.4       Matrix_1.2-12    
+## [16] yaml_2.1.14       blogdown_0.3      Rmpfr_0.6-1      
+## [19] ECOSolveR_0.3-2   stringr_1.2.0     knitr_1.17       
+## [22] rprojroot_1.2     bit64_0.9-7       grid_3.4.2       
+## [25] R6_2.2.2          rmarkdown_1.8     bookdown_0.5     
+## [28] magrittr_1.5      backports_1.1.1   scales_0.5.0     
+## [31] htmltools_0.3.6   scs_1.1-1         colorspace_1.3-2 
+## [34] labeling_0.3      stringi_1.1.6     lazyeval_0.2.1   
+## [37] munsell_0.4.3     R.oo_1.21.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_censored-regression.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>
+
+
+
+						<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../../">
+				<img class="logo" src="../../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../index.html">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_faq/">FAQ</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../../post/cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../../post/examples/cvxr_elastic-net/" title="Elastic Net">Elastic Net</a></li>
+  
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

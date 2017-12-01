@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Censored Regression</title>
+      <link>/post/examples/cvxr_censored-regression/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_censored-regression/</guid>
+      <description>Introduction Data collected from an experimental study is sometimes censored, so that only partial information is known about a subset of observations. For instance, when measuring the lifespan of mice, we may find a number of subjects live beyond the duration of the project. Thus, all we know is the lower bound on their lifespan. This right censoring can be incorporated into a regression model via convex optimization.
+Suppose that only \(K\) of our observations \((x_i,y_i)\) are fully observed, and the remaining are censored such that we observe \(x_i\), but only know \(y_i \geq D\) for \(i = K+1,\ldots,m\) and some constant \(D \in {\mathbf R}\).</description>
+    </item>
+    
+    <item>
       <title>Elastic Net</title>
       <link>/post/examples/cvxr_elastic-net/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -162,7 +172,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Largest Euclidean ball in a 2D polyhedron Catenary Problem Huber Regression Logistic Regression Quantile Regression Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Elastic Net Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges   Miscellaneous  Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   References  </description>
     </item>
     
     <item>
