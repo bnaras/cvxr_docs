@@ -1,0 +1,152 @@
+---
+title: Elastic Net
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_elastic-net
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+## Introduction
+
+Often in applications, we encounter problems that require
+regularization to prevent overfitting, introduce sparsity, facilitate
+variable selection, or impose prior distributions on parameters. Two
+of the most common regularization functions are the $l_1$-norm and
+squared $l_2$-norm, combined in the elastic net regression model
+[@elasticnet, @glmnet],
+
+\[
+\begin{array}{ll} 
+\underset{\beta}{\mbox{minimize}} & \frac{1}{2m}\|y - X\beta\|_2^2 +
+\lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). 
+\end{array}
+\]
+
+Here $\lambda \geq 0$ is the overall regularization weight and
+$\alpha \in [0,1]$ controls the relative $l_1$ versus squared $l_2$
+penalty. Thus, this model encompasses both ridge ($\alpha = 0$) and
+lasso ($\alpha = 1$) regression.
+
+## Example
+
+To solve this problem in `CVXR`, we first define a function that
+calculates the regularization term given the variable and penalty
+weights.
+
+```{r}
+suppressMessages(suppressWarnings(library(CVXR)))
+elastic_reg <- function(beta, lambda = 0, alpha = 0) {
+    ridge <- (1 - alpha) * sum(beta^2)
+    lasso <- alpha * p_norm(beta, 1)
+    lambda * (lasso + ridge)
+}
+```
+
+Later, we will add it to the scaled least squares loss as shown below.
+
+```{r, eval = FALSE}
+loss <- sum((y - X %*% beta)^2)/(2*m)
+obj <- loss + elastic_reg(beta, lambda, alpha)
+```
+
+The advantage of this modular approach is that we can easily
+incorporate elastic net regularization into other regression
+models. For instance, if we wanted to run regularized Huber
+regression, `CVXR` allows us to reuse the above code with just a
+single changed line.
+
+```{r, eval = FALSE}
+loss <- huber(y - X %*% beta, M)
+```
+
+We generate some synthetic sparse data for this example.
+
+```{r}
+set.seed(1)
+
+# Problem data
+n <- 20
+m <- 1000
+DENSITY <- 0.25    # Fraction of non-zero beta
+beta_true <- matrix(rnorm(n), ncol = 1)
+idxs <- sample.int(n, size = floor((1 - DENSITY) * n), replace = FALSE)
+beta_true[idxs] <- 0
+
+sigma <- 45
+X <- matrix(rnorm(m * n, sd = 5), nrow = m, ncol = n)
+eps <- matrix(rnorm(m, sd = sigma), ncol = 1)
+y <- X %*% beta_true + eps
+```
+
+We fit the elastic net model for several values of $\lambda$ .
+
+```{r}
+TRIALS <- 10
+beta_vals <- matrix(0, nrow = n, ncol = TRIALS)
+lambda_vals <- 10^seq(-2, log10(50), length.out = TRIALS)
+beta <- Variable(n)  
+loss <- sum((y - X %*% beta)^2)/(2*m)
+
+## Elastic-net regression
+alpha <- 0.75
+for(i in 1:TRIALS) {
+    lambda <- lambda_vals[i]
+    obj <- loss + elastic_reg(beta, lambda, alpha)
+    prob <- Problem(Minimize(obj))
+    result <- solve(prob)
+    beta_vals[,i] <- result$getValue(beta)
+}
+```
+
+We can now get a table of the coefficients.
+
+
+```{r}
+d <- data.frame(lambda_vals, t(beta_vals))
+names(d) <- c("$\\lambda$", sprintf("$\\beta_{%d}$", seq_len(n)))
+rownames(d) <- paste0("s", 0:9)
+library(kableExtra)
+knitr::kable(t(d), format = "html", caption = "Elastic net fits from `CVXR`", digits = 3) %>%
+    kable_styling("striped") %>%
+    column_spec(1:11, background = "#ececec")
+```
+
+We plot the coefficients against the regularization. 
+
+```{r}
+plot(0, 0, type = "n", main = "Regularization Path for Elastic-net Regression",
+     xlab = expression(lambda), ylab = expression(beta),
+     ylim = c(-0.75, 1.25), xlim = c(0, 50))
+matlines(lambda_vals, t(beta_vals))
+```
+  
+We can also compare with the `glmnet` results.
+
+```{r}
+library(glmnet)
+model_net <- glmnet(X, y, family = "gaussian", alpha = alpha,
+                    lambda = lambda_vals, standardize = FALSE,
+                    intercept = FALSE)
+## Reverse order to match beta_vals
+coef_net <- data.frame(lambda_vals, t(as.matrix(coef(model_net)[-1, seq(TRIALS, 1, by = -1)])))
+names(coef_net) <- c("$\\lambda$", sprintf("$\\beta_{%d}$", seq_len(n)))
+knitr::kable(t(coef_net), format = "html", digits = 3, caption = "Coefficients from `glmnet`") %>%
+    kable_styling("striped") %>%
+    column_spec(1:11, background = "#ececec")
+```
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_elastic-net.Rmd)
+
+## References

@@ -12,6 +12,17 @@
     
     
     <item>
+      <title>Elastic Net</title>
+      <link>/post/examples/cvxr_elastic-net/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_elastic-net/</guid>
+      <description>Introduction Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the \(l_1\)-norm and squared \(l_2\)-norm, combined in the elastic net regression model (H. Zou 2005, Friedman, Hastie, and Tibshirani (2010)),
+\[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2m}\|y - X\beta\|_2^2 + \lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). \end{array} \]
+Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0,1]\) controls the relative \(l_1\) versus squared \(l_2\) penalty.</description>
+    </item>
+    
+    <item>
       <title>Fastest Mixing Markov Chain</title>
       <link>/post/examples/cvxr_fast-mixing-mc/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
@@ -151,7 +162,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
- Largest Euclidean ball in a 2D polyhedron Huber Regression Logistic Regression Quantile Regression Catenary Problem Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
+ Largest Euclidean ball in a 2D polyhedron Catenary Problem Huber Regression Logistic Regression Quantile Regression Isotonic Regression Near Isotonic and Near Convex Regression Direct Standardization \(L_1\) Trend Filtering Elastic Net Log-Concave Density Estimation Sparse Inverse Covariance Estimation Saturating Hinges Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization  References  </description>
     </item>
     
     <item>
@@ -220,8 +231,8 @@ Expressions Expressions in CVXR are formed from variables, numerical constants s
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/cvxr_faq/</guid>
-      <description>Questions Where can I go for help? My problem is not DCP compliant? Help! I want to report a bug.   Answers Where can I go for help?  Please use the Stackoverflow cvx forum for posting questions.
-My problem is not DCP compliant? Help!  Your best bet is the reference Boyd and Vandenberghe (2004) book. It is just not possible for us to analyze every individual problem and determine how to reformulate it in DCP form.</description>
+      <description>Questions Where can I go for help? How do I reformulate my problem to be DCP compliant? I want to report a bug.   Answers Where can I go for help?  Please post questions to the cvx tag on StackOverflow.
+My problem is not DCP compliant. How do I reformulate it?  It is impossible for us to analyze every individual problem and determine whether it can be reformulated as a DCP problem.</description>
     </item>
     
     <item>
