@@ -297,7 +297,7 @@ None
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-norm(x) norm(x, 2)
+cvxr_norm(x) cvxr_norm(x, 2)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\sqrt{\sum_{i}x_{i}^2 }\)</span>
@@ -317,7 +317,7 @@ norm(x) norm(x, 2)
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-norm(X, “fro”)
+cvxr_norm(X, “fro”)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\sqrt{\sum_{ij}X_{ij}^2 }\)</span>
@@ -337,7 +337,7 @@ norm(X, “fro”)
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-norm(X, 1)
+cvxr_norm(X, 1)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\sum_{ij}\lvert X_{ij} \rvert\)</span>
@@ -357,7 +357,7 @@ norm(X, 1)
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-norm(X, “inf”)
+cvxr_norm(X, “inf”)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\max_{ij} \{\lvert X_{ij} \rvert\}\)</span>
@@ -377,7 +377,7 @@ norm(X, “inf”)
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-norm(X, “nuc”)
+cvxr_norm(X, “nuc”)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\mathrm{tr}\left(\left(X^T X\right)^{1/2}\right)\)</span>
@@ -397,7 +397,7 @@ None
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-norm(X) norm(X, 2)
+cvxr_norm(X) cvxr_norm(X, 2)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\sqrt{\lambda_{\max}\left(X^T X\right)}\)</span>
@@ -417,7 +417,7 @@ None
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-pnorm(X, p) <span class="math inline">\(p \geq 1\)</span> or <code>p = Inf</code>
+p_norm(X, p) <span class="math inline">\(p \geq 1\)</span> or <code>p = Inf</code>
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\|X\|_p = \left(\sum_{ij} |X_{ij}|^p \right)^{1/p}\)</span>
@@ -437,7 +437,7 @@ pnorm(X, p) <span class="math inline">\(p \geq 1\)</span> or <code>p = Inf</code
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-pnorm(X, p) <span class="math inline">\(p \lt 1\)</span>, <span class="math inline">\(p \neq 0\)</span>
+p_norm(X, p) <span class="math inline">\(p \lt 1\)</span>, <span class="math inline">\(p \neq 0\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\|X\|_p = \left(\sum_{ij} X_{ij}^p \right)^{1/p}\)</span>
@@ -617,7 +617,7 @@ sum_squares(X)
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-trace(X)
+matrix_trace(X)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\mathrm{tr}\left(X \right)\)</span>
@@ -713,6 +713,7 @@ None
 <pre class="r"><code>X &lt;- Variable(5, 4)
 row_sums &lt;- sum_entries(X, axis=1) # Has size (5, 1)
 col_sums &lt;- sum_entries(X, axis=2) # Has size (1, 4)</code></pre>
+<p>Note that the use of <code>axis</code> differs from its use in <code>CVXPY</code> where <code>axis=2</code> implies the columns. In <code>CVXR</code>, we align our implementation with the <code>base::apply</code> function. The default in most cases is <code>axis = NA</code>, which treats a matrix as one long vector, basically the same as apply with <code>c(1,2)</code>. The exception is <code>cumsum_axis</code> (see below), which cannot take <code>axis = NA</code>; it will throw an error.</p>
 </div>
 <div id="elementwise-functions" class="section level3">
 <h3>Elementwise functions</h3>
@@ -1273,7 +1274,7 @@ depends on c
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-cumsum(X, axis=0)
+cumsum_axis(X, axis=0)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 cumulative sum along given axis.
@@ -1336,7 +1337,7 @@ same as X
 diff(X, k=1, axis=0) <span class="math inline">\(k \in 0,1,2,\ldots\)</span>
 </td>
 <td style="text-align:left;background-color: #ececec;">
-kth order differences along given axis
+<span class="math inline">\(k\)</span>th order differences (argument <span class="math inline">\(k\)</span> is actually named <span class="math inline">\(differences\)</span> and <span class="math inline">\(lag\)</span> can also be used) along given axis
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(X \in\mathbf{R}^{m \times n}\)</span>
@@ -1393,7 +1394,7 @@ depends on C
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
-reshape(X, n’, m’)
+reshape_expr(X, n’, m’)
 </td>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(X&#39; \in\mathbf{R}^{m&#39; \times n&#39;}\)</span>

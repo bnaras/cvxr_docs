@@ -102,10 +102,20 @@ lines <- lines[start:end]
 lines <- stringr::str_trim(lines)
 
 ## Fix for pnorm since it uses :ref:
-lines <- gsub("^\\* - \\:ref\\:\\`pnorm\\(X, p\\) <pnorm>\\`", "* - pnorm(X, p)", lines)
+lines <- gsub("^\\* - \\:ref\\:\\`pnorm\\(X, p\\) <pnorm>\\`", "* - p_norm(X, p)", lines)
 lines <- gsub("\\`\\`p = 'inf'\\`\\`", "p == 'inf'", lines)
 ## End of fix
 
+## Fix for norm(..) since it has been replaced by cvxr_norm
+#lines <- gsub("^norm", "cvxr_norm", lines)
+##saveRDS(lines, file="line.RDS")
+##stop()
+lines <- gsub("^\\* - norm", "\\* - cvxr_norm", lines)
+lines <- gsub("^norm", "cvxr_norm", lines)
+## End of fix
+
+## Fix for trace since it is matrix_trace
+lines <- gsub("trace", "matrix_trace", lines)
 ## Fix for geo_mean since it uses :ref:
 lines <- gsub("\\:ref\\:\\`geo_mean\\(x, p\\) <geo_mean>\\`", "geo_mean(x, p)", lines)
 lines <- gsub("^\\* - \\:ref\\:\\`geo_mean\\(x\\) <geo_mean>\\`", "* - geo_mean(x)", lines)
@@ -185,6 +195,13 @@ X <- Variable(5, 4)
 row_sums <- sum_entries(X, axis=1) # Has size (5, 1)
 col_sums <- sum_entries(X, axis=2) # Has size (1, 4)
 ```
+
+Note that the use of `axis` differs from its use in `CVXPY` where
+`axis=2` implies the columns. In `CVXR`, we align our implementation
+with the `base::apply` function. The default in most cases is `axis =
+NA`, which treats a matrix as one long vector, basically the same as
+apply with `c(1,2)`. The exception is `cumsum_axis` (see below), which cannot take
+`axis = NA`; it will throw an error.
 
 ### Elementwise functions
 
@@ -293,17 +310,30 @@ lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
 ##lines <- gsub("\\|x\\| >M", "\\|x\\| \\\\gt M", lines)
 lines <- gsub("&\\|x\\|", "\\\\&\\|x\\|", lines)
 
+## Fix cumsum which is now cumsum_axis
+lines <- gsub("cumsum", "cumsum_axis", lines)
+## End of fix
+
+## Fix diff
+lines <- gsub("kth order differences", "$k$th order differences (argument $k$ is actually named `differences` and `lag` can also be used)", lines)
+## End of fix
+
+## Fix Reshape
+lines <- gsub("reshape", "reshape_expr", lines)
+## End of fix
+
+
 start <- which(grepl("^\\*", lines))
 end <- c(start[-1] - 1, length(lines))
 coords <- data.frame(start = start, end = end)
 rows <- lapply(seq_len(nrow(coords)),
                function(i) emitRow(lines, coords$start[i], coords$end[i]))
-##saveRDS(rows, file = "~/tmp/rows.RDS")
+
 table <- do.call(rbind, rows)
 colnames(table) <- table[1, ]
 colnames(table)[5] <- "Curvature"
 table <- table[-1, ]
-##saveRDS(table, file="~/tmp/table.RDS")
+
 ```
 
 ```{r, echo = FALSE}
