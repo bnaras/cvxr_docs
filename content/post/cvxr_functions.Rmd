@@ -108,8 +108,6 @@ lines <- gsub("\\`\\`p = 'inf'\\`\\`", "p == 'inf'", lines)
 
 ## Fix for norm(..) since it has been replaced by cvxr_norm
 #lines <- gsub("^norm", "cvxr_norm", lines)
-##saveRDS(lines, file="line.RDS")
-##stop()
 lines <- gsub("^\\* - norm", "\\* - cvxr_norm", lines)
 lines <- gsub("^norm", "cvxr_norm", lines)
 ## End of fix
@@ -255,12 +253,10 @@ end <- c(start[-1] - 1, length(lines))
 coords <- data.frame(start = start, end = end)
 rows <- lapply(seq_len(nrow(coords)),
                function(i) emitRow(lines, coords$start[i], coords$end[i]))
-##saveRDS(rows, file = "~/tmp/rows.RDS")
 table <- do.call(rbind, rows)
 colnames(table) <- table[1, ]
 colnames(table)[5] <- "Curvature"
 table <- table[-1, ]
-##saveRDS(table, file="~/tmp/table.RDS")
 ```
 
 ```{r, echo = FALSE}
