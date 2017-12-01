@@ -315,6 +315,7 @@ lines <- gsub("cumsum", "cumsum_axis", lines)
 ## End of fix
 
 ## Fix diff
+lines <- gsub("axis=0", "axis=1", lines)
 lines <- gsub("kth order differences", "$k$th order differences (argument $k$ is actually named `differences` and `lag` can also be used)", lines)
 ## End of fix
 
