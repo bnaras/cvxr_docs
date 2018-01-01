@@ -11,7 +11,7 @@ tags: []
 
 ## Introduction
 
-Quantile regression is another variation on least squares is quantile regression
+Quantile regression is another variation on least squares
 \citep{quantile}. The loss is the tilted $l_1$ function,
 
 \[
