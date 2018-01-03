@@ -27,7 +27,7 @@
 	
 	<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Quantile regression is another variation on least squares is quantile regression . The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
+<p>Quantile regression is another variation on least squares . The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
 <p><span class="math display">\[
     \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
 \]</span></p>
@@ -52,7 +52,9 @@ colors &lt;- colorRampPalette(colors = c(&quot;black&quot;, &quot;red&quot;))(nf
 p &lt;- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)
 for (i in seq_len(nf)[-1]) {
     p &lt;- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
-}</code></pre>
+}
+p</code></pre>
+<p><img src="../../../post/examples/cvxr_quantile-regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>The above plot shows the quantile regression fits for <span class="math inline">\(\tau = (0.1, 0.25, 0.5, 0.75, 0.90, 0.95)\)</span>. The OLS fit is the thick black line.</p>
 <p>The following is a table of the estimates.</p>
 <pre class="r"><code>library(kableExtra)
@@ -256,7 +258,7 @@ income
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.4.2 (2017-09-28)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.1
+## Running under: macOS High Sierra 10.13.2
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -276,8 +278,8 @@ income
 ##  [1] gmp_0.5-13.1       Rcpp_0.12.14       highr_0.6         
 ##  [4] compiler_3.4.2     plyr_1.8.4         R.methodsS3_1.7.1 
 ##  [7] R.utils_2.6.0      tools_3.4.2        bit_1.1-12        
-## [10] digest_0.6.12      evaluate_0.10.1    tibble_1.3.4      
-## [13] gtable_0.2.0       lattice_0.20-35    viridisLite_0.2.0 
+## [10] digest_0.6.12      viridisLite_0.2.0  evaluate_0.10.1   
+## [13] tibble_1.3.4       gtable_0.2.0       lattice_0.20-35   
 ## [16] pkgconfig_2.0.1    rlang_0.1.4        Matrix_1.2-12     
 ## [19] yaml_2.1.14        blogdown_0.3       Rmpfr_0.6-1       
 ## [22] ECOSolveR_0.3-2    stringr_1.2.0      httr_1.3.1        
@@ -287,8 +289,8 @@ income
 ## [34] bookdown_0.5       readr_1.1.1        magrittr_1.5      
 ## [37] scs_1.1-1          backports_1.1.1    scales_0.5.0      
 ## [40] htmltools_0.3.6    rvest_0.3.2        colorspace_1.3-2  
-## [43] stringi_1.1.6      lazyeval_0.2.1     munsell_0.4.3     
-## [46] R.oo_1.21.0</code></pre>
+## [43] labeling_0.3       stringi_1.1.6      lazyeval_0.2.1    
+## [46] munsell_0.4.3      R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

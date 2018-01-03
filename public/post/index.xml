@@ -131,7 +131,7 @@ We have \(n\) assets or stocks in our portfolio and must determine the amount of
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/examples/cvxr_quantile-regression/</guid>
-      <description>Introduction Quantile regression is another variation on least squares is quantile regression . The loss is the tilted \(l_1\) function,
+      <description>Introduction Quantile regression is another variation on least squares . The loss is the tilted \(l_1\) function,
 \[ \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u, \]
 where \(\tau \in (0,1)\) specifies the quantile. The problem as before is to minimize the total residual loss. This model is commonly used in ecology, healthcare, and other fields where the mean alone is not enough to capture complex relationships between variables.</description>
     </item>

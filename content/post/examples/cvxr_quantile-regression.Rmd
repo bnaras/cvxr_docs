@@ -49,6 +49,7 @@ p <- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[
 for (i in seq_len(nf)[-1]) {
     p <- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
 }
+p
 ```
 
 The above plot shows the quantile regression fits for $\tau = (0.1,
