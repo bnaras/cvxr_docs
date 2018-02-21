@@ -30,8 +30,8 @@ each link must be no more than $h > 0$. Since mass is uniform, the
 total potential energy is simply the sum of the
 $y$-coordinates. Therefore, our (discretized) problem is
 
-$$ \begin{array}{ll} \underset{x,y}{\mbox{minimize}} & \sum_{i=1}^m
-y_i \\ \mbox{subject to} & x_1 = 0, \quad y_1 = 1, \quad x_m = 1,
+$$ 
+\begin{array}{ll} \underset{x,y}{\mbox{minimize}} & \sum_{i=1}^m y_i \\ \mbox{subject to} & x_1 = 0, \quad y_1 = 1, \quad x_m = 1,
 \quad y_m = 1 \\ & (x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2 \leq h^2,
 \quad i = 1,\ldots,m-1 \end{array} 
 $$

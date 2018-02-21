@@ -25,14 +25,19 @@
 						
 	<h1>Near Isotonic and Near Convex Regression</h1>
 	
-	<p>Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>, <span class="citation">R. J. Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving</p>
-<span class="math display">\[\begin{array}{ll}
-
-\underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i -
-\beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
-
-\end{array}\]</span>
-<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. This can be directly formulated in <code>CVXR</code>. As an example, we use global warming data from the <a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a>. The data points are the annual temperature anomalies relative to the 1961–1990 mean.</p>
+	<p>Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>,
+<span class="citation">Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
+\end{array}
+\]</span></p>
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. This can be directly formulated in <code>CVXR</code>. As an
+example, we use global warming data from
+the
+<a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a>. The
+data points are the annual temperature anomalies relative to the
+1961–1990 mean.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 data(cdiac)
 str(cdiac)</code></pre>
@@ -51,17 +56,32 @@ str(cdiac)</code></pre>
 ##  $ nov   : num  -0.19 -0.03 -0.187 -0.256 -0.369 -0.212 -0.608 -0.665 -0.644 -0.316 ...
 ##  $ dec   : num  -0.268 -0.067 0.083 -0.444 -0.232 -0.51 -0.44 -0.356 -0.3 -0.363 ...
 ##  $ annual: num  -0.375 -0.223 -0.224 -0.271 -0.246 -0.271 -0.352 -0.46 -0.466 -0.286 ...</code></pre>
-<p>Since we plan to fit the regression and also get some idea of the standard errors, we write a function that computes the fit for use in bootstrapping.</p>
+<p>Since we plan to fit the regression and also get some idea of the
+standard errors, we write a function that computes the fit for use in
+bootstrapping. We directly call the solver in this instance, to save
+computational time in bootstrapping. For more on this, see <a href="../../../post/examples/cvxr_speed/">Getting
+Faster Results with <code>CVXR</code></a>.</p>
 <pre class="r"><code>neariso_fit &lt;- function(y, lambda) {
     m &lt;- length(y)
     beta &lt;- Variable(m)
     obj &lt;- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
     prob &lt;- Problem(Minimize(obj))
-    solve(prob)$getValue(beta)
+    prob_data &lt;- get_problem_data(prob, solver = &quot;ECOS&quot;)
+    solver_output &lt;- ECOSolveR::ECOS_csolve(c = prob_data[[&quot;c&quot;]],
+                                            G = prob_data[[&quot;G&quot;]],
+                                            h = prob_data[[&quot;h&quot;]],
+                                            dims = prob_data[[&quot;dims&quot;]],
+                                            A = prob_data[[&quot;A&quot;]],
+                                            b = prob_data[[&quot;b&quot;]])
+    unpack_results(prob, &quot;ECOS&quot;, solver_output)$getValue(beta)
 }</code></pre>
 <p>The <code>pos</code> atom evaluates <span class="math inline">\(x_+\)</span> elementwise on the input expression.</p>
-<p>The <code>boot</code> library provides all the tools for bootstrapping but requires a statistic function that takes particular arguments: a data frame, followed by the bootstrap indices and any other arguments (<span class="math inline">\(\lambda\)</span> for instance). This is shown below.</p>
-<p><em>NOTE</em> In what follows, we use a very small number of bootstrap samples as the fits are time consuming.</p>
+<p>The <code>boot</code> library provides all the tools for bootstrapping but
+requires a statistic function that takes particular arguments: a data
+frame, followed by the bootstrap indices and any other arguments
+(<span class="math inline">\(\lambda\)</span> for instance). This is shown below.</p>
+<p><em>NOTE</em> In what follows, we use a very small number of bootstrap
+samples as the fits are time consuming.</p>
 <pre class="r"><code>neariso_fit_stat &lt;- function(data, index, lambda) {
     sample &lt;- data[index,]                  # Bootstrap sample of rows
     sample &lt;- sample[order(sample$year),]   # Order ascending by year
@@ -76,7 +96,8 @@ ci.neariso &lt;- t(sapply(seq_len(nrow(cdiac)),
                                                 type = &quot;norm&quot;, index = i)$normal[-1]))
 data.neariso &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est = boot.neariso$t0,
                               lower = ci.neariso[, 1], upper = ci.neariso[, 2])</code></pre>
-<p>We can now plot the fit and confidence bands for the near isotonic fit.</p>
+<p>We can now plot the fit and confidence bands for the near isotonic
+fit.</p>
 <pre class="r"><code>library(ggplot2)
 (plot.neariso &lt;- ggplot(data = data.neariso) +
      geom_point(mapping = aes(year, annual), color = &quot;red&quot;) +
@@ -84,22 +105,33 @@ data.neariso &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est = bo
      geom_ribbon(mapping = aes(x = year, ymin = lower,ymax = upper),alpha=0.3) +
      labs(x = &quot;Year&quot;, y = &quot;Temperature Anomalies&quot;)
 )</code></pre>
-<p><img src="../../../post/examples/cvxr_near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /> The curve follows the data well, but exhibits some choppiness in regions with a steep trend.</p>
-<p>For a smoother curve, we can solve for the nearly-convex fit described in the same paper:</p>
+<p><img src="../../../post/examples/cvxr_near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+The curve follows the data well, but exhibits some choppiness in
+regions with a steep trend.</p>
+<p>For a smoother curve, we can solve for the nearly-convex fit described
+in the same paper:</p>
 <p><span class="math display">\[
 \begin{array}{ll}
 \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i -
-\beta_i)^2 + \lambda \sum_{i=1}^{m-2}(\beta_i - 2\beta_{i+1} +
-\beta_{i+2})_+ \end{array} 
+\beta_i)^2 + \lambda \sum_{i=1}^{m-2}(\beta_i - 2\beta_{i+1} + \beta_{i+2})_+ \end{array} 
 \]</span></p>
-<p>This replaces the first difference term with an approximation to the second derivative at <span class="math inline">\(\beta_{i+1}\)</span>. In <code>CVXR</code>, the only change necessary is the penalty line: replacing <code>diff(x)</code> by <code>diff(diff(x))</code>.</p>
+<p>This replaces the first difference term with an approximation to the
+second derivative at <span class="math inline">\(\beta_{i+1}\)</span>. In <code>CVXR</code>, the only change
+necessary is the penalty line: replacing <code>diff(x)</code> by <code>diff(diff(x))</code>.</p>
 <pre class="r"><code>nearconvex_fit &lt;- function(y, lambda) {
     m &lt;- length(y)
     beta &lt;- Variable(m)
     penalty &lt;- sum(pos(diff(beta)))
     obj &lt;- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(diff(beta))))
     prob &lt;- Problem(Minimize(obj))
-    solve(prob)$getValue(beta)
+    prob_data &lt;- get_problem_data(prob, solver = &quot;ECOS&quot;)
+    solver_output &lt;- ECOSolveR::ECOS_csolve(c = prob_data[[&quot;c&quot;]],
+                                            G = prob_data[[&quot;G&quot;]],
+                                            h = prob_data[[&quot;h&quot;]],
+                                            dims = prob_data[[&quot;dims&quot;]],
+                                            A = prob_data[[&quot;A&quot;]],
+                                            b = prob_data[[&quot;b&quot;]])
+    unpack_results(prob, &quot;ECOS&quot;, solver_output)$getValue(beta)
 }
 
 nearconvex_fit_stat &lt;- function(data, index, lambda) {
@@ -116,7 +148,9 @@ ci.nearconvex &lt;- t(sapply(seq_len(nrow(cdiac)),
                                               type = &quot;norm&quot;, index = i)$normal[-1]))
 data.nearconvex &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est = boot.nearconvex$t0,
                               lower = ci.nearconvex[, 1], upper = ci.nearconvex[, 2])</code></pre>
-<p>The resulting curve for the near convex fit is depicted below with 95% confidence bands generated from <span class="math inline">\(R = 5\)</span> samples. Note the jagged staircase pattern has been smoothed out.</p>
+<p>The resulting curve for the near convex fit is depicted below with
+95% confidence bands generated from <span class="math inline">\(R = 5\)</span> samples. Note the jagged
+staircase pattern has been smoothed out.</p>
 <pre class="r"><code>(plot.nearconvex &lt;- ggplot(data = data.nearconvex) +
      geom_point(mapping = aes(year, annual), color = &quot;red&quot;) +
      geom_line(mapping = aes(year, est), color = &quot;blue&quot;) +
@@ -126,14 +160,17 @@ data.nearconvex &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est =
 <p><img src="../../../post/examples/cvxr_near-isotonic-and-near-convex-regression_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <div id="notes" class="section level2">
 <h2>Notes</h2>
-<p>We can easily extend this example to higher-order differences or lags. To make this easy, the function <code>diff</code> takes an argument <code>differences</code> that is 1 by default; a third-order difference is specified as <code>diff(x, differences = 3)</code>.</p>
+<p>We can easily extend this example to higher-order differences or
+lags. To make this easy, the function <code>diff</code> takes an argument
+<code>differences</code> that is 1 by default; a third-order difference is specified
+as <code>diff(x, differences = 3)</code>.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.1
+## Running under: macOS High Sierra 10.13.3
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -146,22 +183,23 @@ data.nearconvex &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est =
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] ggplot2_2.2.1 boot_1.3-20   CVXR_0.94-4  
+## [1] ggplot2_2.2.1 boot_1.3-20   CVXR_0.95    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.13      compiler_3.4.2   
-##  [4] plyr_1.8.4        R.methodsS3_1.7.1 R.utils_2.6.0    
-##  [7] tools_3.4.2       digest_0.6.12     bit_1.1-12       
-## [10] evaluate_0.10.1   tibble_1.3.4      gtable_0.2.0     
-## [13] lattice_0.20-35   rlang_0.1.2       Matrix_1.2-11    
-## [16] yaml_2.1.14       blogdown_0.1.7    Rmpfr_0.6-1      
-## [19] ECOSolveR_0.3-2   stringr_1.2.0     knitr_1.17       
-## [22] rprojroot_1.2     bit64_0.9-7       grid_3.4.2       
-## [25] R6_2.2.2          rmarkdown_1.6     bookdown_0.5     
-## [28] magrittr_1.5      backports_1.1.1   scales_0.5.0     
-## [31] htmltools_0.3.6   scs_1.1-1         colorspace_1.3-2 
-## [34] labeling_0.3      stringi_1.1.5     lazyeval_0.2.1   
-## [37] munsell_0.4.3     R.oo_1.21.0</code></pre>
+##  [1] gmp_0.5-13.1      Rcpp_0.12.15      pillar_1.1.0     
+##  [4] compiler_3.4.3    plyr_1.8.4        R.methodsS3_1.7.1
+##  [7] R.utils_2.6.0     tools_3.4.3       digest_0.6.15    
+## [10] bit_1.1-12        evaluate_0.10.1   tibble_1.4.2     
+## [13] gtable_0.2.0      lattice_0.20-35   rlang_0.2.0      
+## [16] Matrix_1.2-12     yaml_2.1.16       blogdown_0.5.4   
+## [19] xfun_0.1          Rmpfr_0.7-0       ECOSolveR_0.4    
+## [22] stringr_1.3.0     knitr_1.20        rprojroot_1.3-2  
+## [25] bit64_0.9-7       grid_3.4.3        R6_2.2.2         
+## [28] rmarkdown_1.8.10  bookdown_0.7      magrittr_1.5     
+## [31] backports_1.1.2   scales_0.5.0      htmltools_0.3.6  
+## [34] scs_1.1-1         colorspace_1.3-2  labeling_0.3     
+## [37] stringi_1.1.6     lazyeval_0.2.1    munsell_0.4.3    
+## [40] R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -171,7 +209,7 @@ data.nearconvex &lt;- data.frame(year = cdiac$year, annual = cdiac$annual, est =
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-TibshiraniHoefling:2011">
-<p>Tibshirani, R. J., H. Hoefling, and R. Tibshirani. 2011. “Nearly-Isotonic Regression.” <em>Technometrics</em> 53 (1): 54–61.</p>
+<p>Tibshirani, R. J., H. Hoefling, and R. Tibshirani. 2011. “Nearly-Isotonic Regression.” <em>Technometrics</em> 53 (1):54–61.</p>
 </div>
 </div>
 </div>

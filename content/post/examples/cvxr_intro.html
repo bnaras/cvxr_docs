@@ -9,10 +9,14 @@ slug: cvxr_intro
 
 
 
-<p>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.</p>
-<p>We generate some synthetic data where we know the model completely, that is</p>
+<p>Consider a simple linear regression problem where it is desired to
+estimate a set of parameters using a least squares criterion.</p>
+<p>We generate some synthetic data where we know the model completely,
+that is</p>
 <p><span class="math display">\[ Y = X\beta + \epsilon \]</span></p>
-<p>where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(100\times 1\)</span> vector, <span class="math inline">\(X\)</span> is a <span class="math inline">\(100\times 10\)</span> matrix, <span class="math inline">\(\beta = [-4,\ldots ,-1, 0, 1, \ldots, 5]\)</span> is a <span class="math inline">\(10\times 1\)</span> vector, and <span class="math inline">\(\epsilon \sim N(0, 1)\)</span>.</p>
+<p>where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(100\times 1\)</span> vector, <span class="math inline">\(X\)</span> is a <span class="math inline">\(100\times 10\)</span> matrix,
+<span class="math inline">\(\beta = [-4,\ldots ,-1, 0, 1, \ldots, 5]\)</span> is a <span class="math inline">\(10\times 1\)</span> vector, and
+<span class="math inline">\(\epsilon \sim N(0, 1)\)</span>.</p>
 <pre class="r"><code>set.seed(123)
 
 n &lt;- 100
@@ -22,7 +26,8 @@ beta &lt;- -4:5   # beta is just -4 through 5.
 X &lt;- matrix(rnorm(n * p), nrow=n)
 colnames(X) &lt;- paste0(&quot;beta_&quot;, beta)
 Y &lt;- X %*% beta + rnorm(n)</code></pre>
-<p>Given the data <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, we can estimate the <span class="math inline">\(\beta\)</span> vector using <code>lm</code> function in R that fits a standard regression model.</p>
+<p>Given the data <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, we can estimate the <span class="math inline">\(\beta\)</span> vector using
+<code>lm</code> function in R that fits a standard regression model.</p>
 <pre class="r"><code>ls.model &lt;- lm(Y ~ 0 + X)   # There is no intercept in our model above
 m &lt;- matrix(coef(ls.model), ncol = 1)
 rownames(m) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
@@ -114,7 +119,8 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 </tr>
 </tbody>
 </table>
-<p>These are the least-squares estimates and can be seen to be reasonably close to the original <span class="math inline">\(\beta\)</span> values -4 through 5.</p>
+<p>These are the least-squares estimates and can be seen to be reasonably
+close to the original <span class="math inline">\(\beta\)</span> values -4 through 5.</p>
 <div id="the-cvxr-formulation" class="section level2">
 <h2>The <code>CVXR</code> formulation</h2>
 <p>The <code>CVXR</code> formulation states the above as an optimization problem:</p>
@@ -122,7 +128,9 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
   \begin{array}{ll}
     \underset{\beta}{\mbox{minimize}} &amp; \|y - X\beta\|_2^2,
   \end{array}
-\]</span> which directly translates into a problem that <code>CVXR</code> can solve as shown in the steps below.</p>
+\]</span>
+which directly translates into a problem that <code>CVXR</code> can solve as shown
+in the steps below.</p>
 <ul>
 <li>Step 0. Load the <code>CVXR</code> library</li>
 </ul>
@@ -135,7 +143,9 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <li>Step 2. Define the objective to be optimized</li>
 </ul>
 <pre class="r"><code>objective &lt;- Minimize(sum((Y - X %*% betaHat)^2))</code></pre>
-<p>Notice how the objective is specified using functions such as <code>sum</code>, <code>*%*</code> and <code>^</code>, that are familiar to R users despite that fact that <code>betaHat</code> is no ordinary R expression but a <code>CVXR</code> expression.</p>
+<p>Notice how the objective is specified using functions such as <code>sum</code>,
+<code>*%*</code> and <code>^</code>, that are familiar to R users despite that fact that
+<code>betaHat</code> is no ordinary R expression but a <code>CVXR</code> expression.</p>
 <ul>
 <li>Step 3. Create a problem to solve</li>
 </ul>
@@ -148,7 +158,8 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <li>Step 5. Extract solution and objective value</li>
 </ul>
 <pre><code>## Objective value: 97.847586</code></pre>
-<p>We can indeed satisfy ourselves that the results we get matches that from <code>lm</code>.</p>
+<p>We can indeed satisfy ourselves that the results we get matches that
+from <code>lm</code>.</p>
 <pre class="r"><code>m &lt;- cbind(result$getValue(betaHat), coef(ls.model))
 colnames(m) &lt;- c(&quot;CVXR est.&quot;, &quot;lm est.&quot;)
 rownames(m) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
@@ -284,9 +295,16 @@ lm est.
 </div>
 <div id="wait-a-minute-what-have-we-gained" class="section level2">
 <h2>Wait a minute! What have we gained?</h2>
-<p>On the surface, it appears that we have replaced one call to <code>lm</code> with at least five or six lines of new R code. On top of that, the code actually runs slower, and so it is not clear what was really achieved.</p>
-<p>So suppose we knew that the <span class="math inline">\(\beta\)</span>s were nonnegative and we wish to take this fact into account. This is <a href="https://en.wikipedia.org/wiki/Non-negative_least_squares">nonnegative least squares regression</a> and <code>lm</code> would no longer do the job.</p>
-<p>In <code>CVXR</code>, the modified problem merely requires the addition of a constraint to the problem definition.</p>
+<p>On the surface, it appears that we have replaced one call to <code>lm</code> with
+at least five or six lines of new R code. On top of that, the code
+actually runs slower, and so it is not clear what was really achieved.</p>
+<p>So suppose we knew that the <span class="math inline">\(\beta\)</span>s were nonnegative and we wish to
+take this fact into account. This
+is
+<a href="https://en.wikipedia.org/wiki/Non-negative_least_squares">nonnegative least squares regression</a> and
+<code>lm</code> would no longer do the job.</p>
+<p>In <code>CVXR</code>, the modified problem merely requires the addition of a constraint to the
+problem definition.</p>
 <pre class="r"><code>problem &lt;- Problem(objective, constraints = list(betaHat &gt;= 0))
 result &lt;- solve(problem)
 m &lt;- matrix(result$getValue(betaHat), ncol = 1)
@@ -378,7 +396,9 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 </tr>
 </tbody>
 </table>
-<p>We can verify once again that these values are comparable to those obtained from another R package, say <a href="https://CRAN.R-project.org/package=nnls">nnls</a>.</p>
+<p>We can verify once again that these values are comparable to those
+obtained from another R package,
+say <a href="https://CRAN.R-project.org/package=nnls">nnls</a>.</p>
 <pre class="r"><code>library(nnls)
 nnls.fit &lt;- nnls(X, Y)$x</code></pre>
 <pre class="r"><code>m &lt;- cbind(result$getValue(betaHat), nnls.fit)
@@ -516,10 +536,17 @@ nnls est.
 </div>
 <div id="okay-that-was-cool-but" class="section level2">
 <h2>Okay that was cool, but…</h2>
-<p>As you no doubt noticed, we have done nothing that other R packages could not do.</p>
-<p>So now suppose further, for some extraneous reason, that the sum of <span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\beta_3\)</span> is known to be negative and but all other <span class="math inline">\(\beta\)</span>s are positive.</p>
-<p>It is clear that this problem would not fit into any standard package. But in <code>CVXR</code>, this is easily done by adding a few constraints.</p>
-<p>To express the fact that <span class="math inline">\(\beta_2 + \beta_3\)</span> is negative, we construct a row matrix with zeros everywhere, except in positions 2 and 3 (for <span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\beta_3\)</span> respectively).</p>
+<p>As you no doubt noticed, we have done nothing that other R packages
+could not do.</p>
+<p>So now suppose further, for some extraneous reason, that the sum of
+<span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\beta_3\)</span> is known to be negative and but all other
+<span class="math inline">\(\beta\)</span>s are positive.</p>
+<p>It is clear that this problem would not fit into any standard
+package. But in <code>CVXR</code>, this is easily done by adding a few
+constraints.</p>
+<p>To express the fact that <span class="math inline">\(\beta_2 + \beta_3\)</span> is negative, we construct
+a row matrix with zeros everywhere, except in positions 2 and 3 (for
+<span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\beta_3\)</span> respectively).</p>
 <pre class="r"><code>A &lt;- matrix(c(0, 1, 1, rep(0, 7)), nrow = 1)
 colnames(A) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
 knitr::kable(A, format = &quot;html&quot;) %&gt;%
@@ -595,7 +622,8 @@ knitr::kable(A, format = &quot;html&quot;) %&gt;%
 </tr>
 </tbody>
 </table>
-<p>The sum constraint is nothing but <span class="math display">\[
+<p>The sum constraint is nothing but
+<span class="math display">\[
 A\beta &lt; 0
 \]</span></p>
 <p>which we express in R as</p>
@@ -603,7 +631,8 @@ A\beta &lt; 0
 <p><em>NOTE</em>: The above constraint can also be expressed simply as</p>
 <pre class="r"><code>constraint1 &lt;- betaHat[2] + betaHat[3] &lt; 0</code></pre>
 <p>but it is easier working with matrices in general with <code>CVXR</code>.</p>
-<p>For the positivity for rest of the variables, we construct a <span class="math inline">\(10\times 10\)</span> matrix <span class="math inline">\(A\)</span> to have 1’s along the diagonal everywhere except rows 2 and 3 and zeros everywhere.</p>
+<p>For the positivity for rest of the variables, we construct a <span class="math inline">\(10\times 10\)</span> matrix <span class="math inline">\(A\)</span> to have 1’s along the diagonal everywhere except rows 2
+and 3 and zeros everywhere.</p>
 <pre class="r"><code>B &lt;- diag(c(1, 0, 0, rep(1, 7)))
 colnames(B) &lt;- rownames(B) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
 knitr::kable(B, format = &quot;html&quot;) %&gt;%
@@ -999,7 +1028,8 @@ knitr::kable(B, format = &quot;html&quot;) %&gt;%
 </tr>
 </tbody>
 </table>
-<p>The constraint for positivity is <span class="math display">\[
+<p>The constraint for positivity is
+<span class="math display">\[
 B\beta &gt; 0
 \]</span></p>
 <p>which we express in R as</p>
@@ -1097,19 +1127,32 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 </tr>
 </tbody>
 </table>
-<p>This demonstrates the chief advantage of <code>CVXR</code>: <em>flexibility</em>. Users can quickly modify and re-solve a problem, making our package ideal for prototyping new statistical methods. Its syntax is simple and mathematically intuitive. Furthermore, <code>CVXR</code> combines seamlessly with native R code as well as several popular packages, allowing it to be incorporated easily into a larger analytical framework. The user is free to construct statistical estimators that are solutions to a convex optimization problem where there may not be a closed form solution or even an implementation. Such solutions can then be combined with resampling techniques like the bootstrap to estimate variability.</p>
+<p>This demonstrates the chief advantage of <code>CVXR</code>: <em>flexibility</em>. Users
+can quickly modify and re-solve a problem, making our package ideal
+for prototyping new statistical methods. Its syntax is simple and
+mathematically intuitive. Furthermore, <code>CVXR</code> combines seamlessly with
+native R code as well as several popular packages, allowing it to be
+incorporated easily into a larger analytical framework. The user is
+free to construct statistical estimators that are solutions to a
+convex optimization problem where there may not be a closed form
+solution or even an implementation. Such solutions can then be
+combined with resampling techniques like the bootstrap to estimate
+variability.</p>
 </div>
 <div id="further-reading" class="section level2">
 <h2>Further Reading</h2>
-<p>We hope we have whet your appetite. You may wish to read <a href="/post/examples/cvxr_gentle-intro/">a longer introduction</a> with more examples.</p>
-<p>We also have a number of <a href="/post/examples/">tutorial examples</a> available to study and mimic.</p>
+<p>We hope we have whet your appetite. You may wish to
+read <a href="/post/examples/cvxr_gentle-intro/">a longer introduction</a>
+with more examples.</p>
+<p>We also have a number of <a href="/post/examples/">tutorial examples</a>
+available to study and mimic.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.1
+## Running under: macOS High Sierra 10.13.3
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -1122,23 +1165,24 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] nnls_1.4         CVXR_0.94-4      kableExtra_0.6.0
+## [1] nnls_1.4         CVXR_0.95        kableExtra_0.7.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.13      compiler_3.4.2   
-##  [4] plyr_1.8.4        highr_0.6         R.methodsS3_1.7.1
-##  [7] R.utils_2.6.0     tools_3.4.2       digest_0.6.12    
-## [10] bit_1.1-12        evaluate_0.10.1   tibble_1.3.4     
-## [13] viridisLite_0.2.0 lattice_0.20-35   rlang_0.1.2      
-## [16] Matrix_1.2-11     yaml_2.1.14       blogdown_0.1.7   
-## [19] Rmpfr_0.6-1       ECOSolveR_0.3-2   httr_1.3.1       
-## [22] stringr_1.2.0     xml2_1.1.1        knitr_1.17       
-## [25] hms_0.3           rprojroot_1.2     bit64_0.9-7      
-## [28] grid_3.4.2        R6_2.2.2          rmarkdown_1.6    
-## [31] bookdown_0.5      readr_1.1.1       magrittr_1.5     
-## [34] scs_1.1-1         backports_1.1.1   scales_0.5.0     
-## [37] htmltools_0.3.6   rvest_0.3.2       colorspace_1.3-2 
-## [40] stringi_1.1.5     munsell_0.4.3     R.oo_1.21.0</code></pre>
+##  [1] gmp_0.5-13.1      Rcpp_0.12.15      pillar_1.1.0     
+##  [4] compiler_3.4.3    plyr_1.8.4        highr_0.6        
+##  [7] R.methodsS3_1.7.1 R.utils_2.6.0     tools_3.4.3      
+## [10] bit_1.1-12        digest_0.6.15     evaluate_0.10.1  
+## [13] tibble_1.4.2      viridisLite_0.3.0 lattice_0.20-35  
+## [16] pkgconfig_2.0.1   rlang_0.2.0       Matrix_1.2-12    
+## [19] yaml_2.1.16       blogdown_0.5.4    xfun_0.1         
+## [22] Rmpfr_0.7-0       ECOSolveR_0.4     httr_1.3.1       
+## [25] stringr_1.3.0     xml2_1.2.0        knitr_1.20       
+## [28] hms_0.4.1         bit64_0.9-7       rprojroot_1.3-2  
+## [31] grid_3.4.3        R6_2.2.2          rmarkdown_1.8.10 
+## [34] bookdown_0.7      readr_1.1.1       magrittr_1.5     
+## [37] scs_1.1-1         backports_1.1.2   scales_0.5.0     
+## [40] htmltools_0.3.6   rvest_0.3.2       colorspace_1.3-2 
+## [43] stringi_1.1.6     munsell_0.4.3     R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

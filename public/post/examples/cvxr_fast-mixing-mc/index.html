@@ -27,15 +27,38 @@
 	
 	<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This example is derived from the results in <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, section 2. Let <span class="math inline">\(\mathcal{G} = (\mathcal{V}, \mathcal{E})\)</span> be a connected graph with vertices <span class="math inline">\(\mathcal{V} = \{1,\ldots,n\}\)</span> and edges <span class="math inline">\(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\)</span>. Assume that <span class="math inline">\((i,i) \in \mathcal{E}\)</span> for all <span class="math inline">\(i = 1,\ldots,n\)</span>, and <span class="math inline">\((i,j) \in \mathcal{E}\)</span> implies <span class="math inline">\((j,i) \in \mathcal{E}\)</span>. Under these conditions, a discrete-time Markov chain on <span class="math inline">\(\mathcal{V}\)</span> will have the uniform distribution as one of its equilibrium distributions. We are interested in finding the Markov chain, constructing the transition probability matrix <span class="math inline">\(P \in {\mathbf R}_+^{n \times n}\)</span>, that minimizes its asymptotic convergence rate to the uniform distribution. This is an important problem in Markov chain Monte Carlo (MCMC) simulations, as it directly affects the sampling efficiency of an algorithm.</p>
-<p>The asymptotic rate of convergence is determined by the second largest eigenvalue of <span class="math inline">\(P\)</span>, which in our case is <span class="math inline">\(\mu(P) := \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T)\)</span> where <span class="math inline">\(\lambda_{\max}(A)\)</span> denotes the maximum eigenvalue of <span class="math inline">\(A\)</span>. As <span class="math inline">\(\mu(P)\)</span> decreases, the mixing rate increases and the Markov chain converges faster to equilibrium. Thus, our optimization problem is</p>
-<span class="math display">\[\begin{array}{ll}
-\underset{P}{\mbox{minimize}} &amp; \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T) \\
-\mbox{subject to} &amp; P \geq 0, \quad P{\mathbf 1} = {\mathbf 1}, \quad P = P^T \\
-&amp; P_{ij} = 0, \quad (i,j) \notin \mathcal{E}.
-\end{array}\]</span>
-<p>The element <span class="math inline">\(P_{ij}\)</span> of our transition matrix is the probability of moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span>. Our assumptions imply that <span class="math inline">\(P\)</span> is nonnegative, symmetric, and doubly stochastic. The last constraint ensures transitions do not occur between unconnected vertices.</p>
-<p>The function <span class="math inline">\(\lambda_{\max}\)</span> is convex, so this problem is solvable in <code>CVXR</code>. For instance, the code for the Markov chain in Figure 2 below (the triangle plus one edge) is</p>
+<p>This example is derived from the results in <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, section 2. Let
+<span class="math inline">\(\mathcal{G} = (\mathcal{V}, \mathcal{E})\)</span> be a connected graph with
+vertices <span class="math inline">\(\mathcal{V} = \{1,\ldots,n\}\)</span> and edges
+<span class="math inline">\(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\)</span>. Assume that
+<span class="math inline">\((i,i) \in \mathcal{E}\)</span> for all <span class="math inline">\(i = 1,\ldots,n\)</span>, and
+<span class="math inline">\((i,j) \in \mathcal{E}\)</span> implies <span class="math inline">\((j,i) \in \mathcal{E}\)</span>. Under these
+conditions, a discrete-time Markov chain on <span class="math inline">\(\mathcal{V}\)</span> will have
+the uniform distribution as one of its equilibrium distributions. We
+are interested in finding the Markov chain, constructing the
+transition probability matrix <span class="math inline">\(P \in {\mathbf R}_+^{n \times n}\)</span>, that
+minimizes its asymptotic convergence rate to the uniform
+distribution. This is an important problem in Markov chain Monte Carlo
+(MCMC) simulations, as it directly affects the sampling efficiency of
+an algorithm.</p>
+<p>The asymptotic rate of convergence is determined by the second largest
+eigenvalue of <span class="math inline">\(P\)</span>, which in our case is
+<span class="math inline">\(\mu(P) := \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T)\)</span> where
+<span class="math inline">\(\lambda_{\max}(A)\)</span> denotes the maximum eigenvalue of <span class="math inline">\(A\)</span>. As <span class="math inline">\(\mu(P)\)</span>
+decreases, the mixing rate increases and the Markov chain converges
+faster to equilibrium. Thus, our optimization problem is</p>
+<p>\begin{array}{ll}
+ &amp; <em>{}(P - ^T) \
+ &amp; P 0, P{1} = {1}, P = P^T \
+&amp; P</em>{ij} = 0, (i,j) .
+\end{array}</p>
+<p>The element <span class="math inline">\(P_{ij}\)</span> of our transition matrix is the probability of
+moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span>. Our assumptions imply that <span class="math inline">\(P\)</span> is
+nonnegative, symmetric, and doubly stochastic. The last constraint
+ensures transitions do not occur between unconnected vertices.</p>
+<p>The function <span class="math inline">\(\lambda_{\max}\)</span> is convex, so this problem is solvable
+in <code>CVXR</code>. For instance, the code for the Markov chain in Figure 2
+below (the triangle plus one edge) is</p>
 <pre class="r"><code>P &lt;- Variable(n,n)
 ones &lt;- matrix(1, nrow = n, ncol = 1)
 
@@ -44,11 +67,14 @@ constr1 &lt;- list(P &gt;= 0, P %*% ones == ones, P == t(P))
 constr2 &lt;- list(P[1,3] == 0, P[1,4] == 0)
 prob &lt;- Problem(obj, c(constr1, constr2))
 result &lt;- solve(prob)</code></pre>
-<p>where we have set <span class="math inline">\(n = 4\)</span>. We could also have specified <span class="math inline">\(P{\mathbf 1} = {\mathbf 1}\)</span> with <code>sum_entries(P,1) == 1</code>, which uses the <code>sum_entries</code> atom to represent the row sums.</p>
+<p>where we have set <span class="math inline">\(n = 4\)</span>. We could also have specified <span class="math inline">\(P{\mathbf 1} = {\mathbf 1}\)</span> with <code>sum_entries(P,1) == 1</code>, which uses the
+<code>sum_entries</code> atom to represent the row sums.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>In order to reproduce some of the examples from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, we create functions to build up the graph, solve the optimization problem and finally display the chain graphically.</p>
+<p>In order to reproduce some of the examples from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, we create
+functions to build up the graph, solve the optimization problem and
+finally display the chain graphically.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 suppressMessages(suppressWarnings(library(markovchain)))
 ## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
@@ -103,10 +129,7 @@ disp_result &lt;- function(states, P, tol = 1e-3) {
 <div id="results" class="section level3">
 <h3>Results</h3>
 <p>Table 1 from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span> is reproduced below.</p>
-<div class="figure">
-<img src="../../../img/fmmc/table1.png" />
-
-</div>
+<p><img src="../../../img/fmmc/table1.png" /></p>
 <p>We reproduce the results for various rows of the table.</p>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = 2, &quot;2&quot; = c(1,3), &quot;3&quot; = c(2,4), &quot;4&quot; = 3)
 result &lt;- FMMC(g, verbose = TRUE)</code></pre>
@@ -152,15 +175,19 @@ Figure 4: Square plus central point
 </div>
 <div id="extensions" class="section level2">
 <h2>Extensions</h2>
-<p>It is easy to extend this example to other Markov chains. To change the number of vertices, we would simply modify <code>n</code>, and to add or remove edges, we need only alter the constraints in <code>constr2</code>. For instance, the bipartite chain in Figure Figure 3 is produced by setting <span class="math inline">\(n = 5\)</span> and</p>
+<p>It is easy to extend this example to other Markov chains. To change
+the number of vertices, we would simply modify <code>n</code>, and to add or
+remove edges, we need only alter the constraints in <code>constr2</code>. For
+instance, the bipartite chain in Figure Figure 3 is produced by
+setting <span class="math inline">\(n = 5\)</span> and</p>
 <pre class="r"><code>constr2 &lt;- list(P[1,3] == 0, P[2,4] == 0, P[2,5] == 0, P[4,5] == 0)</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.1
+## Running under: macOS High Sierra 10.13.3
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -173,22 +200,22 @@ Figure 4: Square plus central point
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] markovchain_0.6.9.8-1 CVXR_0.94-4          
+## [1] markovchain_0.6.9.8-1 CVXR_0.95            
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] igraph_1.1.2        Rcpp_0.12.13        knitr_1.17         
-##  [4] magrittr_1.5        bit_1.1-12          lattice_0.20-35    
-##  [7] R6_2.2.2            highr_0.6           matlab_1.0.2       
-## [10] stringr_1.2.0       tools_3.4.2         parallel_3.4.2     
-## [13] grid_3.4.2          R.oo_1.21.0         scs_1.1-1          
-## [16] htmltools_0.3.6     RcppParallel_4.3.20 bit64_0.9-7        
-## [19] yaml_2.1.14         rprojroot_1.2       digest_0.6.12      
-## [22] bookdown_0.5        Matrix_1.2-11       gmp_0.5-13.1       
-## [25] ECOSolveR_0.3-2     R.utils_2.6.0       evaluate_0.10.1    
-## [28] rmarkdown_1.6       blogdown_0.1.7      stringi_1.1.5      
-## [31] compiler_3.4.2      Rmpfr_0.6-1         backports_1.1.1    
-## [34] R.methodsS3_1.7.1   stats4_3.4.2        expm_0.999-2       
-## [37] pkgconfig_2.0.1</code></pre>
+##  [1] gmp_0.5-13.1          Rcpp_0.12.15          compiler_3.4.3       
+##  [4] highr_0.6             R.methodsS3_1.7.1     R.utils_2.6.0        
+##  [7] tools_3.4.3           digest_0.6.15         bit_1.1-12           
+## [10] evaluate_0.10.1       lattice_0.20-35       pkgconfig_2.0.1      
+## [13] Matrix_1.2-12         igraph_1.1.2          yaml_2.1.16          
+## [16] parallel_3.4.3        expm_0.999-2          blogdown_0.5.4       
+## [19] xfun_0.1              Rmpfr_0.7-0           ECOSolveR_0.4        
+## [22] stringr_1.3.0         knitr_1.20            stats4_3.4.3         
+## [25] rprojroot_1.3-2       bit64_0.9-7           grid_3.4.3           
+## [28] R6_2.2.2              rmarkdown_1.8.10      bookdown_0.7         
+## [31] matlab_1.0.2          magrittr_1.5          backports_1.1.2      
+## [34] htmltools_0.3.6       scs_1.1-1             stringi_1.1.6        
+## [37] RcppParallel_4.3.20.2 R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -198,7 +225,7 @@ Figure 4: Square plus central point
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-FMMC">
-<p>Boyd, S., P. Diaconis, and L. Xiao. 2004. “Fastest Mixing Markov Chain on a Graph.” <em>SIAM Review</em> 46 (4). SIAM: 667–89.</p>
+<p>Boyd, S., P. Diaconis, and L. Xiao. 2004. “Fastest Mixing Markov Chain on a Graph.” <em>SIAM Review</em> 46 (4). SIAM:667–89.</p>
 </div>
 </div>
 </div>
@@ -295,7 +322,7 @@ Figure 4: Square plus central point
 		<h3>Related Topics</h3>
 <ul>
   <li><a href="../../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../../post/examples/cvxr_huber-regression/" title="Huber Regression">Huber Regression</a></li>
+  <li>Previous: <a href="../../../post/examples/cvxr_speed/" title="Getting Faster Results with `CVXR`">Getting Faster Results with `CVXR`</a></li>
   <li>Next: <a href="../../../post/examples/cvxr_elastic-net/" title="Elastic Net">Elastic Net</a></li>
 </ul>
 

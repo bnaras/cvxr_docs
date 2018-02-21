@@ -13,19 +13,26 @@ tags: []
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Huber regression <span class="citation">(Huber <a href="#ref-Huber:1964">1964</a>)</span> is a regression technique that is robust to outliers. The idea is to use a different loss function rather than the traditional least-squares; we solve</p>
-<span class="math display">\[\begin{array}{ll} 
-\underset{\beta}{\mbox{minimize}} &amp; \sum_{i=1}^m \phi(y_i -
-x_i^T\beta) 
-\end{array}\]</span>
-<p>for variable <span class="math inline">\(\beta \in {\mathbf R}^n\)</span>, where the loss <span class="math inline">\(\phi\)</span> is the Huber function with threshold <span class="math inline">\(M &gt; 0\)</span>, <span class="math display">\[
+<p>Huber regression <span class="citation">(Huber <a href="#ref-Huber:1964">1964</a>)</span> is a regression technique that
+is robust to outliers. The idea is to use a different loss function
+rather than the traditional least-squares; we solve</p>
+<p>\begin{array}{ll}
+ &amp; _{i=1}^m (y_i -
+x_i^T)
+\end{array}</p>
+<p>for variable <span class="math inline">\(\beta \in {\mathbf R}^n\)</span>, where the loss <span class="math inline">\(\phi\)</span> is the Huber
+function with threshold <span class="math inline">\(M &gt; 0\)</span>,
+<span class="math display">\[
     \phi(u) = 
     \begin{cases}
         u^2 &amp; \mbox{if } |u| \leq M \\
         2Mu - M^2 &amp; \mbox{if } |u| &gt; M.
     \end{cases}
 \]</span></p>
-<p>This function is identical to the least squares penalty for small residuals, but on large residuals, its penalty is lower and increases linearly rather than quadratically. It is thus more forgiving of outliers.</p>
+<p>This function is identical to the least squares penalty for small
+residuals, but on large residuals, its penalty is lower and increases
+linearly rather than quadratically. It is thus more forgiving of
+outliers.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
@@ -41,10 +48,12 @@ beta_true &lt;- 5 * matrix(stats::rnorm(n), nrow = n)
 X &lt;- matrix(stats::rnorm(m * n), nrow = m, ncol = n)
 y_true &lt;- X %*% beta_true
 eps &lt;- matrix(stats::rnorm(m), nrow = m)</code></pre>
-<p>We will randomly flip the sign of some responses to illustrate the robustness.</p>
+<p>We will randomly flip the sign of some responses to illustrate the
+robustness.</p>
 <pre class="r"><code>factor &lt;- 2*stats::rbinom(m, size = 1, prob = 1-p) - 1
 y &lt;- factor * y_true + eps</code></pre>
-<p>We can solve this problem both using ordinary least squares and huber regression to compare.</p>
+<p>We can solve this problem both using ordinary least squares and huber
+regression to compare.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 beta &lt;- Variable(n)
 rel_err &lt;- norm(beta - beta_true, &quot;F&quot;) / norm(beta_true, &quot;F&quot;)
@@ -62,7 +71,8 @@ prob &lt;- Problem(Minimize(obj))
 result &lt;- solve(prob)
 beta_hub &lt;- result$getValue(beta)
 err_hub &lt;- result$getValue(rel_err)</code></pre>
-<p>Finally, we also solve the OLS problem assuming we know the flipped signs.</p>
+<p>Finally, we also solve the OLS problem assuming we know the flipped
+signs.</p>
 <pre class="r"><code>## Solve ordinary least squares assuming sign flips known
 obj &lt;- sum((y - factor*(X %*% beta))^2)
 prob &lt;- Problem(Minimize(obj))
@@ -88,9 +98,9 @@ ggplot() +
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.1
+## Running under: macOS High Sierra 10.13.3
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -103,22 +113,23 @@ ggplot() +
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] ggplot2_2.2.1 CVXR_0.94-4  
+## [1] ggplot2_2.2.1 CVXR_0.95    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.14      compiler_3.4.2   
-##  [4] plyr_1.8.4        R.methodsS3_1.7.1 R.utils_2.6.0    
-##  [7] tools_3.4.2       digest_0.6.12     bit_1.1-12       
-## [10] evaluate_0.10.1   tibble_1.3.4      gtable_0.2.0     
-## [13] lattice_0.20-35   rlang_0.1.4       Matrix_1.2-12    
-## [16] yaml_2.1.14       blogdown_0.3      Rmpfr_0.6-1      
-## [19] ECOSolveR_0.3-2   stringr_1.2.0     knitr_1.17       
-## [22] rprojroot_1.2     bit64_0.9-7       grid_3.4.2       
-## [25] R6_2.2.2          rmarkdown_1.8     bookdown_0.5     
-## [28] magrittr_1.5      backports_1.1.1   scales_0.5.0     
-## [31] htmltools_0.3.6   scs_1.1-1         colorspace_1.3-2 
-## [34] labeling_0.3      stringi_1.1.6     lazyeval_0.2.1   
-## [37] munsell_0.4.3     R.oo_1.21.0</code></pre>
+##  [1] gmp_0.5-13.1      Rcpp_0.12.15      pillar_1.1.0     
+##  [4] compiler_3.4.3    plyr_1.8.4        R.methodsS3_1.7.1
+##  [7] R.utils_2.6.0     tools_3.4.3       digest_0.6.15    
+## [10] bit_1.1-12        evaluate_0.10.1   tibble_1.4.2     
+## [13] gtable_0.2.0      lattice_0.20-35   rlang_0.2.0      
+## [16] Matrix_1.2-12     yaml_2.1.16       blogdown_0.5.4   
+## [19] xfun_0.1          Rmpfr_0.7-0       ECOSolveR_0.4    
+## [22] stringr_1.3.0     knitr_1.20        rprojroot_1.3-2  
+## [25] bit64_0.9-7       grid_3.4.3        R6_2.2.2         
+## [28] rmarkdown_1.8.10  bookdown_0.7      magrittr_1.5     
+## [31] backports_1.1.2   scales_0.5.0      htmltools_0.3.6  
+## [34] scs_1.1-1         colorspace_1.3-2  labeling_0.3     
+## [37] stringi_1.1.6     lazyeval_0.2.1    munsell_0.4.3    
+## [40] R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -128,7 +139,7 @@ ggplot() +
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-Huber:1964">
-<p>Huber, P. J. 1964. “Robust Estimation of a Location Parameter.” <em>Annals of Mathematical Statistics</em> 35 (1): 73–101.</p>
+<p>Huber, P. J. 1964. “Robust Estimation of a Location Parameter.” <em>Annals of Mathematical Statistics</em> 35 (1):73–101.</p>
 </div>
 </div>
 </div>

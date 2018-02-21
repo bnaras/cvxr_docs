@@ -27,28 +27,45 @@
 	
 	<div id="functions" class="section level2">
 <h2>Functions</h2>
-<p>Here we describe the functions that can be applied to <code>CVXR</code> expressions. <code>CVXR</code> uses the function information in this section and the <a href="http://dcp.stanford.edu/">Disciplined Convex Programming tools</a> to mark expressions with a sign and curvature.</p>
+<p>Here we describe the functions that can be applied to <code>CVXR</code>
+expressions. <code>CVXR</code> uses the function information in this section and
+the <a href="http://dcp.stanford.edu/">Disciplined Convex Programming tools</a>
+to mark expressions with a sign and curvature.</p>
 <div id="operators" class="section level3">
 <h3>Operators</h3>
-<p>The infix operators <code>+</code>, <code>-</code>, <code>*</code>, <code>%*%</code>, <code>/</code> are treated as functions. <code>+</code> and <code>-</code> are affine functions. <code>*</code> and <code>/</code> are affine in <code>CVXR</code> because <code>expr1*expr2</code> and <code>expr1 %*% expr2</code> are allowed only when one of the expressions is constant and <code>expr1/expr2</code> is allowed only when <code>expr2</code> is a scalar constant.</p>
+<p>The infix operators <code>+</code>, <code>-</code>, <code>*</code>, <code>%*%</code>, <code>/</code> are treated as functions. <code>+</code>
+and <code>-</code> are affine functions. <code>*</code> and <code>/</code> are affine in <code>CVXR</code> because
+<code>expr1*expr2</code> and <code>expr1 %*% expr2</code> are allowed only when one of the expressions is constant
+and <code>expr1/expr2</code> is allowed only when <code>expr2</code> is a scalar constant.</p>
 <div id="indexing-and-slicing" class="section level4">
 <h4>Indexing and slicing</h4>
-<p>All non-scalar expressions can be indexed using the syntax <code>expr[i, j]</code>. Indexing is an affine function. The syntax <code>expr[i]</code> can be used as a shorthand for <code>expr[i, 1]</code> when <code>expr</code> is a column vector. Similarly, <code>expr[i]</code> is shorthand for <code>expr[1, i]</code> when <code>expr</code> is a row vector.</p>
-<p>Non-scalar expressions can also be sliced into using the standard R slicing syntax. For example, <code>expr[i:j, r]</code> selects rows <code>i</code> through <code>j</code> of column <code>r</code> and returns a vector.</p>
-<p><code>CVXR</code> supports advanced indexing using lists of indices or boolean arrays. The semantics are the same as in R. Any time R might return a numeric vector, <code>CVXR</code> returns a column vector.</p>
+<p>All non-scalar expressions can be indexed using the syntax
+<code>expr[i, j]</code>. Indexing is an affine function. The syntax <code>expr[i]</code>
+can be used as a shorthand for <code>expr[i, 1]</code> when <code>expr</code> is a column
+vector. Similarly, <code>expr[i]</code> is shorthand for <code>expr[1, i]</code> when
+<code>expr</code> is a row vector.</p>
+<p>Non-scalar expressions can also be sliced into using the standard R
+slicing syntax. For example, <code>expr[i:j, r]</code> selects rows <code>i</code>
+through <code>j</code> of column <code>r</code> and returns a vector.</p>
+<p><code>CVXR</code> supports advanced indexing using lists of indices or boolean
+arrays. The semantics are the same as in R. Any time R might return a
+numeric vector, <code>CVXR</code> returns a column vector.</p>
 </div>
 <div id="transpose" class="section level4">
 <h4>Transpose</h4>
-<p>The transpose of any expression can be obtained using the syntax <code>t(expr)</code>. Transpose is an affine function.</p>
+<p>The transpose of any expression can be obtained using the syntax
+<code>t(expr)</code>. Transpose is an affine function.</p>
 </div>
 <div id="power" class="section level4">
 <h4>Power</h4>
-<p>For any <code>CVXR</code> expression <code>expr</code>, the power operator <code>expr^p</code> is equivalent to the function <code>power(expr, p)</code>.</p>
+<p>For any <code>CVXR</code> expression <code>expr</code>, the power operator <code>expr^p</code> is
+equivalent to the function <code>power(expr, p)</code>.</p>
 </div>
 </div>
 <div id="scalar-functions" class="section level3">
 <h3>Scalar functions</h3>
-<p>A scalar function takes one or more scalars, vectors, or matrices as arguments and returns a scalar.</p>
+<p>A scalar function takes one or more scalars, vectors, or matrices as arguments
+and returns a scalar.</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -717,26 +734,64 @@ None
 </table>
 <div id="clarifications" class="section level4">
 <h4>Clarifications</h4>
-<p>The domain <span class="math inline">\(\mathbf{S}^n\)</span> refers to the set of symmetric matrices. The domains <span class="math inline">\(\mathbf{S}^n_+\)</span> and <span class="math inline">\(\mathbf{S}^n_-\)</span> refer to the set of positive semi-definite and negative semi-definite matrices, respectively. Similarly, <span class="math inline">\(\mathbf{S}^n_{++}\)</span> and <span class="math inline">\(\mathbf{S}^n_{--}\)</span> refer to the set of positive definite and negative definite matrices, respectively.</p>
-<p>For a vector expression <code>x</code>, <code>cvxr_norm(x)</code> and <code>cvxr_norm(x, 2)</code> give the Euclidean norm. For a matrix expression <code>X</code>, however, <code>cvxr_norm(X)</code> and <code>cvxr_norm(X, 2)</code> give the spectral norm.</p>
-<p>The function <code>cvxr_norm(X, &quot;fro&quot;)</code> is called the <a href="https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm%3E">Frobenius norm</a> and <code>cvxr_norm(X, &quot;nuc&quot;)</code> the <a href="https://en.wikipedia.org/wiki/Matrix_norm#Schatten_norms">nuclear norm</a>. The nuclear norm can also be defined as the sum of <code>X</code>’s singular values.</p>
-<p>The functions <code>max_entries</code> and <code>min_entries</code> give the largest and smallest entry, respectively, in a single expression. These functions should not be confused with <code>max_elemwise</code> and <code>min_elemwise</code> (see <code>elementwise</code>). Use <code>max_elemwise</code> and <code>min_elemwise</code> to find the maximum or minimum of a list of scalar expressions.</p>
-<p>The function <code>sum_entries</code> sums all the entries in a single expression. The built-in R <code>sum</code> should be used to add together a list of expressions. For example, the following code sums three expressions:</p>
+<p>The domain <span class="math inline">\(\mathbf{S}^n\)</span> refers to the set of symmetric matrices. The
+domains <span class="math inline">\(\mathbf{S}^n_+\)</span> and <span class="math inline">\(\mathbf{S}^n_-\)</span> refer to the set of
+positive semi-definite and negative semi-definite matrices,
+respectively. Similarly, <span class="math inline">\(\mathbf{S}^n_{++}\)</span> and <span class="math inline">\(\mathbf{S}^n_{--}\)</span>
+refer to the set of positive definite and negative definite matrices,
+respectively.</p>
+<p>For a vector expression <code>x</code>, <code>cvxr_norm(x)</code> and <code>cvxr_norm(x, 2)</code> give the
+Euclidean norm. For a matrix expression <code>X</code>, however, <code>cvxr_norm(X)</code> and
+<code>cvxr_norm(X, 2)</code> give the spectral norm.</p>
+<p>The function <code>cvxr_norm(X, &quot;fro&quot;)</code> is called
+the
+<a href="https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm%3E">Frobenius norm</a> and
+<code>cvxr_norm(X, &quot;nuc&quot;)</code>
+the
+<a href="https://en.wikipedia.org/wiki/Matrix_norm#Schatten_norms">nuclear norm</a>. The
+nuclear norm can also be defined as the sum of <code>X</code>’s singular values.</p>
+<p>The functions <code>max_entries</code> and <code>min_entries</code> give the largest and
+smallest entry, respectively, in a single expression. These functions
+should not be confused with <code>max_elemwise</code> and <code>min_elemwise</code> (see
+<code>elementwise</code>). Use <code>max_elemwise</code> and <code>min_elemwise</code> to find the
+maximum or minimum of a list of scalar expressions.</p>
+<p>The function <code>sum_entries</code> sums all the entries in a single
+expression. The built-in R <code>sum</code> should be used to add together a
+list of expressions. For example, the following code sums
+three expressions:</p>
 <pre class="r"><code>expr_sum &lt;- sum(expr1, expr2, expr3)</code></pre>
 </div>
 </div>
 <div id="functions-along-an-axis" class="section level3">
 <h3>Functions along an axis</h3>
-<p>The functions <code>sum_entries</code>, <code>cvxr_norm</code>, <code>max_entries</code>, and <code>min_entries</code> can be applied along an axis. Given an <code>m</code> by <code>n</code> expression <code>expr</code>, the syntax <code>func(expr, axis=1)</code> applies <code>func</code> to each row, returning a <code>m</code> by 1 expression. The syntax <code>func(expr, axis=2)</code> applies <code>func</code> to each column, returning a 1 by <code>n</code> expression. For example, the following code sums along the columns and rows of a matrix variable:</p>
+<p>The functions <code>sum_entries</code>, <code>cvxr_norm</code>, <code>max_entries</code>, and <code>min_entries</code>
+can be applied along an axis. Given an <code>m</code> by <code>n</code> expression <code>expr</code>,
+the syntax <code>func(expr, axis=1)</code> applies <code>func</code> to each row,
+returning a <code>m</code> by 1 expression. The syntax <code>func(expr, axis=2)</code>
+applies <code>func</code> to each column, returning a 1 by <code>n</code> expression. For
+example, the following code sums along the columns and rows of a
+matrix variable:</p>
 <pre class="r"><code>X &lt;- Variable(5, 4)
 row_sums &lt;- sum_entries(X, axis=1) # Has size (5, 1)
 col_sums &lt;- sum_entries(X, axis=2) # Has size (1, 4)</code></pre>
-<p>Note that the use of <code>axis</code> differs from its use in <code>CVXPY</code> where <code>axis=2</code> implies the columns. In <code>CVXR</code>, we align our implementation with the <code>base::apply</code> function. The default in most cases is <code>axis = NA</code>, which treats a matrix as one long vector, basically the same as apply with <code>c(1,2)</code>. The exception is <code>cumsum_axis</code> (see below), which cannot take <code>axis = NA</code>; it will throw an error.</p>
+<p>Note that the use of <code>axis</code> differs from its use in <code>CVXPY</code> where
+<code>axis=2</code> implies the columns. In <code>CVXR</code>, we align our implementation
+with the <code>base::apply</code> function. The default in most cases is <code>axis = NA</code>, which treats a matrix as one long vector, basically the same as
+apply with <code>c(1,2)</code>. The exception is <code>cumsum_axis</code> (see below), which cannot take
+<code>axis = NA</code>; it will throw an error.</p>
 </div>
 <div id="elementwise-functions" class="section level3">
 <h3>Elementwise functions</h3>
-<p>These functions operate on each element of their arguments. For example, if <code>X</code> is a 5 by 4 matrix variable, then <code>abs(X)</code> is a 5 by 4 matrix expression. <code>abs(X)[1, 2]</code> is equivalent to <code>abs(X[1, 2])</code>.</p>
-<p>Elementwise functions that take multiple arguments, such as <code>max_elemwise</code> and <code>mul_elemwise</code>, operate on the corresponding elements of each argument. For example, if <code>X</code> and <code>Y</code> are both 3 by 3 matrix variables, then <code>max_elemwise(X, Y)</code> is a 3 by 3 matrix expression. <code>max_elemwise(X, Y)[2, 1]</code> is equivalent to <code>max_elemwise(X[2, 1], Y[2, 1])</code>. This means all arguments must have the same dimensions or be scalars, which are promoted.</p>
+<p>These functions operate on each element of their arguments. For
+example, if <code>X</code> is a 5 by 4 matrix variable, then <code>abs(X)</code> is a 5 by 4
+matrix expression. <code>abs(X)[1, 2]</code> is equivalent to <code>abs(X[1, 2])</code>.</p>
+<p>Elementwise functions that take multiple arguments, such as
+<code>max_elemwise</code> and <code>mul_elemwise</code>, operate on the corresponding
+elements of each argument. For example, if <code>X</code> and <code>Y</code> are both 3 by
+3 matrix variables, then <code>max_elemwise(X, Y)</code> is a 3 by 3 matrix
+expression. <code>max_elemwise(X, Y)[2, 1]</code> is equivalent to
+<code>max_elemwise(X[2, 1], Y[2, 1])</code>. This means all arguments must have
+the same dimensions or be scalars, which are promoted.</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1225,7 +1280,8 @@ square(x)
 </div>
 <div id="vectormatrix-functions" class="section level3">
 <h3>Vector/matrix functions</h3>
-<p>A vector/matrix function takes one or more scalars, vectors, or matrices as arguments and returns a vector or matrix.</p>
+<p>A vector/matrix function takes one or more scalars, vectors, or matrices as arguments
+and returns a vector or matrix.</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1474,10 +1530,17 @@ vstack(X1, …, Xk)
 </table>
 <div id="clarifications-1" class="section level4">
 <h4>Clarifications</h4>
-<p>The input to <code>bmat</code> is a list of lists of <code>CVXR</code> expressions. It constructs a block matrix. The elements of each inner list are stacked horizontally, and then the resulting block matrices are stacked vertically.</p>
-<p>The output <span class="math inline">\(y\)</span> of <code>conv(c, x)</code> has size <span class="math inline">\(n+m-1\)</span> and is defined as <span class="math inline">\(y[k]=\sum_{j=0}^k c[j]x[k-j].\)</span></p>
-<p>The output <span class="math inline">\(x\)</span> of <code>vec(X)</code> is the matrix <span class="math inline">\(X\)</span> flattened in column-major order into a vector. Formally, <span class="math inline">\(x&#39;_i = X_{i \bmod{m}, \left \lfloor{i/m}\right \rfloor }\)</span>.</p>
-<p>The output <span class="math inline">\(X\)</span> of <code>reshape_expr(X, m', n')</code> is the matrix <span class="math inline">\(X\)</span> cast into an <span class="math inline">\(m&#39; \times n&#39;\)</span> matrix. The entries are taken from <span class="math inline">\(X\)</span> in column-major order and stored in <span class="math inline">\(X&#39;\)</span> in column-major order. Formally, <span class="math inline">\(X&#39;_{ij} = \mathbf{vec}(X)_{m&#39;j + i}\)</span>.</p>
+<p>The input to <code>bmat</code> is a list of lists of <code>CVXR</code> expressions. It
+constructs a block matrix. The elements of each inner list are
+stacked horizontally, and then the resulting block matrices are stacked
+vertically.</p>
+<p>The output <span class="math inline">\(y\)</span> of <code>conv(c, x)</code> has size <span class="math inline">\(n+m-1\)</span> and is defined as
+<span class="math inline">\(y[k]=\sum_{j=0}^k c[j]x[k-j].\)</span></p>
+<p>The output <span class="math inline">\(x\)</span> of <code>vec(X)</code> is the matrix <span class="math inline">\(X\)</span> flattened in column-major order into a vector.
+Formally, <span class="math inline">\(x&#39;_i = X_{i \bmod{m}, \left \lfloor{i/m}\right \rfloor }\)</span>.</p>
+<p>The output <span class="math inline">\(X\)</span> of <code>reshape_expr(X, m', n')</code> is the matrix <span class="math inline">\(X\)</span> cast into an <span class="math inline">\(m&#39; \times n&#39;\)</span> matrix.
+The entries are taken from <span class="math inline">\(X\)</span> in column-major order and stored in <span class="math inline">\(X&#39;\)</span> in column-major order.
+Formally, <span class="math inline">\(X&#39;_{ij} = \mathbf{vec}(X)_{m&#39;j + i}\)</span>.</p>
 </div>
 </div>
 </div>

@@ -13,12 +13,11 @@ Given a set of data points $y \in {\mathbf R}^m$,
 @TibshiraniHoefling:2011 fit a nearly-isotonic approximation $\beta
 \in {\mathbf R}^m$ by solving
 
+$$
 \begin{array}{ll}
-
-\underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i -
-\beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
-
+\underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
 \end{array}
+$$
 
 where $\lambda \geq 0$ is a penalty parameter and $x_+
 =\max(x,0)$. This can be directly formulated in `CVXR`.  As an
@@ -36,7 +35,9 @@ str(cdiac)
 
 Since we plan to fit the regression and also get some idea of the
 standard errors, we write a function that computes the fit for use in
-bootstrapping. 
+bootstrapping. We directly call the solver in this instance, to save
+computational time in bootstrapping. For more on this, see [Getting
+Faster Results with `CVXR`](/post/examples/cvxr_speed/).
 
 ```{r}
 neariso_fit <- function(y, lambda) {
@@ -44,7 +45,14 @@ neariso_fit <- function(y, lambda) {
     beta <- Variable(m)
     obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
     prob <- Problem(Minimize(obj))
-    solve(prob)$getValue(beta)
+    prob_data <- get_problem_data(prob, solver = "ECOS")
+    solver_output <- ECOSolveR::ECOS_csolve(c = prob_data[["c"]],
+                                            G = prob_data[["G"]],
+                                            h = prob_data[["h"]],
+                                            dims = prob_data[["dims"]],
+                                            A = prob_data[["A"]],
+                                            b = prob_data[["b"]])
+    unpack_results(prob, "ECOS", solver_output)$getValue(beta)
 }
 ```
 The `pos` atom evaluates $x_+$ elementwise on the input expression.
@@ -98,8 +106,7 @@ in the same paper:
 $$
 \begin{array}{ll}
 \underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i -
-\beta_i)^2 + \lambda \sum_{i=1}^{m-2}(\beta_i - 2\beta_{i+1} +
-\beta_{i+2})_+ \end{array} 
+\beta_i)^2 + \lambda \sum_{i=1}^{m-2}(\beta_i - 2\beta_{i+1} + \beta_{i+2})_+ \end{array} 
 $$
 
 This replaces the first difference term with an approximation to the
@@ -113,7 +120,14 @@ nearconvex_fit <- function(y, lambda) {
     penalty <- sum(pos(diff(beta)))
     obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(diff(beta))))
     prob <- Problem(Minimize(obj))
-    solve(prob)$getValue(beta)
+    prob_data <- get_problem_data(prob, solver = "ECOS")
+    solver_output <- ECOSolveR::ECOS_csolve(c = prob_data[["c"]],
+                                            G = prob_data[["G"]],
+                                            h = prob_data[["h"]],
+                                            dims = prob_data[["dims"]],
+                                            A = prob_data[["A"]],
+                                            b = prob_data[["b"]])
+    unpack_results(prob, "ECOS", solver_output)$getValue(beta)
 }
 
 nearconvex_fit_stat <- function(data, index, lambda) {

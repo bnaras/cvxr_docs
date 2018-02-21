@@ -27,15 +27,22 @@
 	
 	<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Quantile regression is another variation on least squares . The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
+<p>Quantile regression is another variation on least squares
+. The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
 <p><span class="math display">\[
     \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
 \]</span></p>
-<p>where <span class="math inline">\(\tau \in (0,1)\)</span> specifies the quantile. The problem as before is to minimize the total residual loss. This model is commonly used in ecology, healthcare, and other fields where the mean alone is not enough to capture complex relationships between variables. <code>CVXR</code> allows us to create a function to represent the loss and integrate it seamlessly into the problem definition, as illustrated below.</p>
+<p>where <span class="math inline">\(\tau \in (0,1)\)</span> specifies the quantile. The problem as before
+is to minimize the total residual loss. This model is commonly used in
+ecology, healthcare, and other fields where the mean alone is not
+enough to capture complex relationships between variables. <code>CVXR</code>
+allows us to create a function to represent the loss and integrate it
+seamlessly into the problem definition, as illustrated below.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>We will use an example from the <code>quantreg</code> package. The vignette provides an example of the estimation and plot.</p>
+<p>We will use an example from the <code>quantreg</code> package. The vignette
+provides an example of the estimation and plot.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(quantreg)))
 data(engel)
 library(ggplot2)
@@ -147,7 +154,8 @@ income
 </tr>
 </tbody>
 </table>
-<p>The <code>CVXR</code> formulation follows. Note we make use of <code>model.matrix</code> to get the intercept column painlessly.</p>
+<p>The <code>CVXR</code> formulation follows. Note we make use of <code>model.matrix</code> to
+get the intercept column painlessly.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 X &lt;- model.matrix(foodexp ~ income, data = engel)
 y &lt;- matrix(engel[, &quot;foodexp&quot;], ncol = 1)
@@ -161,7 +169,8 @@ solutions &lt;- sapply(taus, function(tau) {
 solutions &lt;- data.frame(coef(lm(foodexp ~ income, data = engel)),
                         solutions)
 names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))</code></pre>
-<p>Here is a table similar to the above with the OLS estimate added in for easy comparison.</p>
+<p>Here is a table similar to the above with the OLS estimate added in
+for easy comparison.</p>
 <pre class="r"><code>knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `CVXR`&quot;) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
     column_spec(1:8, background = &quot;#ececec&quot;)</code></pre>
@@ -256,9 +265,9 @@ income
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.2
+## Running under: macOS High Sierra 10.13.3
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -271,26 +280,27 @@ income
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.94-4      kableExtra_0.6.1 ggplot2_2.2.1    quantreg_5.34   
+## [1] CVXR_0.95        kableExtra_0.7.0 ggplot2_2.2.1    quantreg_5.35   
 ## [5] SparseM_1.77    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1       Rcpp_0.12.14       highr_0.6         
-##  [4] compiler_3.4.2     plyr_1.8.4         R.methodsS3_1.7.1 
-##  [7] R.utils_2.6.0      tools_3.4.2        bit_1.1-12        
-## [10] digest_0.6.12      viridisLite_0.2.0  evaluate_0.10.1   
-## [13] tibble_1.3.4       gtable_0.2.0       lattice_0.20-35   
-## [16] pkgconfig_2.0.1    rlang_0.1.4        Matrix_1.2-12     
-## [19] yaml_2.1.14        blogdown_0.3       Rmpfr_0.6-1       
-## [22] ECOSolveR_0.3-2    stringr_1.2.0      httr_1.3.1        
-## [25] knitr_1.17         xml2_1.1.1         MatrixModels_0.4-1
-## [28] hms_0.4.0          bit64_0.9-7        rprojroot_1.2     
-## [31] grid_3.4.2         R6_2.2.2           rmarkdown_1.8     
-## [34] bookdown_0.5       readr_1.1.1        magrittr_1.5      
-## [37] scs_1.1-1          backports_1.1.1    scales_0.5.0      
-## [40] htmltools_0.3.6    rvest_0.3.2        colorspace_1.3-2  
-## [43] labeling_0.3       stringi_1.1.6      lazyeval_0.2.1    
-## [46] munsell_0.4.3      R.oo_1.21.0</code></pre>
+##  [1] gmp_0.5-13.1       Rcpp_0.12.15       highr_0.6         
+##  [4] compiler_3.4.3     pillar_1.1.0       plyr_1.8.4        
+##  [7] R.methodsS3_1.7.1  R.utils_2.6.0      tools_3.4.3       
+## [10] bit_1.1-12         digest_0.6.15      viridisLite_0.3.0 
+## [13] evaluate_0.10.1    tibble_1.4.2       gtable_0.2.0      
+## [16] lattice_0.20-35    pkgconfig_2.0.1    rlang_0.2.0       
+## [19] Matrix_1.2-12      yaml_2.1.16        blogdown_0.5.4    
+## [22] xfun_0.1           Rmpfr_0.7-0        ECOSolveR_0.4     
+## [25] xml2_1.2.0         httr_1.3.1         stringr_1.3.0     
+## [28] knitr_1.20         MatrixModels_0.4-1 hms_0.4.1         
+## [31] bit64_0.9-7        rprojroot_1.3-2    grid_3.4.3        
+## [34] R6_2.2.2           rmarkdown_1.8.10   bookdown_0.7      
+## [37] readr_1.1.1        magrittr_1.5       scs_1.1-1         
+## [40] backports_1.1.2    scales_0.5.0       htmltools_0.3.6   
+## [43] rvest_0.3.2        colorspace_1.3-2   labeling_0.3      
+## [46] stringi_1.1.6      lazyeval_0.2.1     munsell_0.4.3     
+## [49] R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

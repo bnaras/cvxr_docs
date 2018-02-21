@@ -41,4 +41,8 @@ the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as w
 - [Fastest Mixing Markov Chain](/post/examples/cvxr_fast-mixing-mc/)
 - [Portfolio Optimization](/post/examples/cvxr_portfolio-optimization/)
 
+## Advanced Topics
+
+- [Getting Faster Results with `CVXR`](/post/examples/cvxr_speed/)
+
 ## References

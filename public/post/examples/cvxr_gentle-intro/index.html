@@ -27,13 +27,63 @@
 	
 	<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Welcome to <code>CVXR</code>: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to <code>CVXR</code> and to generate excitement for its possibilities in the field of statistics.</p>
-<p>Convex optimization is a powerful and very general tool. As a practical matter, the set of convex optimization problems includes almost every optimization problem that can be solved exactly and efficiently (i.e. without requiring an exhaustive search). If an optimization problem can be solved, it is probably convex. This family of problems becomes even larger if you include those that can be solved <em>approximately</em> and efficiently. To learn more about the mathematics and applications of convex optimization, see <a href="http://stanford.edu/~boyd/cvxbook/">Boyd and Vandenberghe 2009</a>.</p>
-<p>Convex optimization systems written in other languages are already widely used in practical applications. These include <a href="http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Main.WhatIsYALMIP">YALMIP</a> and <a href="http://cvxr.com/cvx/">CVX</a> (Matlab), <a href="http://www.cvxpy.org/en/latest/">CVXPY</a> (Python), and <a href="http://convexjl.readthedocs.org/en/latest/">Convex.jl</a> (Julia). <code>CVXR</code> Shares a lot of its code base with <a href="http://stanford.edu/class/ee364b/projects/2015projects/reports/miller_quigley_zhu_report.pdf">CVXcanon</a> and CVXPY. As far as we know, this is the first full-featured general convex optimization package for R.</p>
-<p>One of the great headaches of conventional numerical optimization is the process of deciding which algorithm to use and how to set its parameters. In convex optimization, the particular algorithm matters much less. So while a user of <code>CVXR</code> is still free to choose from a number of different algorithms and to set algorithm parameters as they please, the vast majority of users will not need to do this. <code>CVXR</code> will just work.</p>
-<p>The uses for convex optimization in statistics are many and varied. A large number of parameter-fitting methods are convex, including least-squares, ridge, lasso, and isotonic regression, as well as many other kinds of problems such as maximum entropy or minimum Kullback-Leibler divergence over a finite set.</p>
-<p>All of these examples, at least in their most basic forms, are established enough that they already have well-crafted R packages devoted to them. If you use <code>CVXR</code> to solve these problems, it will work. It will probably be slower than a custom-built algorithm—for example, glmnet for fitting lasso or ridge regression models—but it will work. However, this is not the true purpose of <code>CVXR</code>. If you want to build a well-established model, you should use one of the well-established packages for doing so. If you want to build your <em>own</em> model—one that is a refinement of an existing method, or perhaps even something that has never been tried before—then <code>CVXR</code> is the package to do it. The advantage of <code>CVXR</code> over glmnet and the like comes from its flexibility: A few lines of code can transform a problem from commonplace to state-of-the-art, and can often do the work of an entire package in the process.</p>
-<p>This document is meant to familiarize you with the <code>CVXR</code> package. It assumes basic knowledge of convex optimization and statistics as well as proficiency with R. A potential user of <code>CVXR</code> should read this entire document and then refer to the tutorial examples.</p>
+<p>Welcome to <code>CVXR</code>: a modeling language for describing and solving
+convex optimization problems that follows the natural, mathematical
+notation of convex optimization rather than the requirements of any
+particular solver. The purpose of this document is both to introduce
+the reader to <code>CVXR</code> and to generate excitement for its possibilities in
+the field of statistics.</p>
+<p>Convex optimization is a powerful and very general tool. As a
+practical matter, the set of convex optimization problems includes
+almost every optimization problem that can be solved exactly and
+efficiently (i.e. without requiring an exhaustive search). If an
+optimization problem can be solved, it is probably convex. This family
+of problems becomes even larger if you include those that can be
+solved <em>approximately</em> and efficiently. To learn more about the
+mathematics and applications of convex optimization,
+see <a href="http://stanford.edu/~boyd/cvxbook/">Boyd and Vandenberghe 2009</a>.</p>
+<p>Convex optimization systems written in other languages are already
+widely used in practical applications. These
+include
+<a href="http://users.isy.liu.se/johanl/yalmip/pmwiki.php?n=Main.WhatIsYALMIP">YALMIP</a> and
+<a href="http://cvxr.com/cvx/">CVX</a>
+(Matlab), <a href="http://www.cvxpy.org/en/latest/">CVXPY</a> (Python),
+and <a href="http://convexjl.readthedocs.org/en/latest/">Convex.jl</a>
+(Julia). <code>CVXR</code> Shares a lot of its code base
+with
+<a href="http://stanford.edu/class/ee364b/projects/2015projects/reports/miller_quigley_zhu_report.pdf">CVXcanon</a> and
+CVXPY. As far as we know, this is the first full-featured general
+convex optimization package for R.</p>
+<p>One of the great headaches of conventional numerical optimization is
+the process of deciding which algorithm to use and how to set its
+parameters. In convex optimization, the particular algorithm matters
+much less. So while a user of <code>CVXR</code> is still free to choose from a
+number of different algorithms and to set algorithm parameters as they
+please, the vast majority of users will not need to do this. <code>CVXR</code>
+will just work.</p>
+<p>The uses for convex optimization in statistics are many and
+varied. A large number of parameter-fitting methods are convex, including
+least-squares, ridge, lasso, and isotonic regression, as well as many
+other kinds of problems such as maximum entropy or minimum
+Kullback-Leibler divergence over a finite set.</p>
+<p>All of these examples, at least in their most basic forms, are
+established enough that they already have well-crafted R packages
+devoted to them. If you use <code>CVXR</code> to solve these problems, it will
+work. It will probably be slower than a custom-built algorithm—for
+example, glmnet for fitting lasso or ridge regression models—but it
+will work. However, this is not the true purpose of <code>CVXR</code>. If you
+want to build a well-established model, you should use one of the
+well-established packages for doing so. If you want to build your
+<em>own</em> model—one that is a refinement of an existing method, or
+perhaps even something that has never been tried before—then <code>CVXR</code>
+is the package to do it. The advantage of <code>CVXR</code> over glmnet and the
+like comes from its flexibility: A few lines of code can transform a
+problem from commonplace to state-of-the-art, and can often do the
+work of an entire package in the process.</p>
+<p>This document is meant to familiarize you with the <code>CVXR</code> package. It
+assumes basic knowledge of convex optimization and statistics as well
+as proficiency with R. A potential user of <code>CVXR</code> should read this entire
+document and then refer to the tutorial examples.</p>
 <p>Happy optimizing!</p>
 </div>
 <div id="convex-optimization" class="section level2">
@@ -45,23 +95,38 @@
     &amp; g_i(x) = 0, \quad i=1,\ldots,p
     \end{array}
 \]</span></p>
-<p>where <span class="math inline">\(x\)</span> is the variable, <span class="math inline">\(f_0\)</span> and <span class="math inline">\(f_1,...,f_m\)</span> are convex, and <span class="math inline">\(g_1,...,g_p\)</span> are affine. <span class="math inline">\(f_0\)</span> is called the objective function, <span class="math inline">\(f_i \leq 0\)</span> are called the inequality constraints, and <span class="math inline">\(g_i = 0\)</span> are called the equality constraints.</p>
-<p>In <code>CVXR</code>, you will specify convex optimization problems in a more convenient format than the one above.</p>
-<p>A convex function is one that is upward curving. A concave function is downward curving. An affine function is flat, and is thus both convex and concave.</p>
-<p>A convex optimization problem is one that attempts to minimize a convex function (or maximize a concave function) over a convex set of input points.</p>
-<p>You can learn much more about convex optimization via <span class="citation">Boyd and Vandenberghe (2004)</span> as well as the <a href="https://lagunita.stanford.edu/courses/Engineering/CVX101/Winter2014/about">CVX101 MOOC</a>.</p>
+<p>where <span class="math inline">\(x\)</span> is the variable, <span class="math inline">\(f_0\)</span> and <span class="math inline">\(f_1,...,f_m\)</span> are convex, and
+<span class="math inline">\(g_1,...,g_p\)</span> are affine. <span class="math inline">\(f_0\)</span> is called the objective function, <span class="math inline">\(f_i \leq 0\)</span> are called the inequality constraints, and <span class="math inline">\(g_i = 0\)</span> are
+called the equality constraints.</p>
+<p>In <code>CVXR</code>, you will specify convex optimization problems in a more
+convenient format than the one above.</p>
+<p>A convex function is one that is upward curving. A concave function is
+downward curving. An affine function is flat, and is thus both convex
+and concave.</p>
+<p>A convex optimization problem is one that attempts to minimize a
+convex function (or maximize a concave function) over a convex set of
+input points.</p>
+<p>You can learn much more about convex optimization via
+<span class="citation">Boyd and Vandenberghe (2004)</span> as well as
+the
+<a href="https://lagunita.stanford.edu/courses/Engineering/CVX101/Winter2014/about">CVX101 MOOC</a>.</p>
 </div>
 <div id="hello-world" class="section level2">
 <h2>‘Hello World’</h2>
-<p>We begin with one of the simplest possible problems that presents all three of these features:</p>
+<p>We begin with one of the simplest possible problems that presents all
+three of these features:</p>
 <p><span class="math display">\[
 \begin{array}{ll}
   \mbox{minimize} &amp; x^2 + y^2 \\
     \mbox{subject to} &amp; x \geq 0, \quad 2x + y = 1
 \end{array}
 \]</span></p>
-<p>with scalar variables <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. This is a convex optimization problem with objective <span class="math inline">\(f_0(x,y) = x^2 + y^2\)</span> and constraint functions <span class="math inline">\(f_1(x,y) = -x\)</span> and <span class="math inline">\(g_1(x,y) = 2x - y - 1\)</span>.</p>
-<p>Note that this problem is simple enough to be solved analytically, so we can confirm that <code>CVXR</code> has produced the correct answer. Here’s how we formulate the problem in <code>CVXR</code>.</p>
+<p>with scalar variables <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. This is a convex optimization
+problem with objective <span class="math inline">\(f_0(x,y) = x^2 + y^2\)</span> and constraint functions
+<span class="math inline">\(f_1(x,y) = -x\)</span> and <span class="math inline">\(g_1(x,y) = 2x - y - 1\)</span>.</p>
+<p>Note that this problem is simple enough to be solved analytically, so
+we can confirm that <code>CVXR</code> has produced the correct answer. Here’s how
+we formulate the problem in <code>CVXR</code>.</p>
 <pre class="r"><code># Variables minimized over
 x &lt;- Variable(1)
 y &lt;- Variable(1)
@@ -82,22 +147,50 @@ solution2.1$status</code></pre>
 <pre class="r"><code>solution2.1$getValue(y)</code></pre>
 <pre><code>## [1] 0.2000044</code></pre>
 <pre class="r"><code># The world says &#39;hi&#39; back.</code></pre>
-<p>We now turn to a careful explanation of the code. The first lines create two Variable objects, <code>x</code> and <code>y</code>, both of length 1 (i.e. scalar variables).</p>
+<p>We now turn to a careful explanation of the code. The first lines
+create two Variable objects, <code>x</code> and <code>y</code>, both of length 1
+(i.e. scalar variables).</p>
 <pre class="r"><code>x &lt;- Variable(1)
 y &lt;- Variable(1)</code></pre>
-<p><code>x</code> and <code>y</code> represent what we are allowed to adjust in our problem in order to obtain the optimal solution. They don’t have values yet, and they won’t until after we solve the problem. For now, they are just placeholders.</p>
+<p><code>x</code> and <code>y</code> represent what we are allowed to adjust in our problem in
+order to obtain the optimal solution. They don’t have values yet, and
+they won’t until after we solve the problem. For now, they are just
+placeholders.</p>
 <p>Next, we define the problem objective.</p>
 <pre class="r"><code>objective &lt;- Minimize(x^2 + y^2)</code></pre>
-<p>This call to <code>Minimize()</code> does <em>not</em> return the minimum value of the expression <code>x^2 + y^2</code> the way a call to the native R function <code>min()</code> would do (after all, <code>x</code> and <code>y</code> don’t have values yet). Instead, <code>Minimize()</code> creates an Objective object, which defines the goal of the optimization we will perform, namely to find values for <code>x</code> and <code>y</code> which produce the smallest possible value of <code>x^2 + y^2</code>.</p>
-<p>The next line defines two constraints—an inequality constraint and an equality constraint, respectively.</p>
+<p>This call to <code>Minimize()</code> does <em>not</em> return the minimum value of the
+expression <code>x^2 + y^2</code> the way a call to the native R function <code>min()</code>
+would do (after all, <code>x</code> and <code>y</code> don’t have values yet). Instead,
+<code>Minimize()</code> creates an Objective object, which defines the goal of
+the optimization we will perform, namely to find values for <code>x</code> and
+<code>y</code> which produce the smallest possible value of <code>x^2 + y^2</code>.</p>
+<p>The next line defines two constraints—an inequality constraint and
+an equality constraint, respectively.</p>
 <pre class="r"><code>constraints &lt;- list(x &gt;= 0, 2*x + y == 1)</code></pre>
-<p>Again, counter to what you might ordinarily expect, the expression <code>x &gt;= 0</code> does not return <code>TRUE</code> or <code>FALSE</code> the way <code>1.3 &gt;= 0</code> would. Instead, the <code>==</code> and <code>&gt;=</code> operators have been overloaded to return Constraint objects, which will be used by the solver to enforce the problem’s constraints. (Without them, the solution to our problem would simply be <span class="math inline">\(x = y = 0\)</span>.)</p>
-<p>Next, we define our Problem object, which takes our Objective object and our two Constraint objects as inputs.</p>
+<p>Again, counter to what you might ordinarily expect, the expression <code>x &gt;= 0</code> does not return <code>TRUE</code> or <code>FALSE</code> the way <code>1.3 &gt;= 0</code>
+would. Instead, the <code>==</code> and <code>&gt;=</code> operators have been overloaded to
+return Constraint objects, which will be used by the solver to enforce
+the problem’s constraints. (Without them, the solution to our problem
+would simply be <span class="math inline">\(x = y = 0\)</span>.)</p>
+<p>Next, we define our Problem object, which takes our Objective object
+and our two Constraint objects as inputs.</p>
 <pre class="r"><code>prob2.1 &lt;- Problem(objective, constraints)</code></pre>
-<p>Problem objects are very flexible in that they can have 0 or more constraints, and their objective can be to <code>Minimize()</code> a convex expression (as shown above) <em>or</em> to <code>Maximize()</code> a concave expression.</p>
-<p>The call to <code>Problem()</code> still does not actually <em>solve</em> our optimization problem. That only happens with the call to <code>solve()</code>.</p>
+<p>Problem objects are very flexible in that they can have 0 or more
+constraints, and their objective can be to <code>Minimize()</code> a convex
+expression (as shown above) <em>or</em> to <code>Maximize()</code> a concave
+expression.</p>
+<p>The call to <code>Problem()</code> still does not actually <em>solve</em> our
+optimization problem. That only happens with the call to <code>solve()</code>.</p>
 <pre class="r"><code>solution2.1 &lt;- solve(prob2.1)</code></pre>
-<p>Behind the scenes, this call translates the problem into a format that a convex solver can understand, feeds the problem to the solver, and then returns the results in a list. For this problem, the list will contain among other things the optimal value of the objective function <code>x^2 + y^2</code>, values for <code>x</code> and <code>y</code> that achieve that optimal objective value (along with a function <code>solution2.1$getValue</code> to retrieve them conveniently), and some accompanying metadata such as <code>solution2.1$status</code>, which confirms that the solution was indeed <code>&quot;optimal&quot;</code>.</p>
+<p>Behind the scenes, this call translates the problem into a format that
+a convex solver can understand, feeds the problem to the solver, and
+then returns the results in a list. For this problem, the
+list will contain among other things the optimal value of
+the objective function <code>x^2 + y^2</code>, values for <code>x</code> and <code>y</code> that
+achieve that optimal objective value (along with a function
+<code>solution2.1$getValue</code> to retrieve them conveniently), and some
+accompanying metadata such as <code>solution2.1$status</code>, which confirms
+that the solution was indeed <code>&quot;optimal&quot;</code>.</p>
 <pre class="r"><code>solution2.1$status</code></pre>
 <pre><code>## [1] &quot;optimal&quot;</code></pre>
 <pre class="r"><code>solution2.1$value</code></pre>
@@ -106,15 +199,39 @@ y &lt;- Variable(1)</code></pre>
 <pre><code>## [1] 0.3999978</code></pre>
 <pre class="r"><code>solution2.1$getValue(y)</code></pre>
 <pre><code>## [1] 0.2000044</code></pre>
-<p>In general, when you apply the <code>solve()</code> method to a Problem, several things can happen:</p>
+<p>In general, when you apply the <code>solve()</code> method to a Problem, several
+things can happen:</p>
 <ol style="list-style-type: decimal">
-<li><p><code>solution$status == &quot;optimal&quot;</code>: The problem was solved. Values for the optimization variables were found, which satisfy all of the constraints and minimize/maximize the objective.</p></li>
-<li><p><code>solution$status == &quot;infeasible&quot;</code>: The problem was <em>not</em> solved because no combination of input variables exists that can satisfy all of the constraints. For a trivial example of when this might happen, consider a problem with optimization variable <code>x</code>, and constraints <code>x &gt;= 1</code> and <code>x &lt;= 0</code>. Obviously, no value of <code>x</code> exists that can satisfy both constraints. In this case, <code>solution$value</code> is <code>+Inf</code> for a minimization problem and <code>-Inf</code> for a maximization problem, indicating infinite dissatisfaction with the result. The values for the input variables are <code>NA</code>.</p></li>
-<li><p><code>solution$status == &quot;unbounded&quot;</code>: The problem was <em>not</em> solved because the objective can be made arbitrarily small for a minimization problem or arbitrarily large for a maximization problem. Hence there is no optimal solution because for any given solution, it is always possible to find something even more optimal. In this case, <code>solution$opt.val</code> is <code>-Inf</code> for a minimization problem and <code>+Inf</code> for a maximization problem, indicating infinite satisfaction with the result. Again, the values of the the input variables are <code>NA</code>.</p></li>
+<li><p><code>solution$status == &quot;optimal&quot;</code>: The problem was solved. Values for
+the optimization variables were found, which satisfy all of the
+constraints and minimize/maximize the objective.</p></li>
+<li><p><code>solution$status == &quot;infeasible&quot;</code>: The problem was <em>not</em> solved
+because no combination of input variables exists that can satisfy
+all of the constraints. For a trivial example of when this might
+happen, consider a problem with optimization variable <code>x</code>, and
+constraints <code>x &gt;= 1</code> and <code>x &lt;= 0</code>. Obviously, no value of <code>x</code>
+exists that can satisfy both constraints. In this case,
+<code>solution$value</code> is <code>+Inf</code> for a minimization problem and <code>-Inf</code>
+for a maximization problem, indicating infinite dissatisfaction
+with the result. The values for the input variables are <code>NA</code>.</p></li>
+<li><p><code>solution$status == &quot;unbounded&quot;</code>: The problem was <em>not</em> solved
+because the objective can be made arbitrarily small for a
+minimization problem or arbitrarily large for a maximization
+problem. Hence there is no optimal solution because for any given
+solution, it is always possible to find something even more
+optimal. In this case, <code>solution$opt.val</code> is <code>-Inf</code> for a
+minimization problem and <code>+Inf</code> for a maximization problem,
+indicating infinite satisfaction with the result. Again, the values
+of the the input variables are <code>NA</code>.</p></li>
 </ol>
 <div id="modifying-a-cvxr-problem" class="section level3">
 <h3>Modifying a CVXR Problem</h3>
-<p>Like any normal R object, the <code>Problem</code>, <code>Minimize</code>, <code>Maximize</code>, and <code>Constraint</code> objects can all be modified and computed upon after creation. Here is an example where we modify the problem we created above by changing its objective and adding a constraint, print the modified problem, check whether it is still convex, and then solve the modified problem:</p>
+<p>Like any normal R object, the <code>Problem</code>, <code>Minimize</code>, <code>Maximize</code>, and
+<code>Constraint</code> objects can all be modified and computed upon after
+creation. Here is an example where we modify the problem we created
+above by changing its objective and adding a constraint, print the
+modified problem, check whether it is still convex, and then solve the
+modified problem:</p>
 <pre class="r"><code># Modify the problem from example 1
 prob2.2 &lt;- prob2.1
 objective(prob2.2) &lt;- Minimize(x^2 + y^2 + abs(x-y))
@@ -135,20 +252,31 @@ solution2.2$status</code></pre>
 </div>
 <div id="an-invalid-problem" class="section level3">
 <h3>An Invalid Problem</h3>
-<p>Unfortunately, you can’t just type any arbitrary problem you like into <code>CVXR</code>. There are restrictions on what kinds of problems can be handled. For example, if we tried to `Maximize()’ the objective from example 2.1, we get an error:</p>
+<p>Unfortunately, you can’t just type any arbitrary problem you like into
+<code>CVXR</code>. There are restrictions on what kinds of problems can be
+handled. For example, if we tried to `Maximize()’ the objective from
+example 2.1, we get an error:</p>
 <pre class="r"><code>prob2.3 &lt;- prob2.1
 objective(prob2.3) &lt;- Maximize(x^2 + y^2)
 solve(prob2.3)</code></pre>
 <pre><code>## Error in CVXR::psolve(a, b, ...): Problem does not follow DCP rules.</code></pre>
-<p>We would get a similar error if we tried to add the constraint <code>p_norm(x,2) == 1</code>. This is because <code>CVXR</code> uses a strict set of rules called Disciplined Convex Programming (DCP) to evaluate the convexity of any given problem. If you follow these rules, you are guaranteed that your problem is convex. If you don’t follow these rules, <code>CVXR</code> will throw an exception. See the last section for further information on DCP.</p>
+<p>We would get a similar error if we tried to add the constraint
+<code>p_norm(x,2) == 1</code>. This is because <code>CVXR</code> uses a strict set of rules
+called Disciplined Convex Programming (DCP) to evaluate the convexity
+of any given problem. If you follow these rules, you are guaranteed
+that your problem is convex. If you don’t follow these rules, <code>CVXR</code>
+will throw an exception. See the last section for further information
+on DCP.</p>
 </div>
 </div>
 <div id="simple-examples" class="section level2">
 <h2>Simple Examples</h2>
-<p>We begin by showing what a standard linear regression problem looks like in <code>CVXR</code>:</p>
+<p>We begin by showing what a standard linear regression problem looks
+like in <code>CVXR</code>:</p>
 <div id="ordinary-least-squares" class="section level3">
 <h3>Ordinary Least Squares</h3>
-<p>For illustration, we generate some synthetic data for use in this example.</p>
+<p>For illustration, we generate some synthetic data for use in this
+example.</p>
 <pre><code>## 
 ## Attaching package: &#39;MASS&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:CVXR&#39;:
@@ -157,25 +285,48 @@ solve(prob2.3)</code></pre>
 <pre class="r"><code>beta &lt;- Variable(n)
 objective &lt;- Minimize(sum_squares(y - X %*% beta))
 prob3.1 &lt;- Problem(objective)</code></pre>
-<p>Here, <code>y</code> is the response, <code>X</code> is the matrix of predictors, <code>n</code> is the number of predictors, and <code>beta</code> is a vector of coefficients on the predictors. The Ordinary Least-Squares (OLS) solution for <code>beta</code> minimizes the <span class="math inline">\(l_2\)</span>-norm of the residuals (i.e. the root-mean-squared error). As we can see below, <code>CVXR</code>’s solution matches the solution obtained by using <code>lm</code>.</p>
+<p>Here, <code>y</code> is the response, <code>X</code> is the matrix of predictors, <code>n</code> is the
+number of predictors, and <code>beta</code> is a vector of coefficients on the
+predictors. The Ordinary Least-Squares (OLS) solution for <code>beta</code>
+minimizes the <span class="math inline">\(l_2\)</span>-norm of the residuals (i.e. the
+root-mean-squared error). As we can see below, <code>CVXR</code>’s solution
+matches the solution obtained by using <code>lm</code>.</p>
 <pre class="r"><code>CVXR_solution3.1 &lt;- solve(prob3.1)
 lm_solution3.1 &lt;- lm(y ~ 0 + X)</code></pre>
 <p><img src="../../../post/examples/cvxr_gentle_intro_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<p>Obviously, if all you want to do is least-squares linear regression, you should simply use <code>lm</code>. The chief advantage of <code>CVXR</code> is its flexibility, as we will demonstrate in the rest of this section.</p>
+<p>Obviously, if all you want to do is least-squares linear regression,
+you should simply use <code>lm</code>. The chief advantage of <code>CVXR</code> is its
+flexibility, as we will demonstrate in the rest of this section.</p>
 </div>
 <div id="non-negative-least-squares" class="section level3">
 <h3>Non-Negative Least Squares</h3>
-<p>Looking at example 3.1, you may notice that the OLS regression problem has an objective, but no constraints. In many contexts, we can greatly improve our model by constraining the solution to reflect our prior knowledge. For example, we may know that the coefficients <code>beta</code> must be non-negative.</p>
+<p>Looking at example 3.1, you may notice that the OLS regression problem
+has an objective, but no constraints. In many contexts, we can greatly
+improve our model by constraining the solution to reflect our prior
+knowledge. For example, we may know that the coefficients <code>beta</code> must
+be non-negative.</p>
 <pre class="r"><code>prob3.2 &lt;- prob3.1
 constraints(prob3.2) &lt;- list(beta &gt;= 0)
 solution3.2 &lt;- solve(prob3.2)</code></pre>
 <p><img src="../../../post/examples/cvxr_gentle_intro_files/figure-html/unnamed-chunk-16-1.png" width="700" /></p>
-<p>As we can see in the figure above, adding that one constraint produced a massive improvement in the accuracy of the estimates. Not only are the non-negative least-squares estimates much closer to the true coefficients than the OLS estimates, they have even managed to recover the correct sparsity structure in this case.</p>
-<p>Like with OLS, there are already R packages available which implement non-negative least squares, such as <code>nnls</code>. But that is actually an excellent demonstration of the power of <code>CVXR</code>: A single line of code here, namely <code>prob3.2$constraints &lt;- list(beta &gt;= 0)</code>, is doing the work of an entire package.</p>
+<p>As we can see in the figure above, adding that one constraint produced
+a massive improvement in the accuracy of the estimates. Not only are
+the non-negative least-squares estimates much closer to the true
+coefficients than the OLS estimates, they have even managed to recover the
+correct sparsity structure in this case.</p>
+<p>Like with OLS, there are already R packages available which implement
+non-negative least squares, such as <code>nnls</code>. But that is
+actually an excellent demonstration of the power of <code>CVXR</code>: A single
+line of code here, namely <code>prob3.2$constraints &lt;- list(beta &gt;= 0)</code>, is
+doing the work of an entire package.</p>
 </div>
 <div id="support-vector-classifiers" class="section level3">
 <h3>Support Vector Classifiers</h3>
-<p>Another common statistical tool is the support vector classifier (SVC). The SVC is an affine function (hyperplane) that separates two sets of points by the widest margin. When the sets are not linearly separable, the SVC is determined by a trade-off between the width of the margin and the number of points that are misclassified.</p>
+<p>Another common statistical tool is the support vector classifier
+(SVC). The SVC is an affine function (hyperplane) that separates two
+sets of points by the widest margin. When the sets are not linearly
+separable, the SVC is determined by a trade-off between the width of
+the margin and the number of points that are misclassified.</p>
 <p>For the binary case, where the response <span class="math inline">\(y_i \in \{-1,1\}\)</span>, the SVC is obtained by solving</p>
 <p><span class="math display">\[
 \begin{array}{ll}
@@ -183,7 +334,10 @@ solution3.2 &lt;- solve(prob3.2)</code></pre>
     \mbox{subject to} &amp; \xi_i \geq 0, \quad y_i(x_i^T\beta + \beta_0) \geq 1 - \xi_i, \quad i = 1,\ldots,m
 \end{array}
 \]</span></p>
-<p>with variables <span class="math inline">\((\beta,\xi)\)</span>. Here, <span class="math inline">\(\xi\)</span> is the amount by which a point can violate the separating hyperplane, and <span class="math inline">\(C &gt; 0\)</span> is a user-chosen penalty on the total violation. As <span class="math inline">\(C\)</span> increases, fewer misclassifications will be allowed.</p>
+<p>with variables <span class="math inline">\((\beta,\xi)\)</span>. Here, <span class="math inline">\(\xi\)</span> is the amount by which a
+point can violate the separating hyperplane, and <span class="math inline">\(C &gt; 0\)</span> is a
+user-chosen penalty on the total violation. As <span class="math inline">\(C\)</span> increases, fewer
+misclassifications will be allowed.</p>
 <p>Below, we fit a SVC in <code>CVXR</code> with <span class="math inline">\(C = 10\)</span>.</p>
 <pre class="r"><code>## Generate data
 set.seed(10)
@@ -209,16 +363,26 @@ solution3.3 &lt;- solve(prob3.3)</code></pre>
 </div>
 <div id="disciplined-convex-programming-dcp" class="section level2">
 <h2>Disciplined Convex Programming (DCP)</h2>
-<p>Disciplined convex programming (DCP) is a system for constructing mathematical expressions with known sign and curvature from a given library of base functions. <code>CVXR</code> uses DCP to ensure that the specified optimization problems are convex.</p>
-<p>The user may find it helpful to read about how the DCP rules are applied in other languages such as <a href="http://www.cvxpy.org/en/latest/tutorial/dcp/index.html">Python</a>, <a href="http://cvxr.com/cvx/doc/dcp.html#">Matlab</a>, and <a href="http://convexjl.readthedocs.io/en/latest/types.html">Julia</a>.</p>
-<p><code>CVXR</code> implements the same rules, and a short introduction is <a href="../../../post/cvxr_dcp">available here</a>. The set of DCP functions are described in <a href="../../../post/cvxr_functions/">Function Reference</a>.</p>
+<p>Disciplined convex programming (DCP) is a system for constructing
+mathematical expressions with known sign and curvature from a given library of
+base functions. <code>CVXR</code> uses DCP to ensure that the specified
+optimization problems are convex.</p>
+<p>The user may find it helpful to read about how the DCP rules are applied
+in other languages such
+as
+<a href="http://www.cvxpy.org/en/latest/tutorial/dcp/index.html">Python</a>,
+<a href="http://cvxr.com/cvx/doc/dcp.html#">Matlab</a>,
+and <a href="http://convexjl.readthedocs.io/en/latest/types.html">Julia</a>.</p>
+<p><code>CVXR</code> implements the same rules, and a short introduction
+is <a href="../../../post/cvxr_dcp">available here</a>. The set of DCP functions are
+described in <a href="../../../post/cvxr_functions/">Function Reference</a>.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.1
+## Running under: macOS High Sierra 10.13.3
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -231,25 +395,24 @@ solution3.3 &lt;- solve(prob3.3)</code></pre>
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] MASS_7.3-47   CVXR_0.94-4   tidyr_0.7.2   ggplot2_2.2.1
+## [1] MASS_7.3-48   CVXR_0.95     tidyr_0.8.0   ggplot2_2.2.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.13      bindr_0.1        
-##  [4] compiler_3.4.2    plyr_1.8.4        R.methodsS3_1.7.1
-##  [7] R.utils_2.6.0     tools_3.4.2       digest_0.6.12    
-## [10] bit_1.1-12        evaluate_0.10.1   tibble_1.3.4     
-## [13] gtable_0.2.0      lattice_0.20-35   pkgconfig_2.0.1  
-## [16] rlang_0.1.2       Matrix_1.2-11     yaml_2.1.14      
-## [19] blogdown_0.1.7    bindrcpp_0.2      dplyr_0.7.4      
-## [22] Rmpfr_0.6-1       ECOSolveR_0.3-2   stringr_1.2.0    
-## [25] knitr_1.17        tidyselect_0.2.2  rprojroot_1.2    
-## [28] bit64_0.9-7       grid_3.4.2        glue_1.2.0       
-## [31] R6_2.2.2          rmarkdown_1.6     bookdown_0.5     
-## [34] purrr_0.2.4       magrittr_1.5      backports_1.1.1  
-## [37] scales_0.5.0      htmltools_0.3.6   scs_1.1-1        
-## [40] assertthat_0.2.0  colorspace_1.3-2  labeling_0.3     
-## [43] stringi_1.1.5     lazyeval_0.2.1    munsell_0.4.3    
-## [46] R.oo_1.21.0</code></pre>
+##  [1] gmp_0.5-13.1      Rcpp_0.12.15      pillar_1.1.0     
+##  [4] compiler_3.4.3    plyr_1.8.4        R.methodsS3_1.7.1
+##  [7] R.utils_2.6.0     tools_3.4.3       bit_1.1-12       
+## [10] digest_0.6.15     evaluate_0.10.1   tibble_1.4.2     
+## [13] gtable_0.2.0      lattice_0.20-35   rlang_0.2.0      
+## [16] Matrix_1.2-12     yaml_2.1.16       blogdown_0.5.4   
+## [19] xfun_0.1          Rmpfr_0.7-0       ECOSolveR_0.4    
+## [22] stringr_1.3.0     knitr_1.20        tidyselect_0.2.3 
+## [25] rprojroot_1.3-2   bit64_0.9-7       grid_3.4.3       
+## [28] glue_1.2.0        R6_2.2.2          rmarkdown_1.8.10 
+## [31] bookdown_0.7      purrr_0.2.4       magrittr_1.5     
+## [34] scs_1.1-1         backports_1.1.2   scales_0.5.0     
+## [37] htmltools_0.3.6   colorspace_1.3-2  labeling_0.3     
+## [40] stringi_1.1.6     lazyeval_0.2.1    munsell_0.4.3    
+## [43] R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

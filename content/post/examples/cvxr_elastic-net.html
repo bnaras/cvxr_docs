@@ -13,18 +13,28 @@ tags: []
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the <span class="math inline">\(l_1\)</span>-norm and squared <span class="math inline">\(l_2\)</span>-norm, combined in the elastic net regression model <span class="citation">(H. Zou <a href="#ref-elasticnet">2005</a>, <span class="citation">Friedman, Hastie, and Tibshirani (<a href="#ref-glmnet">2010</a>)</span>)</span>,</p>
+<p>Often in applications, we encounter problems that require
+regularization to prevent overfitting, introduce sparsity, facilitate
+variable selection, or impose prior distributions on parameters. Two
+of the most common regularization functions are the <span class="math inline">\(l_1\)</span>-norm and
+squared <span class="math inline">\(l_2\)</span>-norm, combined in the elastic net regression model
+<span class="citation">(H. Zou <a href="#ref-elasticnet">2005</a>, <span class="citation">Friedman, Hastie, and Tibshirani (<a href="#ref-glmnet">2010</a>)</span>)</span>,</p>
 <p><span class="math display">\[
 \begin{array}{ll} 
 \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2m}\|y - X\beta\|_2^2 +
 \lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). 
 \end{array}
 \]</span></p>
-<p>Here <span class="math inline">\(\lambda \geq 0\)</span> is the overall regularization weight and <span class="math inline">\(\alpha \in [0,1]\)</span> controls the relative <span class="math inline">\(l_1\)</span> versus squared <span class="math inline">\(l_2\)</span> penalty. Thus, this model encompasses both ridge (<span class="math inline">\(\alpha = 0\)</span>) and lasso (<span class="math inline">\(\alpha = 1\)</span>) regression.</p>
+<p>Here <span class="math inline">\(\lambda \geq 0\)</span> is the overall regularization weight and
+<span class="math inline">\(\alpha \in [0,1]\)</span> controls the relative <span class="math inline">\(l_1\)</span> versus squared <span class="math inline">\(l_2\)</span>
+penalty. Thus, this model encompasses both ridge (<span class="math inline">\(\alpha = 0\)</span>) and
+lasso (<span class="math inline">\(\alpha = 1\)</span>) regression.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>To solve this problem in <code>CVXR</code>, we first define a function that calculates the regularization term given the variable and penalty weights.</p>
+<p>To solve this problem in <code>CVXR</code>, we first define a function that
+calculates the regularization term given the variable and penalty
+weights.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 elastic_reg &lt;- function(beta, lambda = 0, alpha = 0) {
     ridge &lt;- (1 - alpha) * sum(beta^2)
@@ -34,7 +44,11 @@ elastic_reg &lt;- function(beta, lambda = 0, alpha = 0) {
 <p>Later, we will add it to the scaled least squares loss as shown below.</p>
 <pre class="r"><code>loss &lt;- sum((y - X %*% beta)^2)/(2*m)
 obj &lt;- loss + elastic_reg(beta, lambda, alpha)</code></pre>
-<p>The advantage of this modular approach is that we can easily incorporate elastic net regularization into other regression models. For instance, if we wanted to run regularized Huber regression, <code>CVXR</code> allows us to reuse the above code with just a single changed line.</p>
+<p>The advantage of this modular approach is that we can easily
+incorporate elastic net regularization into other regression
+models. For instance, if we wanted to run regularized Huber
+regression, <code>CVXR</code> allows us to reuse the above code with just a
+single changed line.</p>
 <pre class="r"><code>loss &lt;- huber(y - X %*% beta, M)</code></pre>
 <p>We generate some synthetic sparse data for this example.</p>
 <pre class="r"><code>set.seed(1)
@@ -1655,9 +1669,9 @@ s0
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.1
+## Running under: macOS High Sierra 10.13.3
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -1670,25 +1684,26 @@ s0
 ## [1] methods   stats     graphics  grDevices datasets  utils     base     
 ## 
 ## other attached packages:
-## [1] glmnet_2.0-13    foreach_1.4.3    Matrix_1.2-12    kableExtra_0.6.1
-## [5] CVXR_0.94-4     
+## [1] glmnet_2.0-13    foreach_1.4.4    Matrix_1.2-12    kableExtra_0.7.0
+## [5] CVXR_0.95       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.14      highr_0.6        
-##  [4] plyr_1.8.4        compiler_3.4.2    iterators_1.0.8  
-##  [7] R.methodsS3_1.7.1 R.utils_2.6.0     tools_3.4.2      
-## [10] digest_0.6.12     bit_1.1-12        viridisLite_0.2.0
-## [13] evaluate_0.10.1   tibble_1.3.4      lattice_0.20-35  
-## [16] pkgconfig_2.0.1   rlang_0.1.4       yaml_2.1.14      
-## [19] blogdown_0.3      Rmpfr_0.6-1       ECOSolveR_0.3-2  
-## [22] stringr_1.2.0     httr_1.3.1        knitr_1.17       
-## [25] xml2_1.1.1        hms_0.4.0         rprojroot_1.2    
-## [28] bit64_0.9-7       grid_3.4.2        R6_2.2.2         
-## [31] rmarkdown_1.8     bookdown_0.5      readr_1.1.1      
-## [34] magrittr_1.5      codetools_0.2-15  backports_1.1.1  
-## [37] scales_0.5.0      htmltools_0.3.6   scs_1.1-1        
-## [40] rvest_0.3.2       colorspace_1.3-2  stringi_1.1.6    
-## [43] munsell_0.4.3     R.oo_1.21.0</code></pre>
+##  [1] gmp_0.5-13.1      Rcpp_0.12.15      highr_0.6        
+##  [4] plyr_1.8.4        compiler_3.4.3    pillar_1.1.0     
+##  [7] iterators_1.0.9   R.methodsS3_1.7.1 R.utils_2.6.0    
+## [10] tools_3.4.3       digest_0.6.15     bit_1.1-12       
+## [13] viridisLite_0.3.0 evaluate_0.10.1   tibble_1.4.2     
+## [16] lattice_0.20-35   pkgconfig_2.0.1   rlang_0.2.0      
+## [19] yaml_2.1.16       blogdown_0.5.4    xfun_0.1         
+## [22] xml2_1.2.0        Rmpfr_0.7-0       ECOSolveR_0.4    
+## [25] stringr_1.3.0     httr_1.3.1        knitr_1.20       
+## [28] hms_0.4.1         rprojroot_1.3-2   bit64_0.9-7      
+## [31] grid_3.4.3        R6_2.2.2          rmarkdown_1.8.10 
+## [34] bookdown_0.7      readr_1.1.1       magrittr_1.5     
+## [37] codetools_0.2-15  scales_0.5.0      backports_1.1.2  
+## [40] htmltools_0.3.6   scs_1.1-1         rvest_0.3.2      
+## [43] colorspace_1.3-2  stringi_1.1.6     munsell_0.4.3    
+## [46] R.oo_1.21.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -1698,10 +1713,10 @@ s0
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-glmnet">
-<p>Friedman, J., T. Hastie, and R. Tibshirani. 2010. “Regularization Paths for Generalized Linear Models via Coordinate Descent.” <em>Journal of Statistical Software</em> 33 (1): 1–22.</p>
+<p>Friedman, J., T. Hastie, and R. Tibshirani. 2010. “Regularization Paths for Generalized Linear Models via Coordinate Descent.” <em>Journal of Statistical Software</em> 33 (1):1–22.</p>
 </div>
 <div id="ref-elasticnet">
-<p>H. Zou, T. Hastie. 2005. “Regularization and Variable Selection via the Elastic–Net.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 67 (2): 301–20.</p>
+<p>H. Zou, T. Hastie. 2005. “Regularization and Variable Selection via the Elastic–Net.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 67 (2):301–20.</p>
 </div>
 </div>
 </div>
