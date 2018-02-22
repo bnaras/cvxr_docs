@@ -42,7 +42,7 @@ Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0
     </item>
     
     <item>
-      <title>Getting Faster Results with `CVXR`</title>
+      <title>Getting Faster Results</title>
       <link>/post/examples/cvxr_speed/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
@@ -78,10 +78,7 @@ for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber f
       
       <guid>/post/examples/cvxr_l1-trend-filtering/</guid>
       <description>Introduction Kim et al. (2009) propose the \(l_1\) trend filtering method for trend estimation. The method solves an optimization problem of the form
-\begin{array}{ll}
- &amp;amp; _{i=1}^m (y_i - _i)^2 + ||D||_1
-\end{array}
-where the variable to be estimated is \(\beta\) and we are given the problem data \(y\) and \(\lambda\). The matrix \(D\) is the second-order difference matrix,
+\[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1 \end{array} \] where the variable to be estimated is \(\beta\) and we are given the problem data \(y\) and \(\lambda\). The matrix \(D\) is the second-order difference matrix,
 \[ D = \left[ \begin{matrix} 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; \ddots &amp;amp; \ddots &amp;amp; \ddots &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1\\ \end{matrix} \right].</description>
     </item>
     
@@ -106,7 +103,7 @@ a1 &amp;lt;- matrix(c(2,1)) a2 &amp;lt;- matrix(c(2,-1)) a3 &amp;lt;- matrix(c(-
       
       <guid>/post/examples/cvxr_log-concave/</guid>
       <description>Introduction Let \(n = 1\) and suppose \(x_i\) are i.i.d. samples from a log-concave discrete distribution on \(\{0,\ldots,K\}\) for some \(K \in {\mathbf Z}_+\). Define \(p_k := {\mathbf {Prob}}(X = k)\) to be the probability mass function. One method for estimating \(\{p_0,\ldots,p_K\}\) is to maximize the log-likelihood function subject to a log-concavity constraint , i.e.,
-\begin{array}{ll} &amp;amp; {k=0}^K M_kp_k \ &amp;amp; p 0, {k=0}^K p_k = 1, \ &amp;amp; p_k , k = 1,,K-1, \end{array}</description>
+\[ \begin{array}{ll} \underset{p}{\mbox{maximize}} &amp;amp; \sum_{k=0}^K M_k\log p_k \\ \mbox{subject to} &amp;amp; p \geq 0, \quad \sum_{k=0}^K p_k = 1, \\ &amp;amp; p_k \geq \sqrt{p_{k-1}p_{k+1}}, \quad k = 1,\ldots,K-1, \end{array} \]</description>
     </item>
     
     <item>
@@ -187,7 +184,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
-Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges   Miscellaneous  Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   Advanced Topics  Getting Faster Results with CVXR   References  </description>
+Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges   Miscellaneous  Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   Advanced Topics  Getting Faster Results   References  </description>
     </item>
     
     <item>

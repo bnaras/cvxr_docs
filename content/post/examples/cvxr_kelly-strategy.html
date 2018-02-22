@@ -21,10 +21,12 @@ the <span class="math inline">\(n\)</span>th outcome is equivalent to not wageri
 certainty), the fractions must satisfy <span class="math inline">\(\sum_{i=1}^n b_i = 1\)</span>. Thus,
 at the end of the period, our cumulative wealth is <span class="math inline">\(w_t = (r^Tb)w_{t-1}\)</span>. Our goal is to maximize the average growth rate with
 respect to <span class="math inline">\(b \in {\mathbf R}^n\)</span>:</p>
-<p>\begin{array}{ll}
- &amp; _{j=1}^K <em>j(r_j^Tb) \
- &amp; b 0, </em>{i=1}^n b_i = 1.<br />
-\end{array}</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{b}{\mbox{maximize}} &amp; \sum_{j=1}^K \pi_j\log(r_j^Tb) \\
+\mbox{subject to} &amp; b \geq 0, \quad \sum_{i=1}^n b_i = 1.  
+\end{array}
+\]</span></p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>

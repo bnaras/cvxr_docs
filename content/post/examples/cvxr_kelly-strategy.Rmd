@@ -23,12 +23,12 @@ at the end of the period, our cumulative wealth is $w_t =
 (r^Tb)w_{t-1}$. Our goal is to maximize the average growth rate with
 respect to $b \in {\mathbf R}^n$: 
 
-
+$$
 \begin{array}{ll}
 \underset{b}{\mbox{maximize}} & \sum_{j=1}^K \pi_j\log(r_j^Tb) \\
 \mbox{subject to} & b \geq 0, \quad \sum_{i=1}^n b_i = 1.  
 \end{array}
-
+$$
 
 ## Example
 

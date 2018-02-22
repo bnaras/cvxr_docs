@@ -319,6 +319,10 @@ lines <- gsub("kth order differences", "$k$th order differences (argument $k$ is
 lines <- gsub("reshape", "reshape_expr", lines)
 ## End of fix
 
+## Fix kron
+lines <- gsub("kron", "kronecker", lines)
+## End of fix
+
 
 start <- which(grepl("^\\*", lines))
 end <- c(start[-1] - 1, length(lines))

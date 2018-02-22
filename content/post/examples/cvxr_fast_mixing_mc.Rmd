@@ -33,12 +33,13 @@ $\lambda_{\max}(A)$ denotes the maximum eigenvalue of $A$. As $\mu(P)$
 decreases, the mixing rate increases and the Markov chain converges
 faster to equilibrium. Thus, our optimization problem is
 
-
+$$
 \begin{array}{ll}
 \underset{P}{\mbox{minimize}} & \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T) \\
 \mbox{subject to} & P \geq 0, \quad P{\mathbf 1} = {\mathbf 1}, \quad P = P^T \\
 & P_{ij} = 0, \quad (i,j) \notin \mathcal{E}.
 \end{array}
+$$
 
 The element $P_{ij}$ of our transition matrix is the probability of
 moving from state $i$ to state $j$. Our assumptions imply that $P$ is

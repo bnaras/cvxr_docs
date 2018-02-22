@@ -1,5 +1,5 @@
 ---
-title: Getting Faster Results with `CVXR`
+title: Getting Faster Results
 author: Anqi Fu and Balasubramanian Narasimhan
 date: '2017-11-02'
 slug: cvxr_speed

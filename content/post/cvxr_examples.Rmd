@@ -43,6 +43,6 @@ the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as w
 
 ## Advanced Topics
 
-- [Getting Faster Results with `CVXR`](/post/examples/cvxr_speed/)
+- [Getting Faster Results](/post/examples/cvxr_speed/)
 
 ## References

@@ -33,9 +33,11 @@ set of symmetric positive semidefinite matrices, has a sparse inverse
 <span class="math inline">\(\Sigma\)</span> is to maximize the log-likelihood with the prior knowledge
 that <span class="math inline">\(S\)</span> is sparse <span class="citation">(Friedman, Hastie, and Tibshirani <a href="#ref-spinvcov">2008</a>)</span>, which amounts to the optimization
 problem:</p>
-<p>\begin{array}{ll}  &amp; (S) - (SQ) \
- &amp; S <em>+^n, </em>{i=1}^n <em>{j=1}^n |S</em>{ij}| .
-\end{array}</p>
+<p><span class="math display">\[
+\begin{array}{ll} \underset{S}{\mbox{maximize}} &amp; \log\det(S) - \mbox{tr}(SQ) \\
+\mbox{subject to} &amp; S \in {\mathbf S}_+^n, \quad \sum_{i=1}^n \sum_{j=1}^n |S_{ij}| \leq \alpha.
+\end{array}
+\]</span></p>
 <p>The parameter <span class="math inline">\(\alpha \geq 0\)</span> controls the degree of sparsity. The problem
 is convex, so we can solve it using <code>CVXR</code>.</p>
 </div>

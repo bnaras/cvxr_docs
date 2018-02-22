@@ -18,11 +18,13 @@ probability mass function. One method for estimating
 $\{p_0,\ldots,p_K\}$ is to maximize the log-likelihood function
 subject to a log-concavity constraint \citep{mlelogcave}, i.e.,
 
+$$
 \begin{array}{ll}
 \underset{p}{\mbox{maximize}} & \sum_{k=0}^K M_k\log p_k \\
 \mbox{subject to} & p \geq 0, \quad \sum_{k=0}^K p_k = 1, \\
 & p_k \geq \sqrt{p_{k-1}p_{k+1}}, \quad k = 1,\ldots,K-1,
 \end{array}
+$$
 
 where $p \in {\mathbf R}^{K+1}$ is our variable of interest and $M_k$
 represents the number of observations equal to $k$, so that
@@ -32,12 +34,13 @@ problem by defining new variables $u_k = \log p_k$ and relaxing the
 equality constraint to $\sum_{k=0}^K p_k \leq 1$, since the latter
 always holds tightly at an optimal solution. The result is
 
+$$
 \begin{array}{ll}
 \underset{u}{\mbox{maximize}} & \sum_{k=0}^K M_k u_k \\
 \mbox{subject to} & \sum_{k=0}^K e^{u_k} \leq 1, \\
 & u_k - u_{k-1} \geq u_{k+1} - u_k, \quad k = 1,\ldots,K-1.
 \end{array}
-
+$$
 
 ## Example
 

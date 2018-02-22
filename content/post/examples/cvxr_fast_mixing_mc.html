@@ -33,11 +33,13 @@ eigenvalue of <span class="math inline">\(P\)</span>, which in our case is
 <span class="math inline">\(\lambda_{\max}(A)\)</span> denotes the maximum eigenvalue of <span class="math inline">\(A\)</span>. As <span class="math inline">\(\mu(P)\)</span>
 decreases, the mixing rate increases and the Markov chain converges
 faster to equilibrium. Thus, our optimization problem is</p>
-<p>\begin{array}{ll}
- &amp; <em>{}(P - ^T) \
- &amp; P 0, P{1} = {1}, P = P^T \
-&amp; P</em>{ij} = 0, (i,j) .
-\end{array}</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{P}{\mbox{minimize}} &amp; \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T) \\
+\mbox{subject to} &amp; P \geq 0, \quad P{\mathbf 1} = {\mathbf 1}, \quad P = P^T \\
+&amp; P_{ij} = 0, \quad (i,j) \notin \mathcal{E}.
+\end{array}
+\]</span></p>
 <p>The element <span class="math inline">\(P_{ij}\)</span> of our transition matrix is the probability of
 moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span>. Our assumptions imply that <span class="math inline">\(P\)</span> is
 nonnegative, symmetric, and doubly stochastic. The last constraint

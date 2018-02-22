@@ -19,13 +19,11 @@ suppressMessages(suppressWarnings(library(CVXR)))
 @Kim:et_al:2009 propose the $l_1$ trend filtering method for trend
  estimation. The method solves an optimization problem of the form
 
+$$
 \begin{array}{ll}
-
-\underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i -
-\beta_i)^2 + \lambda ||D\beta||_1
-
+\underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1
 \end{array}
-
+$$
 where the variable to be estimated is $\beta$ and we are given the
 problem data $y$ and $\lambda$. The matrix $D$ is the second-order
 difference matrix,

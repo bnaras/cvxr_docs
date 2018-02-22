@@ -60,7 +60,7 @@ str(cdiac)</code></pre>
 standard errors, we write a function that computes the fit for use in
 bootstrapping. We directly call the solver in this instance, to save
 computational time in bootstrapping. For more on this, see <a href="../../../post/examples/cvxr_speed/">Getting
-Faster Results with <code>CVXR</code></a>.</p>
+Faster Results</a>.</p>
 <pre class="r"><code>neariso_fit &lt;- function(y, lambda) {
     m &lt;- length(y)
     beta &lt;- Variable(m)
@@ -117,12 +117,13 @@ in the same paper:</p>
 \]</span></p>
 <p>This replaces the first difference term with an approximation to the
 second derivative at <span class="math inline">\(\beta_{i+1}\)</span>. In <code>CVXR</code>, the only change
-necessary is the penalty line: replacing <code>diff(x)</code> by <code>diff(diff(x))</code>.</p>
+necessary is the penalty line: replacing <code>diff(x)</code> by
+<code>diff(x, differences = 2)</code>.</p>
 <pre class="r"><code>nearconvex_fit &lt;- function(y, lambda) {
     m &lt;- length(y)
     beta &lt;- Variable(m)
     penalty &lt;- sum(pos(diff(beta)))
-    obj &lt;- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(diff(beta))))
+    obj &lt;- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta, differences = 2)))
     prob &lt;- Problem(Minimize(obj))
     prob_data &lt;- get_problem_data(prob, solver = &quot;ECOS&quot;)
     solver_output &lt;- ECOSolveR::ECOS_csolve(c = prob_data[[&quot;c&quot;]],

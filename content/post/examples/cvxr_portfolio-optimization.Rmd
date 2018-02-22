@@ -26,11 +26,12 @@ Portfolio optimization involves a trade-off between the expected
 return ${\mathop{\bf E{}}}[R] = \mu^Tw$ and associated risk, which we take as the
 return variance ${\mathop{\bf Var{}}}(R) = w^T\Sigma w$. Initially, we consider only
 long portfolios, so our problem is
-
-\begin{array}{ll} \underset{w}{\mbox{maximize}} & \mu^Tw - \gamma w^T\Sigma w \\
+$$
+\begin{array}{ll} 
+\underset{w}{\mbox{maximize}} & \mu^Tw - \gamma w^T\Sigma w \\
 \mbox{subject to} & w \geq 0, \quad \sum_{i=1}^n w = 1
 \end{array}
-
+$$
 where the objective is the risk-adjusted return and $\gamma > 0$ is a
 risk aversion parameter.
 

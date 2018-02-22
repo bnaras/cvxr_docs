@@ -19,11 +19,13 @@ discrete distribution on <span class="math inline">\(\{0,\ldots,K\}\)</span> for
 probability mass function. One method for estimating
 <span class="math inline">\(\{p_0,\ldots,p_K\}\)</span> is to maximize the log-likelihood function
 subject to a log-concavity constraint , i.e.,</p>
-<p>\begin{array}{ll}
- &amp; <em>{k=0}^K M_kp_k \
- &amp; p 0, </em>{k=0}^K p_k = 1, \
-&amp; p_k , k = 1,,K-1,
-\end{array}</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{p}{\mbox{maximize}} &amp; \sum_{k=0}^K M_k\log p_k \\
+\mbox{subject to} &amp; p \geq 0, \quad \sum_{k=0}^K p_k = 1, \\
+&amp; p_k \geq \sqrt{p_{k-1}p_{k+1}}, \quad k = 1,\ldots,K-1,
+\end{array}
+\]</span></p>
 <p>where <span class="math inline">\(p \in {\mathbf R}^{K+1}\)</span> is our variable of interest and <span class="math inline">\(M_k\)</span>
 represents the number of observations equal to <span class="math inline">\(k\)</span>, so that
 <span class="math inline">\(\sum_{k=0}^K M_k = m\)</span>. The problem as posed above is not
@@ -31,11 +33,13 @@ convex. However, we can transform it into a convex optimization
 problem by defining new variables <span class="math inline">\(u_k = \log p_k\)</span> and relaxing the
 equality constraint to <span class="math inline">\(\sum_{k=0}^K p_k \leq 1\)</span>, since the latter
 always holds tightly at an optimal solution. The result is</p>
-<p>\begin{array}{ll}
- &amp; <em>{k=0}^K M_k u_k \
- &amp; </em>{k=0}^K e^{u_k} 1, \
-&amp; u_k - u_{k-1} u_{k+1} - u_k, k = 1,,K-1.
-\end{array}</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{u}{\mbox{maximize}} &amp; \sum_{k=0}^K M_k u_k \\
+\mbox{subject to} &amp; \sum_{k=0}^K e^{u_k} \leq 1, \\
+&amp; u_k - u_{k-1} \geq u_{k+1} - u_k, \quad k = 1,\ldots,K-1.
+\end{array}
+\]</span></p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>

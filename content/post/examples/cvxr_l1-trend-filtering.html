@@ -15,11 +15,12 @@ tags: []
 <h2>Introduction</h2>
 <p><span class="citation">Kim et al. (<a href="#ref-Kim:et_al:2009">2009</a>)</span> propose the <span class="math inline">\(l_1\)</span> trend filtering method for trend
 estimation. The method solves an optimization problem of the form</p>
-<p>\begin{array}{ll}</p>
-<p> &amp; _{i=1}^m (y_i -
-_i)^2 + ||D||_1</p>
-<p>\end{array}</p>
-<p>where the variable to be estimated is <span class="math inline">\(\beta\)</span> and we are given the
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1
+\end{array}
+\]</span>
+where the variable to be estimated is <span class="math inline">\(\beta\)</span> and we are given the
 problem data <span class="math inline">\(y\)</span> and <span class="math inline">\(\lambda\)</span>. The matrix <span class="math inline">\(D\)</span> is the second-order
 difference matrix,</p>
 <p><span class="math display">\[

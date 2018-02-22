@@ -31,9 +31,12 @@ $t_j \in {\mathbf R}$. Let $h_j$ be a hinge function at knot $t_j$, \ie,
 $h_j(x) = \max(x-t_j,0)$, and define
 $f(x) = w_0 + \sum_{j=1}^k w_jh_j(x)$. We want to solve
 
-\begin{array}{ll} \underset{w_0,w}{\mbox{minimize}} & \sum_{i=1}^m \ell(y_i, f(x_i)) + \lambda\|w\|_1 \\
+$$
+\begin{array}{ll} 
+\underset{w_0,w}{\mbox{minimize}} & \sum_{i=1}^m \ell(y_i, f(x_i)) + \lambda\|w\|_1 \\
 \mbox{subject to} & \sum_{j=1}^k w_j = 0
 \end{array}
+$$
 
 for variables $(w_0,w) \in {\mathbf R} \times {\mathbf R}^k$. The function
 $\ell:{\mathbf R} \times {\mathbf R} \rightarrow {\mathbf R}$ is the loss associated

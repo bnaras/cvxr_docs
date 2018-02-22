@@ -26,9 +26,12 @@ are given knots <span class="math inline">\(t_1 &lt; t_2 &lt; \cdots &lt; t_k\)<
 <span class="math inline">\(t_j \in {\mathbf R}\)</span>. Let <span class="math inline">\(h_j\)</span> be a hinge function at knot <span class="math inline">\(t_j\)</span>, ,
 <span class="math inline">\(h_j(x) = \max(x-t_j,0)\)</span>, and define
 <span class="math inline">\(f(x) = w_0 + \sum_{j=1}^k w_jh_j(x)\)</span>. We want to solve</p>
-<p>\begin{array}{ll}  &amp; _{i=1}^m (y_i, f(x_i)) + |w|<em>1 \
- &amp; </em>{j=1}^k w_j = 0
-\end{array}</p>
+<p><span class="math display">\[
+\begin{array}{ll} 
+\underset{w_0,w}{\mbox{minimize}} &amp; \sum_{i=1}^m \ell(y_i, f(x_i)) + \lambda\|w\|_1 \\
+\mbox{subject to} &amp; \sum_{j=1}^k w_j = 0
+\end{array}
+\]</span></p>
 <p>for variables <span class="math inline">\((w_0,w) \in {\mathbf R} \times {\mathbf R}^k\)</span>. The function
 <span class="math inline">\(\ell:{\mathbf R} \times {\mathbf R} \rightarrow {\mathbf R}\)</span> is the loss associated
 with every observation, and <span class="math inline">\(\lambda \geq 0\)</span> is the penalty weight. In
