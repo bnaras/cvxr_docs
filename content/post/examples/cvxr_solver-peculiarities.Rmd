@@ -1,0 +1,82 @@
+---
+title: Solver Peculiarities
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2018-05-15'
+slug: cvxr_solver-peculiarities
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+```{r, echo = FALSE}
+suppressWarnings(suppressMessages(library(CVXR)))
+```
+
+The default solvers in `CVXR` is `ECOS`. However, it is not always the
+best solver to use. As an example, let us consider again the [catenary
+problem](/post/examples/cvxr_catenary). 
+
+We will change the problem slightly to use a finer discretization from
+101 points to say 501. 
+
+```{r}
+## Problem data
+m <- 501
+L <- 2
+h <- L / (m - 1)
+
+## Form objective
+x <- Variable(m)
+y <- Variable(m)
+objective <- Minimize(sum(y))
+
+## Form constraints
+constraints <- list(x[1] == 0, y[1] == 1,
+                    x[m] == 1, y[m] == 1,
+                    diff(x)^2 + diff(y)^2 <= h^2)
+
+## Solve the catenary problem
+prob <- Problem(objective, constraints)
+result <- solve(prob)
+```
+
+The solution status is no longer optimal.
+
+```{r}
+cat("Solution status is", result$status)
+```
+
+In such cases, using a different solver will give more accurate
+results. Let us try `MOSEK` for example.
+
+```{r}
+result <- solve(prob, solver = "MOSEK")
+cat("Solution status is", result$status)
+```
+
+This returns an optimal solution. 
+
+Here again, even commercial solvers differ; GUROBI, for example, does
+not completely solve the problem and in fact throws an error.
+
+
+## Further Development
+
+Future versions of `CVXR` will improve support for the commercial
+solvers by taking advantage of problem reductions described in
+@rewriting:2018 to hand the problem to solvers in a form that is
+closer to what the R packages (for those solvers) expect.  This should
+provide better behavior and error reporting.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_solver-peculiarities.Rmd)
+
+## References

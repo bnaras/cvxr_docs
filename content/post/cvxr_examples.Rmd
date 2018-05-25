@@ -16,6 +16,7 @@ the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as w
 
 - [Largest Euclidean ball in a 2D polyhedron](/post/examples/cvxr_2d_ball/)
 - [Catenary Problem](/post/examples/cvxr_catenary/)
+- [Integer Programming](/post/examples/cvxr_integer-programming/)
 
 ## Regression Examples
 
@@ -44,5 +45,7 @@ the [`CVXPY`](https://cvxpy.org) site, although we have added some new ones as w
 ## Advanced Topics
 
 - [Getting Faster Results](/post/examples/cvxr_speed/)
+- [Using Other Solvers](/post/examples/cvxr_using-other-solvers/)
+- [Solver Peculiarities](/post/examples/cvxr_solver-peculiarities/)
 
 ## References

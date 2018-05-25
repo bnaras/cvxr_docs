@@ -25,40 +25,25 @@
 						
 	<h1>Logistic Regression</h1>
 	
-	<div id="introduction" class="section level2">
+	<script src="../../../rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In classification problems, the goal is to predict the class
-membership based on predictors. Often there are two classes and one of
-the most popular methods for binary classification is logistic
-regression <span class="citation">(Cox <a href="#ref-Cox:1958">1958</a>, <span class="citation">Freedman (<a href="#ref-Freedman:2009">2009</a>)</span>)</span>.</p>
-<p>Suppose now that <span class="math inline">\(y_i \in \{0,1\}\)</span> is a binary class indicator. The
-conditional response is modeled as <span class="math inline">\(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\)</span>, where <span class="math inline">\(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\)</span> is the logistic function, and maximize the
-log-likelihood function, yielding the optimization problem</p>
+<p>In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression <span class="citation">(Cox <a href="#ref-Cox:1958">1958</a>, <span class="citation">Freedman (<a href="#ref-Freedman:2009">2009</a>)</span>)</span>.</p>
+<p>Suppose now that <span class="math inline">\(y_i \in \{0,1\}\)</span> is a binary class indicator. The conditional response is modeled as <span class="math inline">\(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\)</span>, where <span class="math inline">\(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\)</span> is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</p>
 <p><span class="math display">\[
 \begin{array}{ll} 
 \underset{\beta}{\mbox{maximize}} &amp; \sum_{i=1}^m \{
 y_i\log(g_{\beta}(x_i)) + (1-y_i)\log(1 - g_{\beta}(x_i)) \}.
 \end{array} 
 \]</span></p>
-<p><code>CVXR</code> provides the <code>logistic</code> atom as a shortcut for <span class="math inline">\(f(z) = \log(1 + e^z)\)</span> to express the optimization problem. One may be
-tempted to use <code>log(1 + exp(X %*% beta))</code> as in conventional
-<code>R</code> syntax. However, this representation of <span class="math inline">\(f(z)\)</span> violates
-the DCP composition rule, so the <code>CVXR</code> parser will reject the
-problem even though the objective is convex. Users who wish to employ
-a function that is convex, but not DCP compliant should check the
-documentation for a custom atom or consider a different formulation.</p>
+<p><code>CVXR</code> provides the <code>logistic</code> atom as a shortcut for <span class="math inline">\(f(z) = \log(1 + e^z)\)</span> to express the optimization problem. One may be tempted to use <code>log(1 + exp(X %*% beta))</code> as in conventional <code>R</code> syntax. However, this representation of <span class="math inline">\(f(z)\)</span> violates the DCP composition rule, so the <code>CVXR</code> parser will reject the problem even though the objective is convex. Users who wish to employ a function that is convex, but not DCP compliant should check the documentation for a custom atom or consider a different formulation.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>The formulation is very similar to OLS, except for the specification
-of the objective.</p>
-<p>In the example below, we demonstrate a <em>key feature</em> of <code>CVXR</code>, that
-of evaluating various functions of the variables that are solutions to
-the optimization problem. For instance, the log-odds, <span class="math inline">\(X\hat{\beta}\)</span>,
-where <span class="math inline">\(\hat{\beta}\)</span> is the logistic regression estimate, is simply
-specified as <code>X %*% beta</code> below, and the <code>getValue</code> function of the
-result will compute its value. (Any other function of the estimate
-can be similarly computed.)</p>
+<p>The formulation is very similar to OLS, except for the specification of the objective.</p>
+<p>In the example below, we demonstrate a <em>key feature</em> of <code>CVXR</code>, that of evaluating various functions of the variables that are solutions to the optimization problem. For instance, the log-odds, <span class="math inline">\(X\hat{\beta}\)</span>, where <span class="math inline">\(\hat{\beta}\)</span> is the logistic regression estimate, is simply specified as <code>X %*% beta</code> below, and the <code>getValue</code> function of the result will compute its value. (Any other function of the estimate can be similarly computed.)</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 n &lt;- 20
 m &lt;- 1000
@@ -326,10 +311,8 @@ GLM.est
 </tr>
 </tbody>
 </table>
-<p>The sign difference is due to the coding of <span class="math inline">\(y\)</span> as <span class="math inline">\((-1, 1)\)</span> for
-<code>CVXR</code> rather than <span class="math inline">\((0, 1)\)</span> for <code>stats::glm</code>.</p>
-<p>So, for completeness, if we were to code the <span class="math inline">\(y\)</span> as <span class="math inline">\((0, 1)\)</span>, the
-objective will have to be modified as below.</p>
+<p>The sign difference is due to the coding of <span class="math inline">\(y\)</span> as <span class="math inline">\((-1, 1)\)</span> for <code>CVXR</code> rather than <span class="math inline">\((0, 1)\)</span> for <code>stats::glm</code>.</p>
+<p>So, for completeness, if we were to code the <span class="math inline">\(y\)</span> as <span class="math inline">\((0, 1)\)</span>, the objective will have to be modified as below.</p>
 <pre class="r"><code>obj &lt;- -sum(X[y &lt;= 0, ] %*% beta) - sum(logistic(-X %*% beta))
 prob &lt;- Problem(Maximize(obj))
 result &lt;- solve(prob)
@@ -580,39 +563,40 @@ GLM.est
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.3 (2017-11-30)
+<pre><code>## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.4
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] C
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices datasets  utils     base     
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_0.7.0 CVXR_0.95       
+## [1] kableExtra_0.9.0 CVXR_0.99       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.15      highr_0.6        
-##  [4] plyr_1.8.4        compiler_3.4.3    pillar_1.1.0     
-##  [7] R.methodsS3_1.7.1 R.utils_2.6.0     tools_3.4.3      
-## [10] digest_0.6.15     bit_1.1-12        viridisLite_0.3.0
+##  [1] gmp_0.5-13.1      Rcpp_0.12.17      highr_0.6        
+##  [4] plyr_1.8.4        compiler_3.5.0    pillar_1.2.2     
+##  [7] R.methodsS3_1.7.1 R.utils_2.6.0     tools_3.5.0      
+## [10] digest_0.6.15     bit_1.1-13        viridisLite_0.3.0
 ## [13] evaluate_0.10.1   tibble_1.4.2      lattice_0.20-35  
-## [16] pkgconfig_2.0.1   rlang_0.2.0       Matrix_1.2-12    
-## [19] yaml_2.1.16       blogdown_0.5.4    xfun_0.1         
-## [22] xml2_1.2.0        Rmpfr_0.7-0       ECOSolveR_0.4    
-## [25] stringr_1.3.0     httr_1.3.1        knitr_1.20       
-## [28] hms_0.4.1         rprojroot_1.3-2   bit64_0.9-7      
-## [31] grid_3.4.3        R6_2.2.2          rmarkdown_1.8.10 
-## [34] bookdown_0.7      readr_1.1.1       magrittr_1.5     
-## [37] scales_0.5.0      backports_1.1.2   htmltools_0.3.6  
-## [40] scs_1.1-1         rvest_0.3.2       colorspace_1.3-2 
-## [43] stringi_1.1.6     munsell_0.4.3     R.oo_1.21.0</code></pre>
+## [16] pkgconfig_2.0.1   rlang_0.2.0       Matrix_1.2-14    
+## [19] rstudioapi_0.7    yaml_2.1.19       blogdown_0.6.3   
+## [22] xfun_0.1          xml2_1.2.0        httr_1.3.1       
+## [25] Rmpfr_0.7-0       ECOSolveR_0.4     stringr_1.3.1    
+## [28] knitr_1.20        hms_0.4.2         rprojroot_1.3-2  
+## [31] bit64_0.9-7       grid_3.5.0        R6_2.2.2         
+## [34] rmarkdown_1.9.14  bookdown_0.7      readr_1.1.1      
+## [37] magrittr_1.5      scales_0.5.0      backports_1.1.2  
+## [40] htmltools_0.3.6   scs_1.1-1         rvest_0.3.2      
+## [43] colorspace_1.3-2  stringi_1.2.2     munsell_0.4.3    
+## [46] R.oo_1.22.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -622,7 +606,7 @@ GLM.est
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-Cox:1958">
-<p>Cox, D. R. 1958. “The Regression Analysis of Binary Sequences.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 20 (2):215–42.</p>
+<p>Cox, D. R. 1958. “The Regression Analysis of Binary Sequences.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 20 (2): 215–42.</p>
 </div>
 <div id="ref-Freedman:2009">
 <p>Freedman, D. A. 2009. <em>Statistical Models: Theory and Practice</em>. Cambridge University Press.</p>
@@ -632,26 +616,7 @@ GLM.est
 
 
 
-						<div id="disqus_thread"></div>
-<script>
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+						
 					</div>
 				</div>
 			</div>
@@ -689,7 +654,7 @@ GLM.est
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
 	</li>
 	
 	<li class="toctree-l1">

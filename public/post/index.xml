@@ -6,10 +6,43 @@
     <description>Recent content in Posts on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 02 Nov 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 May 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Integer Programming</title>
+      <link>/post/examples/cvxr_integer-programming/</link>
+      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_integer-programming/</guid>
+      <description>Consider the following optimization problem.
+\[ \begin{array}{ll} \mbox{Maximize} &amp;amp; x_1 + 2x_2 - 0.1x_3 - 3x_4\\ \mbox{subject to} &amp;amp; x_1, x_2, x_3, x_4 &amp;gt;= 0\\ &amp;amp; x_1 + x_2 &amp;lt;= 5\\ &amp;amp; 2x_1 - x_2 &amp;gt;= 0\\ &amp;amp; -x_1 + 3x_2 &amp;gt;= 0\\ &amp;amp; x_3 + x_4 &amp;gt;= 0.5\\ &amp;amp; x_3 &amp;gt;= 1.1\\ &amp;amp; x_3 \mbox{ is integer.} \end{array} \]
+CVXR provides the Int and Bool constructors for specifying integer and boolean variables.</description>
+    </item>
+    
+    <item>
+      <title>Solver Peculiarities</title>
+      <link>/post/examples/cvxr_solver-peculiarities/</link>
+      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_solver-peculiarities/</guid>
+      <description>The default solvers in CVXR is ECOS. However, it is not always the best solver to use. As an example, let us consider again the catenary problem.
+We will change the problem slightly to use a finer discretization from 101 points to say 501.
+## Problem data m &amp;lt;- 501 L &amp;lt;- 2 h &amp;lt;- L / (m - 1) ## Form objective x &amp;lt;- Variable(m) y &amp;lt;- Variable(m) objective &amp;lt;- Minimize(sum(y)) ## Form constraints constraints &amp;lt;- list(x[1] == 0, y[1] == 1, x[m] == 1, y[m] == 1, diff(x)^2 + diff(y)^2 &amp;lt;= h^2) ## Solve the catenary problem prob &amp;lt;- Problem(objective, constraints) result &amp;lt;- solve(prob) The solution status is no longer optimal.</description>
+    </item>
+    
+    <item>
+      <title>Using Other Solvers</title>
+      <link>/post/examples/cvxr_using-other-solvers/</link>
+      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/examples/cvxr_using-other-solvers/</guid>
+      <description>Introduction The default installation of CVXR comes with two (imported) open source solvers:
+ ECOS and its mixed integer cousin ECOS_BB via the CRAN package ECOSolveR SCS via the CRAB package scs.  CVXR can also make use of several other open source solvers implemented in R packages.
+ The linear and mixed integer programming package lpSolve via the lpSolveAPI package The linear and mixed integer programming package GLPK via the Rglpk package.</description>
+    </item>
     
     <item>
       <title>Censored Regression</title>
@@ -58,8 +91,7 @@ Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0
       
       <guid>/post/examples/cvxr_huber-regression/</guid>
       <description>Introduction Huber regression (Huber 1964) is a regression technique that is robust to outliers. The idea is to use a different loss function rather than the traditional least-squares; we solve
-\begin{array}{ll} &amp;amp; _{i=1}^m (y_i - x_i^T) \end{array}
-for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber function with threshold \(M &amp;gt; 0\), \[ \phi(u) = \begin{cases} u^2 &amp;amp; \mbox{if } |u| \leq M \\ 2Mu - M^2 &amp;amp; \mbox{if } |u| &amp;gt; M.</description>
+\[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \sum_{i=1}^m \phi(y_i - x_i^T\beta) \end{array}\] for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber function with threshold \(M &amp;gt; 0\), \[ \phi(u) = \begin{cases} u^2 &amp;amp; \mbox{if } |u| \leq M \\ 2Mu - M^2 &amp;amp; \mbox{if } |u| &amp;gt; M.</description>
     </item>
     
     <item>
@@ -122,7 +154,7 @@ Suppose now that \(y_i \in \{0,1\}\) is a binary class indicator. The conditiona
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/examples/cvxr_near-isotonic-and-near-convex-regression/</guid>
-      <description>Given a set of data points \(y \in {\mathbf R}^m\), Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving
+      <description>Given a set of data points \(y \in {\mathbf R}^m\), R. J. Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array} \]
 where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in CVXR. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
     </item>
@@ -154,7 +186,7 @@ where \(\tau \in (0,1)\) specifies the quantile. The problem as before is to min
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/examples/cvxr_saturating_hinges/</guid>
-      <description>Introduction The following example comes from work on saturating splines in Boyd et al. (2016). Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they saturate: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a saturating hinge.</description>
+      <description>Introduction The following example comes from work on saturating splines in N. Boyd et al. (2016). Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they saturate: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a saturating hinge.</description>
     </item>
     
     <item>
@@ -184,7 +216,7 @@ This is the famous catenary problem.
       
       <guid>/post/cvxr_examples/</guid>
       <description>Many of the examples here were ported from the CVXPY site, although we have added some new ones as well.
-Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges   Miscellaneous  Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   Advanced Topics  Getting Faster Results   References  </description>
+Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem Integer Programming   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges   Miscellaneous  Direct Standardization Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   Advanced Topics  Getting Faster Results Using Other Solvers Solver Peculiarities   References  </description>
     </item>
     
     <item>

@@ -5,7 +5,7 @@ title = "CVXR"
 theme = "hugo-alabaster-theme"
 relativeURLs = true
 
-disqusShortname = "cvxr"
+disqusShortname = ""
 googleAnalytics = ""
 
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.Rhistory$"]
@@ -52,8 +52,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	show_powered_by = true
 
 [[menu.main]]
-    name = "Github"
-    	 url = "https://github.com/anqif/CVXR"
+    name = "Package Docs"
+    	 url = "https://anqif.github.io/CVXR"
 	 weight = -21
 
 [[menu.main]]

@@ -25,19 +25,16 @@
 						
 	<h1>Isotonic Regression</h1>
 	
-	<div id="introduction" class="section level2">
+	<script src="../../../rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p><a href="https://en.wikipedia.org/wiki/Isotonic_regression">Isotonic regression</a> is
-regression with monotonic constraints. There are several packages in R
-to fit isotonic regression models. In this example, we
-consider <a href="https://cran.r-project.org/package=isotone"><code>isotone</code></a> which
-uses a pooled-adjacent-violators algorithm (PAVA) and active set
-methods to perform the fit.</p>
+<p><a href="https://en.wikipedia.org/wiki/Isotonic_regression">Isotonic regression</a> is regression with monotonic constraints. There are several packages in R to fit isotonic regression models. In this example, we consider <a href="https://cran.r-project.org/package=isotone"><code>isotone</code></a> which uses a pooled-adjacent-violators algorithm (PAVA) and active set methods to perform the fit.</p>
 </div>
 <div id="pituitary-data-example" class="section level2">
 <h2>Pituitary Data Example</h2>
-<p>We will use data from the <code>isotone</code> package (see <span class="citation">de Leeuw, Hornik, and Mair (<a href="#ref-isotone">2009</a>)</span>) on the size
-of pituitary fissures for 11 subjects between 8 and 14 years of age.</p>
+<p>We will use data from the <code>isotone</code> package (see <span class="citation">de Leeuw, Hornik, and Mair (<a href="#ref-isotone">2009</a>)</span>) on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.</p>
 <pre class="r"><code>library(isotone)
 data(&quot;pituitary&quot;)
 str(pituitary)</code></pre>
@@ -75,12 +72,10 @@ x_p &lt;- with(pituitary, {
 </div>
 <div id="handling-ties" class="section level2">
 <h2>Handling Ties</h2>
-<p>Package <code>isotone</code> provides additional methods for handling tied data besides the default <code>ties = &quot;primary&quot;</code> method; <code>ties = &quot;secondary&quot;</code> enforces equality within ties, and <code>ties = &quot;tertiary&quot;</code>
-enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)</p>
+<p>Package <code>isotone</code> provides additional methods for handling tied data besides the default <code>ties = &quot;primary&quot;</code> method; <code>ties = &quot;secondary&quot;</code> enforces equality within ties, and <code>ties = &quot;tertiary&quot;</code> enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)</p>
 <pre class="r"><code>res_s &lt;- with(pituitary, gpava(age, size, ties = &quot;secondary&quot;))
 res_t &lt;- with(pituitary, gpava(age, size, ties = &quot;tertiary&quot;))</code></pre>
-<p>In <code>CVXR</code>, the secondary method just requires an additional constraint to enforce
-equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
+<p>In <code>CVXR</code>, the secondary method just requires an additional constraint to enforce equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
 <pre class="r"><code>x_s &lt;- with(pituitary, {
     n &lt;- length(size)
     x &lt;- Variable(n)
@@ -93,8 +88,7 @@ equality within tied values; no other modification is necessary. We do that belo
     problem &lt;- Problem(objective, constraint)
     solve(problem)$getValue(x)
 })</code></pre>
-<p>Finally, the tertiary method requires computing the block means to be computed for use
-in enforcing monotonicity.</p>
+<p>Finally, the tertiary method requires computing the block means to be computed for use in enforcing monotonicity.</p>
 <pre class="r"><code>x_t &lt;- with(pituitary, {
     n &lt;- length(size)
     x &lt;- Variable(n)
@@ -365,46 +359,45 @@ CVXR (T)
 </div>
 <div id="notes" class="section level2">
 <h2>Notes</h2>
-<p>Other arbitrary desired behavior can be specified for tied
-observations using the above as a guide.</p>
+<p>Other arbitrary desired behavior can be specified for tied observations using the above as a guide.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.3 (2017-11-30)
+<pre><code>## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.4
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] C
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices datasets  utils     base     
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_0.7.0 CVXR_0.95        isotone_1.1-0   
+## [1] kableExtra_0.9.0 CVXR_0.99        isotone_1.1-0   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.15      highr_0.6        
-##  [4] plyr_1.8.4        compiler_3.4.3    pillar_1.1.0     
-##  [7] R.methodsS3_1.7.1 R.utils_2.6.0     tools_3.4.3      
-## [10] digest_0.6.15     bit_1.1-12        viridisLite_0.3.0
+##  [1] gmp_0.5-13.1      Rcpp_0.12.17      highr_0.6        
+##  [4] plyr_1.8.4        compiler_3.5.0    pillar_1.2.2     
+##  [7] R.methodsS3_1.7.1 R.utils_2.6.0     tools_3.5.0      
+## [10] digest_0.6.15     bit_1.1-13        viridisLite_0.3.0
 ## [13] evaluate_0.10.1   tibble_1.4.2      lattice_0.20-35  
-## [16] pkgconfig_2.0.1   rlang_0.2.0       Matrix_1.2-12    
-## [19] yaml_2.1.16       blogdown_0.5.4    xfun_0.1         
-## [22] xml2_1.2.0        httr_1.3.1        Rmpfr_0.7-0      
-## [25] ECOSolveR_0.4     stringr_1.3.0     knitr_1.20       
-## [28] hms_0.4.1         rprojroot_1.3-2   bit64_0.9-7      
-## [31] grid_3.4.3        R6_2.2.2          rmarkdown_1.8.10 
-## [34] bookdown_0.7      readr_1.1.1       magrittr_1.5     
-## [37] scales_0.5.0      backports_1.1.2   htmltools_0.3.6  
-## [40] scs_1.1-1         nnls_1.4          rvest_0.3.2      
-## [43] colorspace_1.3-2  stringi_1.1.6     munsell_0.4.3    
-## [46] R.oo_1.21.0</code></pre>
+## [16] pkgconfig_2.0.1   rlang_0.2.0       Matrix_1.2-14    
+## [19] rstudioapi_0.7    yaml_2.1.19       blogdown_0.6.3   
+## [22] xfun_0.1          xml2_1.2.0        httr_1.3.1       
+## [25] Rmpfr_0.7-0       ECOSolveR_0.4     stringr_1.3.1    
+## [28] knitr_1.20        hms_0.4.2         rprojroot_1.3-2  
+## [31] bit64_0.9-7       grid_3.5.0        R6_2.2.2         
+## [34] rmarkdown_1.9.14  bookdown_0.7      readr_1.1.1      
+## [37] magrittr_1.5      scales_0.5.0      backports_1.1.2  
+## [40] htmltools_0.3.6   scs_1.1-1         nnls_1.4         
+## [43] rvest_0.3.2       colorspace_1.3-2  stringi_1.2.2    
+## [46] munsell_0.4.3     R.oo_1.22.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -414,33 +407,14 @@ observations using the above as a guide.</p>
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-isotone">
-<p>de Leeuw, J., K. Hornik, and P. Mair. 2009. “Isotone Optimization in R: Pool-Adjacent-Violators Algorithm (PAVA) and Active Set Methods.” <em>Journal of Statistical Software</em> 32 (5):1–24.</p>
+<p>de Leeuw, J., K. Hornik, and P. Mair. 2009. “Isotone Optimization in R: Pool-Adjacent-Violators Algorithm (PAVA) and Active Set Methods.” <em>Journal of Statistical Software</em> 32 (5): 1–24.</p>
 </div>
 </div>
 </div>
 
 
 
-						<div id="disqus_thread"></div>
-<script>
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+						
 					</div>
 				</div>
 			</div>
@@ -478,7 +452,7 @@ observations using the above as a guide.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
 	</li>
 	
 	<li class="toctree-l1">

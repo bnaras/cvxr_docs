@@ -1,0 +1,143 @@
+---
+title: Using Other Solvers
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2018-05-15'
+slug: cvxr_using-other-solvers
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The default installation of <code>CVXR</code> comes with two (imported) open source solvers:</p>
+<ul>
+<li><a href="https://github.com/embotech/ecos">ECOS</a> and its mixed integer
+cousin <code>ECOS_BB</code> via the CRAN package
+<a href="https://cloud.r-project.org/package=ECOSolveR">ECOSolveR</a></li>
+<li><a href="https://github.com/cvxgrp/scs">SCS</a> via the CRAB package
+<a href="https://cloud.r-project.org/package=scs">scs</a>.</li>
+</ul>
+<p><code>CVXR</code> can also make use of several other open source solvers
+implemented in R packages.</p>
+<ul>
+<li>The linear and mixed integer programming package
+<a href="http://lpsolve.sourceforge.net/5.5/"><code>lpSolve</code></a> via the
+<a href="https://cloud.r-project.org/package=lpSolveAPI"><code>lpSolveAPI</code></a> package</li>
+<li>The linear and mixed integer programming package <a href="https://www.gnu.org/software/glpk/"><code>GLPK</code></a> via the
+<a href="https://cloud.r-project.org/package=Rglpk"><code>Rglpk</code></a> package.</li>
+</ul>
+<p>Since these are optional, you have to install these packages yourself.</p>
+<pre class="r"><code>lapply(list(LPSOLVE = &quot;lpSolveAPI&quot;,
+            GLPK = &quot;Rglpk&quot;),
+       function(x) x %in% installed.packages()[, 1])</code></pre>
+<pre><code>## $LPSOLVE
+## [1] TRUE
+## 
+## $GLPK
+## [1] TRUE</code></pre>
+<p>Once the packages are installed, a call to <code>installed_solvers</code> will
+indicate what solvers <code>CVXR</code> is aware of.</p>
+</div>
+<div id="commercial-solvers" class="section level2">
+<h2>Commercial Solvers</h2>
+<p>A few commercial solvers are also currently supported: <a href="https://www.mosek.com">MOSEK</a> and
+<a href="https://www.gurobi.com">GUROBI</a>.</p>
+<p>At the moment, the support uses vendor python solver packages via
+<a href="https://cran.r-project.org/package=reticulate"><code>reticulate</code></a>, <em>not R
+packages</em>. Future versions will provide support directly using
+<a href="https://web.stanford.edu/~boyd/papers/cvxpy_rewriting.html"><em>problem
+reductions</em></a>,
+recently implemented in <a href="https://www.cvxpy.org/"><code>CVXPY</code> version 1.0</a>.</p>
+<p>Thus, one needs two pre-requisites for using these commercial solvers:</p>
+<ul>
+<li>a python installation in addition to R</li>
+<li>the
+<a href="https://cran.r-project.org/package=reticulate"><code>reticulate</code></a> R
+package.</li>
+</ul>
+<p>We also recommend that you ensure that <code>reticulate</code> is installed
+correctly and working. For example <code>reticulate::py_eval('1+1')</code> should return
+<code>2</code>.</p>
+<p><strong>N.B.</strong> If you have an Anaconda installation in your path, you have
+to account for the fact that there may be interactions when using
+RStudio and rendering documents. In particular, Anaconda may include
+its own version of pandoc and other tools that may conflict with what
+Rstudio needs to do its work properly.</p>
+<p>To be concrete, one problem we found was that the <code>MOSEK</code> solver was
+not recognized as being available in this rendered document, even
+though the command line interface showed it to be present. Ensuring an
+appropriate <code>PATH</code> variable solves the problem.</p>
+<div id="installing-mosek" class="section level3">
+<h3>Installing <code>MOSEK</code></h3>
+<p><a href="https://www.mosek.com">MOSEK</a> provides an academic version that is
+free of charge. As noted in the downloads page, Anaconda users can
+install merely via:</p>
+<pre class="bash"><code>conda install -c mosek mosek</code></pre>
+<p>Others can use the <code>pip</code> command:</p>
+<pre class="bash"><code>pip install -f https://download.mosek.com/stable/wheel/index.html Mosek</code></pre>
+<p>In addition, the license for the product has to be activated per
+instructions on the <code>Sales</code> section of the web page.</p>
+<p>Once activated, you can check that <code>CVXR</code> recognizes the solver;
+<code>installed_solvers()</code> should list <code>MOSEK</code>. Otherwise, rinse and repeat
+until success.</p>
+</div>
+<div id="installing-gurobi" class="section level3">
+<h3>Installing <code>GUROBI</code></h3>
+<p><a href="https://www.gurobi.com">GUROBI</a> also provides an academic version
+that is free of charge. They require you to register.</p>
+<p>Once registered, install the <em>Gurobi Optimizer</em> software and activate
+your license as necessary.</p>
+<p>Once activated, you can check that <code>CVXR::installed_solvers()</code> lists
+<code>GUROBI</code>. Otherwise, rinse and repeat until success.</p>
+</div>
+<div id="example-session" class="section level3">
+<h3>Example session</h3>
+<pre class="r"><code>installed_solvers()</code></pre>
+<pre><code>## [1] &quot;ECOS&quot;    &quot;ECOS_BB&quot; &quot;SCS&quot;     &quot;MOSEK&quot;   &quot;LPSOLVE&quot; &quot;GLPK&quot;    &quot;GUROBI&quot;</code></pre>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.0 (2018-04-23)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.4
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] CVXR_0.99
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.17          lpSolveAPI_5.5.2.0-17 knitr_1.20           
+##  [4] magrittr_1.5          bit_1.1-13            lattice_0.20-35      
+##  [7] R6_2.2.2              stringr_1.3.1         tools_3.5.0          
+## [10] grid_3.5.0            xfun_0.1              R.oo_1.22.0          
+## [13] scs_1.1-1             htmltools_0.3.6       bit64_0.9-7          
+## [16] yaml_2.1.19           rprojroot_1.3-2       digest_0.6.15        
+## [19] bookdown_0.7          Matrix_1.2-14         gmp_0.5-13.1         
+## [22] ECOSolveR_0.4         Rglpk_0.6-3           R.utils_2.6.0        
+## [25] slam_0.1-43           evaluate_0.10.1       rmarkdown_1.9.14     
+## [28] blogdown_0.6.3        stringi_1.2.2         compiler_3.5.0       
+## [31] Rmpfr_0.7-0           backports_1.1.2       R.methodsS3_1.7.1    
+## [34] jsonlite_1.5          reticulate_1.7.1</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_using-other-solvers.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>

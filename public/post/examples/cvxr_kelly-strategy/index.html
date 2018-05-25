@@ -27,14 +27,7 @@
 	
 	<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In Kelly gambling <span class="citation">(Kelly <a href="#ref-kelly">1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span>
-possible outcomes, which yield a random non-negative return of <span class="math inline">\(r \in {\mathbf R}_+^n\)</span>. The return <span class="math inline">\(r\)</span> takes on exactly <span class="math inline">\(K\)</span> values
-<span class="math inline">\(r_1,\ldots,r_K\)</span> with known probabilities <span class="math inline">\(\pi_1,\ldots,\pi_K\)</span>. This
-gamble is repeated over <span class="math inline">\(T\)</span> periods. In a given period <span class="math inline">\(t\)</span>, let <span class="math inline">\(b_i \geq 0\)</span> denote the fraction of our wealth bet on outcome <span class="math inline">\(i\)</span>. Assuming
-the <span class="math inline">\(n\)</span>th outcome is equivalent to not wagering (it returns one with
-certainty), the fractions must satisfy <span class="math inline">\(\sum_{i=1}^n b_i = 1\)</span>. Thus,
-at the end of the period, our cumulative wealth is <span class="math inline">\(w_t = (r^Tb)w_{t-1}\)</span>. Our goal is to maximize the average growth rate with
-respect to <span class="math inline">\(b \in {\mathbf R}^n\)</span>:</p>
+<p>In Kelly gambling <span class="citation">(Kelly <a href="#ref-kelly">1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span> possible outcomes, which yield a random non-negative return of <span class="math inline">\(r \in {\mathbf R}_+^n\)</span>. The return <span class="math inline">\(r\)</span> takes on exactly <span class="math inline">\(K\)</span> values <span class="math inline">\(r_1,\ldots,r_K\)</span> with known probabilities <span class="math inline">\(\pi_1,\ldots,\pi_K\)</span>. This gamble is repeated over <span class="math inline">\(T\)</span> periods. In a given period <span class="math inline">\(t\)</span>, let <span class="math inline">\(b_i \geq 0\)</span> denote the fraction of our wealth bet on outcome <span class="math inline">\(i\)</span>. Assuming the <span class="math inline">\(n\)</span>th outcome is equivalent to not wagering (it returns one with certainty), the fractions must satisfy <span class="math inline">\(\sum_{i=1}^n b_i = 1\)</span>. Thus, at the end of the period, our cumulative wealth is <span class="math inline">\(w_t = (r^Tb)w_{t-1}\)</span>. Our goal is to maximize the average growth rate with respect to <span class="math inline">\(b \in {\mathbf R}^n\)</span>:</p>
 <p><span class="math display">\[
 \begin{array}{ll}
 \underset{b}{\mbox{maximize}} &amp; \sum_{j=1}^K \pi_j\log(r_j^Tb) \\
@@ -44,15 +37,7 @@ respect to <span class="math inline">\(b \in {\mathbf R}^n\)</span>:</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>We solve the Kelly gambling problem for <span class="math inline">\(K = 100\)</span> and <span class="math inline">\(n = 20\)</span>. The
-probabilities <span class="math inline">\(\pi_j \sim \mbox{Uniform}(0,1)\)</span>, and the potential
-returns <span class="math inline">\(r_j \sim \mbox{Uniform}(0.5,1.5)\)</span> except for <span class="math inline">\(r_n = {\mathbf 1}\)</span>,
-which represents the payoff from not wagering. With an initial wealth
-of <span class="math inline">\(w_0 = 1\)</span>, we simulate the growth trajectory of our Kelly optimal
-bets over <span class="math inline">\(P = 100\)</span> periods, assuming returns are i.i.d. over time. In
-the following code, <code>rets</code> is the <span class="math inline">\(K \times n\)</span> matrix of possible
-returns with row <span class="math inline">\(r_i\)</span>, while <code>ps</code> is the vector of return
-probabilities <span class="math inline">\((\pi_1,\ldots,\pi_K)\)</span>.</p>
+<p>We solve the Kelly gambling problem for <span class="math inline">\(K = 100\)</span> and <span class="math inline">\(n = 20\)</span>. The probabilities <span class="math inline">\(\pi_j \sim \mbox{Uniform}(0,1)\)</span>, and the potential returns <span class="math inline">\(r_j \sim \mbox{Uniform}(0.5,1.5)\)</span> except for <span class="math inline">\(r_n = {\mathbf 1}\)</span>, which represents the payoff from not wagering. With an initial wealth of <span class="math inline">\(w_0 = 1\)</span>, we simulate the growth trajectory of our Kelly optimal bets over <span class="math inline">\(P = 100\)</span> periods, assuming returns are i.i.d. over time. In the following code, <code>rets</code> is the <span class="math inline">\(K \times n\)</span> matrix of possible returns with row <span class="math inline">\(r_i\)</span>, while <code>ps</code> is the vector of return probabilities <span class="math inline">\((\pi_1,\ldots,\pi_K)\)</span>.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 set.seed(1)
 n &lt;- 20      # Total bets
@@ -100,11 +85,7 @@ for(i in seq_len(TRIALS)) {
     winnings_cmp &lt;- rets[sidx,] %*% bets_cmp
     wealth_cmp[,i] &lt;- cumprod(winnings_cmp)
 }</code></pre>
-<p>Growth curves for five independent trials are plotted in the figures
-below. Red lines represent the wealth each period from
-the Kelly bets, while cyan lines are the result of the naive
-bets. Clearly, Kelly optimal bets perform better, producing greater
-net wealth by the final period.</p>
+<p>Growth curves for five independent trials are plotted in the figures below. Red lines represent the wealth each period from the Kelly bets, while cyan lines are the result of the naive bets. Clearly, Kelly optimal bets perform better, producing greater net wealth by the final period.</p>
 <pre class="r"><code>library(ggplot2)
 library(tidyr)
 df &lt;- data.frame(seq_len(PERIODS), wealth)
@@ -129,55 +110,49 @@ ggplot(data = plot.data) +
 </div>
 <div id="extensions" class="section level2">
 <h2>Extensions</h2>
-<p>As observed in some trajectories above, wealth tends to drop by a
-significant amount before increasing eventually. One way to reduce
-this drawdown risk is to add a convex constraint as described in
-<span class="citation">Busseti, Ryu, and Boyd (<a href="#ref-RCK">2016</a>, 5.3)</span></p>
+<p>As observed in some trajectories above, wealth tends to drop by a significant amount before increasing eventually. One way to reduce this drawdown risk is to add a convex constraint as described in <span class="citation">Busseti, Ryu, and Boyd (<a href="#ref-RCK">2016</a>, 5.3)</span></p>
 <p><span class="math display">\[
 \log\left(\sum_{j=1}^K \exp(\log\pi_j - \lambda
 \log(r_j^Tb))\right) \leq 0 
 \]</span></p>
-<p>where <span class="math inline">\(\lambda \geq 0\)</span> is the risk-aversion parameter. With <code>CVXR</code>,
-this can be accomplished in a single line using the
-<code>log_sum_exp</code> atom. Other extensions like wealth goals, betting
-restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is the risk-aversion parameter. With <code>CVXR</code>, this can be accomplished in a single line using the <code>log_sum_exp</code> atom. Other extensions like wealth goals, betting restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.3 (2017-11-30)
+<pre><code>## R version 3.5.0 (2018-04-23)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.4
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] C
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices datasets  utils     base     
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_0.8.0   ggplot2_2.2.1 CVXR_0.95    
+## [1] tidyr_0.8.1   ggplot2_2.2.1 CVXR_0.99    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.1      Rcpp_0.12.15      pillar_1.1.0     
-##  [4] compiler_3.4.3    plyr_1.8.4        R.methodsS3_1.7.1
-##  [7] R.utils_2.6.0     tools_3.4.3       digest_0.6.15    
-## [10] bit_1.1-12        evaluate_0.10.1   tibble_1.4.2     
+##  [1] gmp_0.5-13.1      Rcpp_0.12.17      pillar_1.2.2     
+##  [4] compiler_3.5.0    plyr_1.8.4        R.methodsS3_1.7.1
+##  [7] R.utils_2.6.0     tools_3.5.0       digest_0.6.15    
+## [10] bit_1.1-13        evaluate_0.10.1   tibble_1.4.2     
 ## [13] gtable_0.2.0      lattice_0.20-35   rlang_0.2.0      
-## [16] Matrix_1.2-12     yaml_2.1.16       blogdown_0.5.4   
+## [16] Matrix_1.2-14     yaml_2.1.19       blogdown_0.6.3   
 ## [19] xfun_0.1          Rmpfr_0.7-0       ECOSolveR_0.4    
-## [22] stringr_1.3.0     knitr_1.20        tidyselect_0.2.3 
-## [25] rprojroot_1.3-2   bit64_0.9-7       grid_3.4.3       
-## [28] glue_1.2.0        R6_2.2.2          rmarkdown_1.8.10 
+## [22] stringr_1.3.1     knitr_1.20        tidyselect_0.2.4 
+## [25] rprojroot_1.3-2   bit64_0.9-7       grid_3.5.0       
+## [28] glue_1.2.0        R6_2.2.2          rmarkdown_1.9.14 
 ## [31] bookdown_0.7      purrr_0.2.4       magrittr_1.5     
 ## [34] backports_1.1.2   scales_0.5.0      htmltools_0.3.6  
 ## [37] scs_1.1-1         colorspace_1.3-2  labeling_0.3     
-## [40] stringi_1.1.6     lazyeval_0.2.1    munsell_0.4.3    
-## [43] R.oo_1.21.0</code></pre>
+## [40] stringi_1.2.2     lazyeval_0.2.1    munsell_0.4.3    
+## [43] R.oo_1.22.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -187,36 +162,17 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-RCK">
-<p>Busseti, E., E. K. Ryu, and S. Boyd. 2016. “Risk–Constrained Kelly Gambling.” <em>Journal of Investing</em> 25 (3):118–34.</p>
+<p>Busseti, E., E. K. Ryu, and S. Boyd. 2016. “Risk–Constrained Kelly Gambling.” <em>Journal of Investing</em> 25 (3): 118–34.</p>
 </div>
 <div id="ref-kelly">
-<p>Kelly, J. L. 1956. “A New Interpretation of Information Rate.” <em>Bell System Technical Journal</em> 35 (4):917–26.</p>
+<p>Kelly, J. L. 1956. “A New Interpretation of Information Rate.” <em>Bell System Technical Journal</em> 35 (4): 917–26.</p>
 </div>
 </div>
 </div>
 
 
 
-						<div id="disqus_thread"></div>
-<script>
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "cvxr" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+						
 					</div>
 				</div>
 			</div>
@@ -254,7 +210,7 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://github.com/anqif/CVXR">Github</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
 	</li>
 	
 	<li class="toctree-l1">
