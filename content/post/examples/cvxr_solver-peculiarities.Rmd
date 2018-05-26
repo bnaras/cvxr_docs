@@ -13,7 +13,7 @@ tags: []
 suppressWarnings(suppressMessages(library(CVXR)))
 ```
 
-The default solvers in `CVXR` is `ECOS`. However, it is not always the
+The default solver in `CVXR` is `ECOS`. However, it is not always the
 best solver to use. As an example, let us consider again the [catenary
 problem](/post/examples/cvxr_catenary). 
 

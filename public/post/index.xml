@@ -28,7 +28,7 @@ CVXR provides the Int and Bool constructors for specifying integer and boolean v
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/examples/cvxr_solver-peculiarities/</guid>
-      <description>The default solvers in CVXR is ECOS. However, it is not always the best solver to use. As an example, let us consider again the catenary problem.
+      <description>The default solver in CVXR is ECOS. However, it is not always the best solver to use. As an example, let us consider again the catenary problem.
 We will change the problem slightly to use a finer discretization from 101 points to say 501.
 ## Problem data m &amp;lt;- 501 L &amp;lt;- 2 h &amp;lt;- L / (m - 1) ## Form objective x &amp;lt;- Variable(m) y &amp;lt;- Variable(m) objective &amp;lt;- Minimize(sum(y)) ## Form constraints constraints &amp;lt;- list(x[1] == 0, y[1] == 1, x[m] == 1, y[m] == 1, diff(x)^2 + diff(y)^2 &amp;lt;= h^2) ## Solve the catenary problem prob &amp;lt;- Problem(objective, constraints) result &amp;lt;- solve(prob) The solution status is no longer optimal.</description>
     </item>
