@@ -40,7 +40,7 @@ We will change the problem slightly to use a finer discretization from 101 point
       
       <guid>/post/examples/cvxr_using-other-solvers/</guid>
       <description>Introduction The default installation of CVXR comes with two (imported) open source solvers:
- ECOS and its mixed integer cousin ECOS_BB via the CRAN package ECOSolveR SCS via the CRAB package scs.  CVXR can also make use of several other open source solvers implemented in R packages.
+ ECOS and its mixed integer cousin ECOS_BB via the CRAN package ECOSolveR SCS via the CRAN package scs.  CVXR can also make use of several other open source solvers implemented in R packages.
  The linear and mixed integer programming package lpSolve via the lpSolveAPI package The linear and mixed integer programming package GLPK via the Rglpk package.</description>
     </item>
     

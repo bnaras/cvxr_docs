@@ -20,7 +20,7 @@ The default installation of `CVXR` comes with two (imported) open source solvers
 - [ECOS](https://github.com/embotech/ecos) and its mixed integer
   cousin `ECOS_BB` via the CRAN package
   [ECOSolveR](https://cloud.r-project.org/package=ECOSolveR)
-- [SCS](https://github.com/cvxgrp/scs) via the CRAB package
+- [SCS](https://github.com/cvxgrp/scs) via the CRAN package
   [scs](https://cloud.r-project.org/package=scs).
   
 `CVXR` can also make use of several other open source solvers
