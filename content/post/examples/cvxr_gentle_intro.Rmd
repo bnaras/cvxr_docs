@@ -313,7 +313,7 @@ like in `CVXR`:
 For illustration, we generate some synthetic data for use in this
 example.
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 set.seed(1)
 s <- 1
 n <- 10
