@@ -47,7 +47,7 @@ The solution status is no longer optimal.
 cat("Solution status is", result$status)
 ```
 
-In such cases, using a different solver will give more accurate
+In such cases, using a different solver may give more accurate
 results. Let us try `MOSEK` for example.
 
 ```{r}

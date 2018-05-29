@@ -51,7 +51,7 @@ result &lt;- solve(prob)</code></pre>
 <p>The solution status is no longer optimal.</p>
 <pre class="r"><code>cat(&quot;Solution status is&quot;, result$status)</code></pre>
 <pre><code>## Solution status is optimal_inaccurate</code></pre>
-<p>In such cases, using a different solver will give more accurate
+<p>In such cases, using a different solver may give more accurate
 results. Let us try <code>MOSEK</code> for example.</p>
 <pre class="r"><code>result &lt;- solve(prob, solver = &quot;MOSEK&quot;)
 cat(&quot;Solution status is&quot;, result$status)</code></pre>
