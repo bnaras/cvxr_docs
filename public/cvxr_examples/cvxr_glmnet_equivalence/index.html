@@ -1,0 +1,714 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.42.1" />
+	
+	<title>Getting Equivalent Results from `glmnet` and `CVXR` &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Getting Equivalent Results from `glmnet` and `CVXR`</h1>
+	
+	<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>We’ve had several questions of the following type:</p>
+<p><strong>When I fit the same model in <code>glmnet</code> and <code>CVXR</code>, why are the results so different?</strong></p>
+<p>For example, see <a href="https://stackoverflow.com/questions/51279485/a-comparison-between-cvxr-and-glmnet-elastic-net">this</a>.</p>
+<p>The reason is that users think that they are solving the same problem on the surface without paying attention to some crucial details. The documentation for <code>glmnet::glmnet</code> clearly states the optimization objective and unless the <code>CVXR</code> implementation matches that, there’s no reason to expect the same result.</p>
+<p>We illustrate below.</p>
+</div>
+<div id="lasso" class="section level2">
+<h2>Lasso</h2>
+<p>Consider a simple Lasso fit from the <code>glmnet</code> example, for a fixed <span class="math inline">\(\lambda\)</span>.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(glmnet)))
+set.seed(123)
+n &lt;- 100; p &lt;- 20; thresh &lt;- 1e-12; lambda &lt;- .05
+x &lt;-  matrix(rnorm(n * p), n, p); xDesign &lt;- cbind(1, x)
+y &lt;-  rnorm(n)
+fit1 &lt;-  glmnet(x,y, lambda = lambda, thresh = thresh)</code></pre>
+<p>The <code>glmnet</code> documentation notes that the objective being maximized, in the default invocation, is</p>
+<p><span class="math display">\[
+\|\frac{1}{2n}(y - X\beta)\|_2 + \lambda \|\beta_{-1}\|_1,
+\]</span></p>
+<p>where <span class="math inline">\(\beta_{-1}\)</span> is the beta vector excluding the first component, the intercept. Yes, the intercept is not penalized in the default invocation!</p>
+<p>So we will use this objective with <code>CVXR</code> in the problem specification.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
+beta &lt;- Variable(p + 1)
+obj &lt;- sum_squares((y - xDesign %*% beta)) / (2 * n) + lambda * p_norm(beta[-1], 1)
+prob &lt;- Problem(Minimize(obj))
+result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)</code></pre>
+<p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to compare. The results below should be close, and any differences are minor, due to different solver implementations.</p>
+<pre class="r"><code>est.table &lt;- data.frame(&quot;CVXR.est&quot; = result$getValue(beta), &quot;GLMNET.est&quot; = as.vector(coef(fit1)))
+rownames(est.table) &lt;- paste0(&quot;$\\beta_{&quot;, 0:p, &quot;}$&quot;)
+knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1:3, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+CVXR.est
+</th>
+<th style="text-align:right;">
+GLMNET.est
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{0}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.125
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.126
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{1}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.022
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.028
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{2}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{3}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.101
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.104
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{4}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{5}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{6}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{7}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{8}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.094
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.091
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{9}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{10}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{11}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.106
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.105
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{12}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{13}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.057
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.063
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{14}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{15}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{16}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{17}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{18}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{19}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{20}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.087
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.083
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="a-penalized-logistic-example" class="section level2">
+<h2>A Penalized Logistic Example</h2>
+<p>We now consider a logistic fit, again with a penalized term with a specified <span class="math inline">\(\lambda\)</span>.</p>
+<pre class="r"><code>lambda &lt;- .025
+y2 &lt;- sample(x = c(0, 1), size = n, replace = TRUE)
+fit2 &lt;-  glmnet(x, y2, lambda = lambda, thresh = thresh, family = &quot;binomial&quot;)</code></pre>
+<p>For logistic regression, the <code>glmnet</code> documentation states that the objective minimized is the negative log-likelihood divided by <span class="math inline">\(n\)</span> plus the penalty term which once again excludes the intercept in the default invocation. Below is the <code>CVXR</code> formulation, where we use the <code>logistic</code> atom as noted earlier in our other example on <a href="../../post/examples/cvxr_logistic-regression">logistic regression.</a></p>
+<pre class="r"><code>beta &lt;- Variable(p + 1)
+obj2 &lt;- (sum(xDesign[y2 &lt;= 0, ] %*% beta) + sum(logistic(-xDesign %*% beta))) / n +
+    lambda * p_norm(beta[-1], 1)
+prob &lt;- Problem(Minimize(obj2))
+result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)</code></pre>
+<p>Once again, the results below should be close enough.</p>
+<pre class="r"><code>est.table &lt;- data.frame(&quot;CVXR.est&quot; = result$getValue(beta), &quot;GLMNET.est&quot; = as.vector(coef(fit2)))
+rownames(est.table) &lt;- paste0(&quot;$\\beta_{&quot;, 0:p, &quot;}$&quot;)
+knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1:3, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+CVXR.est
+</th>
+<th style="text-align:right;">
+GLMNET.est
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{0}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.139
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.138
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{1}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.167
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.178
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{2}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.023
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.027
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{3}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.035
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.040
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{4}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.029
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.026
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{5}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.275
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.277
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{6}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{7}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.281
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.278
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{8}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.041
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.036
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{9}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.084
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.081
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{10}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.245
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.243
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{11}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{12}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{13}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{14}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{15}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.141
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.145
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{16}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.052
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.066
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{17}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{18}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.381
+</td>
+<td style="text-align:right;background-color: #ececec;">
+-0.380
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{19}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.071
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.068
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+<span class="math inline">\(\beta_{20}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin17.7.0 (64-bit)
+## Running under: macOS  10.14
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] CVXR_0.99-1      glmnet_2.0-16    foreach_1.4.4    Matrix_1.2-14   
+## [5] kableExtra_0.9.0
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.2      Rcpp_0.12.19      highr_0.7        
+##  [4] pillar_1.3.0      compiler_3.5.1    R.methodsS3_1.7.1
+##  [7] R.utils_2.7.0     iterators_1.0.10  tools_3.5.1      
+## [10] bit_1.1-14        digest_0.6.17     evaluate_0.12    
+## [13] tibble_1.4.2      viridisLite_0.3.0 lattice_0.20-35  
+## [16] pkgconfig_2.0.2   rlang_0.2.2       rstudioapi_0.8   
+## [19] yaml_2.2.0        blogdown_0.9.2    xfun_0.4         
+## [22] Rmpfr_0.7-1       ECOSolveR_0.4     httr_1.3.1       
+## [25] stringr_1.3.1     knitr_1.20        xml2_1.2.0       
+## [28] hms_0.4.2         bit64_0.9-7       rprojroot_1.3-2  
+## [31] grid_3.5.1        R6_2.3.0          rmarkdown_1.10   
+## [34] bookdown_0.7      readr_1.1.1       magrittr_1.5     
+## [37] scs_1.1-1         backports_1.1.2   scales_1.0.0     
+## [40] codetools_0.2-15  htmltools_0.3.6   rvest_0.3.2      
+## [43] colorspace_1.3-2  stringi_1.2.4     munsell_0.5.0    
+## [46] crayon_1.3.4      R.oo_1.22.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_glmnet_equivalence.Rmd">R Markdown</a></p>
+</div>
+
+
+
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../about/">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_integer-programming/" title="Integer Programming">Integer Programming</a></li>
+  
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

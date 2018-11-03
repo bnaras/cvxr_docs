@@ -1,0 +1,129 @@
+---
+title: Getting Equivalent Results from `glmnet` and `CVXR`
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2018-10-21'
+slug: cvxr_glmnet_equivalence
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+```{r, echo = FALSE}
+library(kableExtra)
+```
+
+## Introduction
+
+We've had several questions of the following type:
+
+__When I fit the same model in `glmnet` and `CVXR`, why are the results so
+different?__
+
+For example, see
+[this](https://stackoverflow.com/questions/51279485/a-comparison-between-cvxr-and-glmnet-elastic-net).
+
+The reason is that users think that they are solving the same problem
+on the surface without paying attention to some crucial details. The
+documentation for `glmnet::glmnet` clearly states the optimization
+objective and unless the `CVXR` implementation matches that, there's
+no reason to expect the same result.
+
+We illustrate below.
+
+## Lasso 
+
+Consider a simple Lasso fit from the `glmnet` example, for a fixed
+$\lambda$.
+
+```{r}
+suppressMessages(suppressWarnings(library(glmnet)))
+set.seed(123)
+n <- 100; p <- 20; thresh <- 1e-12; lambda <- .05
+x <-  matrix(rnorm(n * p), n, p); xDesign <- cbind(1, x)
+y <-  rnorm(n)
+fit1 <-  glmnet(x,y, lambda = lambda, thresh = thresh)
+```
+
+The `glmnet` documentation notes that the objective being maximized,
+in the default invocation, is 
+
+\[
+\|\frac{1}{2n}(y - X\beta)\|_2 + \lambda \|\beta_{-1}\|_1,
+\]
+
+where $\beta_{-1}$ is the beta vector excluding the first component,
+the intercept. Yes, the intercept is not penalized in the default
+invocation!
+
+So we will use this objective with `CVXR` in the problem
+specification. 
+
+```{r}
+suppressMessages(suppressWarnings(library(CVXR)))
+beta <- Variable(p + 1)
+obj <- sum_squares((y - xDesign %*% beta)) / (2 * n) + lambda * p_norm(beta[-1], 1)
+prob <- Problem(Minimize(obj))
+result <- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)
+```
+
+We can print the coefficients side-by-side from `glmnet` and `CVXR` to
+compare. The results below should be close, and any differences are
+minor, due to different solver implementations.
+
+
+```{r}
+est.table <- data.frame("CVXR.est" = result$getValue(beta), "GLMNET.est" = as.vector(coef(fit1)))
+rownames(est.table) <- paste0("$\\beta_{", 0:p, "}$")
+knitr::kable(est.table, format = "html", digits = 3) %>%
+    kable_styling("striped") %>%
+    column_spec(1:3, background = "#ececec")
+```
+
+## A Penalized Logistic Example
+
+We now consider a logistic fit, again with a penalized term with a
+specified $\lambda$.
+
+```{r}
+lambda <- .025
+y2 <- sample(x = c(0, 1), size = n, replace = TRUE)
+fit2 <-  glmnet(x, y2, lambda = lambda, thresh = thresh, family = "binomial")
+```
+
+For logistic regression, the `glmnet` documentation states that the
+objective minimized is the negative log-likelihood divided by $n$ plus
+the penalty term which once again excludes the intercept in the
+default invocation. Below is the `CVXR` formulation, where we use the
+`logistic` atom as noted earlier in our other example on [logistic
+regression.](/post/examples/cvxr_logistic-regression)
+
+```{r}
+beta <- Variable(p + 1)
+obj2 <- (sum(xDesign[y2 <= 0, ] %*% beta) + sum(logistic(-xDesign %*% beta))) / n +
+    lambda * p_norm(beta[-1], 1)
+prob <- Problem(Minimize(obj2))
+result <- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)
+```
+
+Once again, the results below should be close enough. 
+
+```{r}
+est.table <- data.frame("CVXR.est" = result$getValue(beta), "GLMNET.est" = as.vector(coef(fit2)))
+rownames(est.table) <- paste0("$\\beta_{", 0:p, "}$")
+knitr::kable(est.table, format = "html", digits = 3) %>%
+    kable_styling("striped") %>%
+    column_spec(1:3, background = "#ececec")
+```
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_glmnet_equivalence.Rmd)
+

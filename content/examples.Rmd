@@ -1,0 +1,52 @@
+---
+title: Tutorial Examples
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: examples
+bibliography: bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+Although a number of examples here were ported from the
+[`CVXPY`](https://cvxpy.org) site, there are many new ones we have
+added.
+
+## Basic Examples
+
+- [Largest Euclidean ball in a 2D polyhedron](/cvxr_examples/cvxr_2d_ball/)
+- [Catenary Problem](/cvxr_examples/cvxr_catenary/)
+- [Integer Programming](/cvxr_examples/cvxr_integer-programming/)
+
+## Regression Examples
+
+- [Huber Regression](/cvxr_examples/cvxr_huber-regression/)
+- [Logistic Regression](/cvxr_examples/cvxr_logistic-regression/)
+- [Quantile Regression](/cvxr_examples/cvxr_quantile-regression/)
+- [Censored Regression](/cvxr_examples/cvxr_censored-regression/)
+- [Isotonic Regression](/cvxr_examples/cvxr_isotonic-regression/)
+
+## Penalized Models
+
+- [Near Isotonic and Near Convex Regression](/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/)
+- [$L_1$ Trend Filtering](/cvxr_examples/cvxr_l1-trend-filtering/)
+- [Elastic Net](/cvxr_examples/cvxr_elastic-net/)
+- [Saturating Hinges](/cvxr_examples/cvxr_saturating_hinges/)
+  
+## Miscellaneous
+
+- [Direct Standardization](/cvxr_examples/cvxr_direct-standardization/)
+- [Log-Concave Density Estimation](/cvxr_examples/cvxr_log-concave/)
+- [Sparse Inverse Covariance Estimation](/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/)
+- [Kelly Gambling](/cvxr_examples/cvxr_kelly-strategy/)
+- [Fastest Mixing Markov Chain](/cvxr_examples/cvxr_fast-mixing-mc/)
+- [Portfolio Optimization](/cvxr_examples/cvxr_portfolio-optimization/)
+
+## Advanced Topics
+- [Replicatng `glmnet` Results](/cvxr_examples/cvxr_glmnet_equivalence/)
+- [Getting Faster Results](/cvxr_examples/cvxr_speed/)
+- [Using Other Solvers](/cvxr_examples/cvxr_using-other-solvers/)
+- [Solver Peculiarities](/cvxr_examples/cvxr_solver-peculiarities/)
+
+## References

@@ -3,148 +3,153 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/post/examples/cvxr_integer-programming/</loc>
+    <loc>/cvxr_examples/cvxr_glmnet_equivalence/</loc>
+    <lastmod>2018-10-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/cvxr_examples/cvxr_integer-programming/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_solver-peculiarities/</loc>
+    <loc>/cvxr_examples/cvxr_solver-peculiarities/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_using-other-solvers/</loc>
+    <loc>/cvxr_examples/cvxr_using-other-solvers/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_censored-regression/</loc>
+    <loc>/cvxr_examples/cvxr_censored-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_elastic-net/</loc>
+    <loc>/cvxr_examples/cvxr_elastic-net/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_fast-mixing-mc/</loc>
+    <loc>/cvxr_examples/cvxr_fast-mixing-mc/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_speed/</loc>
+    <loc>/cvxr_examples/cvxr_speed/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_huber-regression/</loc>
+    <loc>/cvxr_examples/cvxr_huber-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_kelly-strategy/</loc>
+    <loc>/cvxr_examples/cvxr_kelly-strategy/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_l1-trend-filtering/</loc>
+    <loc>/cvxr_examples/cvxr_l1-trend-filtering/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_2d_ball/</loc>
+    <loc>/cvxr_examples/cvxr_2d_ball/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_log-concave/</loc>
+    <loc>/cvxr_examples/cvxr_log-concave/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_logistic-regression/</loc>
+    <loc>/cvxr_examples/cvxr_logistic-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_near-isotonic-and-near-convex-regression/</loc>
+    <loc>/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_portfolio-optimization/</loc>
+    <loc>/cvxr_examples/cvxr_portfolio-optimization/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_quantile-regression/</loc>
+    <loc>/cvxr_examples/cvxr_quantile-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_saturating_hinges/</loc>
+    <loc>/cvxr_examples/cvxr_saturating_hinges/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_sparse_inverse_covariance_estimation/</loc>
+    <loc>/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_catenary/</loc>
+    <loc>/cvxr_examples/cvxr_catenary/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/cvxr_examples/</loc>
+    <loc>/examples/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_direct-standardization/</loc>
+    <loc>/cvxr_examples/cvxr_direct-standardization/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_isotonic-regression/</loc>
+    <loc>/cvxr_examples/cvxr_isotonic-regression/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/cvxr_functions/</loc>
+    <loc>/cvxr_functions/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/cvxr/</loc>
+    <loc>/cvxr/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_gentle-intro/</loc>
+    <loc>/cvxr_examples/cvxr_gentle-intro/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/cvxr_dcp/</loc>
+    <loc>/cvxr_dcp/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/cvxr_faq/</loc>
+    <loc>/cvxr_faq/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/examples/cvxr_intro/</loc>
+    <loc>/cvxr_examples/cvxr_intro/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-21T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -154,8 +159,8 @@
   </url>
   
   <url>
-    <loc>/post/</loc>
-    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
+    <loc>/cvxr_examples/</loc>
+    <lastmod>2018-10-21T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
