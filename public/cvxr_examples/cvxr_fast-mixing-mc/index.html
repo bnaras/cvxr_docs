@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.42.1" />
+	
+	<title>Fastest Mixing Markov Chain &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Fastest Mixing Markov Chain</h1>
+	
+	<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This example is derived from the results in <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, section 2. Let <span class="math inline">\(\mathcal{G} = (\mathcal{V}, \mathcal{E})\)</span> be a connected graph with vertices <span class="math inline">\(\mathcal{V} = \{1,\ldots,n\}\)</span> and edges <span class="math inline">\(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\)</span>. Assume that <span class="math inline">\((i,i) \in \mathcal{E}\)</span> for all <span class="math inline">\(i = 1,\ldots,n\)</span>, and <span class="math inline">\((i,j) \in \mathcal{E}\)</span> implies <span class="math inline">\((j,i) \in \mathcal{E}\)</span>. Under these conditions, a discrete-time Markov chain on <span class="math inline">\(\mathcal{V}\)</span> will have the uniform distribution as one of its equilibrium distributions. We are interested in finding the Markov chain, constructing the transition probability matrix <span class="math inline">\(P \in {\mathbf R}_+^{n \times n}\)</span>, that minimizes its asymptotic convergence rate to the uniform distribution. This is an important problem in Markov chain Monte Carlo (MCMC) simulations, as it directly affects the sampling efficiency of an algorithm.</p>
+<p>The asymptotic rate of convergence is determined by the second largest eigenvalue of <span class="math inline">\(P\)</span>, which in our case is <span class="math inline">\(\mu(P) := \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T)\)</span> where <span class="math inline">\(\lambda_{\max}(A)\)</span> denotes the maximum eigenvalue of <span class="math inline">\(A\)</span>. As <span class="math inline">\(\mu(P)\)</span> decreases, the mixing rate increases and the Markov chain converges faster to equilibrium. Thus, our optimization problem is</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{P}{\mbox{minimize}} &amp; \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T) \\
+\mbox{subject to} &amp; P \geq 0, \quad P{\mathbf 1} = {\mathbf 1}, \quad P = P^T \\
+&amp; P_{ij} = 0, \quad (i,j) \notin \mathcal{E}.
+\end{array}
+\]</span></p>
+<p>The element <span class="math inline">\(P_{ij}\)</span> of our transition matrix is the probability of moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span>. Our assumptions imply that <span class="math inline">\(P\)</span> is nonnegative, symmetric, and doubly stochastic. The last constraint ensures transitions do not occur between unconnected vertices.</p>
+<p>The function <span class="math inline">\(\lambda_{\max}\)</span> is convex, so this problem is solvable in <code>CVXR</code>. For instance, the code for the Markov chain in Figure 2 below (the triangle plus one edge) is</p>
+<pre class="r"><code>P &lt;- Variable(n,n)
+ones &lt;- matrix(1, nrow = n, ncol = 1)
+
+obj &lt;- Minimize(lambda_max(P - 1/n))
+constr1 &lt;- list(P &gt;= 0, P %*% ones == ones, P == t(P))
+constr2 &lt;- list(P[1,3] == 0, P[1,4] == 0)
+prob &lt;- Problem(obj, c(constr1, constr2))
+result &lt;- solve(prob)</code></pre>
+<p>where we have set <span class="math inline">\(n = 4\)</span>. We could also have specified <span class="math inline">\(P{\mathbf 1} = {\mathbf 1}\)</span> with <code>sum_entries(P,1) == 1</code>, which uses the <code>sum_entries</code> atom to represent the row sums.</p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>In order to reproduce some of the examples from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, we create functions to build up the graph, solve the optimization problem and finally display the chain graphically.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
+suppressMessages(suppressWarnings(library(markovchain)))
+## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
+## Form the complementary graph
+antiadjacency &lt;- function(g) {
+    n &lt;- max(as.numeric(names(g)))   ## Assumes names are integers starting from 1
+    a &lt;- lapply(1:n, function(i) c())
+    names(a) &lt;- 1:n
+    for(x in names(g)) {
+        for(y in 1:n) {
+            if(!(y %in% g[[x]]))
+                a[[x]] &lt;- c(a[[x]], y)
+        }
+    }
+    a
+}
+
+## Fastest mixing Markov chain on graph g
+FMMC &lt;- function(g, verbose = FALSE) {
+    a &lt;- antiadjacency(g)
+    n &lt;- length(names(a))
+    P &lt;- Variable(n, n)
+    o &lt;- rep(1, n)
+    objective &lt;- Minimize(norm(P - 1.0/n, &quot;2&quot;))
+    constraints &lt;- list(P %*% o == o, t(P) == P, P &gt;= 0)
+    for(i in names(a)) {
+        for(j in a[[i]]) {  ## (i-j) is a not-edge of g!
+            idx &lt;- as.numeric(i)
+            if(idx != j)
+                constraints &lt;- c(constraints, P[idx,j] == 0)
+        }
+    }
+    prob &lt;- Problem(objective, constraints)
+    result &lt;- solve(prob)
+    if(verbose)
+        cat(&quot;Status: &quot;, result$status, &quot;, Optimal Value = &quot;, result$value)
+    list(status = result$status, value = result$value, P = result$getValue(P))
+}
+
+disp_result &lt;- function(states, P, tol = 1e-3) {
+    if(!(&quot;markovchain&quot; %in% rownames(installed.packages()))) {
+        rownames(P) &lt;- states
+        colnames(P) &lt;- states
+        print(P)
+    } else {
+        P[P &lt; tol] &lt;- 0
+        P &lt;- P/apply(P, 1, sum)   ## Normalize so rows sum to exactly 1
+        mc &lt;- new(&quot;markovchain&quot;, states = states, transitionMatrix = P)
+        plot(mc)
+    }
+}</code></pre>
+<div id="results" class="section level3">
+<h3>Results</h3>
+<p>Table 1 from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span> is reproduced below.</p>
+<div class="figure">
+<img src="../../../img/fmmc/table1.png" />
+
+</div>
+<p>We reproduce the results for various rows of the table.</p>
+<pre class="r"><code>g &lt;- list(&quot;1&quot; = 2, &quot;2&quot; = c(1,3), &quot;3&quot; = c(2,4), &quot;4&quot; = 3)
+result &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.7074549</code></pre>
+<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-3"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-3-1.png" alt="Row 1, line graph" width="100%" />
+<p class="caption">
+Figure 1: Row 1, line graph
+</p>
+</div>
+<pre class="r"><code>g &lt;- list(&quot;1&quot; = 2, &quot;2&quot; = c(1,3,4), &quot;3&quot; = c(2,4), &quot;4&quot; = c(2,3))
+result &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.636713</code></pre>
+<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-4"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-4-1.png" alt="Row 2, triangle plus one edge" width="100%" />
+<p class="caption">
+Figure 2: Row 2, triangle plus one edge
+</p>
+</div>
+<pre class="r"><code>g &lt;- list(&quot;1&quot; = c(2,4,5), &quot;2&quot; = c(1,3), &quot;3&quot; = c(2,4,5), &quot;4&quot; = c(1,3), &quot;5&quot; = c(1,3))
+result &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.4294125</code></pre>
+<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-5"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-5-1.png" alt="Bipartite 2 plus 3" width="100%" />
+<p class="caption">
+Figure 3: Bipartite 2 plus 3
+</p>
+</div>
+<pre class="r"><code>g &lt;- list(&quot;1&quot; = c(2,3,5), &quot;2&quot; = c(1,4,5), &quot;3&quot; = c(1,4,5), &quot;4&quot; = c(2,3,5), &quot;5&quot; = c(1,2,3,4,5))
+result &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.2500525</code></pre>
+<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-6"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-6-1.png" alt="Square plus central point" width="100%" />
+<p class="caption">
+Figure 4: Square plus central point
+</p>
+</div>
+</div>
+</div>
+<div id="extensions" class="section level2">
+<h2>Extensions</h2>
+<p>It is easy to extend this example to other Markov chains. To change the number of vertices, we would simply modify <code>n</code>, and to add or remove edges, we need only alter the constraints in <code>constr2</code>. For instance, the bipartite chain in Figure Figure 3 is produced by setting <span class="math inline">\(n = 5\)</span> and</p>
+<pre class="r"><code>constr2 &lt;- list(P[1,3] == 0, P[2,4] == 0, P[2,5] == 0, P[4,5] == 0)</code></pre>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin17.7.0 (64-bit)
+## Running under: macOS  10.14
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] markovchain_0.6.9.12 CVXR_0.99-1         
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.2       Rcpp_0.12.19       compiler_3.5.1    
+##  [4] highr_0.7          R.methodsS3_1.7.1  R.utils_2.7.0     
+##  [7] tools_3.5.1        digest_0.6.17      bit_1.1-14        
+## [10] evaluate_0.12      lattice_0.20-35    pkgconfig_2.0.2   
+## [13] Matrix_1.2-14      igraph_1.2.2       yaml_2.2.0        
+## [16] parallel_3.5.1     expm_0.999-3       blogdown_0.9.2    
+## [19] xfun_0.4           Rmpfr_0.7-1        ECOSolveR_0.4     
+## [22] stringr_1.3.1      knitr_1.20         stats4_3.5.1      
+## [25] rprojroot_1.3-2    bit64_0.9-7        grid_3.5.1        
+## [28] R6_2.3.0           rmarkdown_1.10     bookdown_0.7      
+## [31] matlab_1.0.2       magrittr_1.5       backports_1.1.2   
+## [34] htmltools_0.3.6    scs_1.1-1          stringi_1.2.4     
+## [37] RcppParallel_4.4.1 R.oo_1.22.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_fast_mixing_mc.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-FMMC">
+<p>Boyd, S., P. Diaconis, and L. Xiao. 2004. “Fastest Mixing Markov Chain on a Graph.” <em>SIAM Review</em> 46 (4). SIAM: 667–89.</p>
+</div>
+</div>
+</div>
+
+
+
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../about/">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_speed/" title="Getting Faster Results">Getting Faster Results</a></li>
+  <li>Next: <a href="../../cvxr_examples/cvxr_elastic-net/" title="Elastic Net">Elastic Net</a></li>
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

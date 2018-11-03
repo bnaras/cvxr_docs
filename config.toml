@@ -28,8 +28,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
   #highlightjsLang = ["r", "yaml"]
   #highlightjsTheme = "github"
 
-  MathJaxCDN = "//cdn.bootcss.com"
-  MathJaxVersion = "2.7.1"
+  MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
+  MathJaxVersion = "2.7.5"
     
 [params.sidebar]
 	logo = "favicon.ico"
@@ -41,15 +41,15 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 
 	show_relations = true
 
-[[menu.main]]
-    name = "Home"
-         identifier = "Level-01"
-    	 url = "/index.html"
-	 weight = -22
-
 [params.footer]
 	copyright = "Anqi Fu, Balasubramanian Narasimhan, Stephen Boyd"
 	show_powered_by = true
+
+[[menu.main]]
+    name = "Home"
+         identifier = "Level-01"
+    	 url = "/about/"
+	 weight = -22
 
 [[menu.main]]
     name = "Package Docs"
@@ -57,38 +57,31 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	 weight = -21
 
 [[menu.main]]
-    name = "Tutorial"
-         identifier = "tutorial"
-	 parent = "Level-01"
-    	 url = "/post/cvxr_examples/"
-	 weight = -20
-
-[[menu.main]]
     name = "A Quick Intro"
-    	 url = "/post/examples/cvxr_intro/"
+    	 url = "/cvxr_examples/cvxr_intro/"
 	 weight = -19
 
 [[menu.main]]
     name = "A Longer Intro"
-    	 url = "/post/examples/cvxr_gentle-intro/"
+    	 url = "/cvxr_examples/cvxr_gentle-intro/"
 	 weight = -18
 
 [[menu.main]]
     name = "Tutorial Examples"
-    	 url = "/post/cvxr_examples/"
+    	 url = "/examples/"
 	 weight = -17
 
 [[menu.main]]
     name = "FAQ"
-    	 url = "/post/cvxr_faq/"
+    	 url = "/cvxr_faq/"
 	 weight = -16
 
 [[menu.main]]
     name = "DCP"
-    	 url = "/post/cvxr_dcp/"
+    	 url = "/cvxr_dcp/"
 	 weight = -16
 
 [[menu.main]]
     name = "Function Reference"
-    	 url = "/post/cvxr_functions/"
+    	 url = "/cvxr_functions/"
 	 weight = -15

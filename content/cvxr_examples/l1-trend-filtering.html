@@ -1,0 +1,150 @@
+---
+title: L1 Trend Filtering
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_l1-trend-filtering
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><span class="citation">Kim et al. (<a href="#ref-Kim:et_al:2009">2009</a>)</span> propose the <span class="math inline">\(l_1\)</span> trend filtering method for trend estimation. The method solves an optimization problem of the form</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1
+\end{array}
+\]</span> where the variable to be estimated is <span class="math inline">\(\beta\)</span> and we are given the problem data <span class="math inline">\(y\)</span> and <span class="math inline">\(\lambda\)</span>. The matrix <span class="math inline">\(D\)</span> is the second-order difference matrix,</p>
+<p><span class="math display">\[
+D = 
+\left[
+\begin{matrix} 1 &amp;  -2  &amp;  1      &amp;        &amp;        &amp;    &amp;   \\ 
+                 &amp;   1  &amp; -2      &amp;  1     &amp;        &amp;    &amp;   \\
+                 &amp;      &amp;  \ddots &amp; \ddots &amp; \ddots &amp;    &amp;   \\
+                 &amp;      &amp;         &amp; 1      &amp; -2     &amp;  1 &amp;   \\
+                 &amp;      &amp;         &amp;        &amp; 1      &amp; -2 &amp;  1\\              
+\end{matrix}
+\right].
+\]</span></p>
+<p>The implementation is in both C and Matlab. Hadley Wickham provides an R interface to the C code. This is on <a href="https://github.com/hadley/l1tf">GitHub</a> and can be installed via:</p>
+<pre class="r"><code>library(devtools)
+install_github(&quot;hadley/l1tf&quot;)</code></pre>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We will use the example in <code>l1tf</code> to illustrate. The package provides the function <code>l1tf</code> which computes the trend estimate for a specified <span class="math inline">\(\lambda\)</span>.</p>
+<pre class="r"><code>library(l1tf)
+sp_data &lt;- data.frame(x = sp500$date,
+                      y = sp500$log,
+                      l1_50 = l1tf(sp500$log, lambda = 50),
+                      l1_100 = l1tf(sp500$log, lambda = 100))</code></pre>
+</div>
+<div id="the-cvxr-version" class="section level2">
+<h2>The <code>CVXR</code> version</h2>
+<p><code>CVXR</code> provides all the atoms and functions necessary to formulat the problem in a few lines. For example, the <span class="math inline">\(D\)</span> matrix above is provided by the function <code>diff(..., differences = 2)</code>. Notice how the formulation tracks the mathematical construct above.</p>
+<pre class="r"><code>## lambda = 50
+y &lt;- sp500$log
+lambda_1 &lt;- 50 
+beta &lt;- Variable(length(y))
+objective_1 &lt;- Minimize(0.5 * p_norm(y - beta) +
+                        lambda_1 * p_norm(diff(x = beta, differences = 2), 1))
+p1 &lt;- Problem(objective_1)
+betaHat_50 &lt;- solve(p1)$getValue(beta)
+
+## lambda = 100
+lambda_2 &lt;- 100
+objective_2 &lt;- Minimize(0.5 * p_norm(y - beta) +
+                        lambda_2 * p_norm(diff(x = beta, differences = 2), 1))
+p2 &lt;- Problem(objective_2)
+betaHat_100 &lt;- solve(p2)$getValue(beta)</code></pre>
+<p><em>NOTE</em> Of course, <code>CVXR</code> is much slower since it is not optimized just for one problem.</p>
+</div>
+<div id="comparison-plots" class="section level2">
+<h2>Comparison Plots</h2>
+<p>A plot of the estimates for two values of <span class="math inline">\(\lambda\)</span> is shown below using both approaches. First the <code>l1tf</code> plot.</p>
+<pre class="r"><code>ggplot(data = sp_data) +
+    geom_line(mapping = aes(x = x, y = y), color = &#39;grey50&#39;) +
+    labs(x = &quot;Date&quot;, y = &quot;SP500 log-price&quot;) +
+    geom_line(mapping = aes(x = x, y = l1_50), color = &#39;red&#39;, size = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = &#39;blue&#39;, size = 1)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-5"></span>
+<img src="/cvxr_examples/l1-trend-filtering_files/figure-html/unnamed-chunk-5-1.png" alt="$L_1$ trends for $\lambda = 50$ (red) and $\lambda = 100$ (blue)." width="672" />
+<p class="caption">
+Figure 1: <span class="math inline">\(L_1\)</span> trends for <span class="math inline">\(\lambda = 50\)</span> (red) and <span class="math inline">\(\lambda = 100\)</span> (blue).
+</p>
+</div>
+<p>Next the corresponding <code>CVXR</code> plots.</p>
+<pre class="r"><code>cvxr_data &lt;- data.frame(x = sp500$date,
+                        y = sp500$log,
+                        l1_50 = betaHat_50,
+                        l1_100 = betaHat_100)
+ggplot(data = cvxr_data) +
+    geom_line(mapping = aes(x = x, y = y), color = &#39;grey50&#39;) +
+    labs(x = &quot;Date&quot;, y = &quot;SP500 log-price&quot;) +
+    geom_line(mapping = aes(x = x, y = l1_50), color = &#39;red&#39;, size = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = &#39;blue&#39;, size = 1)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-6"></span>
+<img src="/cvxr_examples/l1-trend-filtering_files/figure-html/unnamed-chunk-6-1.png" alt="`CVXR` estimated $L_1$ trends for $\lambda = 50$ (red) and $\lambda = 100$ (blue)." width="672" />
+<p class="caption">
+Figure 2: <code>CVXR</code> estimated <span class="math inline">\(L_1\)</span> trends for <span class="math inline">\(\lambda = 50\)</span> (red) and <span class="math inline">\(\lambda = 100\)</span> (blue).
+</p>
+</div>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<p>The <code>CVXR</code> solution is not quite exactly that of <code>l1tf</code>: on the left it shows a larger difference for the two <span class="math inline">\(\lambda\)</span> values; in the middle, it is less flatter than <code>l1tf</code>; and on the right, it does not have as many knots as <code>l1tf</code>.</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin17.7.0 (64-bit)
+## Running under: macOS  10.14
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] l1tf_0.0.0.9000 CVXR_0.99-1     ggplot2_3.0.0  
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.2      Rcpp_0.12.19      highr_0.7        
+##  [4] pillar_1.3.0      compiler_3.5.1    plyr_1.8.4       
+##  [7] bindr_0.1.1       R.methodsS3_1.7.1 R.utils_2.7.0    
+## [10] tools_3.5.1       bit_1.1-14        digest_0.6.17    
+## [13] evaluate_0.12     tibble_1.4.2      gtable_0.2.0     
+## [16] lattice_0.20-35   pkgconfig_2.0.2   rlang_0.2.2      
+## [19] Matrix_1.2-14     yaml_2.2.0        blogdown_0.9.2   
+## [22] xfun_0.4          bindrcpp_0.2.2    Rmpfr_0.7-1      
+## [25] ECOSolveR_0.4     withr_2.1.2       stringr_1.3.1    
+## [28] dplyr_0.7.6       knitr_1.20        bit64_0.9-7      
+## [31] rprojroot_1.3-2   grid_3.5.1        tidyselect_0.2.4 
+## [34] glue_1.3.0        R6_2.3.0          rmarkdown_1.10   
+## [37] bookdown_0.7      purrr_0.2.5       magrittr_1.5     
+## [40] scs_1.1-1         backports_1.1.2   scales_1.0.0     
+## [43] htmltools_0.3.6   assertthat_0.2.0  colorspace_1.3-2 
+## [46] labeling_0.3      stringi_1.2.4     lazyeval_0.2.1   
+## [49] munsell_0.5.0     crayon_1.3.4      R.oo_1.22.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_l1-trend-filtering.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-Kim:et_al:2009">
+<p>Kim, Seung-Jean, Kwangmoo Koh, Stephen Boyd, and Dimitry Gorinevsky. 2009. “<span class="math inline">\(l_1\)</span> Trend Filtering.” <em>SIAM Review</em> 51 (2): 339–60. doi:<a href="https://doi.org/doi:10.1137/070690274">doi:10.1137/070690274</a>.</p>
+</div>
+</div>
+</div>

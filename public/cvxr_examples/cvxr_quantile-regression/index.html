@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.42.1" />
+	
+	<title>Quantile Regression &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Quantile Regression</h1>
+	
+	<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Quantile regression is another variation on least squares . The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
+<p><span class="math display">\[
+    \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
+\]</span></p>
+<p>where <span class="math inline">\(\tau \in (0,1)\)</span> specifies the quantile. The problem as before is to minimize the total residual loss. This model is commonly used in ecology, healthcare, and other fields where the mean alone is not enough to capture complex relationships between variables. <code>CVXR</code> allows us to create a function to represent the loss and integrate it seamlessly into the problem definition, as illustrated below.</p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>We will use an example from the <code>quantreg</code> package. The vignette provides an example of the estimation and plot.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(quantreg)))
+data(engel)
+library(ggplot2)
+p &lt;- ggplot(data = engel) +
+    geom_point(mapping = aes(x = income, y = foodexp), color = &quot;blue&quot;)
+taus &lt;- c(0.1, 0.25, 0.5, 0.75, 0.90, 0.95)
+fits &lt;- data.frame(
+    coef(lm(foodexp ~ income, data = engel)),
+    sapply(taus, function(x) coef(rq(formula = foodexp ~ income, data = engel, tau = x))))
+names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))
+
+nf &lt;- ncol(fits)
+colors &lt;- colorRampPalette(colors = c(&quot;black&quot;, &quot;red&quot;))(nf)
+p &lt;- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)
+for (i in seq_len(nf)[-1]) {
+    p &lt;- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
+}
+p</code></pre>
+<p><img src="../../cvxr_examples/quantile-regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>The above plot shows the quantile regression fits for <span class="math inline">\(\tau = (0.1, 0.25, 0.5, 0.75, 0.90, 0.95)\)</span>. The OLS fit is the thick black line.</p>
+<p>The following is a table of the estimates.</p>
+<pre class="r"><code>library(kableExtra)
+knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `quantreg`&quot;) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1:8, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-2">Table 1: </span>Fits from OLS and <code>quantreg</code>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+OLS
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.10}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.25}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.50}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.75}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.90}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.95}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+(Intercept)
+</td>
+<td style="text-align:right;background-color: #ececec;">
+147.4753885
+</td>
+<td style="text-align:right;background-color: #ececec;">
+110.1415742
+</td>
+<td style="text-align:right;background-color: #ececec;">
+95.4835396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+81.4822474
+</td>
+<td style="text-align:right;background-color: #ececec;">
+62.3965855
+</td>
+<td style="text-align:right;background-color: #ececec;">
+67.3508721
+</td>
+<td style="text-align:right;background-color: #ececec;">
+64.1039632
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+income
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4851784
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4017658
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4741032
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.5601806
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6440141
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6862995
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.7090685
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>CVXR</code> formulation follows. Note we make use of <code>model.matrix</code> to get the intercept column painlessly.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
+X &lt;- model.matrix(foodexp ~ income, data = engel)
+y &lt;- matrix(engel[, &quot;foodexp&quot;], ncol = 1)
+beta &lt;- Variable(2)
+quant_loss &lt;- function(u, tau) { 0.5 * abs(u) + (tau - 0.5) * u }
+solutions &lt;- sapply(taus, function(tau) {
+    obj &lt;- sum(quant_loss(y - X %*% beta, t = tau))
+    prob &lt;- Problem(Minimize(obj))
+    solve(prob)$getValue(beta)
+})
+solutions &lt;- data.frame(coef(lm(foodexp ~ income, data = engel)),
+                        solutions)
+names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))</code></pre>
+<p>Here is a table similar to the above with the OLS estimate added in for easy comparison.</p>
+<pre class="r"><code>knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `CVXR`&quot;) %&gt;%
+    kable_styling(&quot;striped&quot;) %&gt;%
+    column_spec(1:8, background = &quot;#ececec&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-4">Table 2: </span>Fits from OLS and <code>CVXR</code>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+OLS
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.10}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.25}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.50}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.75}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.90}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\tau_{0.95}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+(Intercept)
+</td>
+<td style="text-align:right;background-color: #ececec;">
+147.4753885
+</td>
+<td style="text-align:right;background-color: #ececec;">
+110.1415742
+</td>
+<td style="text-align:right;background-color: #ececec;">
+95.4835396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+81.4822474
+</td>
+<td style="text-align:right;background-color: #ececec;">
+62.3965855
+</td>
+<td style="text-align:right;background-color: #ececec;">
+67.3508721
+</td>
+<td style="text-align:right;background-color: #ececec;">
+64.1039632
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+income
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4851784
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4017658
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.4741032
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.5601806
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6440141
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.6862995
+</td>
+<td style="text-align:right;background-color: #ececec;">
+0.7090685
+</td>
+</tr>
+</tbody>
+</table>
+<p>The results match.</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin17.7.0 (64-bit)
+## Running under: macOS  10.14
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] CVXR_0.99-1      kableExtra_0.9.0 ggplot2_3.0.0    quantreg_5.36   
+## [5] SparseM_1.77    
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.4   xfun_0.4           purrr_0.2.5       
+##  [4] lattice_0.20-35    colorspace_1.3-2   htmltools_0.3.6   
+##  [7] viridisLite_0.3.0  gmp_0.5-13.2       yaml_2.2.0        
+## [10] rlang_0.2.2        R.oo_1.22.0        pillar_1.3.0      
+## [13] Rmpfr_0.7-1        R.utils_2.7.0      glue_1.3.0        
+## [16] withr_2.1.2        bit64_0.9-7        bindrcpp_0.2.2    
+## [19] scs_1.1-1          bindr_0.1.1        plyr_1.8.4        
+## [22] stringr_1.3.1      MatrixModels_0.4-1 munsell_0.5.0     
+## [25] blogdown_0.9.2     gtable_0.2.0       R.methodsS3_1.7.1 
+## [28] rvest_0.3.2        evaluate_0.12      labeling_0.3      
+## [31] knitr_1.20         highr_0.7          Rcpp_0.12.19      
+## [34] readr_1.1.1        scales_1.0.0       backports_1.1.2   
+## [37] bit_1.1-14         hms_0.4.2          digest_0.6.17     
+## [40] stringi_1.2.4      bookdown_0.7       dplyr_0.7.6       
+## [43] grid_3.5.1         rprojroot_1.3-2    ECOSolveR_0.4     
+## [46] tools_3.5.1        magrittr_1.5       lazyeval_0.2.1    
+## [49] tibble_1.4.2       crayon_1.3.4       pkgconfig_2.0.2   
+## [52] Matrix_1.2-14      xml2_1.2.0         assertthat_0.2.0  
+## [55] rmarkdown_1.10     httr_1.3.1         rstudioapi_0.8    
+## [58] R6_2.3.0           compiler_3.5.1</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_quantile-regression.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+</div>
+
+
+
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../about/">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_saturating_hinges/" title="Saturating Hinges Fit">Saturating Hinges Fit</a></li>
+  <li>Next: <a href="../../cvxr_examples/cvxr_portfolio-optimization/" title="Portfolio Optimization">Portfolio Optimization</a></li>
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>
