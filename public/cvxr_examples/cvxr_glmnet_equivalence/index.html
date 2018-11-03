@@ -47,13 +47,13 @@ y &lt;-  rnorm(n)
 fit1 &lt;-  glmnet(x,y, lambda = lambda, thresh = thresh)</code></pre>
 <p>The <code>glmnet</code> documentation notes that the objective being maximized, in the default invocation, is</p>
 <p><span class="math display">\[
-\|\frac{1}{2n}(y - X\beta)\|_2 + \lambda \|\beta_{-1}\|_1,
+\frac{1}{2n}\|(y - X\beta)\|_2^2 + \lambda \|\beta_{-1}\|_1,
 \]</span></p>
 <p>where <span class="math inline">\(\beta_{-1}\)</span> is the beta vector excluding the first component, the intercept. Yes, the intercept is not penalized in the default invocation!</p>
 <p>So we will use this objective with <code>CVXR</code> in the problem specification.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
 beta &lt;- Variable(p + 1)
-obj &lt;- sum_squares((y - xDesign %*% beta)) / (2 * n) + lambda * p_norm(beta[-1], 1)
+obj &lt;- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob &lt;- Problem(Minimize(obj))
 result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to compare. The results below should be close, and any differences are minor, due to different solver implementations.</p>

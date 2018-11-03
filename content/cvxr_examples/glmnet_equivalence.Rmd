@@ -49,7 +49,7 @@ The `glmnet` documentation notes that the objective being maximized,
 in the default invocation, is 
 
 \[
-\|\frac{1}{2n}(y - X\beta)\|_2 + \lambda \|\beta_{-1}\|_1,
+\frac{1}{2n}\|(y - X\beta)\|_2^2 + \lambda \|\beta_{-1}\|_1,
 \]
 
 where $\beta_{-1}$ is the beta vector excluding the first component,
@@ -62,7 +62,7 @@ specification.
 ```{r}
 suppressMessages(suppressWarnings(library(CVXR)))
 beta <- Variable(p + 1)
-obj <- sum_squares((y - xDesign %*% beta)) / (2 * n) + lambda * p_norm(beta[-1], 1)
+obj <- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob <- Problem(Minimize(obj))
 result <- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)
 ```
