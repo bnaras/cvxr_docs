@@ -15,7 +15,7 @@ suppressWarnings(suppressMessages(library(CVXR)))
 
 The default solver in `CVXR` is `ECOS`. However, it is not always the
 best solver to use. As an example, let us consider again the [catenary
-problem](/post/examples/cvxr_catenary). 
+problem](/cvxr_examples/catenary). 
 
 We will change the problem slightly to use a finer discretization from
 101 points to say 501. 
@@ -77,6 +77,6 @@ sessionInfo()
 
 ## Source
 
-[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_solver-peculiarities.Rmd)
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/solver-peculiarities.Rmd)
 
 ## References

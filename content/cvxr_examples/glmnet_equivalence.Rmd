@@ -17,17 +17,17 @@ library(kableExtra)
 
 We've had several questions of the following type:
 
-__When I fit the same model in `glmnet` and `CVXR`, why are the results so
-different?__
+__When I fit the same model in `glmnet` and `CVXR`, why are the
+results different?__
 
 For example, see
 [this](https://stackoverflow.com/questions/51279485/a-comparison-between-cvxr-and-glmnet-elastic-net).
 
-The reason is that users think that they are solving the same problem
-on the surface without paying attention to some crucial details. The
+Obviously, unless one _actually_ solves the same problem in both
+places, there's no reason to expect the same result.  The
 documentation for `glmnet::glmnet` clearly states the optimization
-objective and unless the `CVXR` implementation matches that, there's
-no reason to expect the same result.
+objective and so one just has to ensure that the `CVXR` objective also
+matches that.
 
 We illustrate below.
 
@@ -96,7 +96,7 @@ objective minimized is the negative log-likelihood divided by $n$ plus
 the penalty term which once again excludes the intercept in the
 default invocation. Below is the `CVXR` formulation, where we use the
 `logistic` atom as noted earlier in our other example on [logistic
-regression.](/post/examples/cvxr_logistic-regression)
+regression.](/cvxr_examples/logistic-regression)
 
 ```{r}
 beta <- Variable(p + 1)
@@ -125,5 +125,5 @@ sessionInfo()
 
 ## Source
 
-[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_glmnet_equivalence.Rmd)
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/cvxr_examples/glmnet_equivalence.Rmd)
 

@@ -145,6 +145,6 @@ sessionInfo()
 
 ## Source
 
-[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_log-concave.Rmd)
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/log-concave.Rmd)
 
 ## References

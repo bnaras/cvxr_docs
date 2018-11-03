@@ -37,7 +37,7 @@ Since we plan to fit the regression and also get some idea of the
 standard errors, we write a function that computes the fit for use in
 bootstrapping. We directly call the solver in this instance, to save
 computational time in bootstrapping. For more on this, see [Getting
-Faster Results](/post/examples/cvxr_speed/).
+Faster Results](/cvxr_examples/speed/).
 
 ```{r}
 neariso_fit <- function(y, lambda) {
@@ -176,6 +176,6 @@ sessionInfo()
 
 ## Source
 
-[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_near-isotonic-and-near-convex-regression.Rmd)
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/near-isotonic-and-near-convex-regression.Rmd)
 
 ## References

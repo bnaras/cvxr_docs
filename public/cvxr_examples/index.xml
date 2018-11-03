@@ -18,9 +18,9 @@
       
       <guid>/cvxr_examples/cvxr_glmnet_equivalence/</guid>
       <description>Introduction We’ve had several questions of the following type:
-When I fit the same model in glmnet and CVXR, why are the results so different?
+When I fit the same model in glmnet and CVXR, why are the results different?
 For example, see this.
-The reason is that users think that they are solving the same problem on the surface without paying attention to some crucial details. The documentation for glmnet::glmnet clearly states the optimization objective and unless the CVXR implementation matches that, there’s no reason to expect the same result.</description>
+Obviously, unless one actually solves the same problem in both places, there’s no reason to expect the same result. The documentation for glmnet::glmnet clearly states the optimization objective and so one just has to ensure that the CVXR objective also matches that.</description>
     </item>
     
     <item>

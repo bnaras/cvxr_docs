@@ -501,7 +501,7 @@ sessionInfo()
 
 ## Source
 
-[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_gentle_intro.Rmd)
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/gentle_intro.Rmd)
 
 ## References
 

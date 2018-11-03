@@ -254,10 +254,10 @@ variability.
 ## Further Reading
 
 We hope we have whet your appetite. You may wish to
-read [a longer introduction](/post/examples/cvxr_gentle-intro/)
+read [a longer introduction](/cvxr_examples/gentle-intro/)
 with more examples. 
 
-We also have a number of [tutorial examples](/post/examples/)
+We also have a number of [tutorial examples](/examples/)
 available to study and mimic.
 
 ## Session Info
@@ -268,7 +268,7 @@ sessionInfo()
 
 ## Source
 
-[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_intro.Rmd)
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/intro.Rmd)
 
 ## References
 

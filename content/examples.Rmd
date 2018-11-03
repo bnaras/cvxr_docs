@@ -44,7 +44,7 @@ added.
 - [Portfolio Optimization](/cvxr_examples/cvxr_portfolio-optimization/)
 
 ## Advanced Topics
-- [Replicatng `glmnet` Results](/cvxr_examples/cvxr_glmnet_equivalence/)
+- [Replicating `glmnet` Results](/cvxr_examples/cvxr_glmnet_equivalence/)
 - [Getting Faster Results](/cvxr_examples/cvxr_speed/)
 - [Using Other Solvers](/cvxr_examples/cvxr_using-other-solvers/)
 - [Solver Peculiarities](/cvxr_examples/cvxr_solver-peculiarities/)

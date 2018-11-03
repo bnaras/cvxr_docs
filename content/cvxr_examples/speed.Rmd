@@ -21,7 +21,7 @@ DCP-compliance may result in garbage!_
 ## Introduction
 
 As was remarked in the [introduction to
-`CVXR`](/post/examples/cvxr_intro/), its chief advantage is
+`CVXR`](/cvxr_examples/intro/), its chief advantage is
 _flexibility_: you can specify a problem in close to mathematical form
 and `CVXR` solves it for you, if it can. Behind the scenes, `CVXR`
 compiles the domain specific language and verifies the convexity of
@@ -185,6 +185,6 @@ sessionInfo()
 
 ## Source
 
-[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_speed.Rmd)
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/speed.Rmd)
 
 ## References

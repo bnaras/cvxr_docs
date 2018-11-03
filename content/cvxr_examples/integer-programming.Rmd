@@ -110,7 +110,7 @@ ecos_solution <- result$getValue(x)
 We can try other solvers and compare the solutions obtained, like
 `LPSOLVE` and `GLPK` provided the respective R packages are installed
 as documented in the tutorial [Using Other
-Solvers](/post/examples/cvxr_using-other-solvers/).
+Solvers](/cvxr_examples/using-other-solvers/).
 
 ```{r}
 result <- solve(problem, solver = "LPSOLVE")
@@ -271,6 +271,6 @@ sessionInfo()
 ## Source
 
 [R
-Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_integer-programming.Rmd)
+Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/integer-programming.Rmd)
 
 ## References

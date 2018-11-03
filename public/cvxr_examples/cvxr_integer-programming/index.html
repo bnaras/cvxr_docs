@@ -64,7 +64,7 @@ cat(sprintf(&quot;Optimal value: %.3f\n&quot;, result$value))</code></pre>
 <pre class="r"><code>ecos_solution &lt;- result$getValue(x)</code></pre>
 <div id="alternative-solvers" class="section level2">
 <h2>Alternative Solvers</h2>
-<p>We can try other solvers and compare the solutions obtained, like <code>LPSOLVE</code> and <code>GLPK</code> provided the respective R packages are installed as documented in the tutorial <a href="../../post/examples/cvxr_using-other-solvers/">Using Other Solvers</a>.</p>
+<p>We can try other solvers and compare the solutions obtained, like <code>LPSOLVE</code> and <code>GLPK</code> provided the respective R packages are installed as documented in the tutorial <a href="../../cvxr_examples/using-other-solvers/">Using Other Solvers</a>.</p>
 <pre class="r"><code>result &lt;- solve(problem, solver = &quot;LPSOLVE&quot;)
 lpsolve_solution &lt;- result$getValue(x)
 result &lt;- solve(problem, solver = &quot;GLPK&quot;)
@@ -260,13 +260,13 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.0.0    kableExtra_0.9.0 CVXR_0.99-1     
+## [1] ggplot2_3.1.0    kableExtra_0.9.0 CVXR_0.99-1     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reticulate_1.10       tidyselect_0.2.4      xfun_0.4             
+##  [1] reticulate_1.10       tidyselect_0.2.5      xfun_0.4             
 ##  [4] slam_0.1-43           purrr_0.2.5           lattice_0.20-35      
 ##  [7] colorspace_1.3-2      htmltools_0.3.6       viridisLite_0.3.0    
-## [10] yaml_2.2.0            gmp_0.5-13.2          rlang_0.2.2          
+## [10] yaml_2.2.0            gmp_0.5-13.2          rlang_0.3.0.1        
 ## [13] R.oo_1.22.0           pillar_1.3.0          glue_1.3.0           
 ## [16] Rmpfr_0.7-1           withr_2.1.2           R.utils_2.7.0        
 ## [19] bit64_0.9-7           bindrcpp_0.2.2        scs_1.1-1            
@@ -276,18 +276,18 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [31] evaluate_0.12         labeling_0.3          knitr_1.20           
 ## [34] highr_0.7             Rcpp_0.12.19          readr_1.1.1          
 ## [37] backports_1.1.2       scales_1.0.0          jsonlite_1.5         
-## [40] bit_1.1-14            hms_0.4.2             digest_0.6.17        
-## [43] stringi_1.2.4         bookdown_0.7          dplyr_0.7.6          
+## [40] bit_1.1-14            hms_0.4.2             digest_0.6.18        
+## [43] stringi_1.2.4         bookdown_0.7          dplyr_0.7.7          
 ## [46] Rglpk_0.6-3           grid_3.5.1            rprojroot_1.3-2      
 ## [49] ECOSolveR_0.4         tools_3.5.1           magrittr_1.5         
 ## [52] lazyeval_0.2.1        tibble_1.4.2          crayon_1.3.4         
-## [55] pkgconfig_2.0.2       Matrix_1.2-14         xml2_1.2.0           
+## [55] pkgconfig_2.0.2       Matrix_1.2-15         xml2_1.2.0           
 ## [58] assertthat_0.2.0      rmarkdown_1.10        httr_1.3.1           
 ## [61] rstudioapi_0.8        R6_2.3.0              compiler_3.5.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
-<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_integer-programming.Rmd">R Markdown</a></p>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/integer-programming.Rmd">R Markdown</a></p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

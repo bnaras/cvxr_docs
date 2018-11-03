@@ -25,7 +25,7 @@
 						
 	<h1>Solver Peculiarities</h1>
 	
-	<p>The default solver in <code>CVXR</code> is <code>ECOS</code>. However, it is not always the best solver to use. As an example, let us consider again the <a href="../../post/examples/cvxr_catenary">catenary problem</a>.</p>
+	<p>The default solver in <code>CVXR</code> is <code>ECOS</code>. However, it is not always the best solver to use. As an example, let us consider again the <a href="../../cvxr_examples/catenary">catenary problem</a>.</p>
 <p>We will change the problem slightly to use a finer discretization from 101 points to say 501.</p>
 <pre class="r"><code>## Problem data
 m &lt;- 501
@@ -83,8 +83,8 @@ cat(&quot;Solution status is&quot;, result$status)</code></pre>
 ##  [7] stringr_1.3.1     tools_3.5.1       grid_3.5.1       
 ## [10] xfun_0.4          R.oo_1.22.0       scs_1.1-1        
 ## [13] htmltools_0.3.6   bit64_0.9-7       yaml_2.2.0       
-## [16] rprojroot_1.3-2   digest_0.6.17     bookdown_0.7     
-## [19] Matrix_1.2-14     gmp_0.5-13.2      ECOSolveR_0.4    
+## [16] rprojroot_1.3-2   digest_0.6.18     bookdown_0.7     
+## [19] Matrix_1.2-15     gmp_0.5-13.2      ECOSolveR_0.4    
 ## [22] R.utils_2.7.0     evaluate_0.12     rmarkdown_1.10   
 ## [25] blogdown_0.9.2    stringi_1.2.4     compiler_3.5.1   
 ## [28] Rmpfr_0.7-1       backports_1.1.2   R.methodsS3_1.7.1
@@ -92,7 +92,7 @@ cat(&quot;Solution status is&quot;, result$status)</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
-<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/post/examples/cvxr_solver-peculiarities.Rmd">R Markdown</a></p>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/solver-peculiarities.Rmd">R Markdown</a></p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
