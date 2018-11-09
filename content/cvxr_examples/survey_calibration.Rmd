@@ -1,0 +1,238 @@
+---
+title: Survey Calibration
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2018-10-01'
+slug: cvxr_survey_calibration
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+```{r, echo = FALSE}
+suppressMessages(suppressWarnings(library(dplyr)))
+library(kableExtra)
+build_df <- function(api, method, wt_value) {
+    d <- data.frame(apisrs$stype, apisrs$sch.wide, wt_value )
+    names(d) <- c("stype", "sch.wide", "weight")
+    rownames(d) <- NULL
+    d %<>%
+        group_by(stype, sch.wide) %>%
+        summarize(value = first(weight), frequency = n())
+    names(d) <- c("stype", "sch.wide", paste(method, "wts."), "Frequency")
+    d
+}
+build_table <- function(d1, d2, title) {
+    d <- inner_join(d1, d2, by = c("stype", "sch.wide"))
+    names(d) <- gsub("Frequency.x|Frequency.y", "Frequency", names(d))
+    d %>%
+    knitr::kable(format = "html", digits = 3, caption = title) %>%
+    kable_styling("striped") %>%
+    column_spec(1:6, background = "#ececec")
+}
+```
+
+
+## Introduction
+
+Calibration is a widely used technique in survey sampling. Suppose
+$m$ sampling units in a survey have been assigned initial weights
+$d_i$ for $i = 1,\ldots,m$, and furthermore, there are $n$ auxiliary
+variables whose values in the sample are known. Calibration seeks to
+improve the initial weights $d_i$ by finding new weights $w_i$ that
+incorporate this auxiliary information while perturbing the initial
+weights as little as possible, \ie, the ratio $g_i = w_i/d_i$ must
+be close to one. Such reweighting improves precision of estimates
+(Chapter 7, @Lumley:2010).
+
+Let $X \in {\mathbf R}^{m \times n}$ be the matrix of survey samples, with
+each column corresponding to an auxiliary variable. Reweighting can be
+expressed as the optimization problem (see @Davies:2016):
+
+\[
+	\begin{array}{ll}
+		\mbox{minimize} & \sum_{i=1}^m d_i\phi(g_i) \\
+		\mbox{subject to} & A^Tg = r
+	\end{array}
+\]
+
+with respect to $g \in {\mathbf R}^m$, where $\phi:{\mathbf R} \rightarrow
+{\mathbf R}$ is a strictly convex function with $\phi(1) = 0$, $r \in
+{\mathbf R}^n$ are the known population totals of the auxiliary variables,
+and $A \in {\mathbf R}^{m \times n}$ is related to $X$ by $A_{ij} =
+d_iX_{ij}$ for $i = 1,\ldots,m$ and $j = 1,\ldots,n$. 
+
+## Raking 
+
+A common calibration technique is _raking_, which uses the penalty
+function $\phi(g_i) = g_i\log(g_i) - g_i + 1$ as the calibratin
+metric.
+
+We illustrate with the California Academic Performance Index data in
+the `survey` package (@lumley:2018) which also supplies facilities for
+calibration via the function `calibrate`. Both the population dataset
+(`apipop`) and a simple random sample of $m = 200$ (`apisrs`) are
+provided. Suppose that we wish to reweight the observations in the
+sample using known totals for two variables from the population:
+`stype`, the school type (elementary, middle or high) and `sch.wide`,
+whether the school met the yearly target or not. This reweighting
+would make the sample more representative of the general population.
+
+The code below estimates the weights using `survey::calibrate`.
+
+```{r}
+suppressMessages(suppressWarnings(library(survey)))
+data(api)
+design_api <- svydesign(id = ~dnum, weights = ~pw, data = apisrs)
+formula <- ~stype + sch.wide
+T <- apply(model.matrix(object = formula, data = apipop),
+           2,
+           sum)
+
+cal_api <- calibrate(design_api, formula, population = T, calfun = cal.raking)
+w_survey <- weights(cal_api)
+```
+
+The `CVXR` formulation follows.
+
+```{r}
+suppressMessages(suppressWarnings(library(CVXR)))
+di <- apisrs$pw
+X <- model.matrix(object = formula, data = apisrs)
+A <- di * X
+n <- nrow(apisrs)
+g <- Variable(n)
+constraints <- list(t(A) %*% g == T)
+
+## Raking
+Phi_R <- Minimize(sum(di * (-entr(g) - g + 1)))
+p <- Problem(Phi_R, constraints)
+res <- solve(p)
+w_cvxr <- di * res$getValue(g)
+```
+
+We compare the results below in a table which show them to be identical.
+
+```{r}
+## Using functions in the *un echoed* preamble of this document...
+build_table(d1 = build_df(apisrs, "Survey", w_survey),
+            d2 = build_df(apisrs, "CVXR", w_cvxr),
+            title = "Calibration weights from Raking")
+```
+
+## Other Calibration Metrics
+
+Two other penalty functions commonly used are:
+
+- __Quadratic__
+\[
+  \phi^{Q}(g) = (g-1)^2/2;
+\]
+- __Logit__
+\[
+  \phi^{L}(g; l, u) = \frac{1}{C}\biggl[ (g-l)\log\left(\frac{g-l}{1-l}\right) +
+  (u-g)\log\left(\frac{u-g}{u-1}\right) \biggr] \mbox{ for } C = \frac{u-l}{(1-l)(u-1)}.
+\]
+
+It is again easy to incorporate these in our example and compare to
+`survey` results.
+
+### Quadratic 
+
+The `survey` function for this calibration is invoked as `cal.linear`.
+
+```{r}
+## Quadratic
+Phi_Q  <- Minimize(sum_squares(g - 1) / 2)
+p <- Problem(Phi_Q, constraints)
+res <- solve(p, solver = "SCS")
+w_cvxr_q <- di * res$getValue(g)
+w_survey_q <- weights(calibrate(design_api, formula, population = T, calfun = cal.linear))
+```
+
+Note the use of the `SCS` solver above; the default `ECOS` solver
+produces a different number of unique weights, for reasons we have not
+fully investigated yet. (_Such differences are not unheard of among
+solvers!_)
+
+```{r, echo = FALSE}
+build_table(d1 = build_df(apisrs, "Survey", w_survey_q),
+            d2 = build_df(apisrs, "CVXR", w_cvxr_q),
+            title = "Calibration weights from Quadratic metric")
+```
+
+### Logistic 
+
+Finally, the logistic, which requires bounds $l$ and $u$ on the
+coefficients; we use $l=0.9$ and $u=1.1$.
+
+```{r}
+u <- 1.10; l <- 0.90
+w_survey_l <- weights(calibrate(design_api, formula, population = T, calfun = cal.linear,
+                                bounds = c(l, u)))
+Phi_L <- Minimize(sum(-entr((g - l) / (u - l))  -
+                      entr((u - g) / (u - l)))) 
+p <- Problem(Phi_L, c(constraints, list(l <= g, g <= u)))
+res <- solve(p)
+w_cvxr_l <- di * res$getValue(g)
+```
+
+```{r, echo = FALSE}
+build_table(d1 = build_df(apisrs, "Survey", w_survey_l),
+            d2 = build_df(apisrs, "CVXR", w_cvxr_l),
+            title = "Calibration weights from Logit metric")
+```
+
+## Further Metrics
+
+Following examples in `survey::calibrate`, we can try a few other metrics.
+
+First, the hellinger distance.
+
+```{r}
+hellinger <- make.calfun(Fm1 = function(u, bounds)  ((1 - u / 2)^-2) - 1,
+                         dF= function(u, bounds) (1 -u / 2)^-3 ,
+                         name = "Hellinger distance")
+w_survey_h <- weights(calibrate(design_api, formula, population = T, calfun = hellinger))
+Phi_h <- Minimize(sum((1 - g / 2)^(-2)))
+p <- Problem(Phi_h, constraints)
+res <- solve(p)
+w_cvxr_h <- di * res$getValue(g)
+```
+
+```{r, echo = FALSE}
+build_table(d1 = build_df(apisrs, "Survey", w_survey_h),
+            d2 = build_df(apisrs, "CVXR", w_cvxr_h),
+            title = "Calibration weights from Hellinger distance metric")
+```
+
+Next, the derivative of the inverse hyperbolic sine. 
+
+```{r}
+w_survey_s <- weights(calibrate(design_api, formula, population = T, calfun = cal.sinh,
+                                bounds = c(l, u)))
+Phi_s <- Minimize(sum( 0.5 * (exp(g) + exp(-g))))
+p <- Problem(Phi_s, c(constraints, list(l <= g, g <= u)))
+res <- solve(p)
+w_cvxr_s <- di * res$getValue(g)
+```
+
+```{r, echo = FALSE}
+build_table(d1 = build_df(apisrs, "Survey", w_survey_s),
+            d2 = build_df(apisrs, "CVXR", w_cvxr_s),
+            title = "Calibration weights from derivative of sinh metric")
+```
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/survey_calibration.Rmd)
+
+
+## References
