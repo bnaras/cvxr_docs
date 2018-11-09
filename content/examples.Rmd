@@ -37,6 +37,7 @@ added.
 ## Miscellaneous
 
 - [Direct Standardization](/cvxr_examples/cvxr_direct-standardization/)
+- [Survey Calibration](/cvxr_examples/cvxr_survey_calibration/)
 - [Log-Concave Density Estimation](/cvxr_examples/cvxr_log-concave/)
 - [Sparse Inverse Covariance Estimation](/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/)
 - [Kelly Gambling](/cvxr_examples/cvxr_kelly-strategy/)

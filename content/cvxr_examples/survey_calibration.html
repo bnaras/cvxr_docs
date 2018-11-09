@@ -1,0 +1,922 @@
+---
+title: Survey Calibration
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2018-10-01'
+slug: cvxr_survey_calibration
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Calibration is a widely used technique in survey sampling. Suppose <span class="math inline">\(m\)</span> sampling units in a survey have been assigned initial weights <span class="math inline">\(d_i\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span>, and furthermore, there are <span class="math inline">\(n\)</span> auxiliary variables whose values in the sample are known. Calibration seeks to improve the initial weights <span class="math inline">\(d_i\)</span> by finding new weights <span class="math inline">\(w_i\)</span> that incorporate this auxiliary information while perturbing the initial weights as little as possible, , the ratio <span class="math inline">\(g_i = w_i/d_i\)</span> must be close to one. Such reweighting improves precision of estimates (Chapter 7, <span class="citation">T. S. Lumley (<a href="#ref-Lumley:2010">2010</a>)</span>).</p>
+<p>Let <span class="math inline">\(X \in {\mathbf R}^{m \times n}\)</span> be the matrix of survey samples, with each column corresponding to an auxiliary variable. Reweighting can be expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016">2016</a>)</span>):</p>
+<p><span class="math display">\[
+    \begin{array}{ll}
+        \mbox{minimize} &amp; \sum_{i=1}^m d_i\phi(g_i) \\
+        \mbox{subject to} &amp; A^Tg = r
+    \end{array}
+\]</span></p>
+<p>with respect to <span class="math inline">\(g \in {\mathbf R}^m\)</span>, where <span class="math inline">\(\phi:{\mathbf R} \rightarrow {\mathbf R}\)</span> is a strictly convex function with <span class="math inline">\(\phi(1) = 0\)</span>, <span class="math inline">\(r \in {\mathbf R}^n\)</span> are the known population totals of the auxiliary variables, and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is related to <span class="math inline">\(X\)</span> by <span class="math inline">\(A_{ij} = d_iX_{ij}\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span> and <span class="math inline">\(j = 1,\ldots,n\)</span>.</p>
+</div>
+<div id="raking" class="section level2">
+<h2>Raking</h2>
+<p>A common calibration technique is <em>raking</em>, which uses the penalty function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibratin metric.</p>
+<p>We illustrate with the California Academic Performance Index data in the <code>survey</code> package (<span class="citation">T. Lumley (<a href="#ref-lumley:2018">2018</a>)</span>) which also supplies facilities for calibration via the function <code>calibrate</code>. Both the population dataset (<code>apipop</code>) and a simple random sample of <span class="math inline">\(m = 200\)</span> (<code>apisrs</code>) are provided. Suppose that we wish to reweight the observations in the sample using known totals for two variables from the population: <code>stype</code>, the school type (elementary, middle or high) and <code>sch.wide</code>, whether the school met the yearly target or not. This reweighting would make the sample more representative of the general population.</p>
+<p>The code below estimates the weights using <code>survey::calibrate</code>.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(survey)))
+data(api)
+design_api &lt;- svydesign(id = ~dnum, weights = ~pw, data = apisrs)
+formula &lt;- ~stype + sch.wide
+T &lt;- apply(model.matrix(object = formula, data = apipop),
+           2,
+           sum)
+
+cal_api &lt;- calibrate(design_api, formula, population = T, calfun = cal.raking)
+w_survey &lt;- weights(cal_api)</code></pre>
+<p>The <code>CVXR</code> formulation follows.</p>
+<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
+di &lt;- apisrs$pw
+X &lt;- model.matrix(object = formula, data = apisrs)
+A &lt;- di * X
+n &lt;- nrow(apisrs)
+g &lt;- Variable(n)
+constraints &lt;- list(t(A) %*% g == T)
+
+## Raking
+Phi_R &lt;- Minimize(sum(di * (-entr(g) - g + 1)))
+p &lt;- Problem(Phi_R, constraints)
+res &lt;- solve(p)
+w_cvxr &lt;- di * res$getValue(g)</code></pre>
+<p>We compare the results below in a table which show them to be identical.</p>
+<pre class="r"><code>## Using functions in the *un echoed* preamble of this document...
+build_table(d1 = build_df(apisrs, &quot;Survey&quot;, w_survey),
+            d2 = build_df(apisrs, &quot;CVXR&quot;, w_cvxr),
+            title = &quot;Calibration weights from Raking&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-4">Table 1: </span>Calibration weights from Raking
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stype
+</th>
+<th style="text-align:left;">
+sch.wide
+</th>
+<th style="text-align:right;">
+Survey wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+<th style="text-align:right;">
+CVXR wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.911
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.911
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.003
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.003
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.497
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.497
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.033
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.033
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.529
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.529
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="other-calibration-metrics" class="section level2">
+<h2>Other Calibration Metrics</h2>
+<p>Two other penalty functions commonly used are:</p>
+<ul>
+<li><strong>Quadratic</strong> <span class="math display">\[
+  \phi^{Q}(g) = (g-1)^2/2;
+\]</span></li>
+<li><strong>Logit</strong> <span class="math display">\[
+  \phi^{L}(g; l, u) = \frac{1}{C}\biggl[ (g-l)\log\left(\frac{g-l}{1-l}\right) +
+  (u-g)\log\left(\frac{u-g}{u-1}\right) \biggr] \mbox{ for } C = \frac{u-l}{(1-l)(u-1)}.
+\]</span></li>
+</ul>
+<p>It is again easy to incorporate these in our example and compare to <code>survey</code> results.</p>
+<div id="quadratic" class="section level3">
+<h3>Quadratic</h3>
+<p>The <code>survey</code> function for this calibration is invoked as <code>cal.linear</code>.</p>
+<pre class="r"><code>## Quadratic
+Phi_Q  &lt;- Minimize(sum_squares(g - 1) / 2)
+p &lt;- Problem(Phi_Q, constraints)
+res &lt;- solve(p, solver = &quot;SCS&quot;)
+w_cvxr_q &lt;- di * res$getValue(g)
+w_survey_q &lt;- weights(calibrate(design_api, formula, population = T, calfun = cal.linear))</code></pre>
+<p>Note the use of the <code>SCS</code> solver above; the default <code>ECOS</code> solver produces a different number of unique weights, for reasons we have not fully investigated yet. (<em>Such differences are not unheard of among solvers!</em>)</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">Table 2: </span>Calibration weights from Quadratic metric
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stype
+</th>
+<th style="text-align:left;">
+sch.wide
+</th>
+<th style="text-align:right;">
+Survey wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+<th style="text-align:right;">
+CVXR wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.907
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.946
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.397
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.400
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.005
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.017
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.495
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.472
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.037
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.061
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.528
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.516
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="logistic" class="section level3">
+<h3>Logistic</h3>
+<p>Finally, the logistic, which requires bounds <span class="math inline">\(l\)</span> and <span class="math inline">\(u\)</span> on the coefficients; we use <span class="math inline">\(l=0.9\)</span> and <span class="math inline">\(u=1.1\)</span>.</p>
+<pre class="r"><code>u &lt;- 1.10; l &lt;- 0.90
+w_survey_l &lt;- weights(calibrate(design_api, formula, population = T, calfun = cal.linear,
+                                bounds = c(l, u)))
+Phi_L &lt;- Minimize(sum(-entr((g - l) / (u - l))  -
+                      entr((u - g) / (u - l)))) 
+p &lt;- Problem(Phi_L, c(constraints, list(l &lt;= g, g &lt;= u)))
+res &lt;- solve(p)
+w_cvxr_l &lt;- di * res$getValue(g)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-8">Table 3: </span>Calibration weights from Logit metric
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stype
+</th>
+<th style="text-align:left;">
+sch.wide
+</th>
+<th style="text-align:right;">
+Survey wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+<th style="text-align:right;">
+CVXR wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.907
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.929
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.397
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.394
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.005
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.995
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.495
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.505
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.037
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.014
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.528
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.536
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="further-metrics" class="section level2">
+<h2>Further Metrics</h2>
+<p>Following examples in <code>survey::calibrate</code>, we can try a few other metrics.</p>
+<p>First, the hellinger distance.</p>
+<pre class="r"><code>hellinger &lt;- make.calfun(Fm1 = function(u, bounds)  ((1 - u / 2)^-2) - 1,
+                         dF= function(u, bounds) (1 -u / 2)^-3 ,
+                         name = &quot;Hellinger distance&quot;)
+w_survey_h &lt;- weights(calibrate(design_api, formula, population = T, calfun = hellinger))
+Phi_h &lt;- Minimize(sum((1 - g / 2)^(-2)))
+p &lt;- Problem(Phi_h, constraints)
+res &lt;- solve(p)
+w_cvxr_h &lt;- di * res$getValue(g)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-10">Table 4: </span>Calibration weights from Hellinger distance metric
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stype
+</th>
+<th style="text-align:left;">
+sch.wide
+</th>
+<th style="text-align:right;">
+Survey wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+<th style="text-align:right;">
+CVXR wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.913
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.890
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.399
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.002
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.011
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.498
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.488
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.031
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.056
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.530
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.521
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+<p>Next, the derivative of the inverse hyperbolic sine.</p>
+<pre class="r"><code>w_survey_s &lt;- weights(calibrate(design_api, formula, population = T, calfun = cal.sinh,
+                                bounds = c(l, u)))
+Phi_s &lt;- Minimize(sum( 0.5 * (exp(g) + exp(-g))))
+p &lt;- Problem(Phi_s, c(constraints, list(l &lt;= g, g &lt;= u)))
+res &lt;- solve(p)
+w_cvxr_s &lt;- di * res$getValue(g)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-12">Table 5: </span>Calibration weights from derivative of sinh metric
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+stype
+</th>
+<th style="text-align:left;">
+sch.wide
+</th>
+<th style="text-align:right;">
+Survey wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+<th style="text-align:right;">
+CVXR wts.
+</th>
+<th style="text-align:right;">
+Frequency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.911
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+<td style="text-align:right;background-color: #ececec;">
+28.904
+</td>
+<td style="text-align:right;background-color: #ececec;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+E
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.396
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.397
+</td>
+<td style="text-align:right;background-color: #ececec;">
+127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.003
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.006
+</td>
+<td style="text-align:right;background-color: #ececec;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+H
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.497
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.494
+</td>
+<td style="text-align:right;background-color: #ececec;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+No
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.033
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+<td style="text-align:right;background-color: #ececec;">
+29.041
+</td>
+<td style="text-align:right;background-color: #ececec;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec;">
+M
+</td>
+<td style="text-align:left;background-color: #ececec;">
+Yes
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.529
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+<td style="text-align:right;background-color: #ececec;">
+31.526
+</td>
+<td style="text-align:right;background-color: #ececec;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin17.7.0 (64-bit)
+## Running under: macOS  10.14.1
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] grid      stats     graphics  grDevices datasets  utils     methods  
+## [8] base     
+## 
+## other attached packages:
+## [1] CVXR_0.99-2      survey_3.34      survival_2.43-1  Matrix_1.2-15   
+## [5] kableExtra_0.9.0 dplyr_0.7.7     
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_0.2.5  xfun_0.4          purrr_0.2.5      
+##  [4] splines_3.5.1     lattice_0.20-35   colorspace_1.3-2 
+##  [7] htmltools_0.3.6   viridisLite_0.3.0 yaml_2.2.0       
+## [10] gmp_0.5-13.2      rlang_0.3.0.1     R.oo_1.22.0      
+## [13] pillar_1.3.0      glue_1.3.0        Rmpfr_0.7-1      
+## [16] R.utils_2.7.0     bit64_0.9-7       bindrcpp_0.2.2   
+## [19] scs_1.1-1         bindr_0.1.1       stringr_1.3.1    
+## [22] munsell_0.5.0     blogdown_0.9.2    rvest_0.3.2      
+## [25] R.methodsS3_1.7.1 evaluate_0.12     knitr_1.20       
+## [28] highr_0.7         Rcpp_0.12.19      readr_1.1.1      
+## [31] scales_1.0.0      backports_1.1.2   bit_1.1-14       
+## [34] hms_0.4.2         digest_0.6.18     stringi_1.2.4    
+## [37] bookdown_0.7      rprojroot_1.3-2   ECOSolveR_0.4    
+## [40] tools_3.5.1       magrittr_1.5      tibble_1.4.2     
+## [43] crayon_1.3.4      pkgconfig_2.0.2   MASS_7.3-51.1    
+## [46] xml2_1.2.0        assertthat_0.2.0  rmarkdown_1.10   
+## [49] httr_1.3.1        rstudioapi_0.8    R6_2.3.0         
+## [52] compiler_3.5.1</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/survey_calibration.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-Davies:2016">
+<p>Davies, G., J. Gillard, and A. Zhigljavsky. 2016. “Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.” In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. doi:<a href="https://doi.org/10.1007/978-3-319-29975-4_6">10.1007/978-3-319-29975-4_6</a>.</p>
+</div>
+<div id="ref-lumley:2018">
+<p>Lumley, Thomas. 2018. “Survey: Analysis of Complex Survey Samples.”</p>
+</div>
+<div id="ref-Lumley:2010">
+<p>Lumley, Thomas S. 2010. <em>Complex Surveys: A Guide to Analysis Using R</em>. Wiley Publishing.</p>
+</div>
+</div>
+</div>
