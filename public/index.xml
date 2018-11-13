@@ -236,8 +236,8 @@ This is the famous catenary problem.
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/examples/</guid>
-      <description>Although a number of examples here were ported from the CVXPY site, there are many new ones we have added.
-Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem Integer Programming   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges   Miscellaneous  Direct Standardization Survey Calibration Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   Advanced Topics  Replicating glmnet Results Getting Faster Results Using Other Solvers Solver Peculiarities   References  </description>
+      <description>Although several examples here were ported from the CVXPY site, there are many new ones we have added.
+Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem Integer Programming   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges   Miscellaneous  Direct Standardization Survey Calibration Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   Advanced Topics  Replicating glmnet Results Getting Faster Results Using Other Solvers Solver Peculiarities   </description>
     </item>
     
     <item>

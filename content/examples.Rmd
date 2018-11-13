@@ -9,7 +9,7 @@ categories: []
 tags: []
 ---
 
-Although a number of examples here were ported from the
+Although several examples here were ported from the
 [`CVXPY`](https://cvxpy.org) site, there are many new ones we have
 added.
 
@@ -50,4 +50,3 @@ added.
 - [Using Other Solvers](/cvxr_examples/cvxr_using-other-solvers/)
 - [Solver Peculiarities](/cvxr_examples/cvxr_solver-peculiarities/)
 
-## References

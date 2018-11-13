@@ -126,7 +126,7 @@ Two other penalty functions commonly used are:
 
 - __Quadratic__
 \[
-  \phi^{Q}(g) = (g-1)^2/2;
+  \phi^{Q}(g) = \frac{1}{2}(g-1)^2;
 \]
 - __Logit__
 \[
