@@ -48,7 +48,7 @@ elastic_reg <- function(beta, lambda = 0, alpha = 0) {
 Later, we will add it to the scaled least squares loss as shown below.
 
 ```{r, eval = FALSE}
-loss <- sum((y - X %*% beta)^2)/(2*m)
+loss <- sum((y - X %*% beta)^2) / (2 * n)
 obj <- loss + elastic_reg(beta, lambda, alpha)
 ```
 
@@ -68,16 +68,16 @@ We generate some synthetic sparse data for this example.
 set.seed(1)
 
 # Problem data
-n <- 20
-m <- 1000
+p <- 20
+n <- 1000
 DENSITY <- 0.25    # Fraction of non-zero beta
-beta_true <- matrix(rnorm(n), ncol = 1)
-idxs <- sample.int(n, size = floor((1 - DENSITY) * n), replace = FALSE)
+beta_true <- matrix(rnorm(p), ncol = 1)
+idxs <- sample.int(p, size = floor((1 - DENSITY) * p), replace = FALSE)
 beta_true[idxs] <- 0
 
 sigma <- 45
-X <- matrix(rnorm(m * n, sd = 5), nrow = m, ncol = n)
-eps <- matrix(rnorm(m, sd = sigma), ncol = 1)
+X <- matrix(rnorm(n * p, sd = 5), nrow = n, ncol = p)
+eps <- matrix(rnorm(n, sd = sigma), ncol = 1)
 y <- X %*% beta_true + eps
 ```
 
@@ -85,31 +85,31 @@ We fit the elastic net model for several values of $\lambda$ .
 
 ```{r}
 TRIALS <- 10
-beta_vals <- matrix(0, nrow = n, ncol = TRIALS)
+beta_vals <- matrix(0, nrow = p, ncol = TRIALS)
 lambda_vals <- 10^seq(-2, log10(50), length.out = TRIALS)
-beta <- Variable(n)  
-loss <- sum((y - X %*% beta)^2)/(2*m)
+beta <- Variable(p)  
+loss <- sum((y - X %*% beta)^2) / (2 * n)
 
 ## Elastic-net regression
 alpha <- 0.75
-for(i in 1:TRIALS) {
-    lambda <- lambda_vals[i]
-    obj <- loss + elastic_reg(beta, lambda, alpha)
-    prob <- Problem(Minimize(obj))
-    result <- solve(prob)
-    beta_vals[,i] <- result$getValue(beta)
-}
+beta_vals <- sapply(lambda_vals,
+                    function (lambda) {
+                        obj <- loss + elastic_reg(beta, lambda, alpha)
+                        prob <- Problem(Minimize(obj))
+                        result <- solve(prob)
+                        result$getValue(beta)
+                    })
 ```
 
 We can now get a table of the coefficients.
 
 
 ```{r}
-d <- data.frame(lambda_vals, t(beta_vals))
-names(d) <- c("$\\lambda$", sprintf("$\\beta_{%d}$", seq_len(n)))
-rownames(d) <- paste0("s", 0:9)
+d <- as.data.frame(beta_vals)
+rownames(d) <- sprintf("$\\beta_{%d}$", seq_len(p))
+names(d) <- sprintf("$\\lambda = %.3f$", lambda_vals)
 library(kableExtra)
-knitr::kable(t(d), format = "html", caption = "Elastic net fits from `CVXR`", digits = 3) %>%
+knitr::kable(d, format = "html", caption = "Elastic net fits from `CVXR`", digits = 3) %>%
     kable_styling("striped") %>%
     column_spec(1:11, background = "#ececec")
 ```
@@ -126,14 +126,15 @@ matlines(lambda_vals, t(beta_vals))
 We can also compare with the `glmnet` results.
 
 ```{r}
-library(glmnet)
+suppressMessages(library(glmnet))
 model_net <- glmnet(X, y, family = "gaussian", alpha = alpha,
                     lambda = lambda_vals, standardize = FALSE,
                     intercept = FALSE)
 ## Reverse order to match beta_vals
-coef_net <- data.frame(lambda_vals, t(as.matrix(coef(model_net)[-1, seq(TRIALS, 1, by = -1)])))
-names(coef_net) <- c("$\\lambda$", sprintf("$\\beta_{%d}$", seq_len(n)))
-knitr::kable(t(coef_net), format = "html", digits = 3, caption = "Coefficients from `glmnet`") %>%
+coef_net <- as.data.frame(as.matrix(coef(model_net)[-1, seq(TRIALS, 1, by = -1)]))
+rownames(coef_net) <- sprintf("$\\beta_{%d}$", seq_len(p))
+names(coef_net) <- sprintf("$\\lambda = %.3f$", lambda_vals)
+knitr::kable(coef_net, format = "html", digits = 3, caption = "Coefficients from `glmnet`") %>%
     kable_styling("striped") %>%
     column_spec(1:11, background = "#ececec")
 ```
