@@ -33,7 +33,7 @@ elastic_reg &lt;- function(beta, lambda = 0, alpha = 0) {
     lambda * (lasso + ridge)
 }</code></pre>
 <p>Later, we will add it to the scaled least squares loss as shown below.</p>
-<pre class="r"><code>loss &lt;- sum((y - X %*% beta)^2)/(2*m)
+<pre class="r"><code>loss &lt;- sum((y - X %*% beta)^2) / (2 * n)
 obj &lt;- loss + elastic_reg(beta, lambda, alpha)</code></pre>
 <p>The advantage of this modular approach is that we can easily incorporate elastic net regularization into other regression models. For instance, if we wanted to run regularized Huber regression, <code>CVXR</code> allows us to reuse the above code with just a single changed line.</p>
 <pre class="r"><code>loss &lt;- huber(y - X %*% beta, M)</code></pre>
@@ -41,39 +41,39 @@ obj &lt;- loss + elastic_reg(beta, lambda, alpha)</code></pre>
 <pre class="r"><code>set.seed(1)
 
 # Problem data
-n &lt;- 20
-m &lt;- 1000
+p &lt;- 20
+n &lt;- 1000
 DENSITY &lt;- 0.25    # Fraction of non-zero beta
-beta_true &lt;- matrix(rnorm(n), ncol = 1)
-idxs &lt;- sample.int(n, size = floor((1 - DENSITY) * n), replace = FALSE)
+beta_true &lt;- matrix(rnorm(p), ncol = 1)
+idxs &lt;- sample.int(p, size = floor((1 - DENSITY) * p), replace = FALSE)
 beta_true[idxs] &lt;- 0
 
 sigma &lt;- 45
-X &lt;- matrix(rnorm(m * n, sd = 5), nrow = m, ncol = n)
-eps &lt;- matrix(rnorm(m, sd = sigma), ncol = 1)
+X &lt;- matrix(rnorm(n * p, sd = 5), nrow = n, ncol = p)
+eps &lt;- matrix(rnorm(n, sd = sigma), ncol = 1)
 y &lt;- X %*% beta_true + eps</code></pre>
 <p>We fit the elastic net model for several values of <span class="math inline">\(\lambda\)</span> .</p>
 <pre class="r"><code>TRIALS &lt;- 10
-beta_vals &lt;- matrix(0, nrow = n, ncol = TRIALS)
+beta_vals &lt;- matrix(0, nrow = p, ncol = TRIALS)
 lambda_vals &lt;- 10^seq(-2, log10(50), length.out = TRIALS)
-beta &lt;- Variable(n)  
-loss &lt;- sum((y - X %*% beta)^2)/(2*m)
+beta &lt;- Variable(p)  
+loss &lt;- sum((y - X %*% beta)^2) / (2 * n)
 
 ## Elastic-net regression
 alpha &lt;- 0.75
-for(i in 1:TRIALS) {
-    lambda &lt;- lambda_vals[i]
-    obj &lt;- loss + elastic_reg(beta, lambda, alpha)
-    prob &lt;- Problem(Minimize(obj))
-    result &lt;- solve(prob)
-    beta_vals[,i] &lt;- result$getValue(beta)
-}</code></pre>
+beta_vals &lt;- sapply(lambda_vals,
+                    function (lambda) {
+                        obj &lt;- loss + elastic_reg(beta, lambda, alpha)
+                        prob &lt;- Problem(Minimize(obj))
+                        result &lt;- solve(prob)
+                        result$getValue(beta)
+                    })</code></pre>
 <p>We can now get a table of the coefficients.</p>
-<pre class="r"><code>d &lt;- data.frame(lambda_vals, t(beta_vals))
-names(d) &lt;- c(&quot;$\\lambda$&quot;, sprintf(&quot;$\\beta_{%d}$&quot;, seq_len(n)))
-rownames(d) &lt;- paste0(&quot;s&quot;, 0:9)
+<pre class="r"><code>d &lt;- as.data.frame(beta_vals)
+rownames(d) &lt;- sprintf(&quot;$\\beta_{%d}$&quot;, seq_len(p))
+names(d) &lt;- sprintf(&quot;$\\lambda = %.3f$&quot;, lambda_vals)
 library(kableExtra)
-knitr::kable(t(d), format = &quot;html&quot;, caption = &quot;Elastic net fits from `CVXR`&quot;, digits = 3) %&gt;%
+knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from `CVXR`&quot;, digits = 3) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
     column_spec(1:11, background = &quot;#ececec&quot;)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
@@ -85,73 +85,38 @@ knitr::kable(t(d), format = &quot;html&quot;, caption = &quot;Elastic net fits f
 <th style="text-align:left;">
 </th>
 <th style="text-align:right;">
-s0
+<span class="math inline">\(\lambda = 0.010\)</span>
 </th>
 <th style="text-align:right;">
-s1
+<span class="math inline">\(\lambda = 0.026\)</span>
 </th>
 <th style="text-align:right;">
-s2
+<span class="math inline">\(\lambda = 0.066\)</span>
 </th>
 <th style="text-align:right;">
-s3
+<span class="math inline">\(\lambda = 0.171\)</span>
 </th>
 <th style="text-align:right;">
-s4
+<span class="math inline">\(\lambda = 0.441\)</span>
 </th>
 <th style="text-align:right;">
-s5
+<span class="math inline">\(\lambda = 1.135\)</span>
 </th>
 <th style="text-align:right;">
-s6
+<span class="math inline">\(\lambda = 2.924\)</span>
 </th>
 <th style="text-align:right;">
-s7
+<span class="math inline">\(\lambda = 7.533\)</span>
 </th>
 <th style="text-align:right;">
-s8
+<span class="math inline">\(\lambda = 19.408\)</span>
 </th>
 <th style="text-align:right;">
-s9
+<span class="math inline">\(\lambda = 50.000\)</span>
 </th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\lambda\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.010
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.026
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.066
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.171
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.441
-</td>
-<td style="text-align:right;background-color: #ececec;">
-1.135
-</td>
-<td style="text-align:right;background-color: #ececec;">
-2.924
-</td>
-<td style="text-align:right;background-color: #ececec;">
-7.533
-</td>
-<td style="text-align:right;background-color: #ececec;">
-19.408
-</td>
-<td style="text-align:right;background-color: #ececec;">
-50
-</td>
-</tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\beta_{1}\)</span>
@@ -861,17 +826,15 @@ s9
 matlines(lambda_vals, t(beta_vals))</code></pre>
 <p><img src="/cvxr_examples/elastic-net_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>We can also compare with the <code>glmnet</code> results.</p>
-<pre class="r"><code>library(glmnet)</code></pre>
-<pre><code>## Loading required package: Matrix</code></pre>
-<pre><code>## Loading required package: foreach</code></pre>
-<pre><code>## Loaded glmnet 2.0-16</code></pre>
-<pre class="r"><code>model_net &lt;- glmnet(X, y, family = &quot;gaussian&quot;, alpha = alpha,
+<pre class="r"><code>suppressMessages(library(glmnet))
+model_net &lt;- glmnet(X, y, family = &quot;gaussian&quot;, alpha = alpha,
                     lambda = lambda_vals, standardize = FALSE,
                     intercept = FALSE)
 ## Reverse order to match beta_vals
-coef_net &lt;- data.frame(lambda_vals, t(as.matrix(coef(model_net)[-1, seq(TRIALS, 1, by = -1)])))
-names(coef_net) &lt;- c(&quot;$\\lambda$&quot;, sprintf(&quot;$\\beta_{%d}$&quot;, seq_len(n)))
-knitr::kable(t(coef_net), format = &quot;html&quot;, digits = 3, caption = &quot;Coefficients from `glmnet`&quot;) %&gt;%
+coef_net &lt;- as.data.frame(as.matrix(coef(model_net)[-1, seq(TRIALS, 1, by = -1)]))
+rownames(coef_net) &lt;- sprintf(&quot;$\\beta_{%d}$&quot;, seq_len(p))
+names(coef_net) &lt;- sprintf(&quot;$\\lambda = %.3f$&quot;, lambda_vals)
+knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Coefficients from `glmnet`&quot;) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
     column_spec(1:11, background = &quot;#ececec&quot;)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
@@ -883,73 +846,38 @@ knitr::kable(t(coef_net), format = &quot;html&quot;, digits = 3, caption = &quot
 <th style="text-align:left;">
 </th>
 <th style="text-align:right;">
-s9
+<span class="math inline">\(\lambda = 0.010\)</span>
 </th>
 <th style="text-align:right;">
-s8
+<span class="math inline">\(\lambda = 0.026\)</span>
 </th>
 <th style="text-align:right;">
-s7
+<span class="math inline">\(\lambda = 0.066\)</span>
 </th>
 <th style="text-align:right;">
-s6
+<span class="math inline">\(\lambda = 0.171\)</span>
 </th>
 <th style="text-align:right;">
-s5
+<span class="math inline">\(\lambda = 0.441\)</span>
 </th>
 <th style="text-align:right;">
-s4
+<span class="math inline">\(\lambda = 1.135\)</span>
 </th>
 <th style="text-align:right;">
-s3
+<span class="math inline">\(\lambda = 2.924\)</span>
 </th>
 <th style="text-align:right;">
-s2
+<span class="math inline">\(\lambda = 7.533\)</span>
 </th>
 <th style="text-align:right;">
-s1
+<span class="math inline">\(\lambda = 19.408\)</span>
 </th>
 <th style="text-align:right;">
-s0
+<span class="math inline">\(\lambda = 50.000\)</span>
 </th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\lambda\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.010
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.026
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.066
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.171
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.441
-</td>
-<td style="text-align:right;background-color: #ececec;">
-1.135
-</td>
-<td style="text-align:right;background-color: #ececec;">
-2.924
-</td>
-<td style="text-align:right;background-color: #ececec;">
-7.533
-</td>
-<td style="text-align:right;background-color: #ececec;">
-19.408
-</td>
-<td style="text-align:right;background-color: #ececec;">
-50
-</td>
-</tr>
 <tr>
 <td style="text-align:left;background-color: #ececec;">
 <span class="math inline">\(\beta_{1}\)</span>
