@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title> CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	
 		<h1>Convex Optimization in R</h1>
-		<div id="what-is-cvxr" class="section level2">
+		
+
+
+<div id="what-is-cvxr" class="section level2">
 <h2>What is <code>CVXR</code>?</h2>
 <p><code>CVXR</code> is an R package that provides an object-oriented modeling language for convex optimization, similar to <code>CVX</code>, <code>CVXPY</code>, <code>YALMIP</code>, and <code>Convex.jl</code>. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties. <code>CVXR</code> then applies signed <a href="./post/cvxr_dcp">disciplined convex programming (DCP)</a> to verify the problem’s convexity. Once verified, the problem is converted into standard conic form using graph implementations and passed to a cone solver such as <a href="https://github.com/embotech/ecos">ECOS</a> or <a href="https://github.com/cvxgrp/scs">SCS</a>.</p>
 </div>

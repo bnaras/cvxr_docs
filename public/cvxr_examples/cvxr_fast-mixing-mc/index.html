@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Fastest Mixing Markov Chain &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Fastest Mixing Markov Chain</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>This example is derived from the results in <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, section 2. Let <span class="math inline">\(\mathcal{G} = (\mathcal{V}, \mathcal{E})\)</span> be a connected graph with vertices <span class="math inline">\(\mathcal{V} = \{1,\ldots,n\}\)</span> and edges <span class="math inline">\(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\)</span>. Assume that <span class="math inline">\((i,i) \in \mathcal{E}\)</span> for all <span class="math inline">\(i = 1,\ldots,n\)</span>, and <span class="math inline">\((i,j) \in \mathcal{E}\)</span> implies <span class="math inline">\((j,i) \in \mathcal{E}\)</span>. Under these conditions, a discrete-time Markov chain on <span class="math inline">\(\mathcal{V}\)</span> will have the uniform distribution as one of its equilibrium distributions. We are interested in finding the Markov chain, constructing the transition probability matrix <span class="math inline">\(P \in {\mathbf R}_+^{n \times n}\)</span>, that minimizes its asymptotic convergence rate to the uniform distribution. This is an important problem in Markov chain Monte Carlo (MCMC) simulations, as it directly affects the sampling efficiency of an algorithm.</p>
 <p>The asymptotic rate of convergence is determined by the second largest eigenvalue of <span class="math inline">\(P\)</span>, which in our case is <span class="math inline">\(\mu(P) := \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T)\)</span> where <span class="math inline">\(\lambda_{\max}(A)\)</span> denotes the maximum eigenvalue of <span class="math inline">\(A\)</span>. As <span class="math inline">\(\mu(P)\)</span> decreases, the mixing rate increases and the Markov chain converges faster to equilibrium. Thus, our optimization problem is</p>

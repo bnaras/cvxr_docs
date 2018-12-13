@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Sparse Inverse Covariance Estimation &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Sparse Inverse Covariance Estimation</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Assume we are given i.i.d. observations <span class="math inline">\(x_i \sim N(0,\Sigma)\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span>, and the covariance matrix <span class="math inline">\(\Sigma \in {\mathbf S}_+^n\)</span>, the set of symmetric positive semidefinite matrices, has a sparse inverse <span class="math inline">\(S = \Sigma^{-1}\)</span>. Let <span class="math inline">\(Q = \frac{1}{m-1}\sum_{i=1}^m (x_i - \bar x)(x_i - \bar x)^T\)</span> be our sample covariance. One way to estimate <span class="math inline">\(\Sigma\)</span> is to maximize the log-likelihood with the prior knowledge that <span class="math inline">\(S\)</span> is sparse <span class="citation">(Friedman, Hastie, and Tibshirani <a href="#ref-spinvcov">2008</a>)</span>, which amounts to the optimization problem:</p>
 <p><span class="math display">\[

@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Solver Peculiarities &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Solver Peculiarities</h1>
 	
-	<p>The default solver in <code>CVXR</code> is <code>ECOS</code>. However, it is not always the best solver to use. As an example, let us consider again the <a href="../../cvxr_examples/catenary">catenary problem</a>.</p>
+	
+
+
+<p>The default solver in <code>CVXR</code> is <code>ECOS</code>. However, it is not always the best solver to use. As an example, let us consider again the <a href="../../cvxr_examples/catenary">catenary problem</a>.</p>
 <p>We will change the problem slightly to use a finer discretization from 101 points to say 501.</p>
 <pre class="r"><code>## Problem data
 m &lt;- 501

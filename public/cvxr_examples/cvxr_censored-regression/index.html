@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Censored Regression &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Censored Regression</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Data collected from an experimental study is sometimes censored, so that only partial information is known about a subset of observations. For instance, when measuring the lifespan of mice, we may find a number of subjects live beyond the duration of the project. Thus, all we know is the lower bound on their lifespan. This right censoring can be incorporated into a regression model via convex optimization.</p>
 <p>Suppose that only <span class="math inline">\(K\)</span> of our observations <span class="math inline">\((x_i,y_i)\)</span> are fully observed, and the remaining are censored such that we observe <span class="math inline">\(x_i\)</span>, but only know <span class="math inline">\(y_i \geq D\)</span> for <span class="math inline">\(i = K+1,\ldots,m\)</span> and some constant <span class="math inline">\(D \in {\mathbf R}\)</span>. We can build an OLS model using the uncensored data, restricting the fitted values <span class="math inline">\(\hat y_i = x_i^T\beta\)</span> to lie above <span class="math inline">\(D\)</span> for the censored observations:</p>
