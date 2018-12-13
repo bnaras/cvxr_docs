@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Kelly Gambling &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Kelly Gambling</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>In Kelly gambling <span class="citation">(Kelly <a href="#ref-kelly">1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span> possible outcomes, which yield a random non-negative return of <span class="math inline">\(r \in {\mathbf R}_+^n\)</span>. The return <span class="math inline">\(r\)</span> takes on exactly <span class="math inline">\(K\)</span> values <span class="math inline">\(r_1,\ldots,r_K\)</span> with known probabilities <span class="math inline">\(\pi_1,\ldots,\pi_K\)</span>. This gamble is repeated over <span class="math inline">\(T\)</span> periods. In a given period <span class="math inline">\(t\)</span>, let <span class="math inline">\(b_i \geq 0\)</span> denote the fraction of our wealth bet on outcome <span class="math inline">\(i\)</span>. Assuming the <span class="math inline">\(n\)</span>th outcome is equivalent to not wagering (it returns one with certainty), the fractions must satisfy <span class="math inline">\(\sum_{i=1}^n b_i = 1\)</span>. Thus, at the end of the period, our cumulative wealth is <span class="math inline">\(w_t = (r^Tb)w_{t-1}\)</span>. Our goal is to maximize the average growth rate with respect to <span class="math inline">\(b \in {\mathbf R}^n\)</span>:</p>
 <p><span class="math display">\[

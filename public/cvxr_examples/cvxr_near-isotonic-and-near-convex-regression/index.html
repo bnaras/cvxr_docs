@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Near Isotonic and Near Convex Regression &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Near Isotonic and Near Convex Regression</h1>
 	
-	<p>Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>, <span class="citation">R. J. Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving</p>
+	
+
+
+<p>Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>, <span class="citation">R. J. Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving</p>
 <p><span class="math display">\[
 \begin{array}{ll}
 \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,

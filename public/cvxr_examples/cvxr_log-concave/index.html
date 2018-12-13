@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Log-Concave Distribution Estimation &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Log-Concave Distribution Estimation</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Let <span class="math inline">\(n = 1\)</span> and suppose <span class="math inline">\(x_i\)</span> are i.i.d. samples from a log-concave discrete distribution on <span class="math inline">\(\{0,\ldots,K\}\)</span> for some <span class="math inline">\(K \in {\mathbf Z}_+\)</span>. Define <span class="math inline">\(p_k := {\mathbf {Prob}}(X = k)\)</span> to be the probability mass function. One method for estimating <span class="math inline">\(\{p_0,\ldots,p_K\}\)</span> is to maximize the log-likelihood function subject to a log-concavity constraint , i.e.,</p>
 <p><span class="math display">\[

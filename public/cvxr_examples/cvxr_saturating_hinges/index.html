@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Saturating Hinges Fit &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Saturating Hinges Fit</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>The following example comes from work on saturating splines in <span class="citation">N. Boyd et al. (<a href="#ref-BoydHastie:2016">2016</a>)</span>. Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they <em>saturate</em>: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a <em>saturating hinge</em>.</p>
 <p>For simplicity, consider the univariate case with <span class="math inline">\(n = 1\)</span>. Assume we are given knots <span class="math inline">\(t_1 &lt; t_2 &lt; \cdots &lt; t_k\)</span> where each <span class="math inline">\(t_j \in {\mathbf R}\)</span>. Let <span class="math inline">\(h_j\)</span> be a hinge function at knot <span class="math inline">\(t_j\)</span>, , <span class="math inline">\(h_j(x) = \max(x-t_j,0)\)</span>, and define <span class="math inline">\(f(x) = w_0 + \sum_{j=1}^k w_jh_j(x)\)</span>. We want to solve</p>

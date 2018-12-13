@@ -33,7 +33,8 @@ added.
 - [$L_1$ Trend Filtering](/cvxr_examples/cvxr_l1-trend-filtering/)
 - [Elastic Net](/cvxr_examples/cvxr_elastic-net/)
 - [Saturating Hinges](/cvxr_examples/cvxr_saturating_hinges/)
-  
+- [Pliable Lasso](/cvxr_examples/cvxr_pliable_lasso/)
+
 ## Miscellaneous
 
 - [Direct Standardization](/cvxr_examples/cvxr_direct-standardization/)

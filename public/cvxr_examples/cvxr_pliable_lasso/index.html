@@ -1,0 +1,544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.51" />
+	
+	<title>Prototyping the pliable lasso &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Prototyping the pliable lasso</h1>
+	
+	
+<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><span class="citation">Tibshirani and Friedman (<a href="#ref-tibsjhf:2017">2017</a>)</span> propose a generalization of the lasso that allows the model coefficients to vary as a function of a general set of modifying variables, such as gender, age or time. The pliable lasso model has the form</p>
+<p><span class="math display">\[
+\begin{equation}
+\hat{y} = \beta_0{\mathbf 1} + Z\theta_0 + \sum_{j=1}^p(X_j\beta_j +
+W_j\theta_j)
+\end{equation}
+\]</span></p>
+<p>where <span class="math inline">\(\hat{y}\)</span> is the predicted <span class="math inline">\(N\times1\)</span> vector, <span class="math inline">\(\beta_0\)</span> is a scalar, <span class="math inline">\(\theta_0\)</span> is a <span class="math inline">\(K\)</span>-vector, <span class="math inline">\(X\)</span> and <span class="math inline">\(Z\)</span> are <span class="math inline">\(N\times p\)</span> and <span class="math inline">\(N\times K\)</span> matrices containing values of the predictor and modifying variables respectively with <span class="math inline">\(W_j=X_j \circ Z\)</span> denoting the elementwise multiplication of Z by column <span class="math inline">\(X_j\)</span> of <span class="math inline">\(X\)</span>.</p>
+<p>The objective function used for pliable lasso is</p>
+<p><span class="math display">\[
+J(\beta_0, \theta_0, \beta, \Theta) = 
+\frac{1}{2N}\sum_{i=1}^N (y_i-\hat{y}_i)^2 +
+(1-\alpha)\lambda\sum_{j=1}^p\biggl(||(\beta_j,\theta_j)||_2 +
+||\theta_j||_2\biggr) + \alpha\lambda\sum_{j,k}|\theta_{j,k}|_1.
+\]</span></p>
+<p>In the above, <span class="math inline">\(\Theta\)</span> is a <span class="math inline">\(p\times K\)</span> matrix of parameters with <span class="math inline">\(j\)</span>-th row <span class="math inline">\(\theta_j\)</span> and individual entries <span class="math inline">\(\theta_{j,k}\)</span>, <span class="math inline">\(\lambda\)</span> is a tuning parameters. As <span class="math inline">\(\alpha \rightarrow 1\)</span> (but <span class="math inline">\(&lt;1\)</span>), the solution approaches the lasso solution. The default value used is <span class="math inline">\(\alpha = 0.5.\)</span></p>
+<p>An R package for the pliable lasso is forthcoming from the authors. Nevertheless, the pliable lasso is an excellent example to highlight the prototyping capabilities of <code>CVXR</code> in research. Along the way, we also illustrate some additional atoms that are actually needed in this example.</p>
+</div>
+<div id="the-pliable-lasso-in-cvxr" class="section level2">
+<h2>The pliable lasso in <code>CVXR</code></h2>
+<p>We will use a simulated example from section 3 of <span class="citation">Tibshirani and Friedman (<a href="#ref-tibsjhf:2017">2017</a>)</span> with <span class="math inline">\(n=100\)</span>, <span class="math inline">\(p=50\)</span> and <span class="math inline">\(K=4\)</span>. The response is generated as</p>
+<p><span class="math display">\[
+\begin{eqnarray*}
+y &amp;=&amp; \mu(x) + 0.5\cdot \epsilon;\ \ \epsilon \sim N(0, 1)\\
+\mu(x) &amp;=&amp; x_1\beta_1 + x_2\beta_2 + x_3(\beta_3 e + 2z_1) +
+x_4\beta_4(e - 2z_2);\ \ \beta = (2, -2, 2, 2, 0, 0, \ldots)
+\end{eqnarray*}
+\]</span></p>
+<pre class="r"><code>## Simulation data.
+set.seed(123)
+N &lt;- 100
+K &lt;- 4
+p &lt;- 50
+X &lt;- matrix(rnorm(n = N * p, mean = 0, sd = 1), nrow = N, ncol = p)
+Z &lt;- matrix(rbinom(n = N * K, size = 1, prob = 0.5), nrow = N, ncol = K)
+
+## Response model.
+beta &lt;- rep(x = 0, times = p)
+beta[1:4] &lt;- c(2, -2, 2, 2)
+coeffs &lt;- cbind(beta[1], beta[2], beta[3] + 2 * Z[, 1], beta[4] * (1 - 2 * Z[,2]))
+mu &lt;- diag(X[, 1:4] %*% t(coeffs))
+y &lt;- mu + 0.5 * rnorm(N, mean = 0, sd = 1)</code></pre>
+<p>It seems worthwhile to write a function that will fit the model for us so that we can customize a few things such as an intercept term, verbosity etc. The function has the following structure with comments as placeholders for code we shall construct later.</p>
+<pre class="r"><code>plasso_fit &lt;- function(y, X, Z, lambda, alpha = 0.5, intercept = TRUE,
+                       ZERO_THRESHOLD= 1e-6, verbose = FALSE) {
+    N &lt;- length(y)
+    p &lt;- ncol(X)
+    K &lt;- ncol(Z)
+
+    beta0 &lt;- 0
+    if (intercept) {
+        beta0 &lt;- Variable(1) * matrix(1, nrow = N, ncol = 1)
+    }
+    ## Define_Parameters
+    ## Build_Penalty_Terms
+    ## Compute_Fitted_Value
+    ## Build_Objective
+    ## Define_and_Solve_Problem
+    ## Return_Values
+}
+
+## Fit pliable lasso using CVXR.
+#pliable &lt;- pliable_lasso(y, X, Z, alpha = 0.5, lambda = lambda)</code></pre>
+<div id="defining-the-parameters" class="section level3">
+<h3>Defining the parameters</h3>
+<p>The parameters are easy: we just have <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\Theta\)</span>.</p>
+<pre class="r"><code>beta &lt;- Variable(p)
+theta0 &lt;- Variable(K)
+theta &lt;- Variable(p, K) ; theta_transpose &lt;- t(theta)</code></pre>
+<p>Note that we also define the transpose of <span class="math inline">\(\Theta\)</span> for use later.</p>
+</div>
+<div id="the-penalty-terms" class="section level3">
+<h3>The penalty terms</h3>
+<p>There are three of them. The first term, <span class="math inline">\(\sum_{j=1}^p\biggl(||(\beta_j,\theta_j)||_2\biggr)\)</span>, involves components of <span class="math inline">\(\beta\)</span> and rows of <span class="math inline">\(\Theta\)</span>. <code>CVXR</code> provides two functions to express this norm:</p>
+<ul>
+<li><code>hstack</code> to bind columns of <span class="math inline">\(\beta\)</span> and the matrix <span class="math inline">\(\Theta\)</span>, the equivalent of <code>rbind</code> in R,</li>
+<li><code>cvxr_norm</code> which accepts an <code>axis</code> argument the axis along which the norm is to be taken. The penalty requires us to use the row as axis, so <code>axis = 1</code>, the usual R convention.</li>
+</ul>
+<p>With this in hand, we can easily construct the penalty terms as below.</p>
+<pre class="r"><code>penalty_term1 &lt;- sum(cvxr_norm(hstack(beta, theta), 2, axis = 1))
+penalty_term2 &lt;- sum(cvxr_norm(theta, 2, axis = 1))
+penalty_term3 &lt;- sum(cvxr_norm(theta, 1))</code></pre>
+</div>
+<div id="the-fitted-value" class="section level3">
+<h3>The fitted value</h3>
+<p>Equation 1 above for <span class="math inline">\(\hat{y}\)</span> contains a sum: <span class="math inline">\(\sum_{j=1}^p(X_j\beta_j + W_j\theta_j)\)</span>. This requires multiplication of <span class="math inline">\(Z\)</span> by the columns of <span class="math inline">\(X\)</span> component-wise. That is a natural candidate for a map-reduce combination: Map the column multiplication function appropriately and reduce using <code>+</code> to obtain the <code>XZ_term</code> below.</p>
+<pre class="r"><code>xz_theta &lt;- lapply(seq_len(p),
+                   function(j) (matrix(X[, j], nrow = N, ncol = K) * Z) %*% theta_transpose[, j])
+XZ_term &lt;- Reduce(f = &#39;+&#39;, x = xz_theta)
+y_hat &lt;- beta0 + X %*% beta + Z %*% theta0 + XZ_term</code></pre>
+</div>
+<div id="the-objective" class="section level3">
+<h3>The objective</h3>
+<p>The objective is now straightforward.</p>
+<pre class="r"><code>objective &lt;- sum_squares(y - y_hat) / (2 * N) +
+    (1 - alpha) * lambda * (penalty_term1 + penalty_term2) +
+    alpha * lambda * penalty_term3</code></pre>
+</div>
+<div id="the-problem-and-its-solution" class="section level3">
+<h3>The problem and its solution</h3>
+<pre class="r"><code>prob &lt;- Problem(Minimize(objective))
+result &lt;- solve(prob, verbose = verbose)
+beta_hat &lt;- result$getValue(beta)</code></pre>
+</div>
+<div id="the-return-values" class="section level3">
+<h3>The return values</h3>
+<p>We create a list with values of interest to us. However, since sparsity is desired, we set values below <code>ZERO_THRESHOLD</code> to zero.</p>
+<pre class="r"><code>theta0_hat &lt;- result$getValue(theta0)
+theta_hat &lt;- result$getValue(theta)
+
+## Zero out stuff before returning
+beta_hat[abs(beta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
+theta0_hat[abs(theta0_hat) &lt; ZERO_THRESHOLD] &lt;- 0
+theta_hat[abs(theta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
+return(list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0,
+            beta_hat = beta_hat,
+            theta0_hat = theta0_hat,
+            theta_hat = theta_hat,
+            criterion = result$value))</code></pre>
+</div>
+</div>
+<div id="the-full-function" class="section level2">
+<h2>The full function</h2>
+<p>We now put it all together.</p>
+<pre class="r"><code>plasso_fit &lt;- function(y, X, Z, lambda, alpha = 0.5, intercept = TRUE,
+                          ZERO_THRESHOLD= 1e-6, verbose = FALSE) {
+    N &lt;- length(y)
+    p &lt;- ncol(X)
+    K &lt;- ncol(Z)
+
+    beta0 &lt;- 0
+    if (intercept) {
+        beta0 &lt;- Variable(1) * matrix(1, nrow = N, ncol = 1)
+    }
+    beta &lt;- Variable(p)
+    theta0 &lt;- Variable(K)
+    theta &lt;- Variable(p, K) ; theta_transpose &lt;- t(theta)
+    penalty_term1 &lt;- sum(cvxr_norm(hstack(beta, theta), 2, axis = 1))
+    penalty_term2 &lt;- sum(cvxr_norm(theta, 2, axis = 1))
+    penalty_term3 &lt;- sum(cvxr_norm(theta, 1))
+    xz_theta &lt;- lapply(seq_len(p),
+                       function(j) (matrix(X[, j], nrow = N, ncol = K) * Z) %*% theta_transpose[, j])
+    XZ_term &lt;- Reduce(f = &#39;+&#39;, x = xz_theta)
+    y_hat &lt;- beta0 + X %*% beta + Z %*% theta0 + XZ_term
+    objective &lt;- sum_squares(y - y_hat) / (2 * N) +
+        (1 - alpha) * lambda * (penalty_term1 + penalty_term2) +
+        alpha * lambda * penalty_term3
+    prob &lt;- Problem(Minimize(objective))
+    result &lt;- solve(prob, verbose = verbose)
+    beta_hat &lt;- result$getValue(beta)
+    theta0_hat &lt;- result$getValue(theta0)
+    theta_hat &lt;- result$getValue(theta)
+    
+    ## Zero out stuff before returning
+    beta_hat[abs(beta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
+    theta0_hat[abs(theta0_hat) &lt; ZERO_THRESHOLD] &lt;- 0
+    theta_hat[abs(theta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
+    return(list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0,
+                beta_hat = beta_hat,
+                theta0_hat = theta0_hat,
+                theta_hat = theta_hat,
+                criterion = result$value))
+}</code></pre>
+</div>
+<div id="the-results" class="section level2">
+<h2>The Results</h2>
+<p>Using <span class="math inline">\(\lambda = 0.6\)</span> we fit the pliable lasso without an intercept</p>
+<pre class="r"><code>result &lt;- plasso_fit(y, X, Z, lambda = 0.6, alpha = 0.5, intercept = FALSE)</code></pre>
+<p>We can print the various estimates.</p>
+<pre class="r"><code>cat(sprintf(&quot;Objective value: %f\n&quot;, result$criterion))</code></pre>
+<pre><code>## Objective value: 4.279446</code></pre>
+<p>We only print the nonzero <span class="math inline">\(\beta\)</span> values.</p>
+<pre class="r"><code>index &lt;- which(result$beta_hat != 0)
+est.table &lt;- data.frame(matrix(result$beta_hat[index], nrow = 1))
+names(est.table) &lt;- paste0(&quot;$\\beta_{&quot;, index, &quot;}$&quot;)
+knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
+    kable_styling(&quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+<span class="math inline">\(\beta_{1}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\beta_{2}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\beta_{3}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\beta_{4}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\beta_{20}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\beta_{34}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\beta_{39}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1.783
+</td>
+<td style="text-align:right;">
+-1.373
+</td>
+<td style="text-align:right;">
+2.736
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+-0.141
+</td>
+<td style="text-align:right;">
+-0.093
+</td>
+<td style="text-align:right;">
+0.066
+</td>
+</tr>
+</tbody>
+</table>
+<p>The values for <span class="math inline">\(\theta_0\)</span>.</p>
+<pre class="r"><code>est.table &lt;- data.frame(matrix(result$theta0_hat, nrow = 1))
+names(est.table) &lt;- paste0(&quot;$\\theta_{0,&quot;, 1:K, &quot;}$&quot;)
+knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
+    kable_styling(&quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{0,1}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{0,2}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{0,3}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{0,4}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+-0.153
+</td>
+<td style="text-align:right;">
+0.281
+</td>
+<td style="text-align:right;">
+-0.65
+</td>
+<td style="text-align:right;">
+0.102
+</td>
+</tr>
+</tbody>
+</table>
+<p>And just the first five rows of <span class="math inline">\(\Theta\)</span>, which happen to contain all the nonzero values for this result.</p>
+<pre class="r"><code>est.table &lt;- data.frame(result$theta_hat[1:5, ])
+names(est.table) &lt;- paste0(&quot;$\\theta_{,&quot;, 1:K, &quot;}$&quot;)
+knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
+    kable_styling(&quot;striped&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{,1}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{,2}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{,3}\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\theta_{,4}\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-0.093
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<p>Typically, one would run the fits for various values of <span class="math inline">\(\lambda\)</span> and choose one based on cross-validation. Here, even a single fit takes a while, but techniques discussed in other articles here can be used to speed up things.</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin17.7.0 (64-bit)
+## Running under: macOS  10.14.1
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] kableExtra_0.9.0 CVXR_0.99-2     
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.2      Rcpp_1.0.0        highr_0.7        
+##  [4] compiler_3.5.1    pillar_1.3.0      R.methodsS3_1.7.1
+##  [7] R.utils_2.7.0     tools_3.5.1       digest_0.6.18    
+## [10] bit_1.1-14        viridisLite_0.3.0 evaluate_0.12    
+## [13] tibble_1.4.2      lattice_0.20-38   pkgconfig_2.0.2  
+## [16] rlang_0.3.0.1     Matrix_1.2-15     rstudioapi_0.8   
+## [19] yaml_2.2.0        blogdown_0.9.2    xfun_0.4         
+## [22] xml2_1.2.0        httr_1.3.1        Rmpfr_0.7-1      
+## [25] ECOSolveR_0.4     stringr_1.3.1     knitr_1.20       
+## [28] hms_0.4.2         rprojroot_1.3-2   bit64_0.9-7      
+## [31] grid_3.5.1        R6_2.3.0          rmarkdown_1.10   
+## [34] bookdown_0.7      readr_1.1.1       magrittr_1.5     
+## [37] scales_1.0.0      backports_1.1.2   htmltools_0.3.6  
+## [40] scs_1.1-1         rvest_0.3.2       colorspace_1.3-2 
+## [43] stringi_1.2.4     munsell_0.5.0     crayon_1.3.4     
+## [46] R.oo_1.22.0</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/pliable-lasso.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-tibsjhf:2017">
+<p>Tibshirani, Robert J., and Jerome H. Friedman. 2017. “A Pliable Lasso.” <em>arXiv Preprint Arxiv:1712.00484</em>. <a href="https://arxiv.org/abs/1712.00484" class="uri">https://arxiv.org/abs/1712.00484</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../about/">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_glmnet_equivalence/" title="Getting Equivalent Results from `glmnet` and `CVXR`">Getting Equivalent Results from `glmnet` and `CVXR`</a></li>
+  
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

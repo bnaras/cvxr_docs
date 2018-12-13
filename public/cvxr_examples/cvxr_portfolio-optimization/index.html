@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Portfolio Optimization &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Portfolio Optimization</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>In this example, we solve the Markowitz portfolio problem under various constraints <span class="citation">(Markowitz <a href="#ref-Markowitz:1952">1952</a>; Roy <a href="#ref-Roy:1952">1952</a>; Lobo, Fazel, and Boyd <a href="#ref-LoboFazelBoyd:2007">2007</a>)</span>.</p>
 <p>We have <span class="math inline">\(n\)</span> assets or stocks in our portfolio and must determine the amount of money to invest in each. Let <span class="math inline">\(w_i\)</span> denote the fraction of our budget invested in asset <span class="math inline">\(i = 1,\ldots,m\)</span>, and let <span class="math inline">\(r_i\)</span> be the returns (, fractional change in price) over the period of interest. We model returns as a random vector <span class="math inline">\(r \in {\mathbf R}^n\)</span> with known mean <span class="math inline">\({\mathop{\bf E{}}}[r] = \mu\)</span> and covariance <span class="math inline">\({\mathop{\bf Var{}}}(r) = \Sigma\)</span>. Thus, given a portfolio <span class="math inline">\(w \in {\mathbf R}^n\)</span>, the overall return is <span class="math inline">\(R = r^Tw\)</span>.</p>

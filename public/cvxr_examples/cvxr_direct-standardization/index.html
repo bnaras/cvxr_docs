@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.42.1" />
+	<meta name="generator" content="Hugo 0.51" />
 	
 	<title>Direct Standardization &mdash; CVXR</title>
 	
@@ -25,7 +25,10 @@
 						
 	<h1>Direct Standardization</h1>
 	
-	<div id="introduction" class="section level2">
+	
+
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Consider a set of observations <span class="math inline">\((x_i,y_i)\)</span> drawn non-uniformly from an unknown distribution. We know the expected value of the columns of <span class="math inline">\(X\)</span>, denoted by <span class="math inline">\(b \in {\mathbf R}^n\)</span>, and want to estimate the true distribution of <span class="math inline">\(y\)</span>. This situation may arise, for instance, if we wish to analyze the health of a population based on a sample skewed toward young males, knowing the average population-level sex, age, etc. The empirical distribution that places equal probability <span class="math inline">\(1/m\)</span> on each <span class="math inline">\(y_i\)</span> is not a good estimate.</p>
 <p>So, we must determine the weights <span class="math inline">\(w \in {\mathbf R}^m\)</span> of a weighted empirical distribution, <span class="math inline">\(y = y_i\)</span> with probability <span class="math inline">\(w_i\)</span>, which rectifies the skewness of the sample <span class="citation">(Fleiss, Levin, and Paik <a href="#ref-dirstd">2003</a>, 19.5)</span>. We can pose this problem as</p>

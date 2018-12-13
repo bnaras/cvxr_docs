@@ -6,10 +6,21 @@
     <description>Recent content in Cvxr_examples on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 30 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/cvxr_examples/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Prototyping the pliable lasso</title>
+      <link>/cvxr_examples/cvxr_pliable_lasso/</link>
+      <pubDate>Fri, 30 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/cvxr_examples/cvxr_pliable_lasso/</guid>
+      <description>Introduction Tibshirani and Friedman (2017) propose a generalization of the lasso that allows the model coefficients to vary as a function of a general set of modifying variables, such as gender, age or time. The pliable lasso model has the form
+\[ \begin{equation} \hat{y} = \beta_0{\mathbf 1} + Z\theta_0 + \sum_{j=1}^p(X_j\beta_j + W_j\theta_j) \end{equation} \]
+where \(\hat{y}\) is the predicted \(N\times1\) vector, \(\beta_0\) is a scalar, \(\theta_0\) is a \(K\)-vector, \(X\) and \(Z\) are \(N\times p\) and \(N\times K\) matrices containing values of the predictor and modifying variables respectively with \(W_j=X_j \circ Z\) denoting the elementwise multiplication of Z by column \(X_j\) of \(X\).</description>
+    </item>
     
     <item>
       <title>Getting Equivalent Results from `glmnet` and `CVXR`</title>
