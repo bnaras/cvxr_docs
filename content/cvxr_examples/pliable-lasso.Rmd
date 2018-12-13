@@ -68,6 +68,7 @@ x_4\beta_4(e - 2z_2);\ \ \beta = (2, -2, 2, 2, 0, 0, \ldots)
 \end{eqnarray*}
 \]
 
+where $e=(1,1,\ldots , 1)^T).$
 ```{r}
 ## Simulation data.
 set.seed(123)
@@ -80,7 +81,7 @@ Z <- matrix(rbinom(n = N * K, size = 1, prob = 0.5), nrow = N, ncol = K)
 ## Response model.
 beta <- rep(x = 0, times = p)
 beta[1:4] <- c(2, -2, 2, 2)
-coeffs <- cbind(beta[1], beta[2], beta[3] + 2 * Z[, 1], beta[4] * (1 - 2 * Z[,2]))
+coeffs <- cbind(beta[1], beta[2], beta[3] + 2 * Z[, 1], beta[4] * (1 - 2 * Z[, 2]))
 mu <- diag(X[, 1:4] %*% t(coeffs))
 y <- mu + 0.5 * rnorm(N, mean = 0, sd = 1)
 ```
@@ -152,7 +153,7 @@ penalty_term3 <- sum(cvxr_norm(theta, 1))
 Equation 1 above for $\hat{y}$ contains a sum:
 $\sum_{j=1}^p(X_j\beta_j + W_j\theta_j)$. This requires multiplication
 of $Z$ by the columns of $X$ component-wise. That is a natural candidate
-for a map-reduce combination: Map the column multiplication function
+for a map-reduce combination: map the column multiplication function
 appropriately and reduce using `+` to obtain the `XZ_term` below.
 
 ```{r Compute_Fitted_Value, eval = FALSE}
@@ -191,14 +192,14 @@ theta0_hat <- result$getValue(theta0)
 theta_hat <- result$getValue(theta)
 
 ## Zero out stuff before returning
-beta_hat[abs(beta_hat) < ZERO_THRESHOLD] <- 0
-theta0_hat[abs(theta0_hat) < ZERO_THRESHOLD] <- 0
-theta_hat[abs(theta_hat) < ZERO_THRESHOLD] <- 0
-return(list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0,
-            beta_hat = beta_hat,
-            theta0_hat = theta0_hat,
-            theta_hat = theta_hat,
-            criterion = result$value))
+beta_hat[abs(beta_hat) < ZERO_THRESHOLD] <- 0.0
+theta0_hat[abs(theta0_hat) < ZERO_THRESHOLD] <- 0.0
+theta_hat[abs(theta_hat) < ZERO_THRESHOLD] <- 0.0
+list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0.0,
+     beta_hat = beta_hat,
+     theta0_hat = theta0_hat,
+     theta_hat = theta_hat,
+     criterion = result$value)
 ```
 
 ## The full function
@@ -249,6 +250,9 @@ knitr::kable(est.table, format = "html", digits = 3) %>%
     kable_styling("striped")
 ```
 
+For this value of $\lambda$, the nonzero $(\beta_1, \beta_2, \beta_3,\beta4)$ are picked up along
+with a few stragglers $(\beta_{20}, \beta_{34},\beta_{39}).$ 
+
 The values for $\theta_0$.
 
 ```{r}
@@ -270,9 +274,10 @@ knitr::kable(est.table, format = "html", digits = 3) %>%
 ## Notes
 
 Typically, one would run the fits for various values of $\lambda$ and
-choose one based on cross-validation. Here, even a single fit takes a
-while, but techniques discussed in other articles here can be used to
-speed up things. 
+choose one based on cross-validation and assess the prediction against
+a test set. Here, even a single fit takes a while, but techniques
+discussed in other articles here can be used to speed up the
+computations. 
 
 ## Session Info
 

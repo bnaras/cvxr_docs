@@ -59,6 +59,7 @@ y &amp;=&amp; \mu(x) + 0.5\cdot \epsilon;\ \ \epsilon \sim N(0, 1)\\
 x_4\beta_4(e - 2z_2);\ \ \beta = (2, -2, 2, 2, 0, 0, \ldots)
 \end{eqnarray*}
 \]</span></p>
+<p>where <span class="math inline">\(e=(1,1,\ldots , 1)^T).\)</span></p>
 <pre class="r"><code>## Simulation data.
 set.seed(123)
 N &lt;- 100
@@ -70,7 +71,7 @@ Z &lt;- matrix(rbinom(n = N * K, size = 1, prob = 0.5), nrow = N, ncol = K)
 ## Response model.
 beta &lt;- rep(x = 0, times = p)
 beta[1:4] &lt;- c(2, -2, 2, 2)
-coeffs &lt;- cbind(beta[1], beta[2], beta[3] + 2 * Z[, 1], beta[4] * (1 - 2 * Z[,2]))
+coeffs &lt;- cbind(beta[1], beta[2], beta[3] + 2 * Z[, 1], beta[4] * (1 - 2 * Z[, 2]))
 mu &lt;- diag(X[, 1:4] %*% t(coeffs))
 y &lt;- mu + 0.5 * rnorm(N, mean = 0, sd = 1)</code></pre>
 <p>It seems worthwhile to write a function that will fit the model for us so that we can customize a few things such as an intercept term, verbosity etc. The function has the following structure with comments as placeholders for code we shall construct later.</p>
@@ -116,7 +117,7 @@ penalty_term3 &lt;- sum(cvxr_norm(theta, 1))</code></pre>
 </div>
 <div id="the-fitted-value" class="section level3">
 <h3>The fitted value</h3>
-<p>Equation 1 above for <span class="math inline">\(\hat{y}\)</span> contains a sum: <span class="math inline">\(\sum_{j=1}^p(X_j\beta_j + W_j\theta_j)\)</span>. This requires multiplication of <span class="math inline">\(Z\)</span> by the columns of <span class="math inline">\(X\)</span> component-wise. That is a natural candidate for a map-reduce combination: Map the column multiplication function appropriately and reduce using <code>+</code> to obtain the <code>XZ_term</code> below.</p>
+<p>Equation 1 above for <span class="math inline">\(\hat{y}\)</span> contains a sum: <span class="math inline">\(\sum_{j=1}^p(X_j\beta_j + W_j\theta_j)\)</span>. This requires multiplication of <span class="math inline">\(Z\)</span> by the columns of <span class="math inline">\(X\)</span> component-wise. That is a natural candidate for a map-reduce combination: map the column multiplication function appropriately and reduce using <code>+</code> to obtain the <code>XZ_term</code> below.</p>
 <pre class="r"><code>xz_theta &lt;- lapply(seq_len(p),
                    function(j) (matrix(X[, j], nrow = N, ncol = K) * Z) %*% theta_transpose[, j])
 XZ_term &lt;- Reduce(f = &#39;+&#39;, x = xz_theta)
@@ -142,14 +143,14 @@ beta_hat &lt;- result$getValue(beta)</code></pre>
 theta_hat &lt;- result$getValue(theta)
 
 ## Zero out stuff before returning
-beta_hat[abs(beta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
-theta0_hat[abs(theta0_hat) &lt; ZERO_THRESHOLD] &lt;- 0
-theta_hat[abs(theta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
-return(list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0,
-            beta_hat = beta_hat,
-            theta0_hat = theta0_hat,
-            theta_hat = theta_hat,
-            criterion = result$value))</code></pre>
+beta_hat[abs(beta_hat) &lt; ZERO_THRESHOLD] &lt;- 0.0
+theta0_hat[abs(theta0_hat) &lt; ZERO_THRESHOLD] &lt;- 0.0
+theta_hat[abs(theta_hat) &lt; ZERO_THRESHOLD] &lt;- 0.0
+list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0.0,
+     beta_hat = beta_hat,
+     theta0_hat = theta0_hat,
+     theta_hat = theta_hat,
+     criterion = result$value)</code></pre>
 </div>
 </div>
 <div id="the-full-function" class="section level2">
@@ -185,14 +186,14 @@ return(list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0,
     theta_hat &lt;- result$getValue(theta)
     
     ## Zero out stuff before returning
-    beta_hat[abs(beta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
-    theta0_hat[abs(theta0_hat) &lt; ZERO_THRESHOLD] &lt;- 0
-    theta_hat[abs(theta_hat) &lt; ZERO_THRESHOLD] &lt;- 0
-    return(list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0,
-                beta_hat = beta_hat,
-                theta0_hat = theta0_hat,
-                theta_hat = theta_hat,
-                criterion = result$value))
+    beta_hat[abs(beta_hat) &lt; ZERO_THRESHOLD] &lt;- 0.0
+    theta0_hat[abs(theta0_hat) &lt; ZERO_THRESHOLD] &lt;- 0.0
+    theta_hat[abs(theta_hat) &lt; ZERO_THRESHOLD] &lt;- 0.0
+    list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0.0,
+         beta_hat = beta_hat,
+         theta0_hat = theta0_hat,
+         theta_hat = theta_hat,
+         criterion = result$value)
 }</code></pre>
 </div>
 <div id="the-results" class="section level2">
@@ -260,6 +261,7 @@ knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
 </tr>
 </tbody>
 </table>
+<p>For this value of <span class="math inline">\(\lambda\)</span>, the nonzero <span class="math inline">\((\beta_1, \beta_2, \beta_3,\beta4)\)</span> are picked up along with a few stragglers <span class="math inline">\((\beta_{20}, \beta_{34},\beta_{39}).\)</span></p>
 <p>The values for <span class="math inline">\(\theta_0\)</span>.</p>
 <pre class="r"><code>est.table &lt;- data.frame(matrix(result$theta0_hat, nrow = 1))
 names(est.table) &lt;- paste0(&quot;$\\theta_{0,&quot;, 1:K, &quot;}$&quot;)
@@ -397,7 +399,7 @@ knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
 </div>
 <div id="notes" class="section level2">
 <h2>Notes</h2>
-<p>Typically, one would run the fits for various values of <span class="math inline">\(\lambda\)</span> and choose one based on cross-validation. Here, even a single fit takes a while, but techniques discussed in other articles here can be used to speed up things.</p>
+<p>Typically, one would run the fits for various values of <span class="math inline">\(\lambda\)</span> and choose one based on cross-validation and assess the prediction against a test set. Here, even a single fit takes a while, but techniques discussed in other articles here can be used to speed up the computations.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
