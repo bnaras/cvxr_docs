@@ -88,12 +88,12 @@ theta &lt;- Variable(p, K) ; theta_transpose &lt;- t(theta)</code></pre>
 </div>
 <div id="the-penalty-terms" class="section level3">
 <h3>The penalty terms</h3>
-<p>There are three of them. The first term, <span class="math inline">\(\sum_{j=1}^p\biggl(||(\beta_j,\theta_j)||_2\biggr)\)</span>, involves components of <span class="math inline">\(\beta\)</span> and rows of <span class="math inline">\(\Theta\)</span>. <code>CVXR</code> provides two functions to express this norm:</p>
+<p>There are three of them. The first term in the parenthesis, <span class="math inline">\(\sum_{j=1}^p\biggl(||(\beta_j,\theta_j)||_2\biggr)\)</span>, involves components of <span class="math inline">\(\beta\)</span> and rows of <span class="math inline">\(\Theta\)</span>. <code>CVXR</code> provides two functions to express this norm:</p>
 <ul>
 <li><code>hstack</code> to bind columns of <span class="math inline">\(\beta\)</span> and the matrix <span class="math inline">\(\Theta\)</span>, the equivalent of <code>rbind</code> in R,</li>
-<li><code>cvxr_norm</code> which accepts an <code>axis</code> argument the axis along which the norm is to be taken. The penalty requires us to use the row as axis, so <code>axis = 1</code>, the usual R convention.</li>
+<li><code>cvxr_norm</code> which accepts a matrix variable and an <code>axis</code> denoting the axis along which the norm is to be taken. The penalty requires us to use the row as axis, so <code>axis = 1</code> per the usual R convention.</li>
 </ul>
-<p>With this in hand, we can easily construct the penalty terms as below.</p>
+<p>The second term in the parenthesis _{j}<span class="math inline">\(||\theta_j||_2\)</span> is also a norm along rows as the <span class="math inline">\(\theta_j\)</span> are rows of <span class="math inline">\(\Theta\)</span>. And the last one is simply a 1-norm.</p>
 <pre class="r"><code>penalty_term1 &lt;- sum(cvxr_norm(hstack(beta, theta), 2, axis = 1))
 penalty_term2 &lt;- sum(cvxr_norm(theta, 2, axis = 1))
 penalty_term3 &lt;- sum(cvxr_norm(theta, 1))</code></pre>
@@ -244,7 +244,7 @@ knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
 </tr>
 </tbody>
 </table>
-<p>For this value of <span class="math inline">\(\lambda\)</span>, the nonzero <span class="math inline">\((\beta_1, \beta_2, \beta_3,\beta4)\)</span> are picked up along with a few stragglers <span class="math inline">\((\beta_{20}, \beta_{34},\beta_{39}).\)</span></p>
+<p>For this value of <span class="math inline">\(\lambda\)</span>, the nonzero <span class="math inline">\((\beta_1, \beta_2, \beta_3,\beta4)\)</span> are picked up along with a few others <span class="math inline">\((\beta_{20}, \beta_{34},\beta_{39}).\)</span></p>
 <p>The values for <span class="math inline">\(\theta_0\)</span>.</p>
 <pre class="r"><code>est.table &lt;- data.frame(matrix(result$theta0_hat, nrow = 1))
 names(est.table) &lt;- paste0(&quot;$\\theta_{0,&quot;, 1:K, &quot;}$&quot;)
@@ -380,16 +380,17 @@ knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
 </tbody>
 </table>
 </div>
-<div id="notes" class="section level2">
-<h2>Notes</h2>
+<div id="final-comments" class="section level2">
+<h2>Final comments</h2>
 <p>Typically, one would run the fits for various values of <span class="math inline">\(\lambda\)</span> and choose one based on cross-validation and assess the prediction against a test set. Here, even a single fit takes a while, but techniques discussed in other articles here can be used to speed up the computations.</p>
+<p>A logistic regression using a pliable lasso model can be prototyped similarly.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin17.7.0 (64-bit)
-## Running under: macOS  10.14.1
+## Running under: macOS  10.14.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
