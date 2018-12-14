@@ -129,18 +129,20 @@ Note that we also define the transpose of $\Theta$ for use later.
 
 ### The penalty terms
 
-There are three of them. The first term,
+There are three of them. The first term in the parenthesis,
 $\sum_{j=1}^p\biggl(||(\beta_j,\theta_j)||_2\biggr)$, involves components of
 $\beta$ and rows of $\Theta$. `CVXR` provides two functions to express
 this norm: 
 
 - `hstack` to bind columns of $\beta$ and the matrix $\Theta$, the
   equivalent of `rbind` in R,
-- `cvxr_norm` which accepts an `axis` argument the axis along which
+- `cvxr_norm` which accepts a matrix variable and an `axis` denoting the axis along which
   the norm is to be taken. The penalty requires us to use the row as
-  axis, so `axis = 1`, the usual R convention.
-
-With this in hand, we can easily construct the penalty terms as below.
+  axis, so `axis = 1` per the usual R convention. 
+  
+The second term in the parenthesis \sum_{j}$||\theta_j||_2$ is also a norm
+along rows as the $\theta_j$ are rows of $\Theta$. And the last one is
+simply a 1-norm.
 
 ```{r Build_Penalty_Terms, eval = FALSE}
 penalty_term1 <- sum(cvxr_norm(hstack(beta, theta), 2, axis = 1))
@@ -251,7 +253,7 @@ knitr::kable(est.table, format = "html", digits = 3) %>%
 ```
 
 For this value of $\lambda$, the nonzero $(\beta_1, \beta_2, \beta_3,\beta4)$ are picked up along
-with a few stragglers $(\beta_{20}, \beta_{34},\beta_{39}).$ 
+with a few others $(\beta_{20}, \beta_{34},\beta_{39}).$ 
 
 The values for $\theta_0$.
 
@@ -271,13 +273,16 @@ knitr::kable(est.table, format = "html", digits = 3) %>%
     kable_styling("striped")
 ```
                 
-## Notes
+## Final comments
 
 Typically, one would run the fits for various values of $\lambda$ and
 choose one based on cross-validation and assess the prediction against
 a test set. Here, even a single fit takes a while, but techniques
 discussed in other articles here can be used to speed up the
 computations. 
+
+A logistic regression using a pliable lasso model can be prototyped
+similarly. 
 
 ## Session Info
 
