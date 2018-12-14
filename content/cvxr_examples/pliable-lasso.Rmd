@@ -140,7 +140,7 @@ this norm:
   the norm is to be taken. The penalty requires us to use the row as
   axis, so `axis = 1` per the usual R convention. 
   
-The second term in the parenthesis \sum_{j}$||\theta_j||_2$ is also a norm
+The second term in the parenthesis $\sum_{j}||\theta_j||_2$ is also a norm
 along rows as the $\theta_j$ are rows of $\Theta$. And the last one is
 simply a 1-norm.
 

@@ -93,7 +93,7 @@ theta &lt;- Variable(p, K) ; theta_transpose &lt;- t(theta)</code></pre>
 <li><code>hstack</code> to bind columns of <span class="math inline">\(\beta\)</span> and the matrix <span class="math inline">\(\Theta\)</span>, the equivalent of <code>rbind</code> in R,</li>
 <li><code>cvxr_norm</code> which accepts a matrix variable and an <code>axis</code> denoting the axis along which the norm is to be taken. The penalty requires us to use the row as axis, so <code>axis = 1</code> per the usual R convention.</li>
 </ul>
-<p>The second term in the parenthesis _{j}<span class="math inline">\(||\theta_j||_2\)</span> is also a norm along rows as the <span class="math inline">\(\theta_j\)</span> are rows of <span class="math inline">\(\Theta\)</span>. And the last one is simply a 1-norm.</p>
+<p>The second term in the parenthesis <span class="math inline">\(\sum_{j}||\theta_j||_2\)</span> is also a norm along rows as the <span class="math inline">\(\theta_j\)</span> are rows of <span class="math inline">\(\Theta\)</span>. And the last one is simply a 1-norm.</p>
 <pre class="r"><code>penalty_term1 &lt;- sum(cvxr_norm(hstack(beta, theta), 2, axis = 1))
 penalty_term2 &lt;- sum(cvxr_norm(theta, 2, axis = 1))
 penalty_term3 &lt;- sum(cvxr_norm(theta, 1))</code></pre>
