@@ -26,7 +26,7 @@ tags: []
 </div>
 <div id="raking" class="section level2">
 <h2>Raking</h2>
-<p>A common calibration technique is <em>raking</em>, which uses the penalty function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibratin metric.</p>
+<p>A common calibration technique is <em>raking</em>, which uses the penalty function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibration metric.</p>
 <p>We illustrate with the California Academic Performance Index data in the <code>survey</code> package (<span class="citation">T. Lumley (<a href="#ref-lumley:2018">2018</a>)</span>) which also supplies facilities for calibration via the function <code>calibrate</code>. Both the population dataset (<code>apipop</code>) and a simple random sample of <span class="math inline">\(m = 200\)</span> (<code>apisrs</code>) are provided. Suppose that we wish to reweight the observations in the sample using known totals for two variables from the population: <code>stype</code>, the school type (elementary, middle or high) and <code>sch.wide</code>, whether the school met the yearly target or not. This reweighting would make the sample more representative of the general population.</p>
 <p>The code below estimates the weights using <code>survey::calibrate</code>.</p>
 <pre class="r"><code>suppressMessages(suppressWarnings(library(survey)))
