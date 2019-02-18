@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.51" />
+	<meta name="generator" content="Hugo 0.53" />
 	
 	<title>Quantile Regression &mdash; CVXR</title>
 	
@@ -260,12 +260,12 @@ income
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-apple-darwin17.7.0 (64-bit)
-## Running under: macOS  10.14.1
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin18.2.0 (64-bit)
+## Running under: macOS Mojave 10.14.3
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.4/lib/libopenblasp-r0.3.4.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -274,30 +274,30 @@ income
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-2      kableExtra_0.9.0 ggplot2_3.1.0    quantreg_5.36   
+## [1] CVXR_0.99-3      kableExtra_1.0.1 ggplot2_3.1.0    quantreg_5.38   
 ## [5] SparseM_1.77    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5   xfun_0.4           purrr_0.2.5       
-##  [4] lattice_0.20-35    colorspace_1.3-2   htmltools_0.3.6   
+##  [1] tidyselect_0.2.5   xfun_0.4           purrr_0.3.0       
+##  [4] lattice_0.20-38    colorspace_1.4-0   htmltools_0.3.6   
 ##  [7] viridisLite_0.3.0  gmp_0.5-13.2       yaml_2.2.0        
-## [10] rlang_0.3.0.1      R.oo_1.22.0        pillar_1.3.0      
-## [13] Rmpfr_0.7-1        R.utils_2.7.0      glue_1.3.0        
+## [10] rlang_0.3.1        R.oo_1.22.0        pillar_1.3.1      
+## [13] Rmpfr_0.7-2        R.utils_2.7.0      glue_1.3.0        
 ## [16] withr_2.1.2        bit64_0.9-7        bindrcpp_0.2.2    
 ## [19] scs_1.1-1          bindr_0.1.1        plyr_1.8.4        
-## [22] stringr_1.3.1      MatrixModels_0.4-1 munsell_0.5.0     
-## [25] blogdown_0.9.2     gtable_0.2.0       R.methodsS3_1.7.1 
+## [22] stringr_1.4.0      MatrixModels_0.4-1 munsell_0.5.0     
+## [25] blogdown_0.10      gtable_0.2.0       R.methodsS3_1.7.1 
 ## [28] rvest_0.3.2        evaluate_0.12      labeling_0.3      
-## [31] knitr_1.20         highr_0.7          Rcpp_0.12.19      
-## [34] readr_1.1.1        scales_1.0.0       backports_1.1.2   
+## [31] knitr_1.21         highr_0.7          Rcpp_1.0.0        
+## [34] readr_1.3.1        scales_1.0.0       webshot_0.5.1     
 ## [37] bit_1.1-14         hms_0.4.2          digest_0.6.18     
-## [40] stringi_1.2.4      bookdown_0.7       dplyr_0.7.7       
-## [43] grid_3.5.1         rprojroot_1.3-2    ECOSolveR_0.4     
-## [46] tools_3.5.1        magrittr_1.5       lazyeval_0.2.1    
-## [49] tibble_1.4.2       crayon_1.3.4       pkgconfig_2.0.2   
-## [52] Matrix_1.2-15      xml2_1.2.0         assertthat_0.2.0  
-## [55] rmarkdown_1.10     httr_1.3.1         rstudioapi_0.8    
-## [58] R6_2.3.0           compiler_3.5.1</code></pre>
+## [40] stringi_1.2.4      bookdown_0.9       dplyr_0.7.8       
+## [43] grid_3.5.2         ECOSolveR_0.4      tools_3.5.2       
+## [46] magrittr_1.5       lazyeval_0.2.1     tibble_2.0.1      
+## [49] crayon_1.3.4       pkgconfig_2.0.2    Matrix_1.2-15     
+## [52] xml2_1.2.0         assertthat_0.2.0   rmarkdown_1.11    
+## [55] httr_1.4.0         rstudioapi_0.9.0   R6_2.3.0          
+## [58] compiler_3.5.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

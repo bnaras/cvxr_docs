@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.51" />
+	<meta name="generator" content="Hugo 0.53" />
 	
 	<title>Solver Peculiarities &mdash; CVXR</title>
 	
@@ -64,12 +64,12 @@ cat(&quot;Solution status is&quot;, result$status)</code></pre>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-apple-darwin17.7.0 (64-bit)
-## Running under: macOS  10.14.1
+<pre><code>## R version 3.5.2 (2018-12-20)
+## Platform: x86_64-apple-darwin18.2.0 (64-bit)
+## Running under: macOS Mojave 10.14.3
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.3/lib/libopenblasp-r0.3.3.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.4/lib/libopenblasp-r0.3.4.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -78,20 +78,19 @@ cat(&quot;Solution status is&quot;, result$status)</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-2
+## [1] CVXR_0.99-3
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.19      knitr_1.20        magrittr_1.5     
-##  [4] bit_1.1-14        lattice_0.20-35   R6_2.3.0         
-##  [7] stringr_1.3.1     tools_3.5.1       grid_3.5.1       
+##  [1] Rcpp_1.0.0        knitr_1.21        magrittr_1.5     
+##  [4] bit_1.1-14        lattice_0.20-38   R6_2.3.0         
+##  [7] stringr_1.4.0     tools_3.5.2       grid_3.5.2       
 ## [10] xfun_0.4          R.oo_1.22.0       scs_1.1-1        
-## [13] htmltools_0.3.6   bit64_0.9-7       yaml_2.2.0       
-## [16] rprojroot_1.3-2   digest_0.6.18     bookdown_0.7     
-## [19] Matrix_1.2-15     gmp_0.5-13.2      ECOSolveR_0.4    
-## [22] R.utils_2.7.0     evaluate_0.12     rmarkdown_1.10   
-## [25] blogdown_0.9.2    stringi_1.2.4     compiler_3.5.1   
-## [28] Rmpfr_0.7-1       backports_1.1.2   R.methodsS3_1.7.1
-## [31] jsonlite_1.5      reticulate_1.10</code></pre>
+## [13] htmltools_0.3.6   yaml_2.2.0        bit64_0.9-7      
+## [16] digest_0.6.18     bookdown_0.9      Matrix_1.2-15    
+## [19] gmp_0.5-13.2      ECOSolveR_0.4     R.utils_2.7.0    
+## [22] evaluate_0.12     rmarkdown_1.11    blogdown_0.10    
+## [25] stringi_1.2.4     compiler_3.5.2    Rmpfr_0.7-2      
+## [28] R.methodsS3_1.7.1 jsonlite_1.6      reticulate_1.10</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
