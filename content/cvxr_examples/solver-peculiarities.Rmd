@@ -15,7 +15,7 @@ suppressWarnings(suppressMessages(library(CVXR)))
 
 The default solver in `CVXR` is `ECOS`. However, it is not always the
 best solver to use. As an example, let us consider again the [catenary
-problem](/cvxr_examples/catenary). 
+problem](/cvxr_examples/cvxr_catenary/). 
 
 We will change the problem slightly to use a finer discretization from
 101 points to say 501. 

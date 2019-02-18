@@ -65,7 +65,7 @@ d_iX_{ij}$ for $i = 1,\ldots,m$ and $j = 1,\ldots,n$.
 ## Raking 
 
 A common calibration technique is _raking_, which uses the penalty
-function $\phi(g_i) = g_i\log(g_i) - g_i + 1$ as the calibratin
+function $\phi(g_i) = g_i\log(g_i) - g_i + 1$ as the calibration
 metric.
 
 We illustrate with the California Academic Performance Index data in
