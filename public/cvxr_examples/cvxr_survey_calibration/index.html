@@ -29,6 +29,11 @@
 <script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
+<pre><code>## 
+## Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     group_rows</code></pre>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Calibration is a widely used technique in survey sampling. Suppose <span class="math inline">\(m\)</span> sampling units in a survey have been assigned initial weights <span class="math inline">\(d_i\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span>, and furthermore, there are <span class="math inline">\(n\)</span> auxiliary variables whose values in the sample are known. Calibration seeks to improve the initial weights <span class="math inline">\(d_i\)</span> by finding new weights <span class="math inline">\(w_i\)</span> that incorporate this auxiliary information while perturbing the initial weights as little as possible, , the ratio <span class="math inline">\(g_i = w_i/d_i\)</span> must be close to one. Such reweighting improves precision of estimates (Chapter 7, <span class="citation">T. S. Lumley (<a href="#ref-Lumley:2010">2010</a>)</span>).</p>
@@ -289,7 +294,7 @@ No
 15
 </td>
 <td style="text-align:right;background-color: #ececec;">
-28.946
+28.907
 </td>
 <td style="text-align:right;background-color: #ececec;">
 15
@@ -309,7 +314,7 @@ Yes
 127
 </td>
 <td style="text-align:right;background-color: #ececec;">
-31.400
+31.397
 </td>
 <td style="text-align:right;background-color: #ececec;">
 127
@@ -329,7 +334,7 @@ No
 13
 </td>
 <td style="text-align:right;background-color: #ececec;">
-29.017
+29.005
 </td>
 <td style="text-align:right;background-color: #ececec;">
 13
@@ -349,7 +354,7 @@ Yes
 12
 </td>
 <td style="text-align:right;background-color: #ececec;">
-31.472
+31.495
 </td>
 <td style="text-align:right;background-color: #ececec;">
 12
@@ -369,7 +374,7 @@ No
 9
 </td>
 <td style="text-align:right;background-color: #ececec;">
-29.061
+29.037
 </td>
 <td style="text-align:right;background-color: #ececec;">
 9
@@ -389,7 +394,7 @@ Yes
 24
 </td>
 <td style="text-align:right;background-color: #ececec;">
-31.516
+31.528
 </td>
 <td style="text-align:right;background-color: #ececec;">
 24
@@ -896,27 +901,27 @@ Yes
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-3      survey_3.35-1    survival_2.43-3  Matrix_1.2-15   
-## [5] kableExtra_1.0.1 dplyr_0.7.8     
+## [1] CVXR_0.99-4      survey_3.35-1    survival_2.43-3  Matrix_1.2-15   
+## [5] kableExtra_1.0.1 dplyr_0.8.0.1   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5  xfun_0.4          purrr_0.3.0      
-##  [4] splines_3.5.2     lattice_0.20-38   colorspace_1.4-0 
-##  [7] htmltools_0.3.6   viridisLite_0.3.0 yaml_2.2.0       
-## [10] gmp_0.5-13.2      rlang_0.3.1       R.oo_1.22.0      
-## [13] pillar_1.3.1      glue_1.3.0        Rmpfr_0.7-2      
-## [16] R.utils_2.7.0     bit64_0.9-7       bindrcpp_0.2.2   
-## [19] scs_1.1-1         bindr_0.1.1       stringr_1.4.0    
-## [22] munsell_0.5.0     blogdown_0.10     rvest_0.3.2      
-## [25] R.methodsS3_1.7.1 evaluate_0.12     knitr_1.21       
-## [28] highr_0.7         Rcpp_1.0.0        readr_1.3.1      
-## [31] scales_1.0.0      webshot_0.5.1     bit_1.1-14       
-## [34] hms_0.4.2         digest_0.6.18     stringi_1.2.4    
-## [37] bookdown_0.9      ECOSolveR_0.4     tools_3.5.2      
-## [40] magrittr_1.5      tibble_2.0.1      crayon_1.3.4     
-## [43] pkgconfig_2.0.2   MASS_7.3-51.1     xml2_1.2.0       
-## [46] assertthat_0.2.0  rmarkdown_1.11    httr_1.4.0       
-## [49] rstudioapi_0.9.0  R6_2.3.0          compiler_3.5.2</code></pre>
+##  [1] gmp_0.5-13.4      Rcpp_1.0.0        highr_0.7        
+##  [4] pillar_1.3.1      compiler_3.5.2    R.methodsS3_1.7.1
+##  [7] R.utils_2.8.0     tools_3.5.2       bit_1.1-14       
+## [10] digest_0.6.18     evaluate_0.13     tibble_2.0.1     
+## [13] viridisLite_0.3.0 lattice_0.20-38   pkgconfig_2.0.2  
+## [16] rlang_0.3.1       rstudioapi_0.9.0  yaml_2.2.0       
+## [19] blogdown_0.10.7   xfun_0.5          Rmpfr_0.7-2      
+## [22] ECOSolveR_0.4     stringr_1.4.0     httr_1.4.0       
+## [25] knitr_1.22        xml2_1.2.0        hms_0.4.2        
+## [28] bit64_0.9-7       webshot_0.5.1     tidyselect_0.2.5 
+## [31] glue_1.3.0        R6_2.4.0          rmarkdown_1.11   
+## [34] bookdown_0.9      readr_1.3.1       purrr_0.3.1      
+## [37] magrittr_1.5      scs_1.2-3         MASS_7.3-51.1    
+## [40] splines_3.5.2     scales_1.0.0      htmltools_0.3.6  
+## [43] assertthat_0.2.0  rvest_0.3.2       colorspace_1.4-0 
+## [46] stringi_1.3.1     munsell_0.5.0     crayon_1.3.4     
+## [49] R.oo_1.22.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
