@@ -11,7 +11,16 @@ tags: []
 
 Although several examples here were ported from the
 [`CVXPY`](https://cvxpy.org) site, there are many new ones we have
-added.
+added. Every example contains a link to the complete markdown document
+for reproducing the results here. You can also download the entire
+repository of tutorial examples from the [GitHub
+repo](https://github.com/bnaras/cvxr_docs).
+
+__Note:__ Due to changes in the `sample` function for R version 3.6+,
+some results here will not be the same although the conclusions
+should hold.
+
+
 
 ## Basic Examples
 

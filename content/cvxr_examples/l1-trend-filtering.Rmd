@@ -9,9 +9,10 @@ categories: []
 tags: []
 ---
 
-```{r, echo = FALSE}
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 library(ggplot2)
-suppressMessages(suppressWarnings(library(CVXR)))
+library(l1tf)
 ```
 
 ## Introduction
@@ -56,7 +57,6 @@ the function `l1tf` which computes the trend estimate for a specified
 $\lambda$. 
 
 ```{r}
-library(l1tf)
 sp_data <- data.frame(x = sp500$date,
                       y = sp500$log,
                       l1_50 = l1tf(sp500$log, lambda = 50),

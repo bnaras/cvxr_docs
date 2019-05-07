@@ -9,8 +9,8 @@ categories: []
 tags: []
 ---
 
-```{r, echo = FALSE}
-suppressWarnings(suppressMessages(library(CVXR)))
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 library(kableExtra)
 library(ggplot2)
 draw_office_layout <- function(office_name = c("WC", paste("Office", 5:7), paste("Office", 1:4))) {

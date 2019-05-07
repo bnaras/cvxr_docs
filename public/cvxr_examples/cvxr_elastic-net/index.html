@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.53" />
+	<meta name="generator" content="Hugo 0.55.4" />
 	
 	<title>Elastic Net &mdash; CVXR</title>
 	
@@ -43,8 +43,7 @@
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>To solve this problem in <code>CVXR</code>, we first define a function that calculates the regularization term given the variable and penalty weights.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
-elastic_reg &lt;- function(beta, lambda = 0, alpha = 0) {
+<pre class="r"><code>elastic_reg &lt;- function(beta, lambda = 0, alpha = 0) {
     ridge &lt;- (1 - alpha) * sum(beta^2)
     lasso &lt;- alpha * p_norm(beta, 1)
     lambda * (lasso + ridge)
@@ -89,7 +88,6 @@ beta_vals &lt;- sapply(lambda_vals,
 <pre class="r"><code>d &lt;- as.data.frame(beta_vals)
 rownames(d) &lt;- sprintf(&quot;$\\beta_{%d}$&quot;, seq_len(p))
 names(d) &lt;- sprintf(&quot;$\\lambda = %.3f$&quot;, lambda_vals)
-library(kableExtra)
 knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from `CVXR`&quot;, digits = 3) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
     column_spec(1:11, background = &quot;#ececec&quot;)</code></pre>
@@ -135,703 +133,703 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.642
+<td style="text-align:right;background-color: #ececec !important;">
+0.002
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.641
+<td style="text-align:right;background-color: #ececec !important;">
+0.002
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.639
+<td style="text-align:right;background-color: #ececec !important;">
+0.001
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.634
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.622
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.592
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.520
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.352
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.046
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.037
+<td style="text-align:right;background-color: #ececec !important;">
+-0.035
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.037
+<td style="text-align:right;background-color: #ececec !important;">
+-0.035
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.036
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 -0.033
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.026
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.008
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{3}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.447
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.446
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.444
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.439
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.426
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.393
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.315
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.146
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{4}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.225
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.225
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.223
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.218
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.206
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.177
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.106
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{5}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.729
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.728
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.726
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.721
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.709
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.678
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.601
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.434
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.118
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{6}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.465
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.465
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.463
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.460
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.450
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.426
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.365
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.230
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{7}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.381
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.380
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.379
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.375
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.364
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.338
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.272
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.125
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{8}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.124
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.124
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.122
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.117
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.106
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.078
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.011
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{9}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.041
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.041
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.039
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.036
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.026
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.003
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{10}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.090
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.089
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.088
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.085
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.076
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.055
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.004
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{11}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.382
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.381
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.379
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.375
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.364
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.337
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.272
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.124
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{12}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.064
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.064
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.063
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.061
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.055
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.042
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.007
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{13}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.432
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.432
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.430
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.426
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.416
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.389
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.324
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.171
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{14}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.122
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.121
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.120
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.116
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.107
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.084
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 -0.030
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
+-0.021
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.001
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{15}\)</span>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.668
+<td style="text-align:right;background-color: #ececec !important;">
+0.379
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.668
+<td style="text-align:right;background-color: #ececec !important;">
+0.378
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.666
+<td style="text-align:right;background-color: #ececec !important;">
+0.376
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.662
+<td style="text-align:right;background-color: #ececec !important;">
+0.371
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.651
+<td style="text-align:right;background-color: #ececec !important;">
+0.360
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.624
+<td style="text-align:right;background-color: #ececec !important;">
+0.330
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.556
+<td style="text-align:right;background-color: #ececec !important;">
+0.257
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.387
+<td style="text-align:right;background-color: #ececec !important;">
+0.091
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.058
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{16}\)</span>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.258
+<td style="text-align:right;background-color: #ececec !important;">
+1.812
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.258
+<td style="text-align:right;background-color: #ececec !important;">
+1.811
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.256
+<td style="text-align:right;background-color: #ececec !important;">
+1.808
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.252
+<td style="text-align:right;background-color: #ececec !important;">
+1.800
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.241
+<td style="text-align:right;background-color: #ececec !important;">
+1.781
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.215
+<td style="text-align:right;background-color: #ececec !important;">
+1.733
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.152
+<td style="text-align:right;background-color: #ececec !important;">
+1.616
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.017
+<td style="text-align:right;background-color: #ececec !important;">
+1.351
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
+<td style="text-align:right;background-color: #ececec !important;">
+0.839
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{17}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.017
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.017
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.015
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.012
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.003
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{18}\)</span>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.149
+<td style="text-align:right;background-color: #ececec !important;">
+-0.410
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.148
+<td style="text-align:right;background-color: #ececec !important;">
+-0.409
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.146
+<td style="text-align:right;background-color: #ececec !important;">
+-0.407
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.140
+<td style="text-align:right;background-color: #ececec !important;">
+-0.403
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.126
+<td style="text-align:right;background-color: #ececec !important;">
+-0.393
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.088
+<td style="text-align:right;background-color: #ececec !important;">
+-0.367
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.000
+<td style="text-align:right;background-color: #ececec !important;">
+-0.301
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.799
+<td style="text-align:right;background-color: #ececec !important;">
+-0.156
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{6}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.352
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.352
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.350
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.345
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.334
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.305
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.237
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.076
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{7}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
 0.397
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.397
 </td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{19}\)</span>
+<td style="text-align:right;background-color: #ececec !important;">
+0.395
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.301
+<td style="text-align:right;background-color: #ececec !important;">
+0.391
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.301
+<td style="text-align:right;background-color: #ececec !important;">
+0.381
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.299
+<td style="text-align:right;background-color: #ececec !important;">
+0.355
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.296
+<td style="text-align:right;background-color: #ececec !important;">
+0.291
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.286
+<td style="text-align:right;background-color: #ececec !important;">
+0.146
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.263
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.205
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.069
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{8}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.098
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.098
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.096
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.093
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.085
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.064
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.013
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{9}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.051
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.050
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.049
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.046
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.039
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.020
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{10}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.084
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.083
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.082
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.079
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.071
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.050
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.001
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{11}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.134
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.133
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.131
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.126
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.113
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.079
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.994
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.801
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.429
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{12}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.092
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.092
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.091
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.089
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.082
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.067
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.025
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{13}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.428
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.427
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.425
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.419
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.406
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.371
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.287
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.096
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{14}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.113
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.112
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.111
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.107
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.096
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.069
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.003
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{15}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.676
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.675
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.673
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.669
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.657
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.629
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.557
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.378
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.057
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{16}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.275
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.274
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.272
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.268
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.256
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.228
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.160
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.009
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{17}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.004
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.004
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.003
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.001
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{18}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.186
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.185
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.184
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.179
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.169
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.142
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.080
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{19}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.517
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.516
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.514
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.508
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.494
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.459
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.375
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.195
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{20}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.786
+<td style="text-align:right;background-color: #ececec !important;">
+0.761
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.785
+<td style="text-align:right;background-color: #ececec !important;">
+0.760
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.783
+<td style="text-align:right;background-color: #ececec !important;">
+0.758
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.779
+<td style="text-align:right;background-color: #ececec !important;">
+0.754
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.768
+<td style="text-align:right;background-color: #ececec !important;">
+0.741
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.740
+<td style="text-align:right;background-color: #ececec !important;">
+0.710
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.672
+<td style="text-align:right;background-color: #ececec !important;">
+0.635
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.501
+<td style="text-align:right;background-color: #ececec !important;">
+0.451
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.153
+<td style="text-align:right;background-color: #ececec !important;">
+0.090
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.0
 </td>
 </tr>
 </tbody>
@@ -843,8 +841,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 matlines(lambda_vals, t(beta_vals))</code></pre>
 <p><img src="../../cvxr_examples/elastic-net_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>We can also compare with the <code>glmnet</code> results.</p>
-<pre class="r"><code>suppressMessages(library(glmnet))
-model_net &lt;- glmnet(X, y, family = &quot;gaussian&quot;, alpha = alpha,
+<pre class="r"><code>model_net &lt;- glmnet(X, y, family = &quot;gaussian&quot;, alpha = alpha,
                     lambda = lambda_vals, standardize = FALSE,
                     intercept = FALSE)
 ## Reverse order to match beta_vals
@@ -896,703 +893,703 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.642
+<td style="text-align:right;background-color: #ececec !important;">
+0.002
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.641
+<td style="text-align:right;background-color: #ececec !important;">
+0.002
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.640
+<td style="text-align:right;background-color: #ececec !important;">
+0.001
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.637
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.628
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.605
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.550
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.400
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.057
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.037
+<td style="text-align:right;background-color: #ececec !important;">
+-0.035
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.037
+<td style="text-align:right;background-color: #ececec !important;">
+-0.035
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.036
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 -0.033
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.026
+<td style="text-align:right;background-color: #ececec !important;">
+-0.030
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.008
+<td style="text-align:right;background-color: #ececec !important;">
+-0.022
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.447
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.446
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.445
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.441
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.430
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.404
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.337
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.171
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{4}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.226
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.225
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.223
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.219
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.209
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.183
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.117
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{5}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.729
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.728
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.727
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.724
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.715
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.693
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.634
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.494
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.157
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{6}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.465
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.465
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.464
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.461
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.454
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.435
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.384
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.261
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{7}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.381
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.380
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.379
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.376
+<td style="text-align:right;background-color: #ececec !important;">
+0.378
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.367
+<td style="text-align:right;background-color: #ececec !important;">
+0.377
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.346
+<td style="text-align:right;background-color: #ececec !important;">
+0.373
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.288
+<td style="text-align:right;background-color: #ececec !important;">
+0.364
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.144
+<td style="text-align:right;background-color: #ececec !important;">
+0.339
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
+0.277
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.111
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{8}\)</span>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.124
+<td style="text-align:right;background-color: #ececec !important;">
+1.812
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.124
+<td style="text-align:right;background-color: #ececec !important;">
+1.812
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.122
+<td style="text-align:right;background-color: #ececec !important;">
+1.811
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.118
+<td style="text-align:right;background-color: #ececec !important;">
+1.807
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.107
+<td style="text-align:right;background-color: #ececec !important;">
+1.798
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.081
+<td style="text-align:right;background-color: #ececec !important;">
+1.776
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.012
+<td style="text-align:right;background-color: #ececec !important;">
+1.717
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
+<td style="text-align:right;background-color: #ececec !important;">
+1.568
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
+<td style="text-align:right;background-color: #ececec !important;">
+1.183
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{9}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.041
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.041
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.039
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.036
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.027
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.005
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.205
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{10}\)</span>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.090
+<td style="text-align:right;background-color: #ececec !important;">
+-0.410
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.089
+<td style="text-align:right;background-color: #ececec !important;">
+-0.409
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.088
+<td style="text-align:right;background-color: #ececec !important;">
+-0.408
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.085
+<td style="text-align:right;background-color: #ececec !important;">
+-0.405
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.077
+<td style="text-align:right;background-color: #ececec !important;">
+-0.397
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.056
+<td style="text-align:right;background-color: #ececec !important;">
+-0.376
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.003
+<td style="text-align:right;background-color: #ececec !important;">
+-0.320
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
+-0.184
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{11}\)</span>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{6}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.382
+<td style="text-align:right;background-color: #ececec !important;">
+0.353
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.381
+<td style="text-align:right;background-color: #ececec !important;">
+0.352
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.380
+<td style="text-align:right;background-color: #ececec !important;">
+0.351
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.377
+<td style="text-align:right;background-color: #ececec !important;">
+0.347
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.368
+<td style="text-align:right;background-color: #ececec !important;">
+0.337
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.345
+<td style="text-align:right;background-color: #ececec !important;">
+0.313
 </td>
-<td style="text-align:right;background-color: #ececec;">
--0.288
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.143
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{12}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.064
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.064
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.063
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.061
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.054
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.040
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{13}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.432
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.432
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.431
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.428
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.420
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.399
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.345
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.199
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{14}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.122
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.121
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.120
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.116
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.108
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.086
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.032
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.000
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{15}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.668
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.668
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.667
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.664
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.657
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.638
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.589
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.447
-</td>
-<td style="text-align:right;background-color: #ececec;">
--0.083
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{16}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.258
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.258
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.257
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.253
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.244
+<td style="text-align:right;background-color: #ececec !important;">
+0.088
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.220
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.161
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.020
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{7}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.398
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.397
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.396
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.392
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.384
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.361
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.304
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.158
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{8}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.098
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.098
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.097
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.093
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.085
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.063
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.008
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{9}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.051
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.051
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.049
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.047
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.039
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.020
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{10}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.084
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.083
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.082
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.079
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.071
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.051
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.001
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{11}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.134
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.134
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.133
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.130
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.122
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.102
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+1.048
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.911
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.580
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{12}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.092
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.092
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.091
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.089
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.082
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.066
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.022
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{13}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.428
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.427
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.426
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.422
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.411
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.384
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.315
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.130
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{14}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.113
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.112
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.111
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.107
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.097
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.071
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.003
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{15}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.676
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.675
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.674
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.671
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.663
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.643
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.590
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.433
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.071
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{16}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.275
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.274
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.273
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.269
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.259
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.234
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.171
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.014
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{17}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.017
+<td style="text-align:right;background-color: #ececec !important;">
+-0.004
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.017
+<td style="text-align:right;background-color: #ececec !important;">
+-0.004
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.015
+<td style="text-align:right;background-color: #ececec !important;">
+-0.003
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.012
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.003
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{18}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.149
+<td style="text-align:right;background-color: #ececec !important;">
+0.186
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.149
+<td style="text-align:right;background-color: #ececec !important;">
+0.185
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.148
+<td style="text-align:right;background-color: #ececec !important;">
+0.184
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.144
+<td style="text-align:right;background-color: #ececec !important;">
+0.180
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.136
+<td style="text-align:right;background-color: #ececec !important;">
+0.170
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.114
+<td style="text-align:right;background-color: #ececec !important;">
+0.145
 </td>
-<td style="text-align:right;background-color: #ececec;">
-1.060
+<td style="text-align:right;background-color: #ececec !important;">
+0.085
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.923
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.558
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;background-color: #ececec;">
-<span class="math inline">\(\beta_{19}\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.301
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.301
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.300
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.297
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.289
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.268
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.215
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.074
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
+<span class="math inline">\(\beta_{19}\)</span>
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.517
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.516
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.514
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.510
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.499
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.472
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.400
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+-0.226
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(\beta_{20}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.786
+<td style="text-align:right;background-color: #ececec !important;">
+0.761
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.785
+<td style="text-align:right;background-color: #ececec !important;">
+0.761
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.784
+<td style="text-align:right;background-color: #ececec !important;">
+0.760
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.782
-</td>
-<td style="text-align:right;background-color: #ececec;">
-0.775
-</td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.756
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.712
+<td style="text-align:right;background-color: #ececec !important;">
+0.748
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.578
+<td style="text-align:right;background-color: #ececec !important;">
+0.728
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0.212
+<td style="text-align:right;background-color: #ececec !important;">
+0.678
 </td>
-<td style="text-align:right;background-color: #ececec;">
-0
+<td style="text-align:right;background-color: #ececec !important;">
+0.529
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.137
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 </tr>
 </tbody>
@@ -1601,9 +1598,9 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 (2018-12-20)
-## Platform: x86_64-apple-darwin18.2.0 (64-bit)
-## Running under: macOS Mojave 10.14.3
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-apple-darwin18.5.0 (64-bit)
+## Running under: macOS Mojave 10.14.4
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
@@ -1615,26 +1612,29 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_2.0-16    foreach_1.4.4    Matrix_1.2-15    kableExtra_1.0.1
-## [5] CVXR_0.99-4     
+## [1] glmnet_2.0-16    foreach_1.4.4    Matrix_1.2-17    kableExtra_1.1.0
+## [5] ggplot2_3.1.1    CVXR_0.99-5     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.4      Rcpp_1.0.0        highr_0.7        
-##  [4] compiler_3.5.2    pillar_1.3.1      iterators_1.0.10 
-##  [7] R.methodsS3_1.7.1 R.utils_2.8.0     tools_3.5.2      
-## [10] digest_0.6.18     bit_1.1-14        viridisLite_0.3.0
-## [13] evaluate_0.13     tibble_2.0.1      lattice_0.20-38  
-## [16] pkgconfig_2.0.2   rlang_0.3.1       rstudioapi_0.9.0 
-## [19] yaml_2.2.0        blogdown_0.10.7   xfun_0.5         
-## [22] xml2_1.2.0        httr_1.4.0        Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5     stringr_1.4.0     knitr_1.22       
-## [28] hms_0.4.2         webshot_0.5.1     bit64_0.9-7      
-## [31] grid_3.5.2        glue_1.3.0        R6_2.4.0         
-## [34] rmarkdown_1.11    bookdown_0.9      readr_1.3.1      
-## [37] magrittr_1.5      codetools_0.2-15  scales_1.0.0     
-## [40] htmltools_0.3.6   scs_1.2-3         rvest_0.3.2      
-## [43] colorspace_1.4-0  stringi_1.3.1     munsell_0.5.0    
-## [46] crayon_1.3.4      R.oo_1.22.0</code></pre>
+##  [1] tidyselect_0.2.5  xfun_0.6          purrr_0.3.2      
+##  [4] lattice_0.20-38   colorspace_1.4-1  htmltools_0.3.6  
+##  [7] viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5     
+## [10] rlang_0.3.4       R.oo_1.22.0       pillar_1.3.1     
+## [13] glue_1.3.1        Rmpfr_0.7-2       withr_2.1.2      
+## [16] R.utils_2.8.0     bit64_0.9-7       scs_1.2-3        
+## [19] plyr_1.8.4        stringr_1.4.0     munsell_0.5.0    
+## [22] blogdown_0.12     gtable_0.3.0      rvest_0.3.3      
+## [25] R.methodsS3_1.7.1 codetools_0.2-16  evaluate_0.13    
+## [28] knitr_1.22        highr_0.8         Rcpp_1.0.1       
+## [31] readr_1.3.1       scales_1.0.0      webshot_0.5.1    
+## [34] bit_1.1-14        hms_0.4.2         digest_0.6.18    
+## [37] stringi_1.4.3     bookdown_0.9      dplyr_0.8.0.1    
+## [40] grid_3.6.0        ECOSolveR_0.5.1   tools_3.6.0      
+## [43] magrittr_1.5      lazyeval_0.2.2    tibble_2.1.1     
+## [46] crayon_1.3.4      pkgconfig_2.0.2   xml2_1.2.0       
+## [49] assertthat_0.2.1  rmarkdown_1.12    httr_1.4.0       
+## [52] rstudioapi_0.10   iterators_1.0.10  R6_2.4.0         
+## [55] compiler_3.6.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

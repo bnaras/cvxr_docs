@@ -9,6 +9,11 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(markovchain)
+```
+
 ## Introduction
 
 This example is derived from the results in @FMMC, section 2. Let
@@ -71,8 +76,6 @@ functions to build up the graph, solve the optimization problem and
 finally display the chain graphically. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
-suppressMessages(suppressWarnings(library(markovchain)))
 ## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
 ## Form the complementary graph
 antiadjacency <- function(g) {

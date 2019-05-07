@@ -9,6 +9,11 @@ categories: []
 tags: []
 ---
 
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+```
 ## Introduction
 
 Huber regression [@Huber:1964] is a regression technique that
@@ -65,7 +70,6 @@ We can solve this problem both using ordinary least squares and huber
 regression to compare.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 beta <- Variable(n)
 rel_err <- norm(beta - beta_true, "F") / norm(beta_true, "F")
 
@@ -99,7 +103,6 @@ err_prs <- result$getValue(rel_err)
 We can now plot the fit against the measured responses. 
 
 ```{r}
-library(ggplot2)
 d1 <- data.frame(X = X, y = y, sign = as.factor(factor))
 d2 <- data.frame(X = rbind(X, X, X),
                  yHat = rbind(X %*% beta_ols,

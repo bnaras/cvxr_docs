@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.53" />
+	<meta name="generator" content="Hugo 0.55.4" />
 	
 	<title>The Catenary Problem &mdash; CVXR</title>
 	
@@ -43,9 +43,7 @@
 \]</span></p>
 <p>with variables <span class="math inline">\(x \in {\mathbf R}^m\)</span> and <span class="math inline">\(y \in {\mathbf R}^m\)</span>. This discretized version which has been studied by <span class="citation">Griva and Vanderbei (<a href="#ref-catenary">2005</a>)</span> was suggested to us by <a href="http://hwborchers.lima-city.de/Presents/catenary.html">Hans Werner Borchers</a>.</p>
 <p>The basic catenary problem has a well-known analytical solution (see <span class="citation">Gelfand and Fomin (<a href="#ref-GelfandFomin:1963">1963</a>)</span>) which we can easily verify with <code>CVXR</code>.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
-
-## Problem data
+<pre class="r"><code>## Problem data
 m &lt;- 101
 L &lt;- 2
 h &lt;- L / (m - 1)
@@ -64,8 +62,7 @@ constraints &lt;- list(x[1] == 0, y[1] == 1,
 prob &lt;- Problem(objective, constraints)
 result &lt;- solve(prob)</code></pre>
 <p>We can now plot it and compare it with the ideal solution. Below we use alpha blending and differing line thickness to show the ideal in red and the computed solution in blue.</p>
-<pre class="r"><code>library(ggplot2)
-xs &lt;- result$getValue(x)
+<pre class="r"><code>xs &lt;- result$getValue(x)
 ys &lt;- result$getValue(y)
 
 catenary &lt;- ggplot(data.frame(x = xs, y = ys)) +
@@ -126,9 +123,9 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 (2018-12-20)
-## Platform: x86_64-apple-darwin18.2.0 (64-bit)
-## Running under: macOS Mojave 10.14.3
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-apple-darwin18.5.0 (64-bit)
+## Running under: macOS Mojave 10.14.4
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
@@ -140,24 +137,24 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.1.0 CVXR_0.99-4  
+## [1] ggplot2_3.1.1 CVXR_0.99-5  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.4      Rcpp_1.0.0        highr_0.7        
-##  [4] compiler_3.5.2    pillar_1.3.1      plyr_1.8.4       
-##  [7] R.methodsS3_1.7.1 R.utils_2.8.0     tools_3.5.2      
+##  [1] gmp_0.5-13.5      Rcpp_1.0.1        highr_0.8        
+##  [4] compiler_3.6.0    pillar_1.3.1      plyr_1.8.4       
+##  [7] R.methodsS3_1.7.1 R.utils_2.8.0     tools_3.6.0      
 ## [10] digest_0.6.18     bit_1.1-14        evaluate_0.13    
-## [13] tibble_2.0.1      gtable_0.2.0      lattice_0.20-38  
-## [16] pkgconfig_2.0.2   rlang_0.3.1       Matrix_1.2-15    
-## [19] yaml_2.2.0        blogdown_0.10.7   xfun_0.5         
+## [13] tibble_2.1.1      gtable_0.3.0      lattice_0.20-38  
+## [16] pkgconfig_2.0.2   rlang_0.3.4       Matrix_1.2-17    
+## [19] yaml_2.2.0        blogdown_0.12     xfun_0.6         
 ## [22] withr_2.1.2       dplyr_0.8.0.1     Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5     stringr_1.4.0     knitr_1.22       
-## [28] tidyselect_0.2.5  bit64_0.9-7       grid_3.5.2       
-## [31] glue_1.3.0        R6_2.4.0          rmarkdown_1.11   
-## [34] bookdown_0.9      purrr_0.3.1       magrittr_1.5     
+## [25] ECOSolveR_0.5.1   stringr_1.4.0     knitr_1.22       
+## [28] tidyselect_0.2.5  bit64_0.9-7       grid_3.6.0       
+## [31] glue_1.3.1        R6_2.4.0          rmarkdown_1.12   
+## [34] bookdown_0.9      purrr_0.3.2       magrittr_1.5     
 ## [37] scales_1.0.0      htmltools_0.3.6   scs_1.2-3        
-## [40] assertthat_0.2.0  colorspace_1.4-0  labeling_0.3     
-## [43] stringi_1.3.1     lazyeval_0.2.1    munsell_0.5.0    
+## [40] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3     
+## [43] stringi_1.4.3     lazyeval_0.2.2    munsell_0.5.0    
 ## [46] crayon_1.3.4      R.oo_1.22.0</code></pre>
 </div>
 <div id="source" class="section level2">

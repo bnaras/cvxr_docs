@@ -9,6 +9,12 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(isotone)
+library(kableExtra)
+```
+
 ## Introduction
 
 [Isotonic regression](https://en.wikipedia.org/wiki/Isotonic_regression) is
@@ -24,7 +30,6 @@ We will use data from the `isotone` package (see @isotone) on the size
 of pituitary fissures for 11 subjects between 8 and 14 years of age.
 
 ```{r}
-library(isotone)
 data("pituitary")
 str(pituitary)
 ```
@@ -38,7 +43,6 @@ res_p <- with(pituitary, gpava(age, size))
 The `CVXR` formulation expresses this pretty much in the mathematical form. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 x_p <- with(pituitary, {
       n <- length(size)
       x <- Variable(n)
@@ -110,7 +114,6 @@ In the above, we make use of the `vstack` function to create a single vector of 
 We can now compare all three solutions.
 
 ```{r, echo = FALSE, fig.cap="Comparison of Solutions(P = Primary, S = Secondary, T = Tertiary)"}
-library(kableExtra)
 d <- data.frame(res_p$x, x_p, res_s$x, x_s, res_t$x, x_t)
 names(d) <- c("Isotone (P)", "CVXR (P)", "Isotone (S)", "CVXR(S)",
               "Isotone (T)", "CVXR (T)")

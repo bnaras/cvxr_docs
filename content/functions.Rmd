@@ -5,7 +5,7 @@ date: '2017-10-30'
 slug: cvxr_functions
 ---
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 ## knitr::knit_hooks$set(inline = function(x) {
 ##   return(gsub(pattern = "&", 
 ##               replacement = "\\\\&", 
@@ -92,7 +92,7 @@ equivalent to the function `power(expr, p)`.
 A scalar function takes one or more scalars, vectors, or matrices as arguments
 and returns a scalar.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 lines <- readLines(inFile)
 ## Narrow to region of file that we will process.
 start <- grep("CVXR_START_PROCESSING_MARKER_1", lines) + 1
@@ -133,9 +133,12 @@ table <- do.call(rbind, rows)
 colnames(table) <- table[1, ]
 colnames(table)[5] <- "Curvature"
 table <- table[-1, ]
+## Fix up two rows manually
+table[5, 2] <- "$\\text{sum of } k \\text{ largest }\\\\ \\text{eigenvalues of }X$"
+table[6, 2] <- "$\\text{sum of } k \\text{ smallest}\\\\ \\text{eigenvalues of }X$" 
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 library(kableExtra)
 knitr::kable(table, "html") %>%
   kable_styling("striped") %>%

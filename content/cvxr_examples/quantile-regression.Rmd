@@ -9,6 +9,14 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(kableExtra)
+library(quantreg)
+```
+
+
 ## Introduction
 
 Quantile regression is another variation on least squares
@@ -32,9 +40,7 @@ We will use an example from the `quantreg` package. The vignette
 provides an example of the estimation and plot.
 
 ```{r}
-suppressMessages(suppressWarnings(library(quantreg)))
 data(engel)
-library(ggplot2)
 p <- ggplot(data = engel) +
     geom_point(mapping = aes(x = income, y = foodexp), color = "blue")
 taus <- c(0.1, 0.25, 0.5, 0.75, 0.90, 0.95)
@@ -58,7 +64,6 @@ The above plot shows the quantile regression fits for $\tau = (0.1,
 The following is a table of the estimates.
 
 ```{r}
-library(kableExtra)
 knitr::kable(fits, format = "html", caption = "Fits from OLS and `quantreg`") %>%
     kable_styling("striped") %>%
     column_spec(1:8, background = "#ececec")
@@ -68,7 +73,6 @@ The `CVXR` formulation follows. Note we make use of `model.matrix` to
 get the intercept column painlessly. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 X <- model.matrix(foodexp ~ income, data = engel)
 y <- matrix(engel[, "foodexp"], ncol = 1)
 beta <- Variable(2)

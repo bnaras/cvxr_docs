@@ -40,7 +40,7 @@ Obviously, unless one actually solves the same problem in both places, there’s
       <pubDate>Mon, 01 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_survey_calibration/</guid>
-      <description>## ## Attaching package: &amp;#39;kableExtra&amp;#39; ## The following object is masked from &amp;#39;package:dplyr&amp;#39;: ## ## group_rows Introduction Calibration is a widely used technique in survey sampling. Suppose \(m\) sampling units in a survey have been assigned initial weights \(d_i\) for \(i = 1,\ldots,m\), and furthermore, there are \(n\) auxiliary variables whose values in the sample are known. Calibration seeks to improve the initial weights \(d_i\) by finding new weights \(w_i\) that incorporate this auxiliary information while perturbing the initial weights as little as possible, , the ratio \(g_i = w_i/d_i\) must be close to one.</description>
+      <description>Introduction Calibration is a widely used technique in survey sampling. Suppose \(m\) sampling units in a survey have been assigned initial weights \(d_i\) for \(i = 1,\ldots,m\), and furthermore, there are \(n\) auxiliary variables whose values in the sample are known. Calibration seeks to improve the initial weights \(d_i\) by finding new weights \(w_i\) that incorporate this auxiliary information while perturbing the initial weights as little as possible, , the ratio \(g_i = w_i/d_i\) must be close to one.</description>
     </item>
     
     <item>
@@ -247,8 +247,8 @@ This is the famous catenary problem.
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/examples/</guid>
-      <description> Although several examples here were ported from the CVXPY site, there are many new ones we have added.
-Basic Examples  Largest Euclidean ball in a 2D polyhedron Catenary Problem Integer Programming   Regression Examples  Huber Regression Logistic Regression Quantile Regression Censored Regression Isotonic Regression   Penalized Models  Near Isotonic and Near Convex Regression \(L_1\) Trend Filtering Elastic Net Saturating Hinges Pliable Lasso   Miscellaneous  Direct Standardization Survey Calibration Log-Concave Density Estimation Sparse Inverse Covariance Estimation Kelly Gambling Fastest Mixing Markov Chain Portfolio Optimization   Advanced Topics  Replicating glmnet Results Getting Faster Results Using Other Solvers Solver Peculiarities   </description>
+      <description>Although several examples here were ported from the CVXPY site, there are many new ones we have added. Every example contains a link to the complete markdown document for reproducing the results here. You can also download the entire repository of tutorial examples from the GitHub repo.
+Note: Due to changes in the sample function for R version 3.6+, some results here will not be the same although the conclusions should hold.</description>
     </item>
     
     <item>

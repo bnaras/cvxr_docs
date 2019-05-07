@@ -9,6 +9,13 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(kableExtra)
+library(glmnet)
+```
+
 ## Introduction
 
 Often in applications, we encounter problems that require
@@ -37,7 +44,6 @@ calculates the regularization term given the variable and penalty
 weights.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 elastic_reg <- function(beta, lambda = 0, alpha = 0) {
     ridge <- (1 - alpha) * sum(beta^2)
     lasso <- alpha * p_norm(beta, 1)
@@ -108,7 +114,6 @@ We can now get a table of the coefficients.
 d <- as.data.frame(beta_vals)
 rownames(d) <- sprintf("$\\beta_{%d}$", seq_len(p))
 names(d) <- sprintf("$\\lambda = %.3f$", lambda_vals)
-library(kableExtra)
 knitr::kable(d, format = "html", caption = "Elastic net fits from `CVXR`", digits = 3) %>%
     kable_styling("striped") %>%
     column_spec(1:11, background = "#ececec")
@@ -126,7 +131,6 @@ matlines(lambda_vals, t(beta_vals))
 We can also compare with the `glmnet` results.
 
 ```{r}
-suppressMessages(library(glmnet))
 model_net <- glmnet(X, y, family = "gaussian", alpha = alpha,
                     lambda = lambda_vals, standardize = FALSE,
                     intercept = FALSE)
