@@ -9,6 +9,13 @@ categories: []
 tags: []
 ---
 
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(tidyr)
+```
+
 ## Introduction
 
 In Kelly gambling [@kelly], we are given the opportunity to bet on $n$
@@ -44,7 +51,6 @@ probabilities $(\pi_1,\ldots,\pi_K)$.
 
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 set.seed(1)
 n <- 20      # Total bets
 K <- 100     # Number of possible returns
@@ -100,8 +106,6 @@ bets. Clearly, Kelly optimal bets perform better, producing greater
 net wealth by the final period. 
 
 ```{r}
-library(ggplot2)
-library(tidyr)
 df <- data.frame(seq_len(PERIODS), wealth)
 names(df) <- c("x", paste0("kelly", seq_len(TRIALS)))
 plot.data1 <- gather(df, key = "trial", value = "wealth",

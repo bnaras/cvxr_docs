@@ -9,8 +9,8 @@ categories: []
 tags: []
 ---
 
-```{r, echo = FALSE}
-suppressWarnings(suppressMessages(library(CVXR)))
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 ```
 
 The default solver in `CVXR` is `ECOS`. However, it is not always the

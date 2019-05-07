@@ -37,9 +37,7 @@ result &lt;- solve(prob)</code></pre>
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>In order to reproduce some of the examples from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, we create functions to build up the graph, solve the optimization problem and finally display the chain graphically.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
-suppressMessages(suppressWarnings(library(markovchain)))
-## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
+<pre class="r"><code>## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
 ## Form the complementary graph
 antiadjacency &lt;- function(g) {
     n &lt;- max(as.numeric(names(g)))   ## Assumes names are integers starting from 1
@@ -146,9 +144,9 @@ Figure 4: Square plus central point
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 (2018-12-20)
-## Platform: x86_64-apple-darwin18.2.0 (64-bit)
-## Running under: macOS Mojave 10.14.3
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-apple-darwin18.5.0 (64-bit)
+## Running under: macOS Mojave 10.14.4
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
@@ -160,21 +158,21 @@ Figure 4: Square plus central point
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] markovchain_0.6.9.14 CVXR_0.99-4         
+## [1] markovchain_0.6.9.14 CVXR_0.99-5         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] igraph_1.2.4       Rcpp_1.0.0         knitr_1.22        
+##  [1] igraph_1.2.4.1     Rcpp_1.0.1         knitr_1.22        
 ##  [4] magrittr_1.5       bit_1.1-14         lattice_0.20-38   
-##  [7] R6_2.4.0           highr_0.7          matlab_1.0.2      
-## [10] stringr_1.4.0      tools_3.5.2        parallel_3.5.2    
-## [13] grid_3.5.2         xfun_0.5           R.oo_1.22.0       
+##  [7] R6_2.4.0           highr_0.8          matlab_1.0.2      
+## [10] stringr_1.4.0      tools_3.6.0        parallel_3.6.0    
+## [13] grid_3.6.0         xfun_0.6           R.oo_1.22.0       
 ## [16] scs_1.2-3          htmltools_0.3.6    RcppParallel_4.4.2
 ## [19] yaml_2.2.0         bit64_0.9-7        digest_0.6.18     
-## [22] bookdown_0.9       Matrix_1.2-15      gmp_0.5-13.4      
-## [25] ECOSolveR_0.5      R.utils_2.8.0      evaluate_0.13     
-## [28] rmarkdown_1.11     blogdown_0.10.7    stringi_1.3.1     
-## [31] compiler_3.5.2     Rmpfr_0.7-2        R.methodsS3_1.7.1 
-## [34] stats4_3.5.2       expm_0.999-3       pkgconfig_2.0.2</code></pre>
+## [22] bookdown_0.9       Matrix_1.2-17      gmp_0.5-13.5      
+## [25] ECOSolveR_0.5.1    R.utils_2.8.0      evaluate_0.13     
+## [28] rmarkdown_1.12     blogdown_0.12      stringi_1.4.3     
+## [31] compiler_3.6.0     Rmpfr_0.7-2        R.methodsS3_1.7.1 
+## [34] stats4_3.6.0       expm_0.999-4       pkgconfig_2.0.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

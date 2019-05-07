@@ -10,7 +10,8 @@ tags: []
 ---
 
 
-```{r, echo = FALSE}
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 library(ggplot2)
 ```
 
@@ -72,7 +73,6 @@ We now fit regular OLS, OLS using just the censored data and finally
 the censored regression.
 
 ```{r}
-suppressWarnings(suppressMessages(library(CVXR)))
 ## Regular OLS
 beta <- Variable(n)
 obj <- sum((y_censored - X_ordered %*% beta)^2)

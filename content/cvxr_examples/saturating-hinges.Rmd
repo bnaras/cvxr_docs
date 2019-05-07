@@ -9,9 +9,10 @@ categories: []
 tags: []
 ---
 
-```{r, echo = FALSE}
-library(tidyr)
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 library(ggplot2)
+library(tidyr)
 ```
 
 ## Introduction
@@ -56,7 +57,6 @@ fit a saturating hinge with squared error loss
 $\ell(y_i, f(x_i)) = (y_i - f(x_i))^2$.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 ## Import and sort data
 data(bone, package = "ElemStatLearn")
 X <- bone[bone$gender == "female",]$age

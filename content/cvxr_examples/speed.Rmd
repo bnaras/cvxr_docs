@@ -9,6 +9,12 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(profvis)
+```
+
+
 ## Warning
 
 The solution described below is useful when you mathematically know a
@@ -51,7 +57,6 @@ where $\lambda \geq 0$ is a penalty parameter and $x_+ =\max(x,0)$.
 This can be solved as follows.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 data(cdiac)
 y <- cdiac$annual
 m <- length(y)
@@ -78,8 +83,6 @@ Profiling a single fit to the model is useful to figure out where most
 of the time is spent.
 
 ```{r}
-library(profvis)
-suppressMessages(suppressWarnings(library(CVXR)))
 data(cdiac)
 y <- cdiac$annual
 profvis({

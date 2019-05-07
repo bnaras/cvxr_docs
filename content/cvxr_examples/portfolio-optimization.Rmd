@@ -9,6 +9,13 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(RColorBrewer)
+library(tidyr)
+```
+
 ## Introduction
 
 In this example, we solve the Markowitz portfolio problem under
@@ -42,7 +49,6 @@ $\mu$ and $\Sigma^{1/2}$ drawn from a standard normal
 distribution.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 ## Problem data
 set.seed(10)
 n <- 10
@@ -92,8 +98,6 @@ portfolio becomes more diverse, reducing risk but also yielding a
 lower return.
 
 ```{r}
-library(ggplot2)
-library(RColorBrewer)
 cbPalette <- brewer.pal(n = 10, name = "Paired")
 p1 <- ggplot() +
     geom_line(mapping = aes(x = risk_data, y = ret_data), color = "blue") +
@@ -112,7 +116,6 @@ p1 + geom_point(data = df, mapping = aes(x = x, y = y), color = "black") +
 We can also plot the fraction of budget invested in each asset.
 
 ```{r}
-library(tidyr)
 w_df <- data.frame(paste0("grp", seq_len(ncol(w_data))),
                    t(w_data[markers_on,]))
 names(w_df) <- c("grp", sprintf("gamma == %.2f", gammas[markers_on]))

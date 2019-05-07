@@ -9,6 +9,12 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(tidyr)
+```
+
 ## Introduction
 
 Let $n = 1$ and suppose $x_i$ are i.i.d. samples from a log-concave
@@ -49,7 +55,6 @@ $\{0,\ldots,100\}$. We then estimate the probability mass function
 using the above method and compare it with the empirical distribution.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 set.seed(1)
 ## Calculate a piecewise linear function
 pwl_fun <- function(x, knots) {
@@ -83,7 +88,6 @@ counts <- hist(x, breaks = -1:K, right = TRUE, include.lowest = FALSE,
 ```
 
 ```{r}
-library(ggplot2)
 ggplot() +
     geom_histogram(mapping = aes(x = x), breaks = -1:K, color = "blue", fill = "orange")
 ```
@@ -108,8 +112,6 @@ a `Variable` object such as `u`.
 Below are the comparison plots of pmf and cdf. 
 
 ```{r}
-library(ggplot2)
-library(tidyr)
 dens <- density(x, bw = "sj")
 d <- data.frame(x = xrange, True = xprobs, Optimal = pmf,
                 Empirical = approx(x = dens$x, y = dens$y, xout = xrange)$y)

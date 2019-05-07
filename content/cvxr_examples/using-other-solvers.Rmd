@@ -9,8 +9,9 @@ categories: []
 tags: []
 ---
 
-```{r, echo = FALSE}
-suppressWarnings(suppressMessages(library(CVXR)))
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 ```
 
 ## Introduction

@@ -7,6 +7,42 @@ bibliography: bibtex/cvxr_refs.bib
 type: homepage
 ---
 
+```{r, echo = FALSE}
+## Check pre-requisite packages for generating site
+required_pkgs <- c(
+    "CVXR",
+    "reticulate",
+    "lpSolveAPI",
+    "Rglpk",
+    "ElemStatLearn",
+    "kableExtra",
+    "stringr",
+    "ggplot2",
+    "devtools",
+    "l1tf",
+    "glmnet",
+    "boot",
+    "tidyr",
+    "profvis",
+    "ggforce",
+    "nnls",
+    "markovchain",
+    "quantreg",
+    "isotone",
+    "MASS",
+    "RColorBrewer",
+    "grid",
+    "Matrix",
+    "expm",
+    "dplyr",
+    "survey")
+missing_pkgs <- setdiff(required_pkgs, row.names(installed.packages()))
+if (length(missing_pkgs) > 0) {
+    print(missing_pkgs)
+    stop("Missing above packages; install them.")
+}
+```
+
 ## What is `CVXR`?
 
 `CVXR` is an R package that provides an object-oriented modeling
@@ -48,9 +84,17 @@ from [CRAN](https://cloud.r-project.org).
 
 ## Documentation
 
-A [video of the talk](http://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/CVXR-An-R-Package-for-Modeling-Convex-Optimization-Problems) by [Anqi Fu](https://web.stanford.edu/~anqif)
-at [useR! 2016](http://user2016.r-project.org) provides a good
-overview.
+Two videos provide a good starting point:
+
+- [Anqi Fu's talk](https://www.youtube.com/watch?v=MyglbtnmQ8A) at
+ [useR!  2018](http://user2018.r-project.org)
+- [Anqi's
+talk](http://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/CVXR-An-R-Package-for-Modeling-Convex-Optimization-Problems)
+at [useR!  2016](http://user2016.r-project.org) introducing `CVXR`. 
+
+We are excited to be presenting a tutorial at [useR!
+2019](http://user2019.r-project.org/tutorials/). We hope to see you
+there. 
 
 An introductory vignette is installed with the package and can be
 viewed using `vignette("cvxr_intro", package = "CVXR")`.

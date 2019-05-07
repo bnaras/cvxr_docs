@@ -9,6 +9,11 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+```
+
 ## Introduction
 
 A chain with uniformly distributed mass hangs from the endpoints
@@ -45,8 +50,6 @@ The basic catenary problem has a well-known analytical solution
 (see @GelfandFomin:1963) which we can easily verify with `CVXR`. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
-
 ## Problem data
 m <- 101
 L <- 2
@@ -72,7 +75,6 @@ use alpha blending and differing line thickness to show the ideal in red and the
 
 
 ```{r, fig.cap = "Analytic (red) and computed solution (blue) to the catenary problem"}
-library(ggplot2)
 xs <- result$getValue(x)
 ys <- result$getValue(y)
 

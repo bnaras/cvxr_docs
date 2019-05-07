@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.53" />
+	<meta name="generator" content="Hugo 0.55.4" />
 	
 	<title>Quantile Regression &mdash; CVXR</title>
 	
@@ -40,9 +40,7 @@
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>We will use an example from the <code>quantreg</code> package. The vignette provides an example of the estimation and plot.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(quantreg)))
-data(engel)
-library(ggplot2)
+<pre class="r"><code>data(engel)
 p &lt;- ggplot(data = engel) +
     geom_point(mapping = aes(x = income, y = foodexp), color = &quot;blue&quot;)
 taus &lt;- c(0.1, 0.25, 0.5, 0.75, 0.90, 0.95)
@@ -61,8 +59,7 @@ p</code></pre>
 <p><img src="../../cvxr_examples/quantile-regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>The above plot shows the quantile regression fits for <span class="math inline">\(\tau = (0.1, 0.25, 0.5, 0.75, 0.90, 0.95)\)</span>. The OLS fit is the thick black line.</p>
 <p>The following is a table of the estimates.</p>
-<pre class="r"><code>library(kableExtra)
-knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `quantreg`&quot;) %&gt;%
+<pre class="r"><code>knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `quantreg`&quot;) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
     column_spec(1:8, background = &quot;#ececec&quot;)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
@@ -98,62 +95,61 @@ OLS
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 (Intercept)
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 147.4753885
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 110.1415742
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 95.4835396
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 81.4822474
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 62.3965855
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 67.3508721
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 64.1039632
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 income
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.4851784
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.4017658
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.4741032
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.5601806
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.6440141
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.6862995
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.7090685
 </td>
 </tr>
 </tbody>
 </table>
 <p>The <code>CVXR</code> formulation follows. Note we make use of <code>model.matrix</code> to get the intercept column painlessly.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
-X &lt;- model.matrix(foodexp ~ income, data = engel)
+<pre class="r"><code>X &lt;- model.matrix(foodexp ~ income, data = engel)
 y &lt;- matrix(engel[, &quot;foodexp&quot;], ncol = 1)
 beta &lt;- Variable(2)
 quant_loss &lt;- function(u, tau) { 0.5 * abs(u) + (tau - 0.5) * u }
@@ -202,54 +198,54 @@ OLS
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 (Intercept)
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 147.4753885
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 110.1415742
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 95.4835396
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 81.4822474
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 62.3965855
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 67.3508721
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 64.1039632
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 income
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.4851784
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.4017658
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.4741032
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.5601806
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.6440141
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.6862995
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.7090685
 </td>
 </tr>
@@ -260,9 +256,9 @@ income
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 (2018-12-20)
-## Platform: x86_64-apple-darwin18.2.0 (64-bit)
-## Running under: macOS Mojave 10.14.3
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-apple-darwin18.5.0 (64-bit)
+## Running under: macOS Mojave 10.14.4
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
@@ -274,29 +270,29 @@ income
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-4      kableExtra_1.0.1 ggplot2_3.1.0    quantreg_5.38   
-## [5] SparseM_1.77    
+## [1] quantreg_5.38    SparseM_1.77     kableExtra_1.1.0 ggplot2_3.1.1   
+## [5] CVXR_0.99-5     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5   xfun_0.5           purrr_0.3.1       
-##  [4] lattice_0.20-38    colorspace_1.4-0   htmltools_0.3.6   
-##  [7] viridisLite_0.3.0  gmp_0.5-13.4       yaml_2.2.0        
-## [10] rlang_0.3.1        R.oo_1.22.0        pillar_1.3.1      
-## [13] Rmpfr_0.7-2        glue_1.3.0         withr_2.1.2       
+##  [1] tidyselect_0.2.5   xfun_0.6           purrr_0.3.2       
+##  [4] lattice_0.20-38    colorspace_1.4-1   htmltools_0.3.6   
+##  [7] viridisLite_0.3.0  yaml_2.2.0         gmp_0.5-13.5      
+## [10] rlang_0.3.4        R.oo_1.22.0        pillar_1.3.1      
+## [13] glue_1.3.1         Rmpfr_0.7-2        withr_2.1.2       
 ## [16] R.utils_2.8.0      bit64_0.9-7        scs_1.2-3         
 ## [19] plyr_1.8.4         stringr_1.4.0      MatrixModels_0.4-1
-## [22] munsell_0.5.0      blogdown_0.10.7    gtable_0.2.0      
-## [25] rvest_0.3.2        R.methodsS3_1.7.1  evaluate_0.13     
-## [28] labeling_0.3       knitr_1.22         highr_0.7         
-## [31] Rcpp_1.0.0         readr_1.3.1        scales_1.0.0      
+## [22] munsell_0.5.0      blogdown_0.12      gtable_0.3.0      
+## [25] rvest_0.3.3        R.methodsS3_1.7.1  evaluate_0.13     
+## [28] labeling_0.3       knitr_1.22         highr_0.8         
+## [31] Rcpp_1.0.1         readr_1.3.1        scales_1.0.0      
 ## [34] webshot_0.5.1      bit_1.1-14         hms_0.4.2         
-## [37] digest_0.6.18      stringi_1.3.1      bookdown_0.9      
-## [40] dplyr_0.8.0.1      grid_3.5.2         ECOSolveR_0.5     
-## [43] tools_3.5.2        magrittr_1.5       lazyeval_0.2.1    
-## [46] tibble_2.0.1       crayon_1.3.4       pkgconfig_2.0.2   
-## [49] Matrix_1.2-15      xml2_1.2.0         assertthat_0.2.0  
-## [52] rmarkdown_1.11     httr_1.4.0         rstudioapi_0.9.0  
-## [55] R6_2.4.0           compiler_3.5.2</code></pre>
+## [37] digest_0.6.18      stringi_1.4.3      bookdown_0.9      
+## [40] dplyr_0.8.0.1      grid_3.6.0         ECOSolveR_0.5.1   
+## [43] tools_3.6.0        magrittr_1.5       lazyeval_0.2.2    
+## [46] tibble_2.1.1       crayon_1.3.4       pkgconfig_2.0.2   
+## [49] Matrix_1.2-17      xml2_1.2.0         assertthat_0.2.1  
+## [52] rmarkdown_1.12     httr_1.4.0         rstudioapi_0.10   
+## [55] R6_2.4.0           compiler_3.6.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

@@ -6,11 +6,13 @@ slug: cvxr_gentle-intro
 bibliography: ../bibtex/cvxr_refs.bib
 ---
 
-```{r, message=FALSE, warning=FALSE, echo = FALSE}
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 library(ggplot2)
 library(tidyr)
-library(CVXR)
+library(MASS)
 ```
+
 ## Introduction
 
 Welcome to `CVXR`: a modeling language for describing and solving
@@ -328,8 +330,8 @@ Sigma <- cbind(c(1.6484, -0.2096, -0.0771, -0.4088, 0.0678, -0.6337, 0.9720, -1.
                c(0.9720, -0.6342, -2.5292, -1.8116, -2.0078, -1.0666, 4.0882,  -1.3587, 0.7287),
                c(-1.2158, 1.4291, 0.4776, 2.0076, -0.1715, 1.7536, -1.3587, 2.8789, 0.4094),
                c(-1.3219, -0.4723, -0.4552, -0.3377, -0.3952, -0.1845, 0.7287, 0.4094, 4.8406))
-library(MASS)
-X <- mvrnorm(m, mu, Sigma)
+
+X <- MASS::mvrnorm(m, mu, Sigma)
 X <- cbind(rep(1, m), X)
 trueBeta <- c(0, 0.8, 0, 1, 0.2, 0, 0.4, 1, 0, 0.7)
 y <- X %*% trueBeta + rnorm(m, 0, s)
@@ -354,7 +356,6 @@ lm_solution3.1 <- lm(y ~ 0 + X)
 ```
 
 ```{r, echo=FALSE, fig.height = 5, fig.width = 7}
-library(ggplot2)
 lmBeta <- coef(lm_solution3.1)
 cvxrBeta <- CVXR_solution3.1$getValue(beta)
 coeff <- cbind(lmBeta, cvxrBeta)

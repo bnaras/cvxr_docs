@@ -9,8 +9,9 @@ categories: []
 tags: []
 ---
 
-```{r, echo = FALSE}
-suppressMessages(suppressWarnings(library(CVXR)))
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 library(kableExtra)
 ```
 

@@ -9,8 +9,10 @@ categories: []
 tags: []
 ---
 
-```{r, echo = FALSE}
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
 library(kableExtra)
+library(glmnet)
 ```
 
 ## Introduction
@@ -37,7 +39,6 @@ Consider a simple Lasso fit from the `glmnet` example, for a fixed
 $\lambda$.
 
 ```{r}
-suppressMessages(suppressWarnings(library(glmnet)))
 set.seed(123)
 n <- 100; p <- 20; thresh <- 1e-12; lambda <- .05
 x <-  matrix(rnorm(n * p), n, p); xDesign <- cbind(1, x)
@@ -60,7 +61,6 @@ So we will use this objective with `CVXR` in the problem
 specification. 
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 beta <- Variable(p + 1)
 obj <- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob <- Problem(Minimize(obj))

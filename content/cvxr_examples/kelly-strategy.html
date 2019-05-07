@@ -24,8 +24,7 @@ tags: []
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>We solve the Kelly gambling problem for <span class="math inline">\(K = 100\)</span> and <span class="math inline">\(n = 20\)</span>. The probabilities <span class="math inline">\(\pi_j \sim \mbox{Uniform}(0,1)\)</span>, and the potential returns <span class="math inline">\(r_j \sim \mbox{Uniform}(0.5,1.5)\)</span> except for <span class="math inline">\(r_n = {\mathbf 1}\)</span>, which represents the payoff from not wagering. With an initial wealth of <span class="math inline">\(w_0 = 1\)</span>, we simulate the growth trajectory of our Kelly optimal bets over <span class="math inline">\(P = 100\)</span> periods, assuming returns are i.i.d. over time. In the following code, <code>rets</code> is the <span class="math inline">\(K \times n\)</span> matrix of possible returns with row <span class="math inline">\(r_i\)</span>, while <code>ps</code> is the vector of return probabilities <span class="math inline">\((\pi_1,\ldots,\pi_K)\)</span>.</p>
-<pre class="r"><code>suppressMessages(suppressWarnings(library(CVXR)))
-set.seed(1)
+<pre class="r"><code>set.seed(1)
 n &lt;- 20      # Total bets
 K &lt;- 100     # Number of possible returns
 PERIODS &lt;- 100
@@ -72,9 +71,7 @@ for(i in seq_len(TRIALS)) {
     wealth_cmp[,i] &lt;- cumprod(winnings_cmp)
 }</code></pre>
 <p>Growth curves for five independent trials are plotted in the figures below. Red lines represent the wealth each period from the Kelly bets, while cyan lines are the result of the naive bets. Clearly, Kelly optimal bets perform better, producing greater net wealth by the final period.</p>
-<pre class="r"><code>library(ggplot2)
-library(tidyr)
-df &lt;- data.frame(seq_len(PERIODS), wealth)
+<pre class="r"><code>df &lt;- data.frame(seq_len(PERIODS), wealth)
 names(df) &lt;- c(&quot;x&quot;, paste0(&quot;kelly&quot;, seq_len(TRIALS)))
 plot.data1 &lt;- gather(df, key = &quot;trial&quot;, value = &quot;wealth&quot;,
                      paste0(&quot;kelly&quot;, seq_len(TRIALS)),
@@ -106,9 +103,9 @@ ggplot(data = plot.data) +
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 (2018-12-20)
-## Platform: x86_64-apple-darwin18.2.0 (64-bit)
-## Running under: macOS Mojave 10.14.3
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-apple-darwin18.5.0 (64-bit)
+## Running under: macOS Mojave 10.14.4
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
@@ -120,24 +117,24 @@ ggplot(data = plot.data) +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_0.8.3   ggplot2_3.1.0 CVXR_0.99-4  
+## [1] tidyr_0.8.3   ggplot2_3.1.1 CVXR_0.99-5  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.4      Rcpp_1.0.0        compiler_3.5.2   
+##  [1] gmp_0.5-13.5      Rcpp_1.0.1        compiler_3.6.0   
 ##  [4] pillar_1.3.1      plyr_1.8.4        R.methodsS3_1.7.1
-##  [7] R.utils_2.8.0     tools_3.5.2       digest_0.6.18    
-## [10] bit_1.1-14        evaluate_0.13     tibble_2.0.1     
-## [13] gtable_0.2.0      lattice_0.20-38   pkgconfig_2.0.2  
-## [16] rlang_0.3.1       Matrix_1.2-15     yaml_2.2.0       
-## [19] blogdown_0.10.7   xfun_0.5          withr_2.1.2      
-## [22] dplyr_0.8.0.1     Rmpfr_0.7-2       ECOSolveR_0.5    
+##  [7] R.utils_2.8.0     tools_3.6.0       digest_0.6.18    
+## [10] bit_1.1-14        evaluate_0.13     tibble_2.1.1     
+## [13] gtable_0.3.0      lattice_0.20-38   pkgconfig_2.0.2  
+## [16] rlang_0.3.4       Matrix_1.2-17     yaml_2.2.0       
+## [19] blogdown_0.12     xfun_0.6          withr_2.1.2      
+## [22] dplyr_0.8.0.1     Rmpfr_0.7-2       ECOSolveR_0.5.1  
 ## [25] stringr_1.4.0     knitr_1.22        tidyselect_0.2.5 
-## [28] bit64_0.9-7       grid_3.5.2        glue_1.3.0       
-## [31] R6_2.4.0          rmarkdown_1.11    bookdown_0.9     
-## [34] purrr_0.3.1       magrittr_1.5      scales_1.0.0     
-## [37] htmltools_0.3.6   scs_1.2-3         assertthat_0.2.0 
-## [40] colorspace_1.4-0  labeling_0.3      stringi_1.3.1    
-## [43] lazyeval_0.2.1    munsell_0.5.0     crayon_1.3.4     
+## [28] bit64_0.9-7       grid_3.6.0        glue_1.3.1       
+## [31] R6_2.4.0          rmarkdown_1.12    bookdown_0.9     
+## [34] purrr_0.3.2       magrittr_1.5      scales_1.0.0     
+## [37] htmltools_0.3.6   scs_1.2-3         assertthat_0.2.1 
+## [40] colorspace_1.4-1  labeling_0.3      stringi_1.4.3    
+## [43] lazyeval_0.2.2    munsell_0.5.0     crayon_1.3.4     
 ## [46] R.oo_1.22.0</code></pre>
 </div>
 <div id="source" class="section level2">

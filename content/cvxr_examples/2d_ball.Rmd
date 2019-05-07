@@ -9,6 +9,13 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(ggforce)
+```
+
+
 ## Problem
 
 The following is a problem from @BoydVandenberghe:2004, section 4.3.1.
@@ -35,7 +42,6 @@ b <- rep(1,4)
 Next, we formulate the `CVXR` problem.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 r <- Variable(name = "radius")
 x_c <- Variable(2, name = "center")
 obj <- Maximize(r)
@@ -60,8 +66,6 @@ cat(sprintf("The radius is %0.5f for an area %0.5f\n", radius, pi * radius^2))
 ## A Plot
 
 ```{r, fig.width=6, fig.height=6}
-library(ggplot2)
-library(ggforce)
 ggplot() +
     geom_abline(slope = -a1[1] / a1[2], intercept = b[1] / a1[2]) +
     geom_abline(slope = -a2[1] / a2[2], intercept = b[2] / a2[2]) +

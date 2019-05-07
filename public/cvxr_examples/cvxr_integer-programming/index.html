@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.53" />
+	<meta name="generator" content="Hugo 0.55.4" />
 	
 	<title>Integer Programming &mdash; CVXR</title>
 	
@@ -103,70 +103,70 @@ GUROBI
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(x_1\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 1.666667
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 1.666667
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 1.666667
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 1.666667
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(x_2\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 3.333333
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 3.333333
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 3.333333
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 3.333333
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(x_3\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 2.000000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 2.000000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 2.000000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 2.000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec;">
+<td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(x_4\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000000
 </td>
-<td style="text-align:right;background-color: #ececec;">
+<td style="text-align:right;background-color: #ececec !important;">
 0.000000
 </td>
 </tr>
@@ -178,7 +178,7 @@ GUROBI
 <p>For a slightly more involved example, we consider the <a href="https://www.mathworks.com/help/optim/examples/office-assignments-by-binary-integer-programming.html">office assignment problem</a>.</p>
 <p>The goal is to assign six people, Marcelo, Rakesh, Peter, Tom, Marjorie, and Mary Ann, to seven offices. Each office can have no more than one person, and each person gets exactly one office. So there will be one empty office. People can give preferences for the offices, and their preferences are considered based on their seniority. Some offices have windows, some do not, and one window is smaller than others. Additionally, Peter and Tom often work together, so should be in adjacent offices. Marcelo and Rakesh often work together, and should be in adjacent offices.</p>
 <pre class="r"><code>draw_office_layout()</code></pre>
-<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The office layout is shown above. Offices 1, 2, 3, and 4 are inside offices (no windows). Offices 5, 6, and 7 have windows, but the window in office 5 is smaller than the other two.</p>
 <p>We begin by recording the names of the people and offices.</p>
 <pre class="r"><code>people &lt;- c(&#39;Mary Ann&#39;, &#39;Marjorie&#39;, &#39;Tom&#39;,
@@ -242,14 +242,14 @@ colnames(ecos_soln) &lt;- offices</code></pre>
 office_occupants &lt;- names(office_assignment)[match(c(5:7, 1:4), office_assignment)]
 office_occupants[is.na(office_occupants)] &lt;- &quot;Empty&quot;
 draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
-<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.2 (2018-12-20)
-## Platform: x86_64-apple-darwin18.2.0 (64-bit)
-## Running under: macOS Mojave 10.14.3
+<pre><code>## R version 3.6.0 (2019-04-26)
+## Platform: x86_64-apple-darwin18.5.0 (64-bit)
+## Running under: macOS Mojave 10.14.4
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
@@ -261,29 +261,29 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.1.0    kableExtra_1.0.1 CVXR_0.99-4     
+## [1] ggplot2_3.1.1    kableExtra_1.1.0 CVXR_0.99-5     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reticulate_1.11.1     tidyselect_0.2.5      xfun_0.5             
-##  [4] slam_0.1-45           purrr_0.3.1           lattice_0.20-38      
-##  [7] colorspace_1.4-0      htmltools_0.3.6       viridisLite_0.3.0    
-## [10] yaml_2.2.0            gmp_0.5-13.4          rlang_0.3.1          
-## [13] R.oo_1.22.0           pillar_1.3.1          glue_1.3.0           
+##  [1] reticulate_1.12       tidyselect_0.2.5      xfun_0.6             
+##  [4] slam_0.1-45           purrr_0.3.2           lattice_0.20-38      
+##  [7] colorspace_1.4-1      htmltools_0.3.6       viridisLite_0.3.0    
+## [10] yaml_2.2.0            gmp_0.5-13.5          rlang_0.3.4          
+## [13] R.oo_1.22.0           pillar_1.3.1          glue_1.3.1           
 ## [16] Rmpfr_0.7-2           withr_2.1.2           R.utils_2.8.0        
 ## [19] bit64_0.9-7           scs_1.2-3             plyr_1.8.4           
-## [22] stringr_1.4.0         munsell_0.5.0         blogdown_0.10.7      
-## [25] gtable_0.2.0          rvest_0.3.2           R.methodsS3_1.7.1    
+## [22] stringr_1.4.0         munsell_0.5.0         blogdown_0.12        
+## [25] gtable_0.3.0          rvest_0.3.3           R.methodsS3_1.7.1    
 ## [28] lpSolveAPI_5.5.2.0-17 evaluate_0.13         labeling_0.3         
-## [31] knitr_1.22            highr_0.7             Rcpp_1.0.0           
+## [31] knitr_1.22            highr_0.8             Rcpp_1.0.1           
 ## [34] readr_1.3.1           scales_1.0.0          jsonlite_1.6         
 ## [37] webshot_0.5.1         bit_1.1-14            hms_0.4.2            
-## [40] digest_0.6.18         stringi_1.3.1         bookdown_0.9         
-## [43] dplyr_0.8.0.1         grid_3.5.2            Rglpk_0.6-4          
-## [46] ECOSolveR_0.5         tools_3.5.2           magrittr_1.5         
-## [49] lazyeval_0.2.1        tibble_2.0.1          crayon_1.3.4         
-## [52] pkgconfig_2.0.2       Matrix_1.2-15         xml2_1.2.0           
-## [55] assertthat_0.2.0      rmarkdown_1.11        httr_1.4.0           
-## [58] rstudioapi_0.9.0      R6_2.4.0              compiler_3.5.2</code></pre>
+## [40] digest_0.6.18         stringi_1.4.3         bookdown_0.9         
+## [43] dplyr_0.8.0.1         grid_3.6.0            Rglpk_0.6-4          
+## [46] ECOSolveR_0.5.1       tools_3.6.0           magrittr_1.5         
+## [49] lazyeval_0.2.2        tibble_2.1.1          crayon_1.3.4         
+## [52] pkgconfig_2.0.2       Matrix_1.2-17         xml2_1.2.0           
+## [55] assertthat_0.2.1      rmarkdown_1.12        httr_1.4.0           
+## [58] rstudioapi_0.10       R6_2.4.0              compiler_3.6.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

@@ -9,6 +9,12 @@ categories: []
 tags: []
 ---
 
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(boot)
+```
+
 Given a set of data points $y \in {\mathbf R}^m$,
 @TibshiraniHoefling:2011 fit a nearly-isotonic approximation $\beta
 \in {\mathbf R}^m$ by solving
@@ -28,7 +34,6 @@ data points are the annual temperature anomalies relative to the
 1961--1990 mean.
 
 ```{r}
-suppressMessages(suppressWarnings(library(CVXR)))
 data(cdiac)
 str(cdiac)
 ```
@@ -74,7 +79,6 @@ neariso_fit_stat <- function(data, index, lambda) {
 ```
 
 ```{r}
-library(boot)
 set.seed(123)
 boot.neariso <- boot(data = cdiac, statistic = neariso_fit_stat, R = 10, lambda = 0.44)
 
@@ -89,7 +93,6 @@ We can now plot the fit and confidence bands for the near isotonic
 fit. 
 
 ```{r}
-library(ggplot2)
 (plot.neariso <- ggplot(data = data.neariso) +
      geom_point(mapping = aes(year, annual), color = "red") +
      geom_line(mapping = aes(year, est), color = "blue") +
