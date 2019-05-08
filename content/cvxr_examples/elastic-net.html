@@ -27,7 +27,7 @@ tags: []
 <h2>Example</h2>
 <p>To solve this problem in <code>CVXR</code>, we first define a function that calculates the regularization term given the variable and penalty weights.</p>
 <pre class="r"><code>elastic_reg &lt;- function(beta, lambda = 0, alpha = 0) {
-    ridge &lt;- (1 - alpha) * sum(beta^2)
+    ridge &lt;- (1 - alpha) / 2 * sum(beta^2)
     lasso &lt;- alpha * p_norm(beta, 1)
     lambda * (lasso + ridge)
 }</code></pre>
@@ -147,7 +147,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -167,7 +167,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 -0.030
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.021
+-0.022
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 -0.001
@@ -182,7 +182,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -199,25 +199,25 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.376
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.371
+0.372
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.360
+0.362
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.330
+0.334
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.257
+0.267
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.091
+0.101
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -231,28 +231,28 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 1.811
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.808
+1.809
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.800
+1.804
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.781
+1.790
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.733
+1.755
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.616
+1.666
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.351
+1.453
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.839
+0.983
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.1
+0.135
 </td>
 </tr>
 <tr>
@@ -266,28 +266,28 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 -0.409
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.407
+-0.408
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.403
+-0.404
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.393
+-0.395
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.367
+-0.371
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.301
+-0.310
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.156
+-0.169
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -304,25 +304,25 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.350
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.345
+0.346
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.334
+0.336
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.305
+0.309
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.237
+0.245
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.076
+0.082
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -339,25 +339,25 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.395
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.391
+0.392
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.381
+0.382
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.355
+0.358
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.291
+0.297
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.146
+0.152
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -383,7 +383,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.064
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.013
+0.011
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
@@ -392,7 +392,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -403,7 +403,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 -0.051
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.050
+-0.051
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 -0.049
@@ -427,7 +427,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -450,7 +450,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.071
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.050
+0.051
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.001
@@ -462,7 +462,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -476,28 +476,28 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 1.133
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.131
+1.132
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.126
+1.128
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.113
+1.117
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.079
+1.090
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.994
+1.020
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.801
+0.853
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.429
+0.494
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -520,19 +520,19 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.082
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.067
+0.066
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.025
+0.024
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
-</td>
-<td style="text-align:right;background-color: #ececec !important;">
-0.0
 </td>
 </tr>
 <tr>
@@ -549,25 +549,25 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 -0.425
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.419
+-0.420
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.406
+-0.408
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.371
+-0.378
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.287
+-0.301
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.096
+-0.112
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -590,7 +590,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 -0.096
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.069
+-0.070
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 -0.003
@@ -602,7 +602,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -616,28 +616,28 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 -0.675
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.673
+-0.674
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.669
+-0.670
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.657
+-0.660
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.629
+-0.636
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.557
+-0.573
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.378
+-0.404
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.057
+-0.063
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -657,22 +657,22 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.268
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.256
+0.258
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.228
+0.231
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.160
+0.165
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.009
+0.011
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -707,7 +707,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -724,25 +724,25 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.184
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.179
+0.180
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.169
+0.170
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.142
+0.144
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.080
+0.082
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
-</td>
-<td style="text-align:right;background-color: #ececec !important;">
-0.0
 </td>
 </tr>
 <tr>
@@ -759,25 +759,25 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 -0.514
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.508
+-0.509
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.494
+-0.497
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.459
+-0.465
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.375
+-0.387
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.195
+-0.210
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 <tr>
@@ -788,31 +788,31 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
 0.761
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.760
+0.761
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.758
+0.759
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.754
+0.755
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.741
+0.745
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.710
+0.719
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.635
+0.656
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.451
+0.487
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.090
+0.109
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0
+0.000
 </td>
 </tr>
 </tbody>
