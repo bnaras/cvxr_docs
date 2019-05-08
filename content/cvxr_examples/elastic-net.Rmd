@@ -45,7 +45,7 @@ weights.
 
 ```{r}
 elastic_reg <- function(beta, lambda = 0, alpha = 0) {
-    ridge <- (1 - alpha) * sum(beta^2)
+    ridge <- (1 - alpha) / 2 * sum(beta^2)
     lasso <- alpha * p_norm(beta, 1)
     lambda * (lasso + ridge)
 }
