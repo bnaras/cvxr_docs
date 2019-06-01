@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.55.4" />
+	<meta name="generator" content="Hugo 0.55.6" />
 	
 	<title>Survey Calibration &mdash; CVXR</title>
 	
@@ -31,20 +31,41 @@
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Calibration is a widely used technique in survey sampling. Suppose <span class="math inline">\(m\)</span> sampling units in a survey have been assigned initial weights <span class="math inline">\(d_i\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span>, and furthermore, there are <span class="math inline">\(n\)</span> auxiliary variables whose values in the sample are known. Calibration seeks to improve the initial weights <span class="math inline">\(d_i\)</span> by finding new weights <span class="math inline">\(w_i\)</span> that incorporate this auxiliary information while perturbing the initial weights as little as possible, , the ratio <span class="math inline">\(g_i = w_i/d_i\)</span> must be close to one. Such reweighting improves precision of estimates (Chapter 7, <span class="citation">T. S. Lumley (<a href="#ref-Lumley:2010">2010</a>)</span>).</p>
-<p>Let <span class="math inline">\(X \in {\mathbf R}^{m \times n}\)</span> be the matrix of survey samples, with each column corresponding to an auxiliary variable. Reweighting can be expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016">2016</a>)</span>):</p>
+<p>Calibration is a widely used technique in survey sampling. Suppose
+<span class="math inline">\(m\)</span> sampling units in a survey have been assigned initial weights
+<span class="math inline">\(d_i\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span>, and furthermore, there are <span class="math inline">\(n\)</span> auxiliary
+variables whose values in the sample are known. Calibration seeks to
+improve the initial weights <span class="math inline">\(d_i\)</span> by finding new weights <span class="math inline">\(w_i\)</span> that
+incorporate this auxiliary information while perturbing the initial
+weights as little as possible, , the ratio <span class="math inline">\(g_i = w_i/d_i\)</span> must
+be close to one. Such reweighting improves precision of estimates
+(Chapter 7, <span class="citation">Lumley (<a href="#ref-Lumley:2010" role="doc-biblioref">2010</a>)</span>).</p>
+<p>Let <span class="math inline">\(X \in {\mathbf R}^{m \times n}\)</span> be the matrix of survey samples, with
+each column corresponding to an auxiliary variable. Reweighting can be
+expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016" role="doc-biblioref">2016</a>)</span>):</p>
 <p><span class="math display">\[
     \begin{array}{ll}
         \mbox{minimize} &amp; \sum_{i=1}^m d_i\phi(g_i) \\
         \mbox{subject to} &amp; A^Tg = r
     \end{array}
 \]</span></p>
-<p>with respect to <span class="math inline">\(g \in {\mathbf R}^m\)</span>, where <span class="math inline">\(\phi:{\mathbf R} \rightarrow {\mathbf R}\)</span> is a strictly convex function with <span class="math inline">\(\phi(1) = 0\)</span>, <span class="math inline">\(r \in {\mathbf R}^n\)</span> are the known population totals of the auxiliary variables, and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is related to <span class="math inline">\(X\)</span> by <span class="math inline">\(A_{ij} = d_iX_{ij}\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span> and <span class="math inline">\(j = 1,\ldots,n\)</span>.</p>
+<p>with respect to <span class="math inline">\(g \in {\mathbf R}^m\)</span>, where <span class="math inline">\(\phi:{\mathbf R} \rightarrow {\mathbf R}\)</span> is a strictly convex function with <span class="math inline">\(\phi(1) = 0\)</span>, <span class="math inline">\(r \in {\mathbf R}^n\)</span> are the known population totals of the auxiliary variables,
+and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is related to <span class="math inline">\(X\)</span> by <span class="math inline">\(A_{ij} = d_iX_{ij}\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span> and <span class="math inline">\(j = 1,\ldots,n\)</span>.</p>
 </div>
 <div id="raking" class="section level2">
 <h2>Raking</h2>
-<p>A common calibration technique is <em>raking</em>, which uses the penalty function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibration metric.</p>
-<p>We illustrate with the California Academic Performance Index data in the <code>survey</code> package (<span class="citation">T. Lumley (<a href="#ref-lumley:2018">2018</a>)</span>) which also supplies facilities for calibration via the function <code>calibrate</code>. Both the population dataset (<code>apipop</code>) and a simple random sample of <span class="math inline">\(m = 200\)</span> (<code>apisrs</code>) are provided. Suppose that we wish to reweight the observations in the sample using known totals for two variables from the population: <code>stype</code>, the school type (elementary, middle or high) and <code>sch.wide</code>, whether the school met the yearly target or not. This reweighting would make the sample more representative of the general population.</p>
+<p>A common calibration technique is <em>raking</em>, which uses the penalty
+function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibration
+metric.</p>
+<p>We illustrate with the California Academic Performance Index data in
+the <code>survey</code> package (<span class="citation">Lumley (<a href="#ref-lumley:2018" role="doc-biblioref">2018</a>)</span>) which also supplies facilities for
+calibration via the function <code>calibrate</code>. Both the population dataset
+(<code>apipop</code>) and a simple random sample of <span class="math inline">\(m = 200\)</span> (<code>apisrs</code>) are
+provided. Suppose that we wish to reweight the observations in the
+sample using known totals for two variables from the population:
+<code>stype</code>, the school type (elementary, middle or high) and <code>sch.wide</code>,
+whether the school met the yearly target or not. This reweighting
+would make the sample more representative of the general population.</p>
 <p>The code below estimates the weights using <code>survey::calibrate</code>.</p>
 <pre class="r"><code>data(api)
 design_api &lt;- svydesign(id = ~dnum, weights = ~pw, data = apisrs)
@@ -227,15 +248,18 @@ Yes
 <h2>Other Calibration Metrics</h2>
 <p>Two other penalty functions commonly used are:</p>
 <ul>
-<li><strong>Quadratic</strong> <span class="math display">\[
-  \phi^{Q}(g) = \frac{1}{2}(g-1)^2;
+<li><strong>Quadratic</strong>
+<span class="math display">\[
+\phi^{Q}(g) = \frac{1}{2}(g-1)^2;
 \]</span></li>
-<li><strong>Logit</strong> <span class="math display">\[
-  \phi^{L}(g; l, u) = \frac{1}{C}\biggl[ (g-l)\log\left(\frac{g-l}{1-l}\right) +
-  (u-g)\log\left(\frac{u-g}{u-1}\right) \biggr] \mbox{ for } C = \frac{u-l}{(1-l)(u-1)}.
+<li><strong>Logit</strong>
+<span class="math display">\[
+\phi^{L}(g; l, u) = \frac{1}{C}\biggl[ (g-l)\log\left(\frac{g-l}{1-l}\right) +
+(u-g)\log\left(\frac{u-g}{u-1}\right) \biggr] \mbox{ for } C = \frac{u-l}{(1-l)(u-1)}.
 \]</span></li>
 </ul>
-<p>It is again easy to incorporate these in our example and compare to <code>survey</code> results.</p>
+<p>It is again easy to incorporate these in our example and compare to
+<code>survey</code> results.</p>
 <div id="quadratic" class="section level3">
 <h3>Quadratic</h3>
 <p>The <code>survey</code> function for this calibration is invoked as <code>cal.linear</code>.</p>
@@ -245,7 +269,10 @@ p &lt;- Problem(Phi_Q, constraints)
 res &lt;- solve(p, solver = &quot;SCS&quot;)
 w_cvxr_q &lt;- di * res$getValue(g)
 w_survey_q &lt;- weights(calibrate(design_api, formula, population = T, calfun = cal.linear))</code></pre>
-<p>Note the use of the <code>SCS</code> solver above; the default <code>ECOS</code> solver produces a different number of unique weights, for reasons we have not fully investigated yet. (<em>Such differences are not unheard of among solvers!</em>)</p>
+<p>Note the use of the <code>SCS</code> solver above; the default <code>ECOS</code> solver
+produces a different number of unique weights, for reasons we have not
+fully investigated yet. (<em>Such differences are not unheard of among
+solvers!</em>)</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:unnamed-chunk-5">Table 2: </span>Calibration weights from Quadratic metric
@@ -398,7 +425,8 @@ Yes
 </div>
 <div id="logistic" class="section level3">
 <h3>Logistic</h3>
-<p>Finally, the logistic, which requires bounds <span class="math inline">\(l\)</span> and <span class="math inline">\(u\)</span> on the coefficients; we use <span class="math inline">\(l=0.9\)</span> and <span class="math inline">\(u=1.1\)</span>.</p>
+<p>Finally, the logistic, which requires bounds <span class="math inline">\(l\)</span> and <span class="math inline">\(u\)</span> on the
+coefficients; we use <span class="math inline">\(l=0.9\)</span> and <span class="math inline">\(u=1.1\)</span>.</p>
 <pre class="r"><code>u &lt;- 1.10; l &lt;- 0.90
 w_survey_l &lt;- weights(calibrate(design_api, formula, population = T, calfun = cal.linear,
                                 bounds = c(l, u)))
@@ -881,10 +909,10 @@ Yes
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -894,26 +922,26 @@ Yes
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] survey_3.36       survival_2.44-1.1 Matrix_1.2-17     dplyr_0.8.0.1    
-## [5] kableExtra_1.1.0  CVXR_0.99-5      
+## [1] survey_3.36       survival_2.44-1.1 Matrix_1.2-17     dplyr_0.8.1      
+## [5] kableExtra_1.1.0  CVXR_0.99-6      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5  xfun_0.6          purrr_0.3.2      
+##  [1] tidyselect_0.2.5  xfun_0.7          purrr_0.3.2      
 ##  [4] mitools_2.4       splines_3.6.0     lattice_0.20-38  
 ##  [7] colorspace_1.4-1  htmltools_0.3.6   viridisLite_0.3.0
 ## [10] yaml_2.2.0        gmp_0.5-13.5      rlang_0.3.4      
-## [13] R.oo_1.22.0       pillar_1.3.1      glue_1.3.1       
+## [13] R.oo_1.22.0       pillar_1.4.1      glue_1.3.1       
 ## [16] Rmpfr_0.7-2       DBI_1.0.0         R.utils_2.8.0    
 ## [19] bit64_0.9-7       scs_1.2-3         stringr_1.4.0    
-## [22] munsell_0.5.0     blogdown_0.12     rvest_0.3.3      
-## [25] R.methodsS3_1.7.1 evaluate_0.13     knitr_1.22       
+## [22] munsell_0.5.0     blogdown_0.12.1   rvest_0.3.4      
+## [25] R.methodsS3_1.7.1 evaluate_0.14     knitr_1.23       
 ## [28] highr_0.8         Rcpp_1.0.1        readr_1.3.1      
 ## [31] scales_1.0.0      webshot_0.5.1     bit_1.1-14       
-## [34] hms_0.4.2         digest_0.6.18     stringi_1.4.3    
-## [37] bookdown_0.9      ECOSolveR_0.5.1   tools_3.6.0      
-## [40] magrittr_1.5      tibble_2.1.1      crayon_1.3.4     
+## [34] hms_0.4.2         digest_0.6.19     stringi_1.4.3    
+## [37] bookdown_0.11     ECOSolveR_0.5.2   tools_3.6.0      
+## [40] magrittr_1.5      tibble_2.1.2      crayon_1.3.4     
 ## [43] pkgconfig_2.0.2   MASS_7.3-51.4     xml2_1.2.0       
-## [46] assertthat_0.2.1  rmarkdown_1.12    httr_1.4.0       
+## [46] assertthat_0.2.1  rmarkdown_1.13    httr_1.4.0       
 ## [49] rstudioapi_0.10   R6_2.4.0          compiler_3.6.0</code></pre>
 </div>
 <div id="source" class="section level2">
@@ -924,7 +952,7 @@ Yes
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-Davies:2016">
-<p>Davies, G., J. Gillard, and A. Zhigljavsky. 2016. “Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.” In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. doi:<a href="https://doi.org/10.1007/978-3-319-29975-4_6">10.1007/978-3-319-29975-4_6</a>.</p>
+<p>Davies, G., J. Gillard, and A. Zhigljavsky. 2016. “Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.” In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-29975-4_6">https://doi.org/10.1007/978-3-319-29975-4_6</a>.</p>
 </div>
 <div id="ref-lumley:2018">
 <p>Lumley, Thomas. 2018. “Survey: Analysis of Complex Survey Samples.”</p>

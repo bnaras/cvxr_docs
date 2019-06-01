@@ -25,7 +25,10 @@ tags: []
                   &amp; x_3 \mbox{ is integer.}
 \end{array}
 \]</span></p>
-<p><code>CVXR</code> provides the <code>Int</code> and <code>Bool</code> constructors for specifying integer and boolean variables. These can be combined with <code>vstack</code> (analog of <code>rbind</code>) or <code>hstack</code> (analog of <code>cbind</code>) to construct new expressions.</p>
+<p><code>CVXR</code> provides the <code>Int</code> and <code>Bool</code> constructors for specifying
+integer and boolean variables. These can be combined with <code>vstack</code>
+(analog of <code>rbind</code>) or <code>hstack</code> (analog of <code>cbind</code>) to construct
+new expressions.</p>
 <p>The above problem now in <code>CVXR</code>.</p>
 <pre class="r"><code>y1 &lt;- Variable(2)
 y2 &lt;- Int(1)
@@ -41,19 +44,25 @@ constraints &lt;- list(
     x[3] + x[4] &gt;= 0.5,
     x[3] &gt;= 1.1)
 problem &lt;- Problem(objective, constraints)</code></pre>
-<p>We can solve this problem as usual using the default <code>ECOS</code> (actually <code>ECOS_BB</code>) solver and obtain the optimal value as well as the solution.</p>
+<p>We can solve this problem as usual using the default <code>ECOS</code> (actually
+<code>ECOS_BB</code>) solver and obtain the optimal value as well as the
+solution.</p>
 <pre class="r"><code>result &lt;- solve(problem)
 cat(sprintf(&quot;Optimal value: %.3f\n&quot;, result$value))</code></pre>
 <pre><code>## Optimal value: 8.133</code></pre>
 <pre class="r"><code>ecos_solution &lt;- result$getValue(x)</code></pre>
 <div id="alternative-solvers" class="section level2">
 <h2>Alternative Solvers</h2>
-<p>We can try other solvers and compare the solutions obtained, like <code>LPSOLVE</code> and <code>GLPK</code> provided the respective R packages are installed as documented in the tutorial <a href="/cvxr_examples/using-other-solvers/">Using Other Solvers</a>.</p>
+<p>We can try other solvers and compare the solutions obtained, like
+<code>LPSOLVE</code> and <code>GLPK</code> provided the respective R packages are installed
+as documented in the tutorial <a href="/cvxr_examples/using-other-solvers/">Using Other
+Solvers</a>.</p>
 <pre class="r"><code>result &lt;- solve(problem, solver = &quot;LPSOLVE&quot;)
 lpsolve_solution &lt;- result$getValue(x)
 result &lt;- solve(problem, solver = &quot;GLPK&quot;)
 glpk_solution &lt;- result$getValue(x)</code></pre>
-<p>Finally, we can also try a commercial solver that can handle integer programs.</p>
+<p>Finally, we can also try a commercial solver that can handle integer
+programs.</p>
 <pre class="r"><code>result &lt;- solve(problem, solver = &quot;GUROBI&quot;)
 gurobi_solution &lt;- result$getValue(x)</code></pre>
 <p>Below is the table is solutions from all the solvers we used.</p>
@@ -158,17 +167,31 @@ GUROBI
 </div>
 <div id="office-assignment-problem" class="section level2">
 <h2>Office Assignment Problem</h2>
-<p>For a slightly more involved example, we consider the <a href="https://www.mathworks.com/help/optim/examples/office-assignments-by-binary-integer-programming.html">office assignment problem</a>.</p>
-<p>The goal is to assign six people, Marcelo, Rakesh, Peter, Tom, Marjorie, and Mary Ann, to seven offices. Each office can have no more than one person, and each person gets exactly one office. So there will be one empty office. People can give preferences for the offices, and their preferences are considered based on their seniority. Some offices have windows, some do not, and one window is smaller than others. Additionally, Peter and Tom often work together, so should be in adjacent offices. Marcelo and Rakesh often work together, and should be in adjacent offices.</p>
+<p>For a slightly more involved example, we consider the <a href="https://www.mathworks.com/help/optim/examples/office-assignments-by-binary-integer-programming.html">office
+assignment
+problem</a>.</p>
+<p>The goal is to assign six people, Marcelo, Rakesh, Peter, Tom,
+Marjorie, and Mary Ann, to seven offices. Each office can have no more
+than one person, and each person gets exactly one office. So there
+will be one empty office. People can give preferences for the offices,
+and their preferences are considered based on their seniority. Some
+offices have windows, some do not, and one window is smaller than
+others. Additionally, Peter and Tom often work together, so should be
+in adjacent offices. Marcelo and Rakesh often work together, and
+should be in adjacent offices.</p>
 <pre class="r"><code>draw_office_layout()</code></pre>
 <p><img src="/cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>The office layout is shown above. Offices 1, 2, 3, and 4 are inside offices (no windows). Offices 5, 6, and 7 have windows, but the window in office 5 is smaller than the other two.</p>
+<p>The office layout is shown above. Offices 1, 2, 3, and 4 are inside
+offices (no windows). Offices 5, 6, and 7 have windows, but the window
+in office 5 is smaller than the other two.</p>
 <p>We begin by recording the names of the people and offices.</p>
 <pre class="r"><code>people &lt;- c(&#39;Mary Ann&#39;, &#39;Marjorie&#39;, &#39;Tom&#39;,
             &#39;Peter&#39;, &#39;Marcelo&#39;, &#39;Rakesh&#39;)
 offices &lt;- c(&#39;Office 1&#39;, &#39;Office 2&#39;, &#39;Office 3&#39;,
              &#39;Office 4&#39;,&#39;Office 5&#39;, &#39;Office 6&#39;, &#39;Office 7&#39;)</code></pre>
-<p>We also have the office preferences of each person for each of the seven offices along with seniority data which is used to scale the office preferences.</p>
+<p>We also have the office preferences of each person for each of the
+seven offices along with seniority data which is used to scale the
+office preferences.</p>
 <pre class="r"><code>preference_matrix &lt;- matrix( c(0, 0, 0, 0, 10, 40, 50,
                                0, 0, 0, 0, 20, 40, 40,
                                0, 0, 0, 0, 30, 40, 30,
@@ -182,9 +205,12 @@ colnames(preference_matrix) &lt;- offices
 seniority &lt;- c(9, 10, 5, 3, 1.5, 2)
 weightvector &lt;- seniority / sum(seniority)
 PM &lt;- diag(weightvector) %*% preference_matrix</code></pre>
-<p>We define the the occupancy variable which indicates, using values 1 or 0, who occupies which office.</p>
+<p>We define the the occupancy variable which indicates, using values 1
+or 0, who occupies which office.</p>
 <pre class="r"><code>occupy &lt;- Int(length(people), length(offices))</code></pre>
-<p>The objective is to <em>maximize the satisfaction</em> of the preferences weighted by seniority constrained by the fact the a person can only occupy a single office and no office can have more than 1 person.</p>
+<p>The objective is to <em>maximize the satisfaction</em> of the preferences
+weighted by seniority constrained by the fact the a person can only
+occupy a single office and no office can have more than 1 person.</p>
 <pre class="r"><code>objective &lt;- Maximize(sum_entries(mul_elemwise(PM, occupy)))
 constraints &lt;- list(
     occupy &gt;= 0,
@@ -192,7 +218,9 @@ constraints &lt;- list(
     sum_entries(occupy, axis = 1) == 1,
     sum_entries(occupy, axis = 2) &lt;= 1
 )</code></pre>
-<p>We further add the constraint that Tom (person 3) and Peter (person 4) should be no more than one office away, and ditto for Marcelo (person 5) and Rakesh (person 6).</p>
+<p>We further add the constraint that Tom (person 3) and Peter (person 4)
+should be no more than one office away, and ditto for Marcelo (person
+5) and Rakesh (person 6).</p>
 <pre class="r"><code>tom_peter &lt;- list(
     occupy[3, 1] + sum_entries(occupy[4, ]) - occupy[4, 2] &lt;= 1,
     occupy[3, 2] + sum_entries(occupy[4, ]) - occupy[4, 1] - occupy[4, 3] - occupy[4, 5] &lt;= 1,
@@ -232,10 +260,10 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] C
@@ -244,33 +272,44 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.1.1    kableExtra_1.1.0 CVXR_0.99-5     
+## [1] ggplot2_3.1.1    kableExtra_1.1.0 CVXR_0.99-6     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reticulate_1.12       tidyselect_0.2.5      xfun_0.6             
-##  [4] slam_0.1-45           purrr_0.3.2           lattice_0.20-38      
-##  [7] colorspace_1.4-1      htmltools_0.3.6       viridisLite_0.3.0    
-## [10] yaml_2.2.0            gmp_0.5-13.5          rlang_0.3.4          
-## [13] R.oo_1.22.0           pillar_1.3.1          glue_1.3.1           
-## [16] Rmpfr_0.7-2           withr_2.1.2           R.utils_2.8.0        
-## [19] bit64_0.9-7           scs_1.2-3             plyr_1.8.4           
-## [22] stringr_1.4.0         munsell_0.5.0         blogdown_0.12        
-## [25] gtable_0.3.0          rvest_0.3.3           R.methodsS3_1.7.1    
-## [28] lpSolveAPI_5.5.2.0-17 evaluate_0.13         labeling_0.3         
-## [31] knitr_1.22            highr_0.8             Rcpp_1.0.1           
-## [34] readr_1.3.1           scales_1.0.0          jsonlite_1.6         
-## [37] webshot_0.5.1         bit_1.1-14            hms_0.4.2            
-## [40] digest_0.6.18         stringi_1.4.3         bookdown_0.9         
-## [43] dplyr_0.8.0.1         grid_3.6.0            Rglpk_0.6-4          
-## [46] ECOSolveR_0.5.1       tools_3.6.0           magrittr_1.5         
-## [49] lazyeval_0.2.2        tibble_2.1.1          crayon_1.3.4         
-## [52] pkgconfig_2.0.2       Matrix_1.2-17         xml2_1.2.0           
-## [55] assertthat_0.2.1      rmarkdown_1.12        httr_1.4.0           
-## [58] rstudioapi_0.10       R6_2.4.0              compiler_3.6.0</code></pre>
+##  [1] reticulate_1.12         tidyselect_0.2.5       
+##  [3] xfun_0.7                slam_0.1-45            
+##  [5] purrr_0.3.2             lattice_0.20-38        
+##  [7] colorspace_1.4-1        htmltools_0.3.6        
+##  [9] viridisLite_0.3.0       yaml_2.2.0             
+## [11] gmp_0.5-13.5            rlang_0.3.4            
+## [13] R.oo_1.22.0             pillar_1.4.1           
+## [15] glue_1.3.1              Rmpfr_0.7-2            
+## [17] withr_2.1.2             R.utils_2.8.0          
+## [19] bit64_0.9-7             scs_1.2-3              
+## [21] plyr_1.8.4              stringr_1.4.0          
+## [23] munsell_0.5.0           blogdown_0.12.1        
+## [25] gtable_0.3.0            rvest_0.3.4            
+## [27] R.methodsS3_1.7.1       lpSolveAPI_5.5.2.0-17.1
+## [29] evaluate_0.14           labeling_0.3           
+## [31] knitr_1.23              highr_0.8              
+## [33] Rcpp_1.0.1              readr_1.3.1            
+## [35] scales_1.0.0            jsonlite_1.6           
+## [37] webshot_0.5.1           bit_1.1-14             
+## [39] hms_0.4.2               digest_0.6.19          
+## [41] stringi_1.4.3           bookdown_0.11          
+## [43] dplyr_0.8.1             grid_3.6.0             
+## [45] Rglpk_0.6-4             ECOSolveR_0.5.2        
+## [47] tools_3.6.0             magrittr_1.5           
+## [49] lazyeval_0.2.2          tibble_2.1.2           
+## [51] crayon_1.3.4            pkgconfig_2.0.2        
+## [53] Matrix_1.2-17           xml2_1.2.0             
+## [55] assertthat_0.2.1        rmarkdown_1.13         
+## [57] httr_1.4.0              rstudioapi_0.10        
+## [59] R6_2.4.0                compiler_3.6.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
-<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/integer-programming.Rmd">R Markdown</a></p>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/integer-programming.Rmd">R
+Markdown</a></p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.55.4" />
+	<meta name="generator" content="Hugo 0.55.6" />
 	
 	<title>Direct Standardization &mdash; CVXR</title>
 	
@@ -30,16 +30,38 @@
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Consider a set of observations <span class="math inline">\((x_i,y_i)\)</span> drawn non-uniformly from an unknown distribution. We know the expected value of the columns of <span class="math inline">\(X\)</span>, denoted by <span class="math inline">\(b \in {\mathbf R}^n\)</span>, and want to estimate the true distribution of <span class="math inline">\(y\)</span>. This situation may arise, for instance, if we wish to analyze the health of a population based on a sample skewed toward young males, knowing the average population-level sex, age, etc. The empirical distribution that places equal probability <span class="math inline">\(1/m\)</span> on each <span class="math inline">\(y_i\)</span> is not a good estimate.</p>
-<p>So, we must determine the weights <span class="math inline">\(w \in {\mathbf R}^m\)</span> of a weighted empirical distribution, <span class="math inline">\(y = y_i\)</span> with probability <span class="math inline">\(w_i\)</span>, which rectifies the skewness of the sample <span class="citation">(Fleiss, Levin, and Paik <a href="#ref-dirstd">2003</a>, 19.5)</span>. We can pose this problem as</p>
+<p>Consider a set of observations <span class="math inline">\((x_i,y_i)\)</span> drawn non-uniformly from an
+unknown distribution. We know the expected value of the columns of
+<span class="math inline">\(X\)</span>, denoted by <span class="math inline">\(b \in {\mathbf R}^n\)</span>, and want to estimate the true
+distribution of <span class="math inline">\(y\)</span>. This situation may arise, for instance, if we
+wish to analyze the health of a population based on a sample skewed
+toward young males, knowing the average population-level sex, age,
+etc. The empirical distribution that places equal probability
+<span class="math inline">\(1/m\)</span> on each <span class="math inline">\(y_i\)</span> is not a good estimate.</p>
+<p>So, we must determine the weights <span class="math inline">\(w \in {\mathbf R}^m\)</span> of a weighted
+empirical distribution, <span class="math inline">\(y = y_i\)</span> with probability <span class="math inline">\(w_i\)</span>, which
+rectifies the skewness of the sample <span class="citation">(Fleiss, Levin, and Paik <a href="#ref-dirstd" role="doc-biblioref">2003</a>, 19.5)</span>. We can pose this
+problem as</p>
 <p><span class="math display">\[
     \begin{array}{ll} \underset{w}{\mbox{maximize}} &amp; \sum_{i=1}^m -w_i\log w_i \\
     \mbox{subject to} &amp; w \geq 0, \quad \sum_{i=1}^m w_i = 1,\quad X^Tw = b.
     \end{array}
 \]</span></p>
-<p>Our objective is the total entropy, which is concave on <span class="math inline">\({\mathbf R}_+^m\)</span>, and our constraints ensure <span class="math inline">\(w\)</span> is a probability distribution that implies our known expectations on <span class="math inline">\(X\)</span>.</p>
-<p>To illustrate this method, we generate <span class="math inline">\(m = 1000\)</span> data points <span class="math inline">\(x_{i,1} \sim \mbox{Bernoulli}(0.5)\)</span>, <span class="math inline">\(x_{i,2} \sim \mbox{Uniform}(10,60)\)</span>, and <span class="math inline">\(y_i \sim N(5x_{i,1} + 0.1x_{i,2},1)\)</span>. Then we construct a skewed sample of <span class="math inline">\(m = 100\)</span> points that overrepresent small values of <span class="math inline">\(y_i\)</span>, thus biasing its distribution downwards. This can be seen in Figure , where the sample probability distribution peaks around <span class="math inline">\(y = 2.0\)</span>, and its cumulative distribution is shifted left from the population’s curve. Using direct standardization, we estimate <span class="math inline">\(w_i\)</span> and reweight our sample; the new empirical distribution cleaves much closer to the true distribution shown in red.</p>
-<p>In the <code>CVXR</code> code below, we import data from the package and solve for <span class="math inline">\(w\)</span>.</p>
+<p>Our objective is the total entropy, which is concave on <span class="math inline">\({\mathbf R}_+^m\)</span>, and our constraints ensure <span class="math inline">\(w\)</span> is a probability distribution
+that implies our known expectations on <span class="math inline">\(X\)</span>.</p>
+<p>To illustrate this method, we generate <span class="math inline">\(m = 1000\)</span> data points
+<span class="math inline">\(x_{i,1} \sim \mbox{Bernoulli}(0.5)\)</span>,
+<span class="math inline">\(x_{i,2} \sim \mbox{Uniform}(10,60)\)</span>, and
+<span class="math inline">\(y_i \sim N(5x_{i,1} + 0.1x_{i,2},1)\)</span>. Then we construct a skewed
+sample of <span class="math inline">\(m = 100\)</span> points that overrepresent small values of <span class="math inline">\(y_i\)</span>,
+thus biasing its distribution downwards. This can be seen in Figure
+, where the sample probability distribution peaks
+around <span class="math inline">\(y = 2.0\)</span>, and its cumulative distribution is shifted left from
+the population’s curve. Using direct standardization, we estimate
+<span class="math inline">\(w_i\)</span> and reweight our sample; the new empirical distribution cleaves
+much closer to the true distribution shown in red.</p>
+<p>In the <code>CVXR</code> code below, we import data from the package and solve
+for <span class="math inline">\(w\)</span>.</p>
 <pre class="r"><code>## Import problem data
 data(dspop)   # Population
 data(dssamp)  # Skewed sample
@@ -64,7 +86,8 @@ result &lt;- solve(prob)
 weights &lt;- result$getValue(w)
 result$value</code></pre>
 <pre><code>## [1] 4.223305</code></pre>
-<p>We can plot the density functions using linear approximations for the range of <span class="math inline">\(y\)</span>.</p>
+<p>We can plot the density functions using linear approximations for the
+range of <span class="math inline">\(y\)</span>.</p>
 <pre class="r"><code>## Plot probability density functions
 dens1 &lt;- density(ypop)
 dens2 &lt;- density(y)
@@ -115,10 +138,10 @@ ggplot(plot.data) +
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -127,21 +150,21 @@ ggplot(plot.data) +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_0.8.3   ggplot2_3.1.1 CVXR_0.99-5  
+## [1] tidyr_0.8.3   ggplot2_3.1.1 CVXR_0.99-6  
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.5-13.5      Rcpp_1.0.1        highr_0.8        
-##  [4] compiler_3.6.0    pillar_1.3.1      plyr_1.8.4       
+##  [4] compiler_3.6.0    pillar_1.4.1      plyr_1.8.4       
 ##  [7] R.methodsS3_1.7.1 R.utils_2.8.0     tools_3.6.0      
-## [10] digest_0.6.18     bit_1.1-14        evaluate_0.13    
-## [13] tibble_2.1.1      gtable_0.3.0      lattice_0.20-38  
+## [10] digest_0.6.19     bit_1.1-14        evaluate_0.14    
+## [13] tibble_2.1.2      gtable_0.3.0      lattice_0.20-38  
 ## [16] pkgconfig_2.0.2   rlang_0.3.4       Matrix_1.2-17    
-## [19] yaml_2.2.0        blogdown_0.12     xfun_0.6         
-## [22] withr_2.1.2       dplyr_0.8.0.1     Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5.1   stringr_1.4.0     knitr_1.22       
+## [19] yaml_2.2.0        blogdown_0.12.1   xfun_0.7         
+## [22] withr_2.1.2       dplyr_0.8.1       Rmpfr_0.7-2      
+## [25] ECOSolveR_0.5.2   stringr_1.4.0     knitr_1.23       
 ## [28] tidyselect_0.2.5  bit64_0.9-7       grid_3.6.0       
-## [31] glue_1.3.1        R6_2.4.0          rmarkdown_1.12   
-## [34] bookdown_0.9      purrr_0.3.2       magrittr_1.5     
+## [31] glue_1.3.1        R6_2.4.0          rmarkdown_1.13   
+## [34] bookdown_0.11     purrr_0.3.2       magrittr_1.5     
 ## [37] scales_1.0.0      htmltools_0.3.6   scs_1.2-3        
 ## [40] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3     
 ## [43] stringi_1.4.3     lazyeval_0.2.2    munsell_0.5.0    

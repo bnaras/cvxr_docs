@@ -13,19 +13,41 @@ tags: []
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>The following example comes from work on saturating splines in <span class="citation">N. Boyd et al. (<a href="#ref-BoydHastie:2016">2016</a>)</span>. Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they <em>saturate</em>: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a <em>saturating hinge</em>.</p>
-<p>For simplicity, consider the univariate case with <span class="math inline">\(n = 1\)</span>. Assume we are given knots <span class="math inline">\(t_1 &lt; t_2 &lt; \cdots &lt; t_k\)</span> where each <span class="math inline">\(t_j \in {\mathbf R}\)</span>. Let <span class="math inline">\(h_j\)</span> be a hinge function at knot <span class="math inline">\(t_j\)</span>, , <span class="math inline">\(h_j(x) = \max(x-t_j,0)\)</span>, and define <span class="math inline">\(f(x) = w_0 + \sum_{j=1}^k w_jh_j(x)\)</span>. We want to solve</p>
+<p>The following example comes from work on saturating splines in
+<span class="citation">Boyd et al. (<a href="#ref-BoydHastie:2016" role="doc-biblioref">2016</a>)</span>. Adaptive regression splines are commonly used in
+statistical modeling, but the instability they exhibit beyond their
+boundary knots makes extrapolation dangerous. One way to correct this
+issue for linear splines is to require they <em>saturate</em>: remain
+constant outside their boundary. This problem can be solved using a
+heuristic that is an extension of lasso regression, producing a
+weighted sum of hinge functions, which we call a <em>saturating hinge</em>.</p>
+<p>For simplicity, consider the univariate case with <span class="math inline">\(n = 1\)</span>. Assume we
+are given knots <span class="math inline">\(t_1 &lt; t_2 &lt; \cdots &lt; t_k\)</span> where each
+<span class="math inline">\(t_j \in {\mathbf R}\)</span>. Let <span class="math inline">\(h_j\)</span> be a hinge function at knot <span class="math inline">\(t_j\)</span>, ,
+<span class="math inline">\(h_j(x) = \max(x-t_j,0)\)</span>, and define
+<span class="math inline">\(f(x) = w_0 + \sum_{j=1}^k w_jh_j(x)\)</span>. We want to solve</p>
 <p><span class="math display">\[
 \begin{array}{ll} 
 \underset{w_0,w}{\mbox{minimize}} &amp; \sum_{i=1}^m \ell(y_i, f(x_i)) + \lambda\|w\|_1 \\
 \mbox{subject to} &amp; \sum_{j=1}^k w_j = 0
 \end{array}
 \]</span></p>
-<p>for variables <span class="math inline">\((w_0,w) \in {\mathbf R} \times {\mathbf R}^k\)</span>. The function <span class="math inline">\(\ell:{\mathbf R} \times {\mathbf R} \rightarrow {\mathbf R}\)</span> is the loss associated with every observation, and <span class="math inline">\(\lambda \geq 0\)</span> is the penalty weight. In choosing our knots, we set <span class="math inline">\(t_1 = \min(x_i)\)</span> and <span class="math inline">\(t_k = \max(x_i)\)</span> so that by construction, the estimate <span class="math inline">\(\hat f\)</span> will be constant outside <span class="math inline">\([t_1,t_k]\)</span>.</p>
+<p>for variables <span class="math inline">\((w_0,w) \in {\mathbf R} \times {\mathbf R}^k\)</span>. The function
+<span class="math inline">\(\ell:{\mathbf R} \times {\mathbf R} \rightarrow {\mathbf R}\)</span> is the loss associated
+with every observation, and <span class="math inline">\(\lambda \geq 0\)</span> is the penalty weight. In
+choosing our knots, we set <span class="math inline">\(t_1 = \min(x_i)\)</span> and <span class="math inline">\(t_k = \max(x_i)\)</span> so
+that by construction, the estimate <span class="math inline">\(\hat f\)</span> will be constant outside
+<span class="math inline">\([t_1,t_k]\)</span>.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>We demonstrate this technique on the bone density data for female patients from <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-ESL">2001</a>)</span>, section 5.4. There are a total of <span class="math inline">\(m = 259\)</span> observations. Our response <span class="math inline">\(y_i\)</span> is the change in spinal bone density between two visits, and our predictor <span class="math inline">\(x_i\)</span> is the patient’s age. We select <span class="math inline">\(k = 10\)</span> knots about evenly spaced across the range of <span class="math inline">\(X\)</span> and fit a saturating hinge with squared error loss <span class="math inline">\(\ell(y_i, f(x_i)) = (y_i - f(x_i))^2\)</span>.</p>
+<p>We demonstrate this technique on the bone density data for female
+patients from <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-ESL" role="doc-biblioref">2001</a>)</span>, section 5.4. There are a total of <span class="math inline">\(m = 259\)</span>
+observations. Our response <span class="math inline">\(y_i\)</span> is the change in spinal bone density
+between two visits, and our predictor <span class="math inline">\(x_i\)</span> is the patient’s age. We
+select <span class="math inline">\(k = 10\)</span> knots about evenly spaced across the range of <span class="math inline">\(X\)</span> and
+fit a saturating hinge with squared error loss
+<span class="math inline">\(\ell(y_i, f(x_i)) = (y_i - f(x_i))^2\)</span>.</p>
 <pre class="r"><code>## Import and sort data
 data(bone, package = &quot;ElemStatLearn&quot;)
 X &lt;- bone[bone$gender == &quot;female&quot;,]$age
@@ -48,7 +70,10 @@ f_est &lt;- function(x, knots, w0, w) {
 
 ## Loss function
 loss_obs &lt;- function(y, f) { (y - f)^2 }</code></pre>
-<p>This allows us to easily test different losses and knot locations later. The rest of the set-up is similar to previous examples. We assume that <code>knots</code> is an <code>R</code> vector representing <span class="math inline">\((t_1,\ldots,t_k)\)</span>.</p>
+<p>This allows us to easily test different losses and knot locations
+later. The rest of the set-up is similar to previous examples. We
+assume that <code>knots</code> is an <code>R</code> vector representing
+<span class="math inline">\((t_1,\ldots,t_k)\)</span>.</p>
 <pre class="r"><code>## Form problem
 w0 &lt;- Variable(1)
 w &lt;- Variable(k)
@@ -57,7 +82,8 @@ constr &lt;- list(sum(w) == 0)
 
 xrange &lt;- seq(min(X), max(X), length.out = 100)
 splines &lt;- matrix(0, nrow = length(xrange), ncol = length(lambdas))</code></pre>
-<p>The optimal weights are retrieved using separate calls, as shown below.</p>
+<p>The optimal weights are retrieved using separate calls, as shown
+below.</p>
 <pre class="r"><code>for (i in seq_along(lambdas)) {
     lambda &lt;- lambdas[i]
     reg &lt;- lambda * p_norm(w, 1)
@@ -73,7 +99,9 @@ splines &lt;- matrix(0, nrow = length(xrange), ncol = length(lambdas))</code></p
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p>We plot the fitted saturating hinges in Figure 1 below. As expected, when <span class="math inline">\(\lambda\)</span> increases, the spline exhibits less variation and grows flatter outside its boundaries.</p>
+<p>We plot the fitted saturating hinges in Figure 1 below. As expected,
+when <span class="math inline">\(\lambda\)</span> increases, the spline exhibits less variation and grows
+flatter outside its boundaries.</p>
 <pre class="r"><code>d &lt;- data.frame(xrange, splines)
 names(d) &lt;- c(&quot;x&quot;, paste0(&quot;lambda_&quot;, seq_len(length(lambdas))))
 plot.data &lt;- gather(d, key = &quot;lambda&quot;, value = &quot;spline&quot;,
@@ -86,7 +114,11 @@ ggplot() +
     labs(x = &quot;Age&quot;, y = &quot;Change in Bone Density&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
 <p><img src="/cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>The squared error loss works well in this case, but the Huber loss is preferred when the dataset contains large outliers. To see this, we add 50 randomly generated outliers to the bone density data and re-estimate the saturating hinges.</p>
+<p>The squared error loss works well in this case, but the Huber loss is
+preferred when the dataset contains large outliers. To see this, we
+add 50 randomly generated
+outliers to the bone density data and re-estimate the saturating
+hinges.</p>
 <pre class="r"><code>## Add outliers to data
 set.seed(1)
 nout &lt;- 50
@@ -108,7 +140,10 @@ loss &lt;- sum(loss_obs(y, f_est(X, knots, w0, w), 0.01))
 prob &lt;- Problem(Minimize(loss + reg), constr)
 result &lt;- solve(prob)
 spline_hub &lt;- f_est(xrange, knots, result$getValue(w0), result$getValue(w))</code></pre>
-<p>Figure 2 shows the results. For a Huber loss with <span class="math inline">\(M = 0.01\)</span>, the resulting spline is fairly smooth and follows the shape of the original data, as opposed to the spline using squared error loss, which is biased upwards by a significant amount.</p>
+<p>Figure 2 shows the results. For a Huber loss with <span class="math inline">\(M = 0.01\)</span>, the
+resulting spline is fairly smooth and follows the shape of the
+original data, as opposed to the spline using squared error loss,
+which is biased upwards by a significant amount.</p>
 <pre class="r"><code>d &lt;- data.frame(xrange, spline_hub, spline_sq)
 names(d) &lt;- c(&quot;x&quot;, &quot;Huber&quot;, &quot;Squared&quot;)
 plot.data &lt;- gather(d, key = &quot;loss&quot;, value = &quot;spline&quot;,
@@ -128,10 +163,10 @@ ggplot() +
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -140,20 +175,20 @@ ggplot() +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_0.8.3   ggplot2_3.1.1 CVXR_0.99-5  
+## [1] tidyr_0.8.3   ggplot2_3.1.1 CVXR_0.99-6  
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.5-13.5      Rcpp_1.0.1        compiler_3.6.0   
-##  [4] pillar_1.3.1      plyr_1.8.4        R.methodsS3_1.7.1
-##  [7] R.utils_2.8.0     tools_3.6.0       digest_0.6.18    
-## [10] bit_1.1-14        evaluate_0.13     tibble_2.1.1     
+##  [4] pillar_1.4.1      plyr_1.8.4        R.methodsS3_1.7.1
+##  [7] R.utils_2.8.0     tools_3.6.0       digest_0.6.19    
+## [10] bit_1.1-14        evaluate_0.14     tibble_2.1.2     
 ## [13] gtable_0.3.0      lattice_0.20-38   pkgconfig_2.0.2  
 ## [16] rlang_0.3.4       Matrix_1.2-17     yaml_2.2.0       
-## [19] blogdown_0.12     xfun_0.6          withr_2.1.2      
-## [22] dplyr_0.8.0.1     Rmpfr_0.7-2       ECOSolveR_0.5.1  
-## [25] stringr_1.4.0     knitr_1.22        tidyselect_0.2.5 
+## [19] blogdown_0.12.1   xfun_0.7          withr_2.1.2      
+## [22] dplyr_0.8.1       Rmpfr_0.7-2       ECOSolveR_0.5.2  
+## [25] stringr_1.4.0     knitr_1.23        tidyselect_0.2.5 
 ## [28] bit64_0.9-7       grid_3.6.0        glue_1.3.1       
-## [31] R6_2.4.0          rmarkdown_1.12    bookdown_0.9     
+## [31] R6_2.4.0          rmarkdown_1.13    bookdown_0.11    
 ## [34] purrr_0.3.2       magrittr_1.5      scales_1.0.0     
 ## [37] htmltools_0.3.6   scs_1.2-3         assertthat_0.2.1 
 ## [40] colorspace_1.4-1  labeling_0.3      stringi_1.4.3    

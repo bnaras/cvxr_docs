@@ -92,7 +92,7 @@ Suppose that only \(K\) of our observations \((x_i,y_i)\) are fully observed, an
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_elastic-net/</guid>
-      <description>Introduction Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the \(l_1\)-norm and squared \(l_2\)-norm, combined in the elastic net regression model (H. Zou 2005, Friedman, Hastie, and Tibshirani (2010)),
+      <description>Introduction Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the \(l_1\)-norm and squared \(l_2\)-norm, combined in the elastic net regression model (H. Zou 2005, @glmnet),
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2m}\|y - X\beta\|_2^2 + \lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). \end{array} \]
 Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0,1]\) controls the relative \(l_1\) versus squared \(l_2\) penalty.</description>
     </item>
@@ -123,7 +123,8 @@ Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0
       
       <guid>/cvxr_examples/cvxr_huber-regression/</guid>
       <description>Introduction Huber regression (Huber 1964) is a regression technique that is robust to outliers. The idea is to use a different loss function rather than the traditional least-squares; we solve
-\[\begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \sum_{i=1}^m \phi(y_i - x_i^T\beta) \end{array}\] for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber function with threshold \(M &amp;gt; 0\), \[ \phi(u) = \begin{cases} u^2 &amp;amp; \mbox{if } |u| \leq M \\ 2Mu - M^2 &amp;amp; \mbox{if } |u| &amp;gt; M.</description>
+\begin{array}{ll} &amp;amp; _{i=1}^m (y_i - x_i^T) \end{array}
+for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber function with threshold \(M &amp;gt; 0\), \[ \phi(u) = \begin{cases} u^2 &amp;amp; \mbox{if } |u| \leq M \\ 2Mu - M^2 &amp;amp; \mbox{if } |u| &amp;gt; M.</description>
     </item>
     
     <item>
@@ -176,7 +177,7 @@ a1 &amp;lt;- matrix(c(2,1)) a2 &amp;lt;- matrix(c(2,-1)) a3 &amp;lt;- matrix(c(-
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_logistic-regression/</guid>
-      <description>Introduction In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression (Cox 1958, Freedman (2009)).
+      <description>Introduction In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression (Cox 1958, @Freedman:2009).
 Suppose now that \(y_i \in \{0,1\}\) is a binary class indicator. The conditional response is modeled as \(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\), where \(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\) is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</description>
     </item>
     
@@ -186,7 +187,7 @@ Suppose now that \(y_i \in \{0,1\}\) is a binary class indicator. The conditiona
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</guid>
-      <description>Given a set of data points \(y \in {\mathbf R}^m\), R. J. Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving
+      <description>Given a set of data points \(y \in {\mathbf R}^m\), Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array} \]
 where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in CVXR. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
     </item>
@@ -218,7 +219,7 @@ where \(\tau \in (0,1)\) specifies the quantile. The problem as before is to min
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_saturating_hinges/</guid>
-      <description>Introduction The following example comes from work on saturating splines in N. Boyd et al. (2016). Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they saturate: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a saturating hinge.</description>
+      <description>Introduction The following example comes from work on saturating splines in Boyd et al. (2016). Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they saturate: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a saturating hinge.</description>
     </item>
     
     <item>

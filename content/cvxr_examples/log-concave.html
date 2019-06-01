@@ -13,7 +13,12 @@ tags: []
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Let <span class="math inline">\(n = 1\)</span> and suppose <span class="math inline">\(x_i\)</span> are i.i.d. samples from a log-concave discrete distribution on <span class="math inline">\(\{0,\ldots,K\}\)</span> for some <span class="math inline">\(K \in {\mathbf Z}_+\)</span>. Define <span class="math inline">\(p_k := {\mathbf {Prob}}(X = k)\)</span> to be the probability mass function. One method for estimating <span class="math inline">\(\{p_0,\ldots,p_K\}\)</span> is to maximize the log-likelihood function subject to a log-concavity constraint , i.e.,</p>
+<p>Let <span class="math inline">\(n = 1\)</span> and suppose <span class="math inline">\(x_i\)</span> are i.i.d. samples from a log-concave
+discrete distribution on <span class="math inline">\(\{0,\ldots,K\}\)</span> for some
+<span class="math inline">\(K \in {\mathbf Z}_+\)</span>. Define <span class="math inline">\(p_k := {\mathbf {Prob}}(X = k)\)</span> to be the
+probability mass function. One method for estimating
+<span class="math inline">\(\{p_0,\ldots,p_K\}\)</span> is to maximize the log-likelihood function
+subject to a log-concavity constraint , i.e.,</p>
 <p><span class="math display">\[
 \begin{array}{ll}
 \underset{p}{\mbox{maximize}} &amp; \sum_{k=0}^K M_k\log p_k \\
@@ -21,7 +26,13 @@ tags: []
 &amp; p_k \geq \sqrt{p_{k-1}p_{k+1}}, \quad k = 1,\ldots,K-1,
 \end{array}
 \]</span></p>
-<p>where <span class="math inline">\(p \in {\mathbf R}^{K+1}\)</span> is our variable of interest and <span class="math inline">\(M_k\)</span> represents the number of observations equal to <span class="math inline">\(k\)</span>, so that <span class="math inline">\(\sum_{k=0}^K M_k = m\)</span>. The problem as posed above is not convex. However, we can transform it into a convex optimization problem by defining new variables <span class="math inline">\(u_k = \log p_k\)</span> and relaxing the equality constraint to <span class="math inline">\(\sum_{k=0}^K p_k \leq 1\)</span>, since the latter always holds tightly at an optimal solution. The result is</p>
+<p>where <span class="math inline">\(p \in {\mathbf R}^{K+1}\)</span> is our variable of interest and <span class="math inline">\(M_k\)</span>
+represents the number of observations equal to <span class="math inline">\(k\)</span>, so that
+<span class="math inline">\(\sum_{k=0}^K M_k = m\)</span>. The problem as posed above is not
+convex. However, we can transform it into a convex optimization
+problem by defining new variables <span class="math inline">\(u_k = \log p_k\)</span> and relaxing the
+equality constraint to <span class="math inline">\(\sum_{k=0}^K p_k \leq 1\)</span>, since the latter
+always holds tightly at an optimal solution. The result is</p>
 <p><span class="math display">\[
 \begin{array}{ll}
 \underset{u}{\mbox{maximize}} &amp; \sum_{k=0}^K M_k u_k \\
@@ -32,7 +43,9 @@ tags: []
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>We draw <span class="math inline">\(m = 25\)</span> observations from a log-concave distribution on <span class="math inline">\(\{0,\ldots,100\}\)</span>. We then estimate the probability mass function using the above method and compare it with the empirical distribution.</p>
+<p>We draw <span class="math inline">\(m = 25\)</span> observations from a log-concave distribution on
+<span class="math inline">\(\{0,\ldots,100\}\)</span>. We then estimate the probability mass function
+using the above method and compare it with the empirical distribution.</p>
 <pre class="r"><code>set.seed(1)
 ## Calculate a piecewise linear function
 pwl_fun &lt;- function(x, knots) {
@@ -73,7 +86,10 @@ constraints &lt;- list(sum(exp(u)) &lt;= 1, diff(u[1:K]) &gt;= diff(u[2:(K+1)]))
 prob &lt;- Problem(Maximize(obj), constraints)
 result &lt;- solve(prob)
 pmf &lt;- result$getValue(exp(u))</code></pre>
-<p>The above lines transform the variables <span class="math inline">\(u_k\)</span> to <span class="math inline">\(e^{u_k}\)</span> before calculating their resulting values. This is possible because <code>exp</code> is a member of the <code>CVXR</code> library of atoms, so it can operate directly on a <code>Variable</code> object such as <code>u</code>.</p>
+<p>The above lines transform the variables <span class="math inline">\(u_k\)</span> to <span class="math inline">\(e^{u_k}\)</span> before
+calculating their resulting values. This is possible because <code>exp</code> is
+a member of the <code>CVXR</code> library of atoms, so it can operate directly on
+a <code>Variable</code> object such as <code>u</code>.</p>
 <p>Below are the comparison plots of pmf and cdf.</p>
 <pre class="r"><code>dens &lt;- density(x, bw = &quot;sj&quot;)
 d &lt;- data.frame(x = xrange, True = xprobs, Optimal = pmf,
@@ -93,17 +109,21 @@ ggplot(plot.data) +
     geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
     theme(legend.position = &quot;top&quot;)</code></pre>
 <p><img src="/cvxr_examples/log-concave_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>From the figures we see that the estimated curve is much closer to the true distribution, exhibiting a similar shape and number of peaks. In contrast, the empirical probability mass function oscillates, failing to be log-concave on parts of its domain. These differences are reflected in the cumulative distribution functions as well.</p>
+<p>From the figures we see that the estimated curve is much closer to the
+true distribution, exhibiting a similar shape and number of peaks. In
+contrast, the empirical probability mass function oscillates, failing
+to be log-concave on parts of its domain. These differences are
+reflected in the cumulative distribution functions as well.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -112,20 +132,20 @@ ggplot(plot.data) +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_0.8.3   ggplot2_3.1.1 CVXR_0.99-5  
+## [1] tidyr_0.8.3   ggplot2_3.1.1 CVXR_0.99-6  
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.5-13.5      Rcpp_1.0.1        compiler_3.6.0   
-##  [4] pillar_1.3.1      plyr_1.8.4        R.methodsS3_1.7.1
-##  [7] R.utils_2.8.0     tools_3.6.0       digest_0.6.18    
-## [10] bit_1.1-14        evaluate_0.13     tibble_2.1.1     
+##  [4] pillar_1.4.1      plyr_1.8.4        R.methodsS3_1.7.1
+##  [7] R.utils_2.8.0     tools_3.6.0       digest_0.6.19    
+## [10] bit_1.1-14        evaluate_0.14     tibble_2.1.2     
 ## [13] gtable_0.3.0      lattice_0.20-38   pkgconfig_2.0.2  
 ## [16] rlang_0.3.4       Matrix_1.2-17     yaml_2.2.0       
-## [19] blogdown_0.12     xfun_0.6          withr_2.1.2      
-## [22] dplyr_0.8.0.1     Rmpfr_0.7-2       ECOSolveR_0.5.1  
-## [25] stringr_1.4.0     knitr_1.22        tidyselect_0.2.5 
+## [19] blogdown_0.12.1   xfun_0.7          withr_2.1.2      
+## [22] dplyr_0.8.1       Rmpfr_0.7-2       ECOSolveR_0.5.2  
+## [25] stringr_1.4.0     knitr_1.23        tidyselect_0.2.5 
 ## [28] bit64_0.9-7       grid_3.6.0        glue_1.3.1       
-## [31] R6_2.4.0          rmarkdown_1.12    bookdown_0.9     
+## [31] R6_2.4.0          rmarkdown_1.13    bookdown_0.11    
 ## [34] purrr_0.3.2       magrittr_1.5      scales_1.0.0     
 ## [37] htmltools_0.3.6   scs_1.2-3         assertthat_0.2.1 
 ## [40] colorspace_1.4-1  labeling_0.3      stringi_1.4.3    

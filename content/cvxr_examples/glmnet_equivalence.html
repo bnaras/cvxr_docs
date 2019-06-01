@@ -15,30 +15,43 @@ tags: []
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>We’ve had several questions of the following type:</p>
-<p><strong>When I fit the same model in <code>glmnet</code> and <code>CVXR</code>, why are the results different?</strong></p>
-<p>For example, see <a href="https://stackoverflow.com/questions/51279485/a-comparison-between-cvxr-and-glmnet-elastic-net">this</a>.</p>
-<p>Obviously, unless one <em>actually</em> solves the same problem in both places, there’s no reason to expect the same result. The documentation for <code>glmnet::glmnet</code> clearly states the optimization objective and so one just has to ensure that the <code>CVXR</code> objective also matches that.</p>
+<p><strong>When I fit the same model in <code>glmnet</code> and <code>CVXR</code>, why are the
+results different?</strong></p>
+<p>For example, see
+<a href="https://stackoverflow.com/questions/51279485/a-comparison-between-cvxr-and-glmnet-elastic-net">this</a>.</p>
+<p>Obviously, unless one <em>actually</em> solves the same problem in both
+places, there’s no reason to expect the same result. The
+documentation for <code>glmnet::glmnet</code> clearly states the optimization
+objective and so one just has to ensure that the <code>CVXR</code> objective also
+matches that.</p>
 <p>We illustrate below.</p>
 </div>
 <div id="lasso" class="section level2">
 <h2>Lasso</h2>
-<p>Consider a simple Lasso fit from the <code>glmnet</code> example, for a fixed <span class="math inline">\(\lambda\)</span>.</p>
+<p>Consider a simple Lasso fit from the <code>glmnet</code> example, for a fixed
+<span class="math inline">\(\lambda\)</span>.</p>
 <pre class="r"><code>set.seed(123)
 n &lt;- 100; p &lt;- 20; thresh &lt;- 1e-12; lambda &lt;- .05
 x &lt;-  matrix(rnorm(n * p), n, p); xDesign &lt;- cbind(1, x)
 y &lt;-  rnorm(n)
 fit1 &lt;-  glmnet(x,y, lambda = lambda, thresh = thresh)</code></pre>
-<p>The <code>glmnet</code> documentation notes that the objective being maximized, in the default invocation, is</p>
+<p>The <code>glmnet</code> documentation notes that the objective being maximized,
+in the default invocation, is</p>
 <p><span class="math display">\[
 \frac{1}{2n}\|(y - X\beta)\|_2^2 + \lambda \|\beta_{-1}\|_1,
 \]</span></p>
-<p>where <span class="math inline">\(\beta_{-1}\)</span> is the beta vector excluding the first component, the intercept. Yes, the intercept is not penalized in the default invocation!</p>
-<p>So we will use this objective with <code>CVXR</code> in the problem specification.</p>
+<p>where <span class="math inline">\(\beta_{-1}\)</span> is the beta vector excluding the first component,
+the intercept. Yes, the intercept is not penalized in the default
+invocation!</p>
+<p>So we will use this objective with <code>CVXR</code> in the problem
+specification.</p>
 <pre class="r"><code>beta &lt;- Variable(p + 1)
 obj &lt;- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob &lt;- Problem(Minimize(obj))
 result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)</code></pre>
-<p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to compare. The results below should be close, and any differences are minor, due to different solver implementations.</p>
+<p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
+compare. The results below should be close, and any differences are
+minor, due to different solver implementations.</p>
 <pre class="r"><code>est.table &lt;- data.frame(&quot;CVXR.est&quot; = result$getValue(beta), &quot;GLMNET.est&quot; = as.vector(coef(fit1)))
 rownames(est.table) &lt;- paste0(&quot;$\\beta_{&quot;, 0:p, &quot;}$&quot;)
 knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
@@ -294,11 +307,17 @@ GLMNET.est
 </div>
 <div id="a-penalized-logistic-example" class="section level2">
 <h2>A Penalized Logistic Example</h2>
-<p>We now consider a logistic fit, again with a penalized term with a specified <span class="math inline">\(\lambda\)</span>.</p>
+<p>We now consider a logistic fit, again with a penalized term with a
+specified <span class="math inline">\(\lambda\)</span>.</p>
 <pre class="r"><code>lambda &lt;- .025
 y2 &lt;- sample(x = c(0, 1), size = n, replace = TRUE)
 fit2 &lt;-  glmnet(x, y2, lambda = lambda, thresh = thresh, family = &quot;binomial&quot;)</code></pre>
-<p>For logistic regression, the <code>glmnet</code> documentation states that the objective minimized is the negative log-likelihood divided by <span class="math inline">\(n\)</span> plus the penalty term which once again excludes the intercept in the default invocation. Below is the <code>CVXR</code> formulation, where we use the <code>logistic</code> atom as noted earlier in our other example on <a href="/cvxr_examples/logistic-regression">logistic regression.</a></p>
+<p>For logistic regression, the <code>glmnet</code> documentation states that the
+objective minimized is the negative log-likelihood divided by <span class="math inline">\(n\)</span> plus
+the penalty term which once again excludes the intercept in the
+default invocation. Below is the <code>CVXR</code> formulation, where we use the
+<code>logistic</code> atom as noted earlier in our other example on <a href="/cvxr_examples/logistic-regression">logistic
+regression.</a></p>
 <pre class="r"><code>beta &lt;- Variable(p + 1)
 obj2 &lt;- (sum(xDesign[y2 &lt;= 0, ] %*% beta) + sum(logistic(-xDesign %*% beta))) / n +
     lambda * p_norm(beta[-1], 1)
@@ -563,10 +582,10 @@ GLMNET.est
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -575,24 +594,24 @@ GLMNET.est
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_2.0-16    foreach_1.4.4    Matrix_1.2-17    kableExtra_1.1.0
-## [5] CVXR_0.99-5     
+## [1] glmnet_2.0-18    foreach_1.4.4    Matrix_1.2-17    kableExtra_1.1.0
+## [5] CVXR_0.99-6     
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.5-13.5      Rcpp_1.0.1        highr_0.8        
-##  [4] compiler_3.6.0    pillar_1.3.1      iterators_1.0.10 
+##  [4] compiler_3.6.0    pillar_1.4.1      iterators_1.0.10 
 ##  [7] R.methodsS3_1.7.1 R.utils_2.8.0     tools_3.6.0      
-## [10] digest_0.6.18     bit_1.1-14        viridisLite_0.3.0
-## [13] evaluate_0.13     tibble_2.1.1      lattice_0.20-38  
+## [10] digest_0.6.19     bit_1.1-14        viridisLite_0.3.0
+## [13] evaluate_0.14     tibble_2.1.2      lattice_0.20-38  
 ## [16] pkgconfig_2.0.2   rlang_0.3.4       rstudioapi_0.10  
-## [19] yaml_2.2.0        blogdown_0.12     xfun_0.6         
+## [19] yaml_2.2.0        blogdown_0.12.1   xfun_0.7         
 ## [22] xml2_1.2.0        httr_1.4.0        Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5.1   stringr_1.4.0     knitr_1.22       
+## [25] ECOSolveR_0.5.2   stringr_1.4.0     knitr_1.23       
 ## [28] hms_0.4.2         webshot_0.5.1     bit64_0.9-7      
 ## [31] grid_3.6.0        glue_1.3.1        R6_2.4.0         
-## [34] rmarkdown_1.12    bookdown_0.9      readr_1.3.1      
+## [34] rmarkdown_1.13    bookdown_0.11     readr_1.3.1      
 ## [37] magrittr_1.5      codetools_0.2-16  scales_1.0.0     
-## [40] htmltools_0.3.6   scs_1.2-3         rvest_0.3.3      
+## [40] htmltools_0.3.6   scs_1.2-3         rvest_0.3.4      
 ## [43] colorspace_1.4-1  stringi_1.4.3     munsell_0.5.0    
 ## [46] crayon_1.3.4      R.oo_1.22.0</code></pre>
 </div>

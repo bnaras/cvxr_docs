@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.55.4" />
+	<meta name="generator" content="Hugo 0.55.6" />
 	
 	<title>Convex Optimization in R &mdash; CVXR</title>
 	
@@ -30,50 +30,93 @@
 
 <div id="what-is-cvxr" class="section level2">
 <h2>What is <code>CVXR</code>?</h2>
-<p><code>CVXR</code> is an R package that provides an object-oriented modeling language for convex optimization, similar to <code>CVX</code>, <code>CVXPY</code>, <code>YALMIP</code>, and <code>Convex.jl</code>. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties. <code>CVXR</code> then applies signed <a href="../post/cvxr_dcp">disciplined convex programming (DCP)</a> to verify the problem’s convexity. Once verified, the problem is converted into standard conic form using graph implementations and passed to a cone solver such as <a href="https://github.com/embotech/ecos">ECOS</a> or <a href="https://github.com/cvxgrp/scs">SCS</a>.</p>
+<p><code>CVXR</code> is an R package that provides an object-oriented modeling
+language for convex optimization, similar to <code>CVX</code>, <code>CVXPY</code>, <code>YALMIP</code>,
+and <code>Convex.jl</code>. It allows the user to formulate convex optimization
+problems in a natural mathematical syntax rather than the restrictive
+standard form required by most solvers. The user specifies an
+objective and set of constraints by combining constants, variables,
+and parameters using a library of functions with known mathematical
+properties. <code>CVXR</code> then applies
+signed <a href="../post/cvxr_dcp">disciplined convex programming (DCP)</a> to
+verify the problem’s convexity. Once verified, the problem is
+converted into standard conic form using graph implementations and
+passed to a cone solver such
+as <a href="https://github.com/embotech/ecos">ECOS</a>
+or <a href="https://github.com/cvxgrp/scs">SCS</a>.</p>
 </div>
 <div id="cvxr-paper" class="section level2">
 <h2><code>CVXR</code> paper</h2>
-<p>A preliminary draft our paper is available <a href="https://web.stanford.edu/~boyd/papers/cvxr_paper.html">here</a>.</p>
+<p>A preliminary draft our paper is
+available
+<a href="https://web.stanford.edu/~boyd/papers/cvxr_paper.html">here</a>.</p>
 </div>
 <div id="news" class="section level2">
 <h2>News</h2>
-<p>For the latest news, please see the <a href="https://anqif.github.io/CVXR">Package Documentation</a>.</p>
-<p><code>CVXR</code> continues to be developed on <a href="https://github.com/anqif">Github</a>. The current release implements all of the <code>CVXPY</code> atoms except for <code>geo_mean</code> and parameters. The latter is not an impediment since any parameter can be replaced by a variable.</p>
+<p>For the latest news, please see the <a href="https://anqif.github.io/CVXR">Package
+Documentation</a>.</p>
+<p><code>CVXR</code> continues to be developed
+on <a href="https://github.com/anqif">Github</a>. The current release implements all of
+the <code>CVXPY</code> atoms except for <code>geo_mean</code> and parameters. The latter is
+not an impediment since any parameter can be replaced by a variable.</p>
 </div>
 <div id="installing-cvxr" class="section level2">
 <h2>Installing <code>CVXR</code></h2>
-<p><code>CVXR</code> is installed like any other R package from <a href="https://cloud.r-project.org">CRAN</a>.</p>
+<p><code>CVXR</code> is installed like any other R package
+from <a href="https://cloud.r-project.org">CRAN</a>.</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
 <p>Two videos provide a good starting point:</p>
 <ul>
-<li><a href="https://www.youtube.com/watch?v=MyglbtnmQ8A">Anqi Fu’s talk</a> at <a href="http://user2018.r-project.org">useR! 2018</a></li>
-<li><a href="http://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/CVXR-An-R-Package-for-Modeling-Convex-Optimization-Problems">Anqi’s talk</a> at <a href="http://user2016.r-project.org">useR! 2016</a> introducing <code>CVXR</code>.</li>
+<li><a href="https://www.youtube.com/watch?v=MyglbtnmQ8A">Anqi Fu’s talk</a> at
+<a href="http://user2018.r-project.org">useR! 2018</a></li>
+<li><a href="http://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/CVXR-An-R-Package-for-Modeling-Convex-Optimization-Problems">Anqi’s
+talk</a>
+at <a href="http://user2016.r-project.org">useR! 2016</a> introducing <code>CVXR</code>.</li>
 </ul>
-<p>We are excited to be presenting a tutorial at <a href="http://user2019.r-project.org/tutorials/">useR! 2019</a>. We hope to see you there.</p>
-<p>An introductory vignette is installed with the package and can be viewed using <code>vignette(&quot;cvxr_intro&quot;, package = &quot;CVXR&quot;)</code>.</p>
-<p>A large set of examples, many ported from <code>CVXPY</code>, are available on this site in the <a href="../post/cvxr_examples/">Examples</a> section.</p>
+<p>We are excited to be presenting a tutorial at <a href="http://user2019.r-project.org/tutorials/">useR!
+2019</a>. We hope to see you
+there.</p>
+<p>An introductory vignette is installed with the package and can be
+viewed using <code>vignette("cvxr_intro", package = "CVXR")</code>.</p>
+<p>A large set of examples, many ported from <code>CVXPY</code>, are available on
+this site in the <a href="../post/cvxr_examples/">Examples</a> section.</p>
 </div>
 <div id="citing-cvxr" class="section level2">
 <h2>Citing <code>CVXR</code></h2>
-<p>If you use <code>CVXR</code> in your work, please consider citing the paper by <span class="citation">Fu, Narasimhan, and Boyd (2017)</span> below.</p>
+<p>If you use <code>CVXR</code> in your work, please consider citing the paper
+by <span class="citation">Fu, Narasimhan, and Boyd (2017)</span> below.</p>
 </div>
 <div id="acknowledgements" class="section level2">
 <h2>Acknowledgements</h2>
-<p>We are grateful to <a href="https://web.stanford.edu/~stevend2/">Steven Diamond</a>, <a href="https://people.eecs.berkeley.edu/~miller_john/">John Miller</a>, and Paul Kunsberg Rosenfield for their contributions to the software’s development. In particular, we are indebted to Steven Diamond for his work on <a href="http://www.cvxpy.org/en/latest/">CVXPY</a>. Most of <code>CVXR</code>’s code, documentation, and examples were ported from his Python library.</p>
+<p>We are grateful
+to
+<a href="https://web.stanford.edu/~stevend2/">Steven Diamond</a>,
+<a href="https://people.eecs.berkeley.edu/~miller_john/">John Miller</a>, and
+Paul Kunsberg Rosenfield for their contributions to the software’s
+development. In particular, we are indebted to Steven Diamond for his
+work on <a href="http://www.cvxpy.org/en/latest/">CVXPY</a>. Most of <code>CVXR</code>’s code,
+documentation, and examples were ported from his Python library.</p>
 </div>
 <div id="about-this-site" class="section level2">
 <h2>About this site</h2>
-<p>Much of the documentation on this site was modified from <a href="https://cvxpy.org"><code>CVXPY</code></a> in a semi-automated way.</p>
-<p>This site was constructed using <a href="http://rmarkdown.rstudio.com/">R markdown documents</a>, the wonderful <a href="https://cloud.r-package.org/package=%22blogdown%22">blogdown</a> package by <a href="https://yihui.name/">Yihui Xie</a>, and the <a href="https://themes.gohugo.io/theme/hugo-alabaster-theme/">Hugo Alabaster theme</a>. The pages are served out of the <a href="https://github.com/bnaras/cvxr_docs">CVXR docs</a> repository.</p>
+<p>Much of the documentation on this site was modified
+from <a href="https://cvxpy.org"><code>CVXPY</code></a> in a semi-automated way.</p>
+<p>This site was constructed
+using <a href="http://rmarkdown.rstudio.com/">R markdown documents</a>, the
+wonderful <a href="https://cloud.r-package.org/package=%22blogdown%22">blogdown</a>
+package by <a href="https://yihui.name/">Yihui Xie</a>, and
+the
+<a href="https://themes.gohugo.io/theme/hugo-alabaster-theme/">Hugo Alabaster theme</a>. The
+pages are served out of
+the <a href="https://github.com/bnaras/cvxr_docs">CVXR docs</a> repository.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-fu:naras:boyd:2017">
-<p>Fu, Anqi, Balasubramanian Narasimhan, and Stephen Boyd. 2017. “CVXR: An R Package for Disciplined Convex Optimization.” Working Paper. <a href="https://web.stanford.edu/~boyd/papers/cvxr_paper.html" class="uri">https://web.stanford.edu/~boyd/papers/cvxr_paper.html</a>.</p>
+<p>Fu, Anqi, Balasubramanian Narasimhan, and Stephen Boyd. 2017. “CVXR: An R Package for Disciplined Convex Optimization.” <a href="https://web.stanford.edu/~boyd/papers/cvxr_paper.html">https://web.stanford.edu/~boyd/papers/cvxr_paper.html</a>.</p>
 </div>
 </div>
 </div>

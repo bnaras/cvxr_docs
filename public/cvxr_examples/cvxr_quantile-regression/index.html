@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.55.4" />
+	<meta name="generator" content="Hugo 0.55.6" />
 	
 	<title>Quantile Regression &mdash; CVXR</title>
 	
@@ -31,15 +31,22 @@
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Quantile regression is another variation on least squares . The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
+<p>Quantile regression is another variation on least squares
+. The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
 <p><span class="math display">\[
     \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
 \]</span></p>
-<p>where <span class="math inline">\(\tau \in (0,1)\)</span> specifies the quantile. The problem as before is to minimize the total residual loss. This model is commonly used in ecology, healthcare, and other fields where the mean alone is not enough to capture complex relationships between variables. <code>CVXR</code> allows us to create a function to represent the loss and integrate it seamlessly into the problem definition, as illustrated below.</p>
+<p>where <span class="math inline">\(\tau \in (0,1)\)</span> specifies the quantile. The problem as before
+is to minimize the total residual loss. This model is commonly used in
+ecology, healthcare, and other fields where the mean alone is not
+enough to capture complex relationships between variables. <code>CVXR</code>
+allows us to create a function to represent the loss and integrate it
+seamlessly into the problem definition, as illustrated below.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>We will use an example from the <code>quantreg</code> package. The vignette provides an example of the estimation and plot.</p>
+<p>We will use an example from the <code>quantreg</code> package. The vignette
+provides an example of the estimation and plot.</p>
 <pre class="r"><code>data(engel)
 p &lt;- ggplot(data = engel) +
     geom_point(mapping = aes(x = income, y = foodexp), color = &quot;blue&quot;)
@@ -148,7 +155,8 @@ income
 </tr>
 </tbody>
 </table>
-<p>The <code>CVXR</code> formulation follows. Note we make use of <code>model.matrix</code> to get the intercept column painlessly.</p>
+<p>The <code>CVXR</code> formulation follows. Note we make use of <code>model.matrix</code> to
+get the intercept column painlessly.</p>
 <pre class="r"><code>X &lt;- model.matrix(foodexp ~ income, data = engel)
 y &lt;- matrix(engel[, &quot;foodexp&quot;], ncol = 1)
 beta &lt;- Variable(2)
@@ -161,7 +169,8 @@ solutions &lt;- sapply(taus, function(tau) {
 solutions &lt;- data.frame(coef(lm(foodexp ~ income, data = engel)),
                         solutions)
 names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))</code></pre>
-<p>Here is a table similar to the above with the OLS estimate added in for easy comparison.</p>
+<p>Here is a table similar to the above with the OLS estimate added in
+for easy comparison.</p>
 <pre class="r"><code>knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `CVXR`&quot;) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
     column_spec(1:8, background = &quot;#ececec&quot;)</code></pre>
@@ -258,10 +267,10 @@ income
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -271,27 +280,27 @@ income
 ## 
 ## other attached packages:
 ## [1] quantreg_5.38    SparseM_1.77     kableExtra_1.1.0 ggplot2_3.1.1   
-## [5] CVXR_0.99-5     
+## [5] CVXR_0.99-6     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5   xfun_0.6           purrr_0.3.2       
+##  [1] tidyselect_0.2.5   xfun_0.7           purrr_0.3.2       
 ##  [4] lattice_0.20-38    colorspace_1.4-1   htmltools_0.3.6   
 ##  [7] viridisLite_0.3.0  yaml_2.2.0         gmp_0.5-13.5      
-## [10] rlang_0.3.4        R.oo_1.22.0        pillar_1.3.1      
+## [10] rlang_0.3.4        R.oo_1.22.0        pillar_1.4.1      
 ## [13] glue_1.3.1         Rmpfr_0.7-2        withr_2.1.2       
 ## [16] R.utils_2.8.0      bit64_0.9-7        scs_1.2-3         
 ## [19] plyr_1.8.4         stringr_1.4.0      MatrixModels_0.4-1
-## [22] munsell_0.5.0      blogdown_0.12      gtable_0.3.0      
-## [25] rvest_0.3.3        R.methodsS3_1.7.1  evaluate_0.13     
-## [28] labeling_0.3       knitr_1.22         highr_0.8         
+## [22] munsell_0.5.0      blogdown_0.12.1    gtable_0.3.0      
+## [25] rvest_0.3.4        R.methodsS3_1.7.1  evaluate_0.14     
+## [28] labeling_0.3       knitr_1.23         highr_0.8         
 ## [31] Rcpp_1.0.1         readr_1.3.1        scales_1.0.0      
 ## [34] webshot_0.5.1      bit_1.1-14         hms_0.4.2         
-## [37] digest_0.6.18      stringi_1.4.3      bookdown_0.9      
-## [40] dplyr_0.8.0.1      grid_3.6.0         ECOSolveR_0.5.1   
+## [37] digest_0.6.19      stringi_1.4.3      bookdown_0.11     
+## [40] dplyr_0.8.1        grid_3.6.0         ECOSolveR_0.5.2   
 ## [43] tools_3.6.0        magrittr_1.5       lazyeval_0.2.2    
-## [46] tibble_2.1.1       crayon_1.3.4       pkgconfig_2.0.2   
+## [46] tibble_2.1.2       crayon_1.3.4       pkgconfig_2.0.2   
 ## [49] Matrix_1.2-17      xml2_1.2.0         assertthat_0.2.1  
-## [52] rmarkdown_1.12     httr_1.4.0         rstudioapi_0.10   
+## [52] rmarkdown_1.13     httr_1.4.0         rstudioapi_0.10   
 ## [55] R6_2.4.0           compiler_3.6.0</code></pre>
 </div>
 <div id="source" class="section level2">

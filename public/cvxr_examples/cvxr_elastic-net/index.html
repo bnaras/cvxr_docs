@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.55.4" />
+	<meta name="generator" content="Hugo 0.55.6" />
 	
 	<title>Elastic Net &mdash; CVXR</title>
 	
@@ -31,18 +31,28 @@
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the <span class="math inline">\(l_1\)</span>-norm and squared <span class="math inline">\(l_2\)</span>-norm, combined in the elastic net regression model <span class="citation">(H. Zou <a href="#ref-elasticnet">2005</a>, <span class="citation">Friedman, Hastie, and Tibshirani (<a href="#ref-glmnet">2010</a>)</span>)</span>,</p>
+<p>Often in applications, we encounter problems that require
+regularization to prevent overfitting, introduce sparsity, facilitate
+variable selection, or impose prior distributions on parameters. Two
+of the most common regularization functions are the <span class="math inline">\(l_1\)</span>-norm and
+squared <span class="math inline">\(l_2\)</span>-norm, combined in the elastic net regression model
+<span class="citation">(H. Zou <a href="#ref-elasticnet" role="doc-biblioref">2005</a>, <span class="citation">@glmnet</span>)</span>,</p>
 <p><span class="math display">\[
 \begin{array}{ll} 
 \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2m}\|y - X\beta\|_2^2 +
 \lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). 
 \end{array}
 \]</span></p>
-<p>Here <span class="math inline">\(\lambda \geq 0\)</span> is the overall regularization weight and <span class="math inline">\(\alpha \in [0,1]\)</span> controls the relative <span class="math inline">\(l_1\)</span> versus squared <span class="math inline">\(l_2\)</span> penalty. Thus, this model encompasses both ridge (<span class="math inline">\(\alpha = 0\)</span>) and lasso (<span class="math inline">\(\alpha = 1\)</span>) regression.</p>
+<p>Here <span class="math inline">\(\lambda \geq 0\)</span> is the overall regularization weight and
+<span class="math inline">\(\alpha \in [0,1]\)</span> controls the relative <span class="math inline">\(l_1\)</span> versus squared <span class="math inline">\(l_2\)</span>
+penalty. Thus, this model encompasses both ridge (<span class="math inline">\(\alpha = 0\)</span>) and
+lasso (<span class="math inline">\(\alpha = 1\)</span>) regression.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>To solve this problem in <code>CVXR</code>, we first define a function that calculates the regularization term given the variable and penalty weights.</p>
+<p>To solve this problem in <code>CVXR</code>, we first define a function that
+calculates the regularization term given the variable and penalty
+weights.</p>
 <pre class="r"><code>elastic_reg &lt;- function(beta, lambda = 0, alpha = 0) {
     ridge &lt;- (1 - alpha) / 2 * sum(beta^2)
     lasso &lt;- alpha * p_norm(beta, 1)
@@ -51,7 +61,11 @@
 <p>Later, we will add it to the scaled least squares loss as shown below.</p>
 <pre class="r"><code>loss &lt;- sum((y - X %*% beta)^2) / (2 * n)
 obj &lt;- loss + elastic_reg(beta, lambda, alpha)</code></pre>
-<p>The advantage of this modular approach is that we can easily incorporate elastic net regularization into other regression models. For instance, if we wanted to run regularized Huber regression, <code>CVXR</code> allows us to reuse the above code with just a single changed line.</p>
+<p>The advantage of this modular approach is that we can easily
+incorporate elastic net regularization into other regression
+models. For instance, if we wanted to run regularized Huber
+regression, <code>CVXR</code> allows us to reuse the above code with just a
+single changed line.</p>
 <pre class="r"><code>loss &lt;- huber(y - X %*% beta, M)</code></pre>
 <p>We generate some synthetic sparse data for this example.</p>
 <pre class="r"><code>set.seed(1)
@@ -1600,10 +1614,10 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -1612,27 +1626,27 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_2.0-16    foreach_1.4.4    Matrix_1.2-17    kableExtra_1.1.0
-## [5] ggplot2_3.1.1    CVXR_0.99-5     
+## [1] glmnet_2.0-18    foreach_1.4.4    Matrix_1.2-17    kableExtra_1.1.0
+## [5] ggplot2_3.1.1    CVXR_0.99-6     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5  xfun_0.6          purrr_0.3.2      
+##  [1] tidyselect_0.2.5  xfun_0.7          purrr_0.3.2      
 ##  [4] lattice_0.20-38   colorspace_1.4-1  htmltools_0.3.6  
 ##  [7] viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5     
-## [10] rlang_0.3.4       R.oo_1.22.0       pillar_1.3.1     
+## [10] rlang_0.3.4       R.oo_1.22.0       pillar_1.4.1     
 ## [13] glue_1.3.1        Rmpfr_0.7-2       withr_2.1.2      
 ## [16] R.utils_2.8.0     bit64_0.9-7       scs_1.2-3        
 ## [19] plyr_1.8.4        stringr_1.4.0     munsell_0.5.0    
-## [22] blogdown_0.12     gtable_0.3.0      rvest_0.3.3      
-## [25] R.methodsS3_1.7.1 codetools_0.2-16  evaluate_0.13    
-## [28] knitr_1.22        highr_0.8         Rcpp_1.0.1       
+## [22] blogdown_0.12.1   gtable_0.3.0      rvest_0.3.4      
+## [25] R.methodsS3_1.7.1 codetools_0.2-16  evaluate_0.14    
+## [28] knitr_1.23        highr_0.8         Rcpp_1.0.1       
 ## [31] readr_1.3.1       scales_1.0.0      webshot_0.5.1    
-## [34] bit_1.1-14        hms_0.4.2         digest_0.6.18    
-## [37] stringi_1.4.3     bookdown_0.9      dplyr_0.8.0.1    
-## [40] grid_3.6.0        ECOSolveR_0.5.1   tools_3.6.0      
-## [43] magrittr_1.5      lazyeval_0.2.2    tibble_2.1.1     
+## [34] bit_1.1-14        hms_0.4.2         digest_0.6.19    
+## [37] stringi_1.4.3     bookdown_0.11     dplyr_0.8.1      
+## [40] grid_3.6.0        ECOSolveR_0.5.2   tools_3.6.0      
+## [43] magrittr_1.5      lazyeval_0.2.2    tibble_2.1.2     
 ## [46] crayon_1.3.4      pkgconfig_2.0.2   xml2_1.2.0       
-## [49] assertthat_0.2.1  rmarkdown_1.12    httr_1.4.0       
+## [49] assertthat_0.2.1  rmarkdown_1.13    httr_1.4.0       
 ## [52] rstudioapi_0.10   iterators_1.0.10  R6_2.4.0         
 ## [55] compiler_3.6.0</code></pre>
 </div>

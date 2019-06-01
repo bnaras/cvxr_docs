@@ -14,20 +14,38 @@ tags: []
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression <span class="citation">(Cox <a href="#ref-Cox:1958">1958</a>, <span class="citation">Freedman (<a href="#ref-Freedman:2009">2009</a>)</span>)</span>.</p>
-<p>Suppose now that <span class="math inline">\(y_i \in \{0,1\}\)</span> is a binary class indicator. The conditional response is modeled as <span class="math inline">\(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\)</span>, where <span class="math inline">\(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\)</span> is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</p>
+<p>In classification problems, the goal is to predict the class
+membership based on predictors. Often there are two classes and one of
+the most popular methods for binary classification is logistic
+regression <span class="citation">(Cox <a href="#ref-Cox:1958" role="doc-biblioref">1958</a>, @Freedman:2009)</span>.</p>
+<p>Suppose now that <span class="math inline">\(y_i \in \{0,1\}\)</span> is a binary class indicator. The
+conditional response is modeled as <span class="math inline">\(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\)</span>, where <span class="math inline">\(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\)</span> is the logistic function, and maximize the
+log-likelihood function, yielding the optimization problem</p>
 <p><span class="math display">\[
 \begin{array}{ll} 
 \underset{\beta}{\mbox{maximize}} &amp; \sum_{i=1}^m \{
 y_i\log(g_{\beta}(x_i)) + (1-y_i)\log(1 - g_{\beta}(x_i)) \}.
 \end{array} 
 \]</span></p>
-<p><code>CVXR</code> provides the <code>logistic</code> atom as a shortcut for <span class="math inline">\(f(z) = \log(1 + e^z)\)</span> to express the optimization problem. One may be tempted to use <code>log(1 + exp(X %*% beta))</code> as in conventional <code>R</code> syntax. However, this representation of <span class="math inline">\(f(z)\)</span> violates the DCP composition rule, so the <code>CVXR</code> parser will reject the problem even though the objective is convex. Users who wish to employ a function that is convex, but not DCP compliant should check the documentation for a custom atom or consider a different formulation.</p>
+<p><code>CVXR</code> provides the <code>logistic</code> atom as a shortcut for <span class="math inline">\(f(z) = \log(1 + e^z)\)</span> to express the optimization problem. One may be
+tempted to use <code>log(1 + exp(X %*% beta))</code> as in conventional
+<code>R</code> syntax. However, this representation of <span class="math inline">\(f(z)\)</span> violates
+the DCP composition rule, so the <code>CVXR</code> parser will reject the
+problem even though the objective is convex. Users who wish to employ
+a function that is convex, but not DCP compliant should check the
+documentation for a custom atom or consider a different formulation.</p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>The formulation is very similar to OLS, except for the specification of the objective.</p>
-<p>In the example below, we demonstrate a <em>key feature</em> of <code>CVXR</code>, that of evaluating various functions of the variables that are solutions to the optimization problem. For instance, the log-odds, <span class="math inline">\(X\hat{\beta}\)</span>, where <span class="math inline">\(\hat{\beta}\)</span> is the logistic regression estimate, is simply specified as <code>X %*% beta</code> below, and the <code>getValue</code> function of the result will compute its value. (Any other function of the estimate can be similarly computed.)</p>
+<p>The formulation is very similar to OLS, except for the specification
+of the objective.</p>
+<p>In the example below, we demonstrate a <em>key feature</em> of <code>CVXR</code>, that
+of evaluating various functions of the variables that are solutions to
+the optimization problem. For instance, the log-odds, <span class="math inline">\(X\hat{\beta}\)</span>,
+where <span class="math inline">\(\hat{\beta}\)</span> is the logistic regression estimate, is simply
+specified as <code>X %*% beta</code> below, and the <code>getValue</code> function of the
+result will compute its value. (Any other function of the estimate
+can be similarly computed.)</p>
 <pre class="r"><code>n &lt;- 20
 m &lt;- 1000
 offset &lt;- 0
@@ -293,8 +311,10 @@ GLM.est
 </tr>
 </tbody>
 </table>
-<p>The sign difference is due to the coding of <span class="math inline">\(y\)</span> as <span class="math inline">\((-1, 1)\)</span> for <code>CVXR</code> rather than <span class="math inline">\((0, 1)\)</span> for <code>stats::glm</code>.</p>
-<p>So, for completeness, if we were to code the <span class="math inline">\(y\)</span> as <span class="math inline">\((0, 1)\)</span>, the objective will have to be modified as below.</p>
+<p>The sign difference is due to the coding of <span class="math inline">\(y\)</span> as <span class="math inline">\((-1, 1)\)</span> for
+<code>CVXR</code> rather than <span class="math inline">\((0, 1)\)</span> for <code>stats::glm</code>.</p>
+<p>So, for completeness, if we were to code the <span class="math inline">\(y\)</span> as <span class="math inline">\((0, 1)\)</span>, the
+objective will have to be modified as below.</p>
 <pre class="r"><code>obj &lt;- -sum(X[y &lt;= 0, ] %*% beta) - sum(logistic(-X %*% beta))
 prob &lt;- Problem(Maximize(obj))
 result &lt;- solve(prob)
@@ -547,10 +567,10 @@ GLM.est
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.4
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.5/lib/libopenblasp-r0.3.5.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -559,23 +579,23 @@ GLM.est
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_0.99-5     
+## [1] kableExtra_1.1.0 CVXR_0.99-6     
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.5-13.5      Rcpp_1.0.1        highr_0.8        
-##  [4] compiler_3.6.0    pillar_1.3.1      R.methodsS3_1.7.1
-##  [7] R.utils_2.8.0     tools_3.6.0       digest_0.6.18    
-## [10] bit_1.1-14        viridisLite_0.3.0 evaluate_0.13    
-## [13] tibble_2.1.1      lattice_0.20-38   pkgconfig_2.0.2  
+##  [4] compiler_3.6.0    pillar_1.4.1      R.methodsS3_1.7.1
+##  [7] R.utils_2.8.0     tools_3.6.0       digest_0.6.19    
+## [10] bit_1.1-14        viridisLite_0.3.0 evaluate_0.14    
+## [13] tibble_2.1.2      lattice_0.20-38   pkgconfig_2.0.2  
 ## [16] rlang_0.3.4       Matrix_1.2-17     rstudioapi_0.10  
-## [19] yaml_2.2.0        blogdown_0.12     xfun_0.6         
+## [19] yaml_2.2.0        blogdown_0.12.1   xfun_0.7         
 ## [22] xml2_1.2.0        httr_1.4.0        Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5.1   stringr_1.4.0     knitr_1.22       
+## [25] ECOSolveR_0.5.2   stringr_1.4.0     knitr_1.23       
 ## [28] hms_0.4.2         webshot_0.5.1     bit64_0.9-7      
 ## [31] grid_3.6.0        glue_1.3.1        R6_2.4.0         
-## [34] rmarkdown_1.12    bookdown_0.9      readr_1.3.1      
+## [34] rmarkdown_1.13    bookdown_0.11     readr_1.3.1      
 ## [37] magrittr_1.5      scales_1.0.0      htmltools_0.3.6  
-## [40] scs_1.2-3         rvest_0.3.3       colorspace_1.4-1 
+## [40] scs_1.2-3         rvest_0.3.4       colorspace_1.4-1 
 ## [43] stringi_1.4.3     munsell_0.5.0     crayon_1.3.4     
 ## [46] R.oo_1.22.0</code></pre>
 </div>
