@@ -92,9 +92,11 @@ Two videos provide a good starting point:
 talk](http://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/CVXR-An-R-Package-for-Modeling-Convex-Optimization-Problems)
 at [useR!  2016](http://user2016.r-project.org) introducing `CVXR`. 
 
-We are excited to be presenting a tutorial at [useR!
-2019](http://user2019.r-project.org/tutorials/). We hope to see you
-there. 
+Thanks to all attendees who participated in our tutorial at [useR!
+2019](http://user2019.r-project.org/tutorials/). The tutorial
+materials including exercises and solutions are available as a
+[bookdown project](https://github.com/bnaras/cvxr_tutorial). Follow
+the instructions in the README.
 
 An introductory vignette is installed with the package and can be
 viewed using `vignette("cvxr_intro", package = "CVXR")`.
