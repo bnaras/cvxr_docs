@@ -145,15 +145,18 @@ The `survey` function for this calibration is invoked as `cal.linear`.
 ## Quadratic
 Phi_Q  <- Minimize(sum_squares(g - 1) / 2)
 p <- Problem(Phi_Q, constraints)
-res <- solve(p, solver = "SCS")
+res <- solve(p)
 w_cvxr_q <- di * res$getValue(g)
 w_survey_q <- weights(calibrate(design_api, formula, population = T, calfun = cal.linear))
 ```
 
-Note the use of the `SCS` solver above; the default `ECOS` solver
-produces a different number of unique weights, for reasons we have not
-fully investigated yet. (_Such differences are not unheard of among
-solvers!_)
+__N.B.__ This example used the `SCS` solver (before `CVXR v0.99-7)` as
+the default `ECOS` solver produced a different number of unique
+weights. With updates to both `ECOSolveR` and `scs`, the situation is
+now reversed. _Such differences are not unheard of among solvers!_
+However, one can obtain the same results by using additional arguments
+`solver = "SCS"` and `acceleration_lookback = 5L` in the call to
+`CVXR::solve()` above.
 
 ```{r, echo = FALSE}
 build_table(d1 = build_df(apisrs, "Survey", w_survey_q),

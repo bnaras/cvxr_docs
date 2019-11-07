@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.55.6" />
+	<meta name="generator" content="Hugo 0.58.3" />
 	
 	<title>Integer Programming &mdash; CVXR</title>
 	
@@ -275,12 +275,12 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.0 (2019-04-26)
-## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.5
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-apple-darwin19.0.0 (64-bit)
+## Running under: macOS Catalina 10.15.1
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
 ## 
 ## locale:
 ## [1] C
@@ -289,39 +289,40 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.1.1    kableExtra_1.1.0 CVXR_0.99-6     
+## [1] ggplot2_3.2.1    kableExtra_1.1.0 CVXR_0.99-7     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reticulate_1.12         tidyselect_0.2.5       
-##  [3] xfun_0.7                slam_0.1-45            
-##  [5] purrr_0.3.2             lattice_0.20-38        
-##  [7] colorspace_1.4-1        htmltools_0.3.6        
-##  [9] viridisLite_0.3.0       yaml_2.2.0             
-## [11] gmp_0.5-13.5            rlang_0.3.4            
-## [13] R.oo_1.22.0             pillar_1.4.1           
-## [15] glue_1.3.1              Rmpfr_0.7-2            
-## [17] withr_2.1.2             R.utils_2.8.0          
-## [19] bit64_0.9-7             scs_1.2-3              
-## [21] plyr_1.8.4              stringr_1.4.0          
-## [23] munsell_0.5.0           blogdown_0.12.1        
+##  [1] reticulate_1.13         tidyselect_0.2.5       
+##  [3] xfun_0.10               slam_0.1-46            
+##  [5] purrr_0.3.3             lattice_0.20-38        
+##  [7] colorspace_1.4-1        vctrs_0.2.0            
+##  [9] htmltools_0.4.0         viridisLite_0.3.0      
+## [11] yaml_2.2.0              gmp_0.5-13.5           
+## [13] rlang_0.4.1             R.oo_1.23.0            
+## [15] pillar_1.4.2            glue_1.3.1             
+## [17] Rmpfr_0.7-2             withr_2.1.2            
+## [19] R.utils_2.9.0           bit64_0.9-7            
+## [21] scs_1.3-1               stringr_1.4.0          
+## [23] munsell_0.5.0           blogdown_0.16          
 ## [25] gtable_0.3.0            rvest_0.3.4            
-## [27] R.methodsS3_1.7.1       lpSolveAPI_5.5.2.0-17.1
+## [27] R.methodsS3_1.7.1       lpSolveAPI_5.5.2.0-17.4
 ## [29] evaluate_0.14           labeling_0.3           
-## [31] knitr_1.23              highr_0.8              
-## [33] Rcpp_1.0.1              readr_1.3.1            
-## [35] scales_1.0.0            jsonlite_1.6           
-## [37] webshot_0.5.1           bit_1.1-14             
-## [39] hms_0.4.2               digest_0.6.19          
-## [41] stringi_1.4.3           bookdown_0.11          
-## [43] dplyr_0.8.1             grid_3.6.0             
-## [45] Rglpk_0.6-4             ECOSolveR_0.5.2        
-## [47] tools_3.6.0             magrittr_1.5           
-## [49] lazyeval_0.2.2          tibble_2.1.2           
-## [51] crayon_1.3.4            pkgconfig_2.0.2        
-## [53] Matrix_1.2-17           xml2_1.2.0             
-## [55] assertthat_0.2.1        rmarkdown_1.13         
-## [57] httr_1.4.0              rstudioapi_0.10        
-## [59] R6_2.4.0                compiler_3.6.0</code></pre>
+## [31] knitr_1.25              highr_0.8              
+## [33] Rcpp_1.0.2              readr_1.3.1            
+## [35] backports_1.1.5         scales_1.0.0           
+## [37] jsonlite_1.6            webshot_0.5.1          
+## [39] bit_1.1-14              hms_0.5.2              
+## [41] digest_0.6.22           stringi_1.4.3          
+## [43] bookdown_0.14           dplyr_0.8.3            
+## [45] grid_3.6.1              Rglpk_0.6-4            
+## [47] ECOSolveR_0.5.3         tools_3.6.1            
+## [49] magrittr_1.5            lazyeval_0.2.2         
+## [51] tibble_2.1.3            crayon_1.3.4           
+## [53] pkgconfig_2.0.3         zeallot_0.1.0          
+## [55] Matrix_1.2-17           xml2_1.2.2             
+## [57] assertthat_0.2.1        rmarkdown_1.16         
+## [59] httr_1.4.1              rstudioapi_0.10        
+## [61] R6_2.4.0                compiler_3.6.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

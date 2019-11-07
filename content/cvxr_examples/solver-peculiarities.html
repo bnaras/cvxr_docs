@@ -47,21 +47,21 @@ cat(&quot;Solution status is&quot;, result$status)</code></pre>
 not completely solve the problem and in fact throws an error.</p>
 <div id="further-development" class="section level2">
 <h2>Further Development</h2>
-<p>Future versions of <code>CVXR</code> will improve support for the commercial
-solvers by taking advantage of problem reductions described in
-<span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018" role="doc-biblioref">2018</a>)</span> to hand the problem to solvers in a form that is
-closer to what the R packages (for those solvers) expect. This should
-provide better behavior and error reporting.</p>
+<p><code>CVXR v1.x</code> will improve support for the commercial solvers by taking
+advantage of problem reductions described in <span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018">2018</a>)</span> to hand
+the problem to solvers in a form that is closer to what the R packages
+(for those solvers) expect. This should provide better behavior and
+error reporting.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.0 (2019-04-26)
-## Platform: x86_64-apple-darwin18.5.0 (64-bit)
-## Running under: macOS Mojave 10.14.5
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-apple-darwin19.0.0 (64-bit)
+## Running under: macOS Catalina 10.15.1
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.6_1/lib/libopenblasp-r0.3.6.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -70,19 +70,20 @@ provide better behavior and error reporting.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-6
+## [1] CVXR_0.99-7
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.1        knitr_1.23        magrittr_1.5     
+##  [1] Rcpp_1.0.2        knitr_1.25        magrittr_1.5     
 ##  [4] bit_1.1-14        lattice_0.20-38   R6_2.4.0         
-##  [7] stringr_1.4.0     tools_3.6.0       grid_3.6.0       
-## [10] xfun_0.7          R.oo_1.22.0       scs_1.2-3        
-## [13] htmltools_0.3.6   yaml_2.2.0        bit64_0.9-7      
-## [16] digest_0.6.19     bookdown_0.11     Matrix_1.2-17    
-## [19] gmp_0.5-13.5      ECOSolveR_0.5.2   R.utils_2.8.0    
-## [22] evaluate_0.14     rmarkdown_1.13    blogdown_0.12.1  
-## [25] stringi_1.4.3     compiler_3.6.0    Rmpfr_0.7-2      
-## [28] R.methodsS3_1.7.1 jsonlite_1.6      reticulate_1.12</code></pre>
+##  [7] rlang_0.4.1       stringr_1.4.0     tools_3.6.1      
+## [10] grid_3.6.1        xfun_0.10         R.oo_1.23.0      
+## [13] scs_1.3-1         htmltools_0.4.0   yaml_2.2.0       
+## [16] bit64_0.9-7       digest_0.6.22     bookdown_0.14    
+## [19] Matrix_1.2-17     gmp_0.5-13.5      ECOSolveR_0.5.3  
+## [22] R.utils_2.9.0     evaluate_0.14     rmarkdown_1.16   
+## [25] blogdown_0.16     stringi_1.4.3     compiler_3.6.1   
+## [28] Rmpfr_0.7-2       R.methodsS3_1.7.1 jsonlite_1.6     
+## [31] reticulate_1.13</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -92,7 +93,7 @@ provide better behavior and error reporting.</p>
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-rewriting:2018">
-<p>Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. “A Rewriting System for Convex Optimization Problems.” <em>Journal of Control and Decision</em> 5 (1): 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554">https://doi.org/10.1080/23307706.2017.1397554</a>.</p>
+<p>Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. “A Rewriting System for Convex Optimization Problems.” <em>Journal of Control and Decision</em> 5 (1). Taylor &amp; Francis: 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554" class="uri">https://doi.org/10.1080/23307706.2017.1397554</a>.</p>
 </div>
 </div>
 </div>

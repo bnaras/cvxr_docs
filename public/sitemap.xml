@@ -5,13 +5,11 @@
   <url>
     <loc>/</loc>
     <lastmod>2018-11-30T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>/cvxr_examples/</loc>
     <lastmod>2018-11-30T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -140,12 +138,12 @@
   </url>
   
   <url>
-    <loc>/cvxr_functions/</loc>
+    <loc>/cvxr/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr/</loc>
+    <loc>/cvxr_functions/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
@@ -157,7 +155,6 @@
   <url>
     <loc>/categories/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -178,12 +175,10 @@
   <url>
     <loc>/categories/simple-least-squares/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/</loc>
-    <priority>0</priority>
   </url>
   
 </urlset>

@@ -272,6 +272,15 @@ Note: Due to changes in the sample function for R version 3.6+, some results her
     </item>
     
     <item>
+      <title>Convex Optimization in R</title>
+      <link>/cvxr/</link>
+      <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/cvxr/</guid>
+      <description>What is CVXR? CVXR is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
+    </item>
+    
+    <item>
       <title>CVXR Functions</title>
       <link>/cvxr_functions/</link>
       <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
@@ -279,15 +288,6 @@ Note: Due to changes in the sample function for R version 3.6+, some results her
       <guid>/cvxr_functions/</guid>
       <description>Functions Here we describe the functions that can be applied to CVXR expressions. CVXR uses the function information in this section and the Disciplined Convex Programming tools to mark expressions with a sign and curvature.
 Operators The infix operators +, -, *, %*%, / are treated as functions. + and - are affine functions. * and / are affine in CVXR because expr1*expr2 and expr1 %*% expr2 are allowed only when one of the expressions is constant and expr1/expr2 is allowed only when expr2 is a scalar constant.</description>
-    </item>
-    
-    <item>
-      <title>Convex Optimization in R</title>
-      <link>/cvxr/</link>
-      <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/cvxr/</guid>
-      <description>What is CVXR? CVXR is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
     </item>
     
     <item>
