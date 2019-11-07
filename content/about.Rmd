@@ -69,13 +69,16 @@ available
 ## News
 
 For the latest news, please see the [Package
-Documentation](https://www.cvxgrp.org/CVXR). 
-
-`CVXR` continues to be developed on
-[Github](https://github.com/cvxgrp/CVXR). The current release
+Documentation](https://www.cvxgrp.org/CVXR). The current release
 implements all of the `CVXPY` atoms except for `geo_mean` and
 parameters. The latter is not an impediment since any parameter can be
 replaced by a variable.
+
+`CVXR` continues to be developed on
+[Github](https://github.com/cvxgrp/CVXR).  The 1.0 branch of the repo
+is almost ready for release and is now being extensively tested. It
+has numerous improvements including an implementation of reductions
+plus interfaces to many more solvers.
 
 
 ## Installing `CVXR`
