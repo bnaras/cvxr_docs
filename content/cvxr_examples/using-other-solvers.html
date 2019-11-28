@@ -13,29 +13,35 @@ tags: []
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>The default installation of <code>CVXR</code> comes with two (imported) open source solvers:</p>
+<p>The default installation of <code>CVXR</code> comes with several (imported) open source solvers:</p>
 <ul>
 <li><a href="https://github.com/embotech/ecos">ECOS</a> and its mixed integer
 cousin <code>ECOS_BB</code> via the CRAN package
 <a href="https://cloud.r-project.org/package=ECOSolveR">ECOSolveR</a></li>
+<li><a href="https://www.osqp.org">OSQP</a></li>
 <li><a href="https://github.com/cvxgrp/scs">SCS</a> via the CRAN package
-<a href="https://cloud.r-project.org/package=scs">scs</a>.</li>
+<a href="https://cran.r-project.org/package=scs">scs</a>.</li>
 </ul>
 <p><code>CVXR</code> can also make use of several other open source solvers
 implemented in R packages.</p>
 <ul>
 <li>The linear and mixed integer programming package
 <a href="http://lpsolve.sourceforge.net/5.5/"><code>lpSolve</code></a> via the
-<a href="https://cloud.r-project.org/package=lpSolveAPI"><code>lpSolveAPI</code></a> package</li>
+<a href="https://cloud.r-project.org/package=lpSolveAPI"><code>lpSolveAPI</code></a>
+package. <strong>NOTE:</strong> This solver is now orphaned on CRAN and so is not
+supported any more.</li>
 <li>The linear and mixed integer programming package <a href="https://www.gnu.org/software/glpk/"><code>GLPK</code></a> via the
 <a href="https://cloud.r-project.org/package=Rglpk"><code>Rglpk</code></a> package.</li>
+<li>The CBC solver via the R package
+<a href="https://github.com/dirkschumacher/rcbc"><code>rcbc</code></a>. This is not yet on
+CRAN</li>
 </ul>
 <p>Since these are optional, you have to install these packages yourself.</p>
-<pre class="r"><code>lapply(list(LPSOLVE = &quot;lpSolveAPI&quot;,
+<pre class="r"><code>lapply(list(&quot;CBC&quot; = &quot;rcbc&quot;,
             GLPK = &quot;Rglpk&quot;),
        function(x) x %in% installed.packages()[, 1])</code></pre>
-<pre><code>## $LPSOLVE
-## [1] TRUE
+<pre><code>## $CBC
+## [1] FALSE
 ## 
 ## $GLPK
 ## [1] TRUE</code></pre>
@@ -45,32 +51,11 @@ indicate what solvers <code>CVXR</code> is aware of.</p>
 <div id="commercial-solvers" class="section level2">
 <h2>Commercial Solvers</h2>
 <p>A few commercial solvers are also currently supported: <a href="https://www.mosek.com">MOSEK</a> and
-<a href="https://www.gurobi.com">GUROBI</a>.</p>
-<p>At the moment, the support uses vendor python solver packages via
+<a href="https://www.gurobi.com">GUROBI</a>, <a href="https://www.ibm.com/analytics/cplex-optimizer">CPLEX</a></p>
+<p>Previous versions of <code>CVXR</code> used vendor python solver packages via
 <a href="https://cran.r-project.org/package=reticulate"><code>reticulate</code></a>, <em>not R
-packages</em>. Future versions will provide support directly using
-<a href="https://web.stanford.edu/~boyd/papers/cvxpy_rewriting.html"><em>problem
-reductions</em></a>,
-recently implemented in <a href="https://www.cvxpy.org/"><code>CVXPY</code> version 1.0</a>.</p>
-<p>Thus, one needs two pre-requisites for using these commercial solvers:</p>
-<ul>
-<li>a python installation in addition to R</li>
-<li>the
-<a href="https://cran.r-project.org/package=reticulate"><code>reticulate</code></a> R
-package.</li>
-</ul>
-<p>We also recommend that you ensure that <code>reticulate</code> is installed
-correctly and working. For example <code>reticulate::py_eval('1+1')</code> should return
-<code>2</code>.</p>
-<p><strong>N.B.</strong> If you have an Anaconda installation in your path, you have
-to account for the fact that there may be interactions when using
-RStudio and rendering documents. In particular, Anaconda may include
-its own version of pandoc and other tools that may conflict with what
-Rstudio needs to do its work properly.</p>
-<p>To be concrete, one problem we found was that the <code>MOSEK</code> solver was
-not recognized as being available in this rendered document, even
-though the command line interface showed it to be present. Ensuring an
-appropriate <code>PATH</code> variable solves the problem.</p>
+packages</em>. This has changed with version 1.0, where we directly call
+native R packages, resulting in a cleaner interface.</p>
 <div id="installing-mosek" class="section level3">
 <h3>Installing <code>MOSEK</code></h3>
 <p><a href="https://www.mosek.com">MOSEK</a> provides an academic version that is
@@ -120,23 +105,18 @@ your license as necessary.</p>
 ## [1] CVXR_0.99-7
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.2              lpSolveAPI_5.5.2.0-17.4
-##  [3] knitr_1.25              magrittr_1.5           
-##  [5] bit_1.1-14              lattice_0.20-38        
-##  [7] R6_2.4.0                rlang_0.4.1            
-##  [9] stringr_1.4.0           tools_3.6.1            
-## [11] grid_3.6.1              xfun_0.10              
-## [13] R.oo_1.23.0             scs_1.3-1              
-## [15] htmltools_0.4.0         yaml_2.2.0             
-## [17] bit64_0.9-7             digest_0.6.22          
-## [19] bookdown_0.14           Matrix_1.2-17          
-## [21] gmp_0.5-13.5            ECOSolveR_0.5.3        
-## [23] Rglpk_0.6-4             R.utils_2.9.0          
-## [25] slam_0.1-46             evaluate_0.14          
-## [27] rmarkdown_1.16          blogdown_0.16          
-## [29] stringi_1.4.3           compiler_3.6.1         
-## [31] Rmpfr_0.7-2             R.methodsS3_1.7.1      
-## [33] jsonlite_1.6            reticulate_1.13</code></pre>
+##  [1] Rcpp_1.0.3              lpSolveAPI_5.5.2.0-17.4 knitr_1.26             
+##  [4] magrittr_1.5            bit_1.1-14              lattice_0.20-38        
+##  [7] R6_2.4.1                rlang_0.4.2             stringr_1.4.0          
+## [10] tools_3.6.1             grid_3.6.1              xfun_0.11              
+## [13] R.oo_1.23.0             scs_1.3-2               htmltools_0.4.0        
+## [16] yaml_2.2.0              bit64_0.9-7             digest_0.6.23          
+## [19] bookdown_0.16           Matrix_1.2-17           gmp_0.5-13.5           
+## [22] ECOSolveR_0.5.3         Rglpk_0.6-4             R.utils_2.9.0          
+## [25] slam_0.1-46             evaluate_0.14           rmarkdown_1.17         
+## [28] blogdown_0.17           stringi_1.4.3           compiler_3.6.1         
+## [31] Rmpfr_0.7-2             R.methodsS3_1.7.1       jsonlite_1.6           
+## [34] reticulate_1.13</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

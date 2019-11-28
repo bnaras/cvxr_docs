@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>CVXR</title>
@@ -60,9 +60,9 @@ CVXR provides the Int and Bool constructors for specifying integer and boolean v
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_solver-peculiarities/</guid>
-      <description>The default solver in CVXR is ECOS. However, it is not always the best solver to use. As an example, let us consider again the catenary problem.
+      <description>The default solver in CVXR used to be ECOS. However, it is not always the best solver to use. As an example, let us consider again the catenary problem.
 We will change the problem slightly to use a finer discretization from 101 points to say 501.
-## Problem data m &amp;lt;- 501 L &amp;lt;- 2 h &amp;lt;- L / (m - 1) ## Form objective x &amp;lt;- Variable(m) y &amp;lt;- Variable(m) objective &amp;lt;- Minimize(sum(y)) ## Form constraints constraints &amp;lt;- list(x[1] == 0, y[1] == 1, x[m] == 1, y[m] == 1, diff(x)^2 + diff(y)^2 &amp;lt;= h^2) ## Solve the catenary problem prob &amp;lt;- Problem(objective, constraints) result &amp;lt;- solve(prob) The solution status is no longer optimal.</description>
+## Problem data m &amp;lt;- 501 L &amp;lt;- 2 h &amp;lt;- L / (m - 1) ## Form objective x &amp;lt;- Variable(m) y &amp;lt;- Variable(m) objective &amp;lt;- Minimize(sum(y)) ## Form constraints constraints &amp;lt;- list(x[1] == 0, y[1] == 1, x[m] == 1, y[m] == 1, diff(x)^2 + diff(y)^2 &amp;lt;= h^2) ## Solve the catenary problem prob &amp;lt;- Problem(objective, constraints) result &amp;lt;- solve(prob, solver = &amp;quot;ECOS&amp;quot;) The solution status is no longer optimal.</description>
     </item>
     
     <item>
@@ -71,9 +71,9 @@ We will change the problem slightly to use a finer discretization from 101 point
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_using-other-solvers/</guid>
-      <description>Introduction The default installation of CVXR comes with two (imported) open source solvers:
- ECOS and its mixed integer cousin ECOS_BB via the CRAN package ECOSolveR SCS via the CRAN package scs.  CVXR can also make use of several other open source solvers implemented in R packages.
- The linear and mixed integer programming package lpSolve via the lpSolveAPI package The linear and mixed integer programming package GLPK via the Rglpk package.</description>
+      <description>Introduction The default installation of CVXR comes with several (imported) open source solvers:
+ ECOS and its mixed integer cousin ECOS_BB via the CRAN package ECOSolveR OSQP SCS via the CRAN package scs.  CVXR can also make use of several other open source solvers implemented in R packages.
+ The linear and mixed integer programming package lpSolve via the lpSolveAPI package. NOTE: This solver is now orphaned on CRAN and so is not supported any more.</description>
     </item>
     
     <item>
@@ -113,7 +113,7 @@ Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0
       
       <guid>/cvxr_examples/cvxr_speed/</guid>
       <description>Warning The solution described below is useful when you mathematically know a problem is DCP-compliant and none of your data inputs will change the nature of the problem. We recommend that users check the DCP-compliance of a problem (via a call to is_dcp(prob) for example) at least once to ensure this is the case. Not verifying DCP-compliance may result in garbage!
- Introduction As was remarked in the introduction to CVXR, its chief advantage is flexibility: you can specify a problem in close to mathematical form and CVXR solves it for you, if it can.</description>
+ Note also that the large speed gains in previous versions are no longer evident in the version 1.</description>
     </item>
     
     <item>

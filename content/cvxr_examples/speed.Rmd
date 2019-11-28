@@ -7,22 +7,24 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: save
+  check_dir: test_data
+  data_dir: speed
 ---
-
-```{r prereqs, message = FALSE, echo = FALSE}
-library(CVXR)
-library(profvis)
-```
-
 
 ## Warning
 
-The solution described below is useful when you mathematically know a
-problem is DCP-compliant and none of your data inputs will change the
-nature of the problem. We recommend that users check the
-DCP-compliance of a problem (via a call to `is_dcp(prob)` for example)
-at least once to ensure this is the case.  _Not verifying
-DCP-compliance may result in garbage!_
+1. The solution described below is useful when you mathematically know
+   a problem is DCP-compliant and none of your data inputs will change
+   the nature of the problem. We recommend that users check the
+   DCP-compliance of a problem (via a call to `is_dcp(prob)` for
+   example) at least once to ensure this is the case.  _Not verifying
+   DCP-compliance may result in garbage!_
+   
+2. Note also that the large speed gains in previous versions are no longer
+   evident in the version 1.x because the new reduction framework has
+   really made `CVXR` faster.
 
 ## Introduction
 
@@ -57,6 +59,7 @@ where $\lambda \geq 0$ is a penalty parameter and $x_+ =\max(x,0)$.
 This can be solved as follows.
 
 ```{r}
+suppressMessages(suppressWarnings(library(CVXR)))
 data(cdiac)
 y <- cdiac$annual
 m <- length(y)
@@ -64,7 +67,7 @@ lambda <- 0.44
 beta <- Variable(m)
 obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
 prob <- Problem(Minimize(obj))
-soln <- solve(prob)
+soln <- solve(prob, solver = "ECOS")
 betaHat <- soln$getValue(beta)
 ```
 
@@ -83,7 +86,7 @@ Profiling a single fit to the model is useful to figure out where most
 of the time is spent.
 
 ```{r}
-data(cdiac)
+library(profvis)
 y <- cdiac$annual
 profvis({
     beta <- Variable(m)
@@ -109,7 +112,7 @@ of the time.
 
 We are mathematically certain that the above is convex and so we can
 avoid the `is_dcp` hit. We can obtain the the problem data for a
-particular solver (like ECOS or SCS) using the function
+particular solver (like `OSQP`, or `ECOS` or `SCS`) using the function
 `get_problem_data` and directly hand that data to the solver to get
 the solution.
 
@@ -118,7 +121,7 @@ prob_data <- get_problem_data(prob, solver = "ECOS")
 ```
 
 _ASIDE_: How did we know ECOS was the solver to use? Future versions
-will provode a function to match a solver to a problem. (Actually, it
+will provide a function to match a solver to a problem. (Actually, it
 is available already, but not exported yet!). For now, a single call
 to `solve` with the verbose option set to `TRUE` can provide that
 information. 
@@ -128,22 +131,31 @@ soln <- solve(prob, verbose = TRUE)
 ```
 Now that we have the problem data and know which solver to use, we can
 call the ECOS solver with the right arguments. (The ECOS solver is
-provided by the package `ECOSolveR` which `CVXR` imports.)
+provided by the package `ECOSolveR`, which `CVXR` imports.)
 
 ```{r}
-solver_output <- ECOSolveR::ECOS_csolve(c = prob_data[["c"]],
-                                        G = prob_data[["G"]],
-                                        h = prob_data[["h"]],
-                                        dims = prob_data[["dims"]],
-                                        A = prob_data[["A"]],
-                                        b = prob_data[["b"]])
+if (packageVersion("CVXR") > "0.99-7") {
+    ECOS_dims <- ECOS.dims_to_solver_dict(prob_data$data[["dims"]])
+} else {
+    ECOS_dims <- prob_data$data[["dims"]]
+}
+solver_output <- ECOSolveR::ECOS_csolve(c = prob_data$data[["c"]],
+                                        G = prob_data$data[["G"]],
+                                        h = prob_data$data[["h"]],
+                                        dims = ECOS_dims,
+                                        A = prob_data$data[["A"]],
+                                        b = prob_data$data[["b"]])
 ```
 
 Finally, we can obtain the results by asking `CVXR` to _unpack_ the
 solver results for us. (See `?unpack_results` for further examples.)
 
 ```{r}
-direct_soln <- unpack_results(prob, "ECOS", solver_output)
+if (packageVersion("CVXR") > "0.99-7") {
+    direct_soln <- unpack_results(prob, solver_output, prob_data$chain, prob_data$inverse_data)
+} else {
+    direct_soln <- unpack_results(prob, "ECOS", solver_output)
+}
 ```
 
 ## Profile the Direct Call
@@ -156,13 +168,22 @@ profvis({
     obj <- Minimize(0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta))))
     prob <- Problem(obj)
     prob_data <- get_problem_data(prob, solver = "ECOS")
-    solver_output <- ECOSolveR::ECOS_csolve(c = prob_data[["c"]],
-                                            G = prob_data[["G"]],
-                                            h = prob_data[["h"]],
-                                            dims = prob_data[["dims"]],
-                                            A = prob_data[["A"]],
-                                            b = prob_data[["b"]])
-    direct_soln <- unpack_results(prob, "ECOS", solver_output)
+    if (packageVersion("CVXR") > "0.99-7") {
+        ECOS_dims <- ECOS.dims_to_solver_dict(prob_data$data[["dims"]])
+    } else {
+        ECOS_dims <- prob_data$data[["dims"]]
+    }
+    solver_output <- ECOSolveR::ECOS_csolve(c = prob_data$data[["c"]],
+                                            G = prob_data$data[["G"]],
+                                            h = prob_data$data[["h"]],
+                                            dims = ECOS_dims,
+                                            A = prob_data$data[["A"]],
+                                            b = prob_data$data[["b"]])
+    if (packageVersion("CVXR") > "0.99-7") {
+        direct_soln <- unpack_results(prob, solver_output, prob_data$chain, prob_data$inverse_data)
+    } else {
+        direct_soln <- unpack_results(prob, "ECOS", solver_output)
+    }
 })
 ```
 

@@ -7,8 +7,21 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: save
+  check_dir: test_data
+  data_dir: plasso
 ---
 
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$check_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
@@ -180,7 +193,7 @@ objective <- sum_squares(y - y_hat) / (2 * N) +
 
 ```{r Define_and_Solve_Problem, eval = FALSE}
 prob <- Problem(Minimize(objective))
-result <- solve(prob, verbose = verbose)
+result <- solve(prob, verbose = TRUE)
 beta_hat <- result$getValue(beta)
 ```
 
@@ -274,6 +287,17 @@ knitr::kable(est.table, format = "html", digits = 3) %>%
     kable_styling("striped")
 ```
                 
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), error = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(result, file = file.path(testdata_dir, "plasso.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    plasso_results <- readRDS(file = file.path(testdata_dir, "plasso.RDS"))
+    expect_identical(result, plasso_results)
+}
+```
+
+
 ## Final comments
 
 Typically, one would run the fits for various values of $\lambda$ and

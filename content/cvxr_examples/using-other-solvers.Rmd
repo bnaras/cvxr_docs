@@ -16,27 +16,33 @@ library(CVXR)
 
 ## Introduction
 
-The default installation of `CVXR` comes with two (imported) open source solvers:
+The default installation of `CVXR` comes with several (imported) open source solvers:
 
 - [ECOS](https://github.com/embotech/ecos) and its mixed integer
   cousin `ECOS_BB` via the CRAN package
   [ECOSolveR](https://cloud.r-project.org/package=ECOSolveR)
+- [OSQP](https://www.osqp.org) 
 - [SCS](https://github.com/cvxgrp/scs) via the CRAN package
-  [scs](https://cloud.r-project.org/package=scs).
+  [scs](https://cran.r-project.org/package=scs).
   
 `CVXR` can also make use of several other open source solvers
 implemented in R packages. 
 
 - The linear and mixed integer programming package
   [`lpSolve`](http://lpsolve.sourceforge.net/5.5/) via the 
-  [`lpSolveAPI`](https://cloud.r-project.org/package=lpSolveAPI) package
+  [`lpSolveAPI`](https://cloud.r-project.org/package=lpSolveAPI)
+  package. __NOTE:__ This solver is now orphaned on CRAN and so is not
+  supported any more.
 - The linear and mixed integer programming package [`GLPK`](https://www.gnu.org/software/glpk/) via the 
   [`Rglpk`](https://cloud.r-project.org/package=Rglpk) package.
-  
+- The CBC solver via the R package
+  [`rcbc`](https://github.com/dirkschumacher/rcbc). This is not yet on
+  CRAN 
+
 Since these are optional, you have to install these packages yourself.
 
 ```{r}
-lapply(list(LPSOLVE = "lpSolveAPI",
+lapply(list("CBC" = "rcbc",
             GLPK = "Rglpk"),
        function(x) x %in% installed.packages()[, 1])
 ```
@@ -47,36 +53,12 @@ indicate what solvers `CVXR` is aware of.
 ## Commercial Solvers
 
 A few commercial solvers are also currently supported: [MOSEK](https://www.mosek.com) and
-[GUROBI](https://www.gurobi.com).
+[GUROBI](https://www.gurobi.com), [CPLEX](https://www.ibm.com/analytics/cplex-optimizer)
 
-At the moment, the support uses vendor python solver packages via
+Previous versions of `CVXR` used vendor python solver packages via
 [`reticulate`](https://cran.r-project.org/package=reticulate), _not R
-packages_. Future versions will provide support directly using
-[_problem
-reductions_](https://web.stanford.edu/~boyd/papers/cvxpy_rewriting.html),
-recently implemented in [`CVXPY` version 1.0](https://www.cvxpy.org/).
-
-Thus, one needs two pre-requisites for using these commercial solvers:
-
-- a python installation in addition to R
-- the
-  [`reticulate`](https://cran.r-project.org/package=reticulate) R
-  package. 
-  
-We also recommend that you ensure that `reticulate` is installed
-correctly and working. For example `reticulate::py_eval('1+1')` should return
-`2`. 
-
-__N.B.__ If you have an Anaconda installation in your path, you have
-to account for the fact that there may be interactions when using
-RStudio and rendering documents.  In particular, Anaconda may include
-its own version of pandoc and other tools that may conflict with what
-Rstudio needs to do its work properly.
-
-To be concrete, one problem we found was that the `MOSEK` solver was
-not recognized as being available in this rendered document, even
-though the command line interface showed it to be present. Ensuring an
-appropriate `PATH` variable solves the problem. 
+packages_. This has changed with version 1.0, where we directly call
+native R packages, resulting in a cleaner interface.
 
 
 ### Installing `MOSEK`

@@ -7,7 +7,21 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: save
+  check_dir: test_data
+  data_dir: isotonic-regression
 ---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$check_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
@@ -119,6 +133,18 @@ names(d) <- c("Isotone (P)", "CVXR (P)", "Isotone (S)", "CVXR(S)",
               "Isotone (T)", "CVXR (T)")
 knitr::kable(d, digits = 2, format = "html", caption = "P = primary, S = Secondary, T = Tertiary") %>%
     column_spec(1:6, background = "#ececec")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), error = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(x_p = x_p, x_s = x_s, x_t = x_t), file = file.path(testdata_dir, "isotonic-regression.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    iso_results <- readRDS(file = file.path(testdata_dir, "isotonic-regression.RDS"))
+    expect_identical(x_p, iso_results$x_p)
+    expect_identical(x_s, iso_results$x_s)
+    expect_identical(x_t, iso_results$x_t)
+}
 ```
 
 ## Notes

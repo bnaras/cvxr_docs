@@ -7,6 +7,10 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: save
+  check_dir: test_data
+  data_dir: portfolio-optimization
 ---
 
 
@@ -94,7 +98,7 @@ df &lt;- data.frame(markers =  markers_on, x = risk_data[markers_on],
 p1 + geom_point(data = df, mapping = aes(x = x, y = y), color = &quot;black&quot;) +
     annotate(&quot;text&quot;, x = df$x + 0.2, y = df$y - 0.05, label = df$labels, parse = TRUE) +
     labs(x = &quot;Risk (Standard Deviation)&quot;, y = &quot;Return&quot;)</code></pre>
-<p><img src="/cvxr_examples/portfolio-optimization_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/portfolio-optimization_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>We can also plot the fraction of budget invested in each asset.</p>
 <pre class="r"><code>w_df &lt;- data.frame(paste0(&quot;grp&quot;, seq_len(ncol(w_data))),
                    t(w_data[markers_on,]))
@@ -106,7 +110,7 @@ ggplot(data = tidyW, mapping = aes(x = gamma, y = fraction)) +
     scale_fill_manual(values = cbPalette) +
     guides(fill = FALSE) +
     labs(x = &quot;Risk Aversion&quot;, y = &quot;Fraction of Budget&quot;)</code></pre>
-<p><img src="/cvxr_examples/portfolio-optimization_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/portfolio-optimization_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
@@ -139,27 +143,23 @@ to the code above.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.0.0        RColorBrewer_1.1-2 ggplot2_3.2.1     
-## [4] CVXR_0.99-7       
+## [1] tidyr_1.0.0        RColorBrewer_1.1-2 ggplot2_3.2.1      CVXR_0.99-7       
+## [5] here_0.1          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        compiler_3.6.1   
-##  [4] pillar_1.4.2      R.methodsS3_1.7.1 R.utils_2.9.0    
-##  [7] tools_3.6.1       zeallot_0.1.0     digest_0.6.22    
-## [10] bit_1.1-14        lifecycle_0.1.0   evaluate_0.14    
-## [13] tibble_2.1.3      gtable_0.3.0      lattice_0.20-38  
-## [16] pkgconfig_2.0.3   rlang_0.4.1       Matrix_1.2-17    
-## [19] yaml_2.2.0        blogdown_0.16     xfun_0.10        
-## [22] withr_2.1.2       dplyr_0.8.3       Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5.3   stringr_1.4.0     knitr_1.25       
-## [28] vctrs_0.2.0       tidyselect_0.2.5  bit64_0.9-7      
-## [31] grid_3.6.1        glue_1.3.1        R6_2.4.0         
-## [34] rmarkdown_1.16    bookdown_0.14     purrr_0.3.3      
-## [37] magrittr_1.5      ellipsis_0.3.0    backports_1.1.5  
-## [40] scales_1.0.0      htmltools_0.4.0   scs_1.3-1        
-## [43] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3     
-## [46] stringi_1.4.3     lazyeval_0.2.2    munsell_0.5.0    
-## [49] crayon_1.3.4      R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5      Rcpp_1.0.3        pillar_1.4.2      compiler_3.6.1   
+##  [5] R.methodsS3_1.7.1 R.utils_2.9.0     tools_3.6.1       zeallot_0.1.0    
+##  [9] digest_0.6.23     bit_1.1-14        evaluate_0.14     lifecycle_0.1.0  
+## [13] tibble_2.1.3      gtable_0.3.0      lattice_0.20-38   pkgconfig_2.0.3  
+## [17] rlang_0.4.2       Matrix_1.2-17     yaml_2.2.0        blogdown_0.17    
+## [21] xfun_0.11         withr_2.1.2       dplyr_0.8.3       Rmpfr_0.7-2      
+## [25] ECOSolveR_0.5.3   stringr_1.4.0     knitr_1.26        vctrs_0.2.0      
+## [29] tidyselect_0.2.5  rprojroot_1.3-2   bit64_0.9-7       grid_3.6.1       
+## [33] glue_1.3.1        R6_2.4.1          rmarkdown_1.17    bookdown_0.16    
+## [37] farver_2.0.1      purrr_0.3.3       magrittr_1.5      ellipsis_0.3.0   
+## [41] backports_1.1.5   scales_1.1.0      htmltools_0.4.0   scs_1.3-2        
+## [45] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3      stringi_1.4.3    
+## [49] lazyeval_0.2.2    munsell_0.5.0     crayon_1.3.4      R.oo_1.23.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

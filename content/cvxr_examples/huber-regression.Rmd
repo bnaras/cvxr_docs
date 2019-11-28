@@ -7,7 +7,21 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: save
+  check_dir: test_data
+  data_dir: huber-regression
 ---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$check_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
 
 
 ```{r prereqs, message = FALSE, echo = FALSE}
@@ -118,6 +132,18 @@ ggplot() +
 
 As can be seen, the Huber line is closer to the prescient line.
 
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), error = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(beta_ols = beta_ols, beta_prs = beta_prs, beta_hub = beta_hub), file = file.path(testdata_dir, "huber-regression.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    hub_results <- readRDS(file = file.path(testdata_dir, "huber-regression.RDS"))
+    expect_identical(beta_ols, hub_results$beta_ols)
+    expect_identical(beta_prs, hub_results$beta_prs)
+    expect_identical(beta_hub, hub_results$beta_hub)
+}
+```
 
 ## Session Info
 
