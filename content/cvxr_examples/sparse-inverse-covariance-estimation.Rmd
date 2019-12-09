@@ -8,7 +8,7 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: sparse_inverse_covariance_estimation
 ---
@@ -186,7 +186,13 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     sice_result <- readRDS(file = file.path(testdata_dir, "sparse_inverse_covariance.RDS"))
-    expect_identical(S.est, sice_result)
+    sice_result  <- lapply(sice_result, as.matrix)
+    sice_result  <- lapply(sice_result, function(x) {dimnames(x)  <- NULL; x })
+    expect_equal(S.est[[1]], sice_result[[1]], 1e-3)
+    expect_equal(S.est[[2]], sice_result[[2]], 1e-3)
+    expect_equal(S.est[[3]], sice_result[[3]], 1e-3)
+    expect_equal(S.est[[4]], sice_result[[4]], 1e-3)
+    expect_equal(S.est[[5]], sice_result[[5]], 1e-3)
 }
 ```
 

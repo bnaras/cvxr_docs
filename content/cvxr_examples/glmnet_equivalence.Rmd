@@ -8,7 +8,7 @@ link-citations: test
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: glmnet_equivalence
 ---
@@ -78,7 +78,7 @@ specification.
 beta <- Variable(p + 1)
 obj <- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob <- Problem(Minimize(obj))
-result <- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)
+result <- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, verbose = TRUE)
 ```
 
 We can print the coefficients side-by-side from `glmnet` and `CVXR` to

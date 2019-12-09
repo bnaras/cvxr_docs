@@ -5,7 +5,7 @@ date: '2017-10-29'
 slug: cvxr_gentle-intro
 bibliography: ../bibtex/cvxr_refs.bib
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: gentle_intro
 ---

@@ -68,7 +68,8 @@ indicate what solvers <code>CVXR</code> is aware of.</p>
 <div id="commercial-solvers" class="section level2">
 <h2>Commercial Solvers</h2>
 <p>A few commercial solvers are also currently supported: <a href="https://www.mosek.com">MOSEK</a> and
-<a href="https://www.gurobi.com">GUROBI</a>, <a href="https://www.ibm.com/analytics/cplex-optimizer">CPLEX</a></p>
+<a href="https://www.gurobi.com">GUROBI</a>,
+<a href="https://www.ibm.com/analytics/cplex-optimizer">CPLEX</a>.</p>
 <p>Previous versions of <code>CVXR</code> used vendor python solver packages via
 <a href="https://cran.r-project.org/package=reticulate"><code>reticulate</code></a>, <em>not R
 packages</em>. This has changed with version 1.0, where we directly call
@@ -96,10 +97,20 @@ your license as necessary.</p>
 <p>Once activated, you can check that <code>CVXR::installed_solvers()</code> lists
 <code>GUROBI</code>. Otherwise, rinse and repeat until success.</p>
 </div>
+<div id="installing-rcplex" class="section level3">
+<h3>Installing <code>Rcplex</code></h3>
+<p><a href="https://www.ibm.com/analytics/cplex-optimizer">CPLEX</a> is available in
+a community edition. After installation, the
+<a href="https://cran.r-project.org/package=Rcplex"><code>Rcplex</code></a> package needs to
+be told where to find the libraries for linking. A sample session on
+macOS is shown below for reference.</p>
+<pre class="bash"><code>R CMD INSTALL Rcplex_0.3-3.tar.gz --configure-args=&quot;--with-cplex-include=/Applications/CPLEX_Studio_Community129/cplex/include --with-cplex-lib=&#39;-L/Applications/CPLEX_Studio_Community129/cplex/lib/x86-64_osx/static_pic -lilocplex -lcplex&#39;&quot;</code></pre>
+</div>
 <div id="example-session" class="section level3">
 <h3>Example session</h3>
 <pre class="r"><code>installed_solvers()</code></pre>
-<pre><code>## [1] &quot;ECOS&quot;    &quot;ECOS_BB&quot; &quot;SCS&quot;     &quot;MOSEK&quot;   &quot;LPSOLVE&quot; &quot;GLPK&quot;    &quot;GUROBI&quot;</code></pre>
+<pre><code>## [1] &quot;ECOS&quot;    &quot;ECOS_BB&quot; &quot;CPLEX&quot;   &quot;GLPK_MI&quot; &quot;GLPK&quot;    &quot;SCS&quot;     &quot;GUROBI&quot; 
+## [8] &quot;MOSEK&quot;   &quot;OSQP&quot;</code></pre>
 </div>
 </div>
 <div id="session-info" class="section level2">
@@ -119,21 +130,17 @@ your license as necessary.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-7
+## [1] CVXR_0.995
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.3              lpSolveAPI_5.5.2.0-17.4 knitr_1.26             
-##  [4] magrittr_1.5            bit_1.1-14              lattice_0.20-38        
-##  [7] R6_2.4.1                rlang_0.4.2             stringr_1.4.0          
-## [10] tools_3.6.1             grid_3.6.1              xfun_0.11              
-## [13] R.oo_1.23.0             scs_1.3-2               htmltools_0.4.0        
-## [16] yaml_2.2.0              bit64_0.9-7             digest_0.6.23          
-## [19] bookdown_0.16           Matrix_1.2-17           gmp_0.5-13.5           
-## [22] ECOSolveR_0.5.3         Rglpk_0.6-4             R.utils_2.9.0          
-## [25] slam_0.1-46             evaluate_0.14           rmarkdown_1.17         
-## [28] blogdown_0.17           stringi_1.4.3           compiler_3.6.1         
-## [31] Rmpfr_0.7-2             R.methodsS3_1.7.1       jsonlite_1.6           
-## [34] reticulate_1.13</code></pre>
+##  [1] Rcpp_1.0.3        knitr_1.26        magrittr_1.5      bit_1.1-14       
+##  [5] lattice_0.20-38   R6_2.4.1          rlang_0.4.2       stringr_1.4.0    
+##  [9] tools_3.6.1       grid_3.6.1        xfun_0.11         R.oo_1.23.0      
+## [13] htmltools_0.4.0   yaml_2.2.0        bit64_0.9-7       digest_0.6.23    
+## [17] bookdown_0.16     Matrix_1.2-17     gmp_0.5-13.5      Rglpk_0.6-4      
+## [21] R.utils_2.9.0     slam_0.1-46       evaluate_0.14     rmarkdown_1.17   
+## [25] blogdown_0.17     Rcplex_0.3-3      gurobi_9.0-0      stringi_1.4.3    
+## [29] compiler_3.6.1    Rmpfr_0.7-2       Rmosek_9.1.0      R.methodsS3_1.7.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

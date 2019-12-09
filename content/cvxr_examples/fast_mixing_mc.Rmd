@@ -8,7 +8,7 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: fast-mixing-mc
 ---
@@ -149,6 +149,7 @@ Table 1 from @FMMC is reproduced below.
 ![](../../../img/fmmc/table1.png)
 
 
+
 We reproduce the results for various rows of the table.
 
 ```{r, fig.cap="Row 1, line graph", out.width="100%"}
@@ -182,10 +183,10 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     fmix <- readRDS(file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
-    expect_identical(result1, fmix$result1)
-    expect_identical(result2, fmix$result2)
-    expect_identical(result3, fmix$result3)
-    expect_identical(result4, fmix$result4)
+    expect_equal(result1, fmix$result1, tol = 1e-4)
+    expect_equal(result2, fmix$result2, tol = 1e-4)
+    expect_equal(result3, fmix$result3, tol = 1e-4)
+    expect_equal(result4, fmix$result4, tol = 1e-4)
 }
 ```
 

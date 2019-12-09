@@ -8,7 +8,7 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: l1-trend-filtering
 ---
@@ -113,8 +113,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     l1_results <- readRDS(file = file.path(testdata_dir, "l1-trend-filtering1.RDS"))
-    expect_identical(b50, l1_results$b50)
-    expect_identical(b50, l1_results$b100)
+    expect_equal(betaHat_50, l1_results$b50, tol = 1e-5)
+    expect_equal(betaHat_100, l1_results$b100, tol = 1e-5)
 }
 ```
 

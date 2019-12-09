@@ -8,7 +8,7 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: solver-peculiarities
 ---
@@ -43,8 +43,96 @@ result &lt;- solve(prob, solver = &quot;ECOS&quot;)</code></pre>
 <pre><code>## Solution status is optimal_inaccurate</code></pre>
 <p>In such cases, using a different solver may give more accurate
 results. Let us try <code>MOSEK</code> for example.</p>
-<pre class="r"><code>result &lt;- solve(prob, solver = &quot;MOSEK&quot;)
-cat(&quot;Solution status is&quot;, result$status)</code></pre>
+<pre class="r"><code>result &lt;- solve(prob, solver = &quot;MOSEK&quot;)</code></pre>
+<pre><code>## Acquiring MOSEK environment
+## Problem
+##   Name                   :                 
+##   Objective sense        : min             
+##   Type                   : CONIC (conic optimization problem)
+##   Constraints            : 3504            
+##   Cones                  : 1000            
+##   Scalar variables       : 5002            
+##   Matrix variables       : 0               
+##   Integer variables      : 0               
+## 
+## Optimizer started.
+## Presolve started.
+## Linear dependency checker started.
+## Linear dependency checker terminated.
+## Eliminator started.
+## Freed constraints in eliminator : 994
+## Eliminator terminated.
+## Eliminator started.
+## Freed constraints in eliminator : 0
+## Eliminator terminated.
+## Eliminator - tries                  : 2                 time                   : 0.00            
+## Lin. dep.  - tries                  : 1                 time                   : 0.00            
+## Lin. dep.  - number                 : 0               
+## Presolve terminated. Time: 0.00    
+## Problem
+##   Name                   :                 
+##   Objective sense        : min             
+##   Type                   : CONIC (conic optimization problem)
+##   Constraints            : 3504            
+##   Cones                  : 1000            
+##   Scalar variables       : 5002            
+##   Matrix variables       : 0               
+##   Integer variables      : 0               
+## 
+## Optimizer  - threads                : 8               
+## Optimizer  - solved problem         : the primal      
+## Optimizer  - Constraints            : 1502
+## Optimizer  - Cones                  : 1000
+## Optimizer  - Scalar variables       : 3500              conic                  : 3000            
+## Optimizer  - Semi-definite variables: 0                 scalarized             : 0               
+## Factor     - setup time             : 0.00              dense det. time        : 0.00            
+## Factor     - ML order time          : 0.00              GP order time          : 0.00            
+## Factor     - nonzeros before factor : 4502              after factor           : 5003            
+## Factor     - dense dim.             : 0                 flops                  : 4.60e+04        
+## ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
+## 0   2.0e+00  2.5e+02  1.0e+00  0.00e+00   5.010000000e+02   5.010000000e+02   1.0e+00  0.01  
+## 1   1.8e-01  2.2e+01  3.0e-01  -9.99e-01  -9.735430031e+03  -9.725196058e+03  8.8e-02  0.01  
+## 2   3.9e-02  4.8e+00  1.1e-01  -8.90e-01  -3.172768917e+04  -3.169526703e+04  1.9e-02  0.01  
+## 3   9.6e-03  1.2e+00  2.9e-02  -2.25e-01  -2.988294809e+04  -2.984702493e+04  4.8e-03  0.01  
+## 4   3.7e-03  4.6e-01  1.1e-02  1.10e-02   -2.310818914e+04  -2.307644099e+04  1.9e-03  0.01  
+## 5   9.6e-04  1.2e-01  2.0e-03  2.88e-01   -1.480029988e+04  -1.478261753e+04  4.8e-04  0.01  
+## 6   3.2e-04  4.0e-02  5.5e-04  3.55e-01   -1.018597614e+04  -1.017425981e+04  1.6e-04  0.02  
+## 7   7.7e-05  9.6e-03  1.0e-04  3.91e-01   -6.338623332e+03  -6.331838381e+03  3.9e-05  0.02  
+## 8   2.7e-05  3.4e-03  3.2e-05  2.96e-01   -4.342638229e+03  -4.337079028e+03  1.4e-05  0.02  
+## 9   7.0e-06  8.7e-04  6.1e-06  4.44e-01   -2.590670151e+03  -2.587691786e+03  3.5e-06  0.02  
+## 10  2.6e-06  3.2e-04  2.0e-06  3.21e-01   -1.717972379e+03  -1.715563545e+03  1.3e-06  0.02  
+## 11  6.8e-07  8.4e-05  4.0e-07  4.14e-01   -9.314385995e+02  -9.300604585e+02  3.4e-07  0.02  
+## 12  2.5e-07  3.1e-05  1.3e-07  3.44e-01   -5.364831163e+02  -5.354388429e+02  1.3e-07  0.02  
+## 13  6.0e-08  7.5e-06  2.3e-08  4.03e-01   -1.629199243e+02  -1.623359462e+02  3.0e-08  0.02  
+## 14  2.1e-08  2.7e-06  6.9e-09  3.66e-01   1.483952769e+01   1.525718741e+01   1.1e-08  0.02  
+## 15  5.4e-09  6.7e-07  1.2e-09  5.19e-01   1.570292885e+02   1.572226365e+02   2.7e-09  0.02  
+## 16  2.2e-09  2.8e-07  3.8e-10  5.45e-01   2.122793880e+02   2.123963103e+02   1.1e-09  0.03  
+## 17  4.6e-10  5.7e-08  4.2e-11  7.33e-01   2.576502263e+02   2.576819797e+02   2.3e-10  0.03  
+## 18  1.3e-10  1.6e-08  6.3e-12  8.91e-01   2.686983952e+02   2.687077103e+02   6.5e-11  0.03  
+## 19  3.9e-12  4.9e-10  4.3e-15  9.68e-01   2.730596930e+02   2.730599916e+02   2.0e-12  0.03  
+## 20  8.7e-14  5.3e-11  1.9e-15  9.98e-01   2.731950606e+02   2.731950674e+02   4.4e-14  0.03  
+## 21  1.6e-12  4.7e-10  5.1e-16  1.00e+00   2.731981897e+02   2.731981898e+02   2.5e-16  0.03  
+## Optimizer terminated. Time: 0.03    
+## 
+## 
+## Interior-point solution summary
+##   Problem status  : PRIMAL_AND_DUAL_FEASIBLE
+##   Solution status : OPTIMAL
+##   Primal.  obj: 2.7319818975e+02    nrm: 1e+00    Viol.  con: 2e-08    var: 0e+00    cones: 0e+00  
+##   Dual.    obj: 2.7319818980e+02    nrm: 3e+04    Viol.  con: 3e-11    var: 2e-12    cones: 0e+00  
+## Optimizer summary
+##   Optimizer                 -                        time: 0.03    
+##     Interior-point          - iterations : 21        time: 0.03    
+##       Basis identification  -                        time: 0.00    
+##         Primal              - iterations : 0         time: 0.00    
+##         Dual                - iterations : 0         time: 0.00    
+##         Clean primal        - iterations : 0         time: 0.00    
+##         Clean dual          - iterations : 0         time: 0.00    
+##     Simplex                 -                        time: 0.00    
+##       Primal simplex        - iterations : 0         time: 0.00    
+##       Dual simplex          - iterations : 0         time: 0.00    
+##     Mixed integer           - relaxations: 0         time: 0.00</code></pre>
+<pre class="r"><code>cat(&quot;Solution status is&quot;, result$status)</code></pre>
 <pre><code>## Solution status is optimal</code></pre>
 <p>This returns an optimal solution.</p>
 <p>Here again, even commercial solvers differ; GUROBI, for example, does
@@ -74,18 +162,18 @@ error reporting.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-7 here_0.1   
+## [1] CVXR_0.995
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.3        knitr_1.26        magrittr_1.5      bit_1.1-14       
 ##  [5] lattice_0.20-38   R6_2.4.1          rlang_0.4.2       stringr_1.4.0    
 ##  [9] tools_3.6.1       grid_3.6.1        xfun_0.11         R.oo_1.23.0      
-## [13] scs_1.3-2         htmltools_0.4.0   bit64_0.9-7       yaml_2.2.0       
-## [17] rprojroot_1.3-2   digest_0.6.23     bookdown_0.16     Matrix_1.2-17    
-## [21] gmp_0.5-13.5      ECOSolveR_0.5.3   R.utils_2.9.0     evaluate_0.14    
-## [25] rmarkdown_1.17    blogdown_0.17     stringi_1.4.3     compiler_3.6.1   
-## [29] Rmpfr_0.7-2       backports_1.1.5   R.methodsS3_1.7.1 jsonlite_1.6     
-## [33] reticulate_1.13</code></pre>
+## [13] htmltools_0.4.0   yaml_2.2.0        bit64_0.9-7       digest_0.6.23    
+## [17] bookdown_0.16     Matrix_1.2-17     gmp_0.5-13.5      ECOSolveR_0.5.3  
+## [21] Rglpk_0.6-4       R.utils_2.9.0     slam_0.1-46       evaluate_0.14    
+## [25] rmarkdown_1.17    blogdown_0.17     Rcplex_0.3-3      gurobi_9.0-0     
+## [29] stringi_1.4.3     compiler_3.6.1    Rmpfr_0.7-2       Rmosek_9.1.0     
+## [33] R.methodsS3_1.7.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

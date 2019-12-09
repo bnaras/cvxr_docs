@@ -8,7 +8,7 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: log-concave
 ---
@@ -159,7 +159,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     lc_results <- readRDS(file = file.path(testdata_dir, "log-concave.RDS"))
-    expect_identical(pms, lc_results$pmf)
+    expect_identical(pmf, lc_results$pmf)
 }
 ```
 

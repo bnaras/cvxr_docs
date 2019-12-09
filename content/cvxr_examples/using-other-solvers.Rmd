@@ -53,7 +53,8 @@ indicate what solvers `CVXR` is aware of.
 ## Commercial Solvers
 
 A few commercial solvers are also currently supported: [MOSEK](https://www.mosek.com) and
-[GUROBI](https://www.gurobi.com), [CPLEX](https://www.ibm.com/analytics/cplex-optimizer)
+[GUROBI](https://www.gurobi.com),
+[CPLEX](https://www.ibm.com/analytics/cplex-optimizer).
 
 Previous versions of `CVXR` used vendor python solver packages via
 [`reticulate`](https://cran.r-project.org/package=reticulate), _not R
@@ -94,6 +95,18 @@ your license as necessary.
 
 Once activated, you can check that `CVXR::installed_solvers()` lists
 `GUROBI`. Otherwise, rinse and repeat until success.
+
+### Installing `Rcplex`
+
+[CPLEX](https://www.ibm.com/analytics/cplex-optimizer) is available in
+a community edition. After installation, the
+[`Rcplex`](https://cran.r-project.org/package=Rcplex) package needs to
+be told where to find the libraries for linking. A sample session on
+macOS is shown below for reference. 
+
+```{bash, eval = FALSE}
+R CMD INSTALL Rcplex_0.3-3.tar.gz --configure-args="--with-cplex-include=/Applications/CPLEX_Studio_Community129/cplex/include --with-cplex-lib='-L/Applications/CPLEX_Studio_Community129/cplex/lib/x86-64_osx/static_pic -lilocplex -lcplex'"
+```
 
 ### Example session
 

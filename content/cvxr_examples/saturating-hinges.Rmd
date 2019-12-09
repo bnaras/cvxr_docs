@@ -8,7 +8,7 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: saturating_hinges
 ---
@@ -139,7 +139,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     sat_splines <- readRDS(file = file.path(testdata_dir, "saturating_hinges.RDS"))
-    expect_identical(splines, sat_splines)
+    expect_equal(splines, sat_splines, tol = 1e-5)
 }
 ```
 

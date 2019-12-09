@@ -6,7 +6,7 @@ categories:
   - Simple Least Squares
 slug: cvxr_intro
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: intro
 ---

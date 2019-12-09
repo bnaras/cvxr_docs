@@ -8,7 +8,7 @@ link-citations: test
 categories: []
 tags: []
 params:
-  mode: save
+  mode: ignore
   check_dir: test_data
   data_dir: glmnet_equivalence
 ---
@@ -52,7 +52,34 @@ specification.</p>
 <pre class="r"><code>beta &lt;- Variable(p + 1)
 obj &lt;- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob &lt;- Problem(Minimize(obj))
-result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)</code></pre>
+result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, verbose = TRUE)</code></pre>
+<pre><code>## -----------------------------------------------------------------
+##            OSQP v0.6.0  -  Operator Splitting QP Solver
+##               (c) Bartolomeo Stellato,  Goran Banjac
+##         University of Oxford  -  Stanford University 2019
+## -----------------------------------------------------------------
+## problem:  variables n = 141, constraints m = 140
+##           nnz(P) + nnz(A) = 2380
+## settings: linear system solver = qdldl,
+##           eps_abs = 1.0e-05, eps_rel = 1.0e-05,
+##           eps_prim_inf = 1.0e-04, eps_dual_inf = 1.0e-04,
+##           rho = 1.00e-01 (adaptive),
+##           sigma = 1.00e-06, alpha = 1.60, max_iter = 10000
+##           check_termination: on (interval 25),
+##           scaling: on, scaled_termination: off
+##           warm start: on, polish: on, time_limit: off
+## 
+## iter   objective    pri res    dua res    rho        time
+##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   3.21e-04s
+##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.05e-03s
+## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.24e-03s
+## 
+## status:               solved
+## solution polish:      successful
+## number of iterations: 125
+## optimal objective:    0.3711
+## run time:             1.24e-03s
+## optimal rho estimate: 2.90e+00</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
 compare. The results below should be close, and any differences are
 minor, due to different solver implementations.</p>
@@ -352,10 +379,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{0}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.179
+-0.228
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.181
+-0.226
 </td>
 </tr>
 <tr>
@@ -374,10 +401,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.044
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.048
 </td>
 </tr>
 <tr>
@@ -385,10 +412,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.084
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.090
+0.000
 </td>
 </tr>
 <tr>
@@ -396,10 +423,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.250
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.252
 </td>
 </tr>
 <tr>
@@ -429,10 +456,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.121
+-0.786
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.117
+-0.785
 </td>
 </tr>
 <tr>
@@ -451,10 +478,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.083
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.076
 </td>
 </tr>
 <tr>
@@ -462,10 +489,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.058
+0.018
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.057
+0.016
 </td>
 </tr>
 <tr>
@@ -473,10 +500,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{11}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.189
+0.091
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.185
+0.084
 </td>
 </tr>
 <tr>
@@ -484,10 +511,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{12}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.324
+0.198
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.326
+0.203
 </td>
 </tr>
 <tr>
@@ -495,10 +522,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{13}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.043
+-0.307
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.056
+-0.323
 </td>
 </tr>
 <tr>
@@ -506,10 +533,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{14}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.059
+0.266
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.061
+0.269
 </td>
 </tr>
 <tr>
@@ -517,10 +544,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{15}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.110
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.114
 </td>
 </tr>
 <tr>
@@ -528,10 +555,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{16}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.025
+-0.004
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.042
+-0.028
 </td>
 </tr>
 <tr>
@@ -539,10 +566,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{17}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.164
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.152
+0.000
 </td>
 </tr>
 <tr>
@@ -561,10 +588,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{19}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.019
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.015
+0.000
 </td>
 </tr>
 <tr>
@@ -572,10 +599,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{20}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.170
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.162
+0.000
 </td>
 </tr>
 </tbody>
@@ -598,24 +625,24 @@ GLMNET.est
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_3.0-1     Matrix_1.2-17    kableExtra_1.1.0 CVXR_0.99-7     
-## [5] here_0.1        
+## [1] glmnet_3.0-2     Matrix_1.2-17    kableExtra_1.1.0 CVXR_0.995      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.1   
-##  [5] pillar_1.4.2      iterators_1.0.12  R.methodsS3_1.7.1 R.utils_2.9.0    
-##  [9] tools_3.6.1       zeallot_0.1.0     digest_0.6.23     bit_1.1-14       
-## [13] viridisLite_0.3.0 lifecycle_0.1.0   evaluate_0.14     tibble_2.1.3     
-## [17] lattice_0.20-38   pkgconfig_2.0.3   rlang_0.4.2       foreach_1.4.7    
-## [21] rstudioapi_0.10   yaml_2.2.0        blogdown_0.17     xfun_0.11        
-## [25] xml2_1.2.2        httr_1.4.1        Rmpfr_0.7-2       ECOSolveR_0.5.3  
-## [29] stringr_1.4.0     knitr_1.26        vctrs_0.2.0       hms_0.5.2        
-## [33] webshot_0.5.2     rprojroot_1.3-2   bit64_0.9-7       grid_3.6.1       
-## [37] glue_1.3.1        R6_2.4.1          rmarkdown_1.17    bookdown_0.16    
-## [41] readr_1.3.1       magrittr_1.5      codetools_0.2-16  scales_1.1.0     
-## [45] backports_1.1.5   htmltools_0.4.0   scs_1.3-2         rvest_0.3.5      
-## [49] shape_1.4.4       colorspace_1.4-1  stringi_1.4.3     munsell_0.5.0    
-## [53] crayon_1.3.4      R.oo_1.23.0</code></pre>
+##  [1] shape_1.4.4       xfun_0.11         slam_0.1-46       lattice_0.20-38  
+##  [5] Rmosek_9.1.0      colorspace_1.4-1  vctrs_0.2.0       htmltools_0.4.0  
+##  [9] viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5      rlang_0.4.2      
+## [13] R.oo_1.23.0       pillar_1.4.2      glue_1.3.1        Rmpfr_0.7-2      
+## [17] R.utils_2.9.0     Rcplex_0.3-3      bit64_0.9-7       foreach_1.4.7    
+## [21] lifecycle_0.1.0   stringr_1.4.0     munsell_0.5.0     blogdown_0.17    
+## [25] rvest_0.3.5       gurobi_9.0-0      R.methodsS3_1.7.1 codetools_0.2-16 
+## [29] evaluate_0.14     knitr_1.26        highr_0.8         Rcpp_1.0.3       
+## [33] readr_1.3.1       backports_1.1.5   scales_1.1.0      osqp_0.6.0.3     
+## [37] webshot_0.5.2     bit_1.1-14        hms_0.5.2         digest_0.6.23    
+## [41] stringi_1.4.3     bookdown_0.16     grid_3.6.1        Rglpk_0.6-4      
+## [45] ECOSolveR_0.5.3   tools_3.6.1       magrittr_1.5      tibble_2.1.3     
+## [49] crayon_1.3.4      pkgconfig_2.0.3   zeallot_0.1.0     xml2_1.2.2       
+## [53] rmarkdown_1.17    httr_1.4.1        rstudioapi_0.10   iterators_1.0.12 
+## [57] R6_2.4.1          compiler_3.6.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
