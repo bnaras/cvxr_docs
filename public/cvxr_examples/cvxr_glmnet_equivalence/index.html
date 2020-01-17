@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.59.1" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Getting Equivalent Results from `glmnet` and `CVXR` &mdash; CVXR</title>
 	
@@ -83,15 +83,15 @@ result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, ver
 ##           warm start: on, polish: on, time_limit: off
 ## 
 ## iter   objective    pri res    dua res    rho        time
-##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   3.21e-04s
-##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.05e-03s
-## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.24e-03s
+##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   4.55e-04s
+##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.57e-03s
+## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.84e-03s
 ## 
 ## status:               solved
 ## solution polish:      successful
 ## number of iterations: 125
 ## optimal objective:    0.3711
-## run time:             1.24e-03s
+## run time:             1.84e-03s
 ## optimal rho estimate: 2.90e+00</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
 compare. The results below should be close, and any differences are
@@ -624,9 +624,9 @@ GLMNET.est
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -638,24 +638,24 @@ GLMNET.est
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_3.0-2     Matrix_1.2-17    kableExtra_1.1.0 CVXR_0.995      
+## [1] glmnet_3.0-2     Matrix_1.2-18    kableExtra_1.1.0 CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] shape_1.4.4       xfun_0.11         slam_0.1-46       lattice_0.20-38  
-##  [5] Rmosek_9.1.0      colorspace_1.4-1  vctrs_0.2.0       htmltools_0.4.0  
+##  [1] shape_1.4.4       xfun_0.11         slam_0.1-47       lattice_0.20-38  
+##  [5] Rmosek_9.1.0      colorspace_1.4-1  vctrs_0.2.1       htmltools_0.4.0  
 ##  [9] viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5      rlang_0.4.2      
-## [13] R.oo_1.23.0       pillar_1.4.2      glue_1.3.1        Rmpfr_0.7-2      
-## [17] R.utils_2.9.0     Rcplex_0.3-3      bit64_0.9-7       foreach_1.4.7    
+## [13] R.oo_1.23.0       pillar_1.4.3      glue_1.3.1        Rmpfr_0.7-2      
+## [17] R.utils_2.9.2     Rcplex_0.3-3      bit64_0.9-7       foreach_1.4.7    
 ## [21] lifecycle_0.1.0   stringr_1.4.0     munsell_0.5.0     blogdown_0.17    
 ## [25] rvest_0.3.5       gurobi_9.0-0      R.methodsS3_1.7.1 codetools_0.2-16 
 ## [29] evaluate_0.14     knitr_1.26        highr_0.8         Rcpp_1.0.3       
 ## [33] readr_1.3.1       backports_1.1.5   scales_1.1.0      osqp_0.6.0.3     
 ## [37] webshot_0.5.2     bit_1.1-14        hms_0.5.2         digest_0.6.23    
-## [41] stringi_1.4.3     bookdown_0.16     grid_3.6.1        Rglpk_0.6-4      
-## [45] ECOSolveR_0.5.3   tools_3.6.1       magrittr_1.5      tibble_2.1.3     
+## [41] stringi_1.4.3     bookdown_0.16     grid_3.6.2        Rglpk_0.6-4      
+## [45] ECOSolveR_0.5.3   tools_3.6.2       magrittr_1.5      tibble_2.1.3     
 ## [49] crayon_1.3.4      pkgconfig_2.0.3   zeallot_0.1.0     xml2_1.2.2       
-## [53] rmarkdown_1.17    httr_1.4.1        rstudioapi_0.10   iterators_1.0.12 
-## [57] R6_2.4.1          compiler_3.6.1</code></pre>
+## [53] rmarkdown_2.0     httr_1.4.1        rstudioapi_0.10   iterators_1.0.12 
+## [57] R6_2.4.1          compiler_3.6.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -702,19 +702,23 @@ GLMNET.est
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -726,7 +730,7 @@ GLMNET.est
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

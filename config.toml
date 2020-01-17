@@ -49,25 +49,31 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
     name = "Home"
          identifier = "Level-01"
     	 url = "/"
-	 weight = -22
+	 weight = -23
 
 [[menu.main]]
-    name = "Package Docs"
+    name = "What's new in 1.0"
+    	 url = "/cvxr_examples/whats_new_1.0"
+	 weight = -22
+
+
+[[menu.main]]
+    name = "Package docs"
     	 url = "https://anqif.github.io/CVXR"
 	 weight = -21
 
 [[menu.main]]
-    name = "A Quick Intro"
+    name = "Quick intro"
     	 url = "/cvxr_examples/cvxr_intro/"
 	 weight = -19
 
 [[menu.main]]
-    name = "A Longer Intro"
+    name = "Longer intro"
     	 url = "/cvxr_examples/cvxr_gentle-intro/"
 	 weight = -18
 
 [[menu.main]]
-    name = "Tutorial Examples"
+    name = "Tutorial examples"
     	 url = "/examples/"
 	 weight = -17
 
@@ -82,6 +88,6 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	 weight = -16
 
 [[menu.main]]
-    name = "Function Reference"
+    name = "Function reference"
     	 url = "/cvxr_functions/"
 	 weight = -15

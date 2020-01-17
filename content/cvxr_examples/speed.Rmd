@@ -9,7 +9,7 @@ categories: []
 tags: []
 params:
   mode: ignore
-  check_dir: test_data
+  testdata_dir: test_data
   data_dir: speed
 ---
 
@@ -25,7 +25,7 @@ params:
 2. Note also that the large speed gains in previous versions are no longer
    evident in the version 1.x because the new reduction framework has
    really made `CVXR` faster.
-
+   
 ## Introduction
 
 As was remarked in the [introduction to

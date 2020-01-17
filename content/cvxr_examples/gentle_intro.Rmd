@@ -6,13 +6,13 @@ slug: cvxr_gentle-intro
 bibliography: ../bibtex/cvxr_refs.bib
 params:
   mode: ignore
-  check_dir: test_data
+  testdata_dir: test_data
   data_dir: gentle_intro
 ---
 
 ```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
 library(here)
-testdata_dir  <- here("static", params$check_dir, params$data_dir) 
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir) 
 if (params$mode == "test") {
     library(testthat)
 } else {

@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.59.1" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Solver Peculiarities &mdash; CVXR</title>
 	
@@ -108,7 +108,7 @@ results. Let us try <code>MOSEK</code> for example.</p>
 ## 2   3.9e-02  4.8e+00  1.1e-01  -8.90e-01  -3.172768917e+04  -3.169526703e+04  1.9e-02  0.01  
 ## 3   9.6e-03  1.2e+00  2.9e-02  -2.25e-01  -2.988294809e+04  -2.984702493e+04  4.8e-03  0.01  
 ## 4   3.7e-03  4.6e-01  1.1e-02  1.10e-02   -2.310818914e+04  -2.307644099e+04  1.9e-03  0.01  
-## 5   9.6e-04  1.2e-01  2.0e-03  2.88e-01   -1.480029988e+04  -1.478261753e+04  4.8e-04  0.01  
+## 5   9.6e-04  1.2e-01  2.0e-03  2.88e-01   -1.480029988e+04  -1.478261753e+04  4.8e-04  0.02  
 ## 6   3.2e-04  4.0e-02  5.5e-04  3.55e-01   -1.018597614e+04  -1.017425981e+04  1.6e-04  0.02  
 ## 7   7.7e-05  9.6e-03  1.0e-04  3.91e-01   -6.338623332e+03  -6.331838381e+03  3.9e-05  0.02  
 ## 8   2.7e-05  3.4e-03  3.2e-05  2.96e-01   -4.342638229e+03  -4.337079028e+03  1.4e-05  0.02  
@@ -153,7 +153,7 @@ not completely solve the problem and in fact throws an error.</p>
 <div id="further-development" class="section level2">
 <h2>Further Development</h2>
 <p><code>CVXR v1.x</code> will improve support for the commercial solvers by taking
-advantage of problem reductions described in <span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018">2018</a>)</span> to hand
+advantage of problem reductions described in <span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018" role="doc-biblioref">2018</a>)</span> to hand
 the problem to solvers in a form that is closer to what the R packages
 (for those solvers) expect. This should provide better behavior and
 error reporting.</p>
@@ -161,9 +161,9 @@ error reporting.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -175,17 +175,17 @@ error reporting.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.995
+## [1] CVXR_1.0
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.3        knitr_1.26        magrittr_1.5      bit_1.1-14       
 ##  [5] lattice_0.20-38   R6_2.4.1          rlang_0.4.2       stringr_1.4.0    
-##  [9] tools_3.6.1       grid_3.6.1        xfun_0.11         R.oo_1.23.0      
+##  [9] tools_3.6.2       grid_3.6.2        xfun_0.11         R.oo_1.23.0      
 ## [13] htmltools_0.4.0   yaml_2.2.0        bit64_0.9-7       digest_0.6.23    
-## [17] bookdown_0.16     Matrix_1.2-17     gmp_0.5-13.5      ECOSolveR_0.5.3  
-## [21] Rglpk_0.6-4       R.utils_2.9.0     slam_0.1-46       evaluate_0.14    
-## [25] rmarkdown_1.17    blogdown_0.17     Rcplex_0.3-3      gurobi_9.0-0     
-## [29] stringi_1.4.3     compiler_3.6.1    Rmpfr_0.7-2       Rmosek_9.1.0     
+## [17] bookdown_0.16     Matrix_1.2-18     gmp_0.5-13.5      ECOSolveR_0.5.3  
+## [21] Rglpk_0.6-4       R.utils_2.9.2     slam_0.1-47       evaluate_0.14    
+## [25] rmarkdown_2.0     blogdown_0.17     Rcplex_0.3-3      gurobi_9.0-0     
+## [29] stringi_1.4.3     compiler_3.6.2    Rmpfr_0.7-2       Rmosek_9.1.0     
 ## [33] R.methodsS3_1.7.1</code></pre>
 </div>
 <div id="source" class="section level2">
@@ -196,7 +196,7 @@ error reporting.</p>
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-rewriting:2018">
-<p>Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. “A Rewriting System for Convex Optimization Problems.” <em>Journal of Control and Decision</em> 5 (1). Taylor &amp; Francis: 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554" class="uri">https://doi.org/10.1080/23307706.2017.1397554</a>.</p>
+<p>Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. “A Rewriting System for Convex Optimization Problems.” <em>Journal of Control and Decision</em> 5 (1): 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554">https://doi.org/10.1080/23307706.2017.1397554</a>.</p>
 </div>
 </div>
 </div>
@@ -241,19 +241,23 @@ error reporting.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -265,7 +269,7 @@ error reporting.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

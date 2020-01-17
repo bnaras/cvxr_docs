@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.59.1" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Isotonic Regression &mdash; CVXR</title>
 	
@@ -40,7 +40,7 @@ methods to perform the fit.</p>
 </div>
 <div id="pituitary-data-example" class="section level2">
 <h2>Pituitary Data Example</h2>
-<p>We will use data from the <code>isotone</code> package (see <span class="citation">de Leeuw, Hornik, and Mair (<a href="#ref-isotone">2009</a>)</span>) on the size
+<p>We will use data from the <code>isotone</code> package (see <span class="citation">de Leeuw, Hornik, and Mair (<a href="#ref-isotone" role="doc-biblioref">2009</a>)</span>) on the size
 of pituitary fissures for 11 subjects between 8 and 14 years of age.</p>
 <pre class="r"><code>data(&quot;pituitary&quot;)
 str(pituitary)</code></pre>
@@ -151,12 +151,12 @@ str(pituitary)</code></pre>
 </div>
 <div id="handling-ties" class="section level2">
 <h2>Handling Ties</h2>
-<p>Package <code>isotone</code> provides additional methods for handling tied data besides the default <code>ties = &quot;primary&quot;</code> method; <code>ties = &quot;secondary&quot;</code> enforces equality within ties, and <code>ties = &quot;tertiary&quot;</code>
+<p>Package <code>isotone</code> provides additional methods for handling tied data besides the default <code>ties = "primary"</code> method; <code>ties = "secondary"</code> enforces equality within ties, and <code>ties = "tertiary"</code>
 enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)</p>
 <pre class="r"><code>res_s &lt;- with(pituitary, gpava(age, size, ties = &quot;secondary&quot;))
 res_t &lt;- with(pituitary, gpava(age, size, ties = &quot;tertiary&quot;))</code></pre>
 <p>In <code>CVXR</code>, the secondary method just requires an additional constraint to enforce
-equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
+equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
 <pre class="r"><code>x_s &lt;- with(pituitary, {
     n &lt;- length(size)
     x &lt;- Variable(n)
@@ -593,9 +593,9 @@ observations using the above as a guide.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -607,22 +607,22 @@ observations using the above as a guide.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 isotone_1.1-0    CVXR_0.995      
+## [1] kableExtra_1.1.0 isotone_1.1-0    CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.1   
-##  [5] pillar_1.4.2      R.methodsS3_1.7.1 R.utils_2.9.0     tools_3.6.1      
+##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.2   
+##  [5] pillar_1.4.3      R.methodsS3_1.7.1 R.utils_2.9.2     tools_3.6.2      
 ##  [9] zeallot_0.1.0     digest_0.6.23     bit_1.1-14        viridisLite_0.3.0
 ## [13] lifecycle_0.1.0   evaluate_0.14     tibble_2.1.3      lattice_0.20-38  
-## [17] pkgconfig_2.0.3   rlang_0.4.2       Matrix_1.2-17     gurobi_9.0-0     
+## [17] pkgconfig_2.0.3   rlang_0.4.2       Matrix_1.2-18     gurobi_9.0-0     
 ## [21] rstudioapi_0.10   Rglpk_0.6-4       yaml_2.2.0        blogdown_0.17    
 ## [25] xfun_0.11         xml2_1.2.2        httr_1.4.1        Rmpfr_0.7-2      
-## [29] stringr_1.4.0     knitr_1.26        vctrs_0.2.0       hms_0.5.2        
-## [33] webshot_0.5.2     bit64_0.9-7       grid_3.6.1        glue_1.3.1       
-## [37] R6_2.4.1          rmarkdown_1.17    bookdown_0.16     readr_1.3.1      
+## [29] stringr_1.4.0     knitr_1.26        vctrs_0.2.1       hms_0.5.2        
+## [33] webshot_0.5.2     bit64_0.9-7       grid_3.6.2        glue_1.3.1       
+## [37] R6_2.4.1          rmarkdown_2.0     bookdown_0.16     readr_1.3.1      
 ## [41] magrittr_1.5      scales_1.1.0      backports_1.1.5   htmltools_0.4.0  
 ## [45] nnls_1.4          rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3     
-## [49] stringi_1.4.3     Rmosek_9.1.0      munsell_0.5.0     slam_0.1-46      
+## [49] stringi_1.4.3     Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47      
 ## [53] crayon_1.3.4      R.oo_1.23.0</code></pre>
 </div>
 <div id="source" class="section level2">
@@ -678,19 +678,23 @@ observations using the above as a guide.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -702,7 +706,7 @@ observations using the above as a guide.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.59.1" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>The Catenary Problem &mdash; CVXR</title>
 	
@@ -52,11 +52,11 @@ total potential energy is simply the sum of the
 \quad i = 1,\ldots,m-1 \end{array} 
 \]</span></p>
 <p>with variables <span class="math inline">\(x \in {\mathbf R}^m\)</span> and <span class="math inline">\(y \in {\mathbf R}^m\)</span>. This
-discretized version which has been studied by <span class="citation">Griva and Vanderbei (<a href="#ref-catenary">2005</a>)</span> was suggested
+discretized version which has been studied by <span class="citation">Griva and Vanderbei (<a href="#ref-catenary" role="doc-biblioref">2005</a>)</span> was suggested
 to us by <a href="http://hwborchers.lima-city.de/Presents/catenary.html">Hans Werner
 Borchers</a>.</p>
 <p>The basic catenary problem has a well-known analytical solution
-(see <span class="citation">Gelfand and Fomin (<a href="#ref-GelfandFomin:1963">1963</a>)</span>) which we can easily verify with <code>CVXR</code>.</p>
+(see <span class="citation">Gelfand and Fomin (<a href="#ref-GelfandFomin:1963" role="doc-biblioref">1963</a>)</span>) which we can easily verify with <code>CVXR</code>.</p>
 <pre class="r"><code>## Problem data
 m &lt;- 101
 L &lt;- 2
@@ -257,8 +257,8 @@ result &lt;- solve(prob)</code></pre>
 ## 4   9.5e-03  9.5e-03  1.2e-03  7.82e-01   2.646269473e+01   2.651211672e+01   4.7e-03  0.00  
 ## 5   5.8e-03  5.8e-03  6.2e-04  6.32e-01   2.703210695e+01   2.706964296e+01   2.9e-03  0.00  
 ## 6   3.6e-03  3.6e-03  3.5e-04  4.95e-01   2.760465131e+01   2.763567985e+01   1.8e-03  0.00  
-## 7   2.4e-03  2.4e-03  2.1e-04  4.15e-01   2.808138705e+01   2.810862720e+01   1.2e-03  0.00  
-## 8   1.5e-03  1.5e-03  1.2e-04  3.59e-01   2.859924710e+01   2.862300633e+01   7.4e-04  0.00  
+## 7   2.4e-03  2.4e-03  2.1e-04  4.15e-01   2.808138705e+01   2.810862720e+01   1.2e-03  0.01  
+## 8   1.5e-03  1.5e-03  1.2e-04  3.59e-01   2.859924710e+01   2.862300633e+01   7.4e-04  0.01  
 ## 9   8.9e-04  8.9e-04  6.8e-05  2.88e-01   2.918863319e+01   2.920927569e+01   4.5e-04  0.01  
 ## 10  5.5e-04  5.5e-04  4.0e-05  2.22e-01   2.975795209e+01   2.977661930e+01   2.8e-04  0.01  
 ## 11  3.5e-04  3.5e-04  2.4e-05  1.79e-01   3.032852599e+01   3.034566214e+01   1.7e-04  0.01  
@@ -325,9 +325,9 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -339,22 +339,22 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.2.1 CVXR_0.995   
+## [1] ggplot2_3.2.1 CVXR_1.0     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.1   
-##  [5] pillar_1.4.2      R.methodsS3_1.7.1 R.utils_2.9.0     tools_3.6.1      
+##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.2   
+##  [5] pillar_1.4.3      R.methodsS3_1.7.1 R.utils_2.9.2     tools_3.6.2      
 ##  [9] digest_0.6.23     bit_1.1-14        evaluate_0.14     lifecycle_0.1.0  
 ## [13] tibble_2.1.3      gtable_0.3.0      lattice_0.20-38   pkgconfig_2.0.3  
-## [17] rlang_0.4.2       Matrix_1.2-17     gurobi_9.0-0      Rglpk_0.6-4      
+## [17] rlang_0.4.2       Matrix_1.2-18     gurobi_9.0-0      Rglpk_0.6-4      
 ## [21] yaml_2.2.0        blogdown_0.17     xfun_0.11         withr_2.1.2      
 ## [25] dplyr_0.8.3       Rmpfr_0.7-2       stringr_1.4.0     knitr_1.26       
-## [29] tidyselect_0.2.5  bit64_0.9-7       grid_3.6.1        glue_1.3.1       
-## [33] R6_2.4.1          rmarkdown_1.17    bookdown_0.16     farver_2.0.1     
+## [29] tidyselect_0.2.5  bit64_0.9-7       grid_3.6.2        glue_1.3.1       
+## [33] R6_2.4.1          rmarkdown_2.0     bookdown_0.16     farver_2.0.1     
 ## [37] purrr_0.3.3       magrittr_1.5      scales_1.1.0      htmltools_0.4.0  
 ## [41] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3      Rcplex_0.3-3     
 ## [45] stringi_1.4.3     Rmosek_9.1.0      lazyeval_0.2.2    munsell_0.5.0    
-## [49] slam_0.1-46       crayon_1.3.4      R.oo_1.23.0</code></pre>
+## [49] slam_0.1-47       crayon_1.3.4      R.oo_1.23.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -367,7 +367,7 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 <p>Gelfand, I. M., and S. V. Fomin. 1963. <em>Calculus of Variations</em>. Prentice-Hall.</p>
 </div>
 <div id="ref-catenary">
-<p>Griva, I. A., and R. J. Vanderbei. 2005. “Case Studies in Optimization: Catenary Problem.” <em>Optimization and Engineering</em> 6 (4). Springer: 463–82.</p>
+<p>Griva, I. A., and R. J. Vanderbei. 2005. “Case Studies in Optimization: Catenary Problem.” <em>Optimization and Engineering</em> 6 (4): 463–82.</p>
 </div>
 </div>
 </div>
@@ -412,19 +412,23 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -436,7 +440,7 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

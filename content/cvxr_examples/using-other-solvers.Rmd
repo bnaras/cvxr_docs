@@ -20,7 +20,7 @@ The default installation of `CVXR` comes with several (imported) open source sol
 
 - [ECOS](https://github.com/embotech/ecos) and its mixed integer
   cousin `ECOS_BB` via the CRAN package
-  [ECOSolveR](https://cloud.r-project.org/package=ECOSolveR)
+  [ECOSolveR](https://cran.r-project.org/package=ECOSolveR)
 - [OSQP](https://www.osqp.org) 
 - [SCS](https://github.com/cvxgrp/scs) via the CRAN package
   [scs](https://cran.r-project.org/package=scs).
@@ -30,14 +30,14 @@ implemented in R packages.
 
 - The linear and mixed integer programming package
   [`lpSolve`](http://lpsolve.sourceforge.net/5.5/) via the 
-  [`lpSolveAPI`](https://cloud.r-project.org/package=lpSolveAPI)
+  [`lpSolveAPI`](https://cran.r-project.org/package=lpSolveAPI)
   package. __NOTE:__ This solver is now orphaned on CRAN and so is not
   supported any more.
 - The linear and mixed integer programming package [`GLPK`](https://www.gnu.org/software/glpk/) via the 
-  [`Rglpk`](https://cloud.r-project.org/package=Rglpk) package.
+  [`Rglpk`](https://cran.r-project.org/package=Rglpk) package.
 - The CBC solver via the R package
   [`rcbc`](https://github.com/dirkschumacher/rcbc). This is not yet on
-  CRAN 
+  CRAN. 
 
 Since these are optional, you have to install these packages yourself.
 
@@ -52,46 +52,42 @@ indicate what solvers `CVXR` is aware of.
 
 ## Commercial Solvers
 
-A few commercial solvers are also currently supported: [MOSEK](https://www.mosek.com) and
+We are excited to note that the following commercial solvers are also
+now directly supported: [MOSEK](https://www.mosek.com) and
 [GUROBI](https://www.gurobi.com),
 [CPLEX](https://www.ibm.com/analytics/cplex-optimizer).
 
-Previous versions of `CVXR` used vendor python solver packages via
+Pre-1.0 versions of `CVXR` used vendor python solver packages via
 [`reticulate`](https://cran.r-project.org/package=reticulate), _not R
-packages_. This has changed with version 1.0, where we directly call
-native R packages, resulting in a cleaner interface.
-
+packages_. Version 1.x directly uses native R packages that have now
+become available, resulting in a cleaner, more efficient interface.
 
 ### Installing `MOSEK`
 
 [MOSEK](https://www.mosek.com) provides an academic version that is
-free of charge. As noted in the downloads page, Anaconda users can
-install merely via:
+free of charge: one can obtain the free academic license after
+registering. Once the license for the product has been activates, the
+[Rmosek documentation](https://docs.mosek.com/9.1/rmosek/index.html)
+provides all the details for installation. A quick check to ensure
+things are working is to run the example:
 
-```{bash, eval=FALSE}
-conda install -c mosek mosek
+```{r, eval = FALSE}
+library(Rmosek)
+example(mosek)
 ```
 
-Others can use the `pip` command:
-
-```{bash, eval = FALSE}
-pip install -f https://download.mosek.com/stable/wheel/index.html Mosek
-```
-
-In addition, the license for the product has to be activated per
-instructions on the `Sales` section of the web page.
-
-Once activated, you can check that `CVXR` recognizes the solver;
-`installed_solvers()` should list `MOSEK`. Otherwise, rinse and repeat
-until success.
+Once everything is working, you can check that `CVXR` recognizes the
+solver; `installed_solvers()` should list `MOSEK`. Otherwise, rinse
+and repeat until success.
 
 ### Installing `GUROBI`
 
 [GUROBI](https://www.gurobi.com) also provides an academic version
-that is free of charge. They require you to register. 
-
-Once registered, install the _Gurobi Optimizer_ software and activate
-your license as necessary.
+that is free of charge. After registering, install the _Gurobi
+Optimizer_ software and activate your license as necessary. The
+[Gurobi
+documentation](https://www.gurobi.com/documentation/9.0/quickstart_mac/r_interface.html#section:R)
+provides details.
 
 Once activated, you can check that `CVXR::installed_solvers()` lists
 `GUROBI`. Otherwise, rinse and repeat until success.
