@@ -20,85 +20,59 @@ before diving into the details. We only cover changes that might be of
 interest to users.</p>
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<pre><code>Disciplined geometric programming (DGP): Starting with version 1.0.11, `CVXR` lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs. To get started with DGP, check out the tutorial and consult the accompanying paper.
-
-Reductions: `CVXR` 1.0 uses a modular system of reductions to convert problems input by the user into the format required by the solver, which makes it easy to support new standard forms, such as quadratic programs, and more advanced user inputs, such as problems with complex variables. See Reductions and the accompanying paper for further details.
-
-Attributes: Variables and parameters now support a variety of attributes that describe their symbolic properties, such as nonnegative or symmetric. This unifies the treatment of symbolic properties for variables and parameters and replaces specialized variable classes such as Bool and Semidef.
-
-NumPy compatibility: `CVXR`’s interface has been changed to resemble NumPy as closely as possible, including support for 0D and 1D arrays.
-
-Transforms: The new transform class provides additional ways of manipulating `CVXR` objects, byond the atomic functions. While atomic functions operate only on expressions, transforms may also take Problem, Objective, or Constraint objects as input.</code></pre>
-<p>Reductions</p>
+<ul>
+<li><p>Disciplined geometric programming (DGP): Starting with version 1.0.11, <code>CVXR</code> lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs. To get started with DGP, check out the tutorial and consult the accompanying paper.</p></li>
+<li><p>Reductions: <code>CVXR</code> 1.0 uses a modular system of reductions to convert problems input by the user into the format required by the solver, which makes it easy to support new standard forms, such as quadratic programs, and more advanced user inputs, such as problems with complex variables. See Reductions and the accompanying paper for further details.</p></li>
+<li><p>Attributes: Variables and parameters now support a variety of attributes that describe their symbolic properties, such as nonnegative or symmetric. This unifies the treatment of symbolic properties for variables and parameters and replaces specialized variable classes such as Bool and Semidef.</p></li>
+<li><p>Transforms: The new transform class provides additional ways of manipulating <code>CVXR</code> objects, byond the atomic functions. While atomic functions operate only on expressions, transforms may also take Problem, Objective, or Constraint objects as input.</p></li>
+</ul>
+</div>
+<div id="reductions" class="section level2">
+<h2>Reductions</h2>
 <p>A reduction is a transformation from one problem to an equivalent problem. Two problems are equivalent if a solution of one can be converted to a solution of the other with no more than a moderate amount of effort. <code>CVXR</code> uses reductions to rewrite problems into forms that solvers will accept. The practical benefit of the reduction based framework is that <code>CVXR</code> 1.0 supports quadratic programs as a target solver standard form in addition to cone programs, with more standard forms on the way. It also makes it easy to add generic problem transformations such as converting problems with complex variables into problems with only real variables.
 Attributes</p>
-<p>Attributes describe the symbolic properties of variables and parameters and are specified as arguments to the constructor. For example, Variable(nonneg=True) creates a scalar variable constrained to be nonnegative. Attributes replace the previous syntax of special variable classes like Bool for boolean variables and Semidef for symmetric positive semidefinite variables, as well as specification of the sign for parameters (e.g., Parameter(sign=‘positive’)). Concretely, write</p>
-<pre><code>Variable(shape, boolean=True) instead of Bool(shape).
-
-Variable(shape, integer=True) instead of Int(shape).
-
-Variable((n, n), PSD=True) instead of Semidef(n).
-
-Variable((n, n), symmetric=True) instead of Symmetric(n).
-
-Variable(shape, nonneg=True) instead of NonNegative(shape).
-
-Parameter(shape, nonneg=True) instead of Parameter(shape, sign=&#39;positive&#39;).
-
-Parameter(shape, nonpos=True) instead of Parameter(shape, sign=&#39;negative&#39;).</code></pre>
+<p>Attributes describe the symbolic properties of variables and parameters and are specified as arguments to the constructor. For example, Variable(nonneg=TRUE) creates a scalar variable constrained to be nonnegative. Attributes replace the previous syntax of special variable classes like Bool for boolean variables and Semidef for symmetric positive semidefinite variables, as well as specification of the sign for parameters (e.g., Parameter(sign=‘positive’)). Concretely, write</p>
+<ul>
+<li><p><code>Variable(shape, boolean=TRUE)</code> instead of <code>Bool(shape)</code>.</p></li>
+<li><p><code>Variable(shape, integer=TRUE)</code> instead of <code>Int(shape)</code>.</p></li>
+<li><p><code>Variable(c(n, n), PSD=TRUE)</code> instead of <code>Semidef(n)</code>.</p></li>
+<li><p><code>Variable(c(n, n), symmetric=TRUE)</code> instead of <code>Symmetric(n)</code>.</p></li>
+<li><p><code>Variable(shape, nonneg=TRUE)</code> instead of <code>NonNegative(shape)</code>.</p></li>
+<li><p><code>Parameter(shape, nonneg=TRUE)</code> instead of <code>Parameter(shape, sign='positive')</code>.</p></li>
+<li><p><code>Parameter(shape, nonpos=TRUE)</code> instead of <code>Parameter(shape, sign='negative')</code>.</p></li>
+</ul>
 <p>See Attributes for a complete list of supported attributes. More attributes will be added in the future.
 NumPy Compatibility</p>
-<p>The following interface changes have been made to make <code>CVXR</code> more compatible with NumPy syntax:</p>
-<pre><code>The value field of `CVXR` expressions now returns NumPy ndarrays instead of NumPy matrices.
-
-The dimensions of `CVXR` expressions are given by the shape field, while the size field gives the total number of entries. In `CVXR` 0.4.11 and earlier, the size field gave the dimensions and the shape field did not exist.
-
-The dimensions of `CVXR` expressions are no longer always 2D. 0D and 1D expressions are possible. We will add support for arbitrary ND expressions in the future. The number of dimensions is given by the ndim field.
-
-The shape argument of the Variable, Parameter, and reshape constructors must be a tuple. Instead of writing, Parameter(2, 3) to create a parameter of shape (2, 3), you must write Parameter((2, 3)).
-
-Indexing and other operations can map 2D expressions down to 1D or 0D expressions. For example, if X has shape (3, 2), then X[:,0] has shape (3,). `CVXR` behavior follows NumPy semantics in all cases, with the exception that broadcasting only works when one argument is 0D.
-
-Several `CVXR` atoms have been renamed:
-
-    mul_elemwise to multiply
-
-    max_entries to max
-
-    sum_entries to sum
-
-    max_elemwise to maximum
-
-    min_elemwise to minimum
-
-Due to the name changes, we now strongly recommend against importing `CVXR` using the syntax from cvxpy import *.
-
-The vstack and hstack atoms now take lists as input. For example, write vstack([x, y]) instead of vstack(x, y).</code></pre>
-<p>Transforms</p>
+</div>
+<div id="transforms" class="section level2">
+<h2>Transforms</h2>
 <p>Transforms provide additional ways of manipulating <code>CVXR</code> objects beyond the atomic functions. For example, the indicator transform converts a list of constraints into an expression representing the convex function that takes value 0 when the constraints hold and ∞
 when they are violated. See Transforms for a full list of the new transforms.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.2 (2019-12-12)
-## Platform: x86_64-apple-darwin19.2.0 (64-bit)
-## Running under: macOS Catalina 10.15.2
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 18362)
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] compiler_3.6.2  magrittr_1.5    bookdown_0.16   tools_3.6.2    
+##  [1] compiler_3.6.1  magrittr_1.5    bookdown_0.17   tools_3.6.1    
 ##  [5] htmltools_0.4.0 yaml_2.2.0      Rcpp_1.0.3      stringi_1.4.3  
-##  [9] rmarkdown_2.0   blogdown_0.17   knitr_1.26      stringr_1.4.0  
-## [13] digest_0.6.23   xfun_0.11       rlang_0.4.2     evaluate_0.14</code></pre>
+##  [9] rmarkdown_1.17  blogdown_0.17   knitr_1.26      stringr_1.4.0  
+## [13] digest_0.6.22   xfun_0.11       rlang_0.4.1     evaluate_0.14</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
