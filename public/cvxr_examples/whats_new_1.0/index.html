@@ -39,13 +39,14 @@ interest to users.</p>
 <li><p>Disciplined geometric programming (DGP): Starting with version 1.0.11, <code>CVXR</code> lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs. To get started with DGP, check out the tutorial and consult the accompanying paper.</p></li>
 <li><p>Reductions: <code>CVXR</code> 1.0 uses a modular system of reductions to convert problems input by the user into the format required by the solver, which makes it easy to support new standard forms, such as quadratic programs, and more advanced user inputs, such as problems with complex variables. See Reductions and the accompanying paper for further details.</p></li>
 <li><p>Attributes: Variables and parameters now support a variety of attributes that describe their symbolic properties, such as nonnegative or symmetric. This unifies the treatment of symbolic properties for variables and parameters and replaces specialized variable classes such as Bool and Semidef.</p></li>
-<li><p>Transforms: The new transform class provides additional ways of manipulating <code>CVXR</code> objects, byond the atomic functions. While atomic functions operate only on expressions, transforms may also take Problem, Objective, or Constraint objects as input.</p></li>
 </ul>
 </div>
 <div id="reductions" class="section level2">
 <h2>Reductions</h2>
-<p>A reduction is a transformation from one problem to an equivalent problem. Two problems are equivalent if a solution of one can be converted to a solution of the other with no more than a moderate amount of effort. <code>CVXR</code> uses reductions to rewrite problems into forms that solvers will accept. The practical benefit of the reduction based framework is that <code>CVXR</code> 1.0 supports quadratic programs as a target solver standard form in addition to cone programs, with more standard forms on the way. It also makes it easy to add generic problem transformations such as converting problems with complex variables into problems with only real variables.
-Attributes</p>
+<p>A reduction is a transformation from one problem to an equivalent problem. Two problems are equivalent if a solution of one can be converted to a solution of the other with no more than a moderate amount of effort. <code>CVXR</code> uses reductions to rewrite problems into forms that solvers will accept. The practical benefit of the reduction based framework is that <code>CVXR</code> 1.0 supports quadratic programs as a target solver standard form in addition to cone programs, with more standard forms on the way. It also makes it easy to add generic problem transformations such as converting problems with complex variables into problems with only real variables.</p>
+</div>
+<div id="attributes" class="section level2">
+<h2>Attributes</h2>
 <p>Attributes describe the symbolic properties of variables and parameters and are specified as arguments to the constructor. For example, Variable(nonneg=TRUE) creates a scalar variable constrained to be nonnegative. Attributes replace the previous syntax of special variable classes like Bool for boolean variables and Semidef for symmetric positive semidefinite variables, as well as specification of the sign for parameters (e.g., Parameter(sign=‘positive’)). Concretely, write</p>
 <ul>
 <li><p><code>Variable(shape, boolean=TRUE)</code> instead of <code>Bool(shape)</code>.</p></li>
@@ -56,13 +57,32 @@ Attributes</p>
 <li><p><code>Parameter(shape, nonneg=TRUE)</code> instead of <code>Parameter(shape, sign='positive')</code>.</p></li>
 <li><p><code>Parameter(shape, nonpos=TRUE)</code> instead of <code>Parameter(shape, sign='negative')</code>.</p></li>
 </ul>
-<p>See Attributes for a complete list of supported attributes. More attributes will be added in the future.
-NumPy Compatibility</p>
-</div>
-<div id="transforms" class="section level2">
-<h2>Transforms</h2>
-<p>Transforms provide additional ways of manipulating <code>CVXR</code> objects beyond the atomic functions. For example, the indicator transform converts a list of constraints into an expression representing the convex function that takes value 0 when the constraints hold and ∞
-when they are violated. See Transforms for a full list of the new transforms.</p>
+<p>The full constructor of the <code>Leaf</code> class (the parent class of <code>Variable</code> and <code>Parameter</code>) is given below</p>
+<pre><code>Leaf &lt;- setClass(&quot;Leaf&quot;, representation(dim = &quot;NumORNULL&quot;, value = &quot;ConstVal&quot;, nonneg = &quot;logical&quot;, nonpos = &quot;logical&quot;,
+                                    complex = &quot;logical&quot;, imag = &quot;logical&quot;, symmetric = &quot;logical&quot;, diag = &quot;logical&quot;,
+                                    PSD = &quot;logical&quot;, NSD = &quot;logical&quot;, hermitian = &quot;logical&quot;, boolean = &quot;NumORLogical&quot;, integer = &quot;NumORLogical&quot;,
+                                    sparsity = &quot;matrix&quot;, pos = &quot;logical&quot;, neg = &quot;logical&quot;,
+                                    attributes = &quot;list&quot;, boolean_idx = &quot;matrix&quot;, integer_idx = &quot;matrix&quot;), ...#more arguments)</code></pre>
+<ul>
+<li><strong>Parameters</strong>
+<ul>
+<li><strong>value</strong> (<em>numeric type</em>) - A value to assign to the variable.</li>
+<li><strong>nonneg</strong> (<em>bool</em>) – Is the variable constrained to be nonnegative?</li>
+<li><strong>nonpos</strong> (<em>bool</em>) – Is the variable constrained to be nonpositive?</li>
+<li><strong>complex</strong> (<em>bool</em>) – Is the variable complex valued?</li>
+<li><strong>imag</strong> (<em>bool</em>) – Is the variable purely imaginary?</li>
+<li><strong>symmetric</strong> (<em>bool</em>) – Is the variable constrained to be symmetric?</li>
+<li><strong>diag</strong> (<em>bool</em>) – Is the variable constrained to be diagonal?</li>
+<li><strong>PSD</strong> (<em>bool</em>) – Is the variable constrained to be symmetric positive semidefinite?</li>
+<li><strong>NSD</strong> (<em>bool</em>) – Is the variable constrained to be symmetric negative semidefinite?</li>
+<li><strong>hermitian</strong> (<em>bool</em>) – Is the variable constrained to be Hermitian?</li>
+<li><strong>boolean</strong> (<em>bool or list of tuple</em>) – Is the variable boolean (i.e., 0 or 1)? True, which constrains the entire variable to be boolean, False, or a list of indices which should be constrained as boolean, where each index is a tuple of length exactly equal to the length of shape.</li>
+<li><strong>integer</strong> (<em>bool or list of tuple</em>) – Is the variable integer? The semantics are the same as the boolean argument.</li>
+<li><strong>sparsity</strong> (<em>matrix</em>) A matrix representing the fixed sparsity pattern of the leaf.</li>
+<li><strong>pos</strong> (<em>bool</em>) Is the leaf strictly positive?</li>
+<li><strong>neg</strong> (<em>bool</em>) Is the leaf strictly negative?</li>
+</ul></li>
+</ul>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
