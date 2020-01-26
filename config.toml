@@ -59,7 +59,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 
 [[menu.main]]
     name = "Package docs"
-    	 url = "https://anqif.github.io/CVXR"
+    	 url = "https://www.cvxgrp.org/CVXR/"
 	 weight = -21
 
 [[menu.main]]
