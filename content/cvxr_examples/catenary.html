@@ -62,89 +62,6 @@ constraints &lt;- list(x[1] == 0, y[1] == 1,
 ## Solve the catenary problem
 prob &lt;- Problem(objective, constraints)
 result &lt;- solve(prob)</code></pre>
-<pre><code>## Acquiring MOSEK environment
-## Problem
-##   Name                   :                 
-##   Objective sense        : min             
-##   Type                   : CONIC (conic optimization problem)
-##   Constraints            : 704             
-##   Cones                  : 200             
-##   Scalar variables       : 1002            
-##   Matrix variables       : 0               
-##   Integer variables      : 0               
-## 
-## Optimizer started.
-## Presolve started.
-## Linear dependency checker started.
-## Linear dependency checker terminated.
-## Eliminator started.
-## Freed constraints in eliminator : 194
-## Eliminator terminated.
-## Eliminator started.
-## Freed constraints in eliminator : 0
-## Eliminator terminated.
-## Eliminator - tries                  : 2                 time                   : 0.00            
-## Lin. dep.  - tries                  : 1                 time                   : 0.00            
-## Lin. dep.  - number                 : 0               
-## Presolve terminated. Time: 0.00    
-## Problem
-##   Name                   :                 
-##   Objective sense        : min             
-##   Type                   : CONIC (conic optimization problem)
-##   Constraints            : 704             
-##   Cones                  : 200             
-##   Scalar variables       : 1002            
-##   Matrix variables       : 0               
-##   Integer variables      : 0               
-## 
-## Optimizer  - threads                : 8               
-## Optimizer  - solved problem         : the primal      
-## Optimizer  - Constraints            : 302
-## Optimizer  - Cones                  : 200
-## Optimizer  - Scalar variables       : 700               conic                  : 600             
-## Optimizer  - Semi-definite variables: 0                 scalarized             : 0               
-## Factor     - setup time             : 0.00              dense det. time        : 0.00            
-## Factor     - ML order time          : 0.00              GP order time          : 0.00            
-## Factor     - nonzeros before factor : 902               after factor           : 904             
-## Factor     - dense dim.             : 0                 flops                  : 8.51e+03        
-## ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
-## 0   2.0e+00  4.8e+01  1.0e+00  0.00e+00   1.010000000e+02   1.010000000e+02   1.0e+00  0.01  
-## 1   4.0e-01  9.7e+00  4.3e-01  -9.81e-01  -6.100654343e+02  -6.064605723e+02  2.0e-01  0.01  
-## 2   8.4e-02  2.0e+00  1.1e-01  -5.81e-01  -1.090607132e+03  -1.084274859e+03  4.2e-02  0.01  
-## 3   1.6e-02  3.9e-01  1.8e-02  7.41e-02   -8.445363673e+02  -8.396975530e+02  8.0e-03  0.01  
-## 4   3.5e-03  8.4e-02  3.4e-03  1.94e-01   -4.941557141e+02  -4.903862780e+02  1.7e-03  0.01  
-## 5   1.1e-03  2.8e-02  9.7e-04  2.58e-01   -3.088449812e+02  -3.060156330e+02  5.7e-04  0.01  
-## 6   3.3e-04  8.0e-03  2.1e-04  4.31e-01   -1.711675209e+02  -1.695798876e+02  1.7e-04  0.01  
-## 7   1.5e-04  3.6e-03  8.4e-05  3.52e-01   -1.077351878e+02  -1.064830507e+02  7.5e-05  0.01  
-## 8   3.5e-05  8.5e-04  1.4e-05  4.18e-01   -3.157319914e+01  -3.090721808e+01  1.8e-05  0.01  
-## 9   1.2e-05  3.0e-04  4.2e-06  3.60e-01   4.818589011e+00   5.293311872e+00   6.1e-06  0.01  
-## 10  3.2e-06  7.8e-05  7.4e-07  5.52e-01   3.244801230e+01   3.265856391e+01   1.6e-06  0.01  
-## 11  1.3e-06  3.2e-05  2.4e-07  5.47e-01   4.350329774e+01   4.362984250e+01   6.7e-07  0.01  
-## 12  2.5e-07  6.2e-06  2.3e-08  7.52e-01   5.259417457e+01   5.262562447e+01   1.3e-07  0.01  
-## 13  5.1e-08  1.2e-06  2.1e-09  8.93e-01   5.485985503e+01   5.486643320e+01   2.6e-08  0.01  
-## 14  8.8e-10  2.1e-08  4.8e-12  9.79e-01   5.543098999e+01   5.543110701e+01   4.4e-10  0.01  
-## 15  4.7e-12  1.1e-10  2.1e-15  9.99e-01   5.544114330e+01   5.544114395e+01   2.3e-12  0.01  
-## 16  1.4e-12  1.5e-10  2.9e-17  1.00e+00   5.544119998e+01   5.544119999e+01   4.8e-14  0.01  
-## Optimizer terminated. Time: 0.01    
-## 
-## 
-## Interior-point solution summary
-##   Problem status  : PRIMAL_AND_DUAL_FEASIBLE
-##   Solution status : OPTIMAL
-##   Primal.  obj: 5.5441199980e+01    nrm: 1e+00    Viol.  con: 7e-10    var: 0e+00    cones: 0e+00  
-##   Dual.    obj: 5.5441199994e+01    nrm: 1e+03    Viol.  con: 7e-13    var: 7e-08    cones: 0e+00  
-## Optimizer summary
-##   Optimizer                 -                        time: 0.01    
-##     Interior-point          - iterations : 16        time: 0.01    
-##       Basis identification  -                        time: 0.00    
-##         Primal              - iterations : 0         time: 0.00    
-##         Dual                - iterations : 0         time: 0.00    
-##         Clean primal        - iterations : 0         time: 0.00    
-##         Clean dual          - iterations : 0         time: 0.00    
-##     Simplex                 -                        time: 0.00    
-##       Primal simplex        - iterations : 0         time: 0.00    
-##       Dual simplex          - iterations : 0         time: 0.00    
-##     Mixed integer           - relaxations: 0         time: 0.00</code></pre>
 <p>We can now plot it and compare it with the ideal solution. Below we
 use alpha blending and differing line thickness to show the ideal in red and the computed solution in blue.</p>
 <pre class="r"><code>xs &lt;- result$getValue(x)
@@ -192,102 +109,6 @@ constraints &lt;- c(constraints, y &gt;= ground)
 constraints[[4]] &lt;- (y[m] == 0.5)
 prob &lt;- Problem(objective, constraints)
 result &lt;- solve(prob)</code></pre>
-<pre><code>## Problem
-##   Name                   :                 
-##   Objective sense        : min             
-##   Type                   : CONIC (conic optimization problem)
-##   Constraints            : 805             
-##   Cones                  : 200             
-##   Scalar variables       : 1002            
-##   Matrix variables       : 0               
-##   Integer variables      : 0               
-## 
-## Optimizer started.
-## Presolve started.
-## Linear dependency checker started.
-## Linear dependency checker terminated.
-## Eliminator started.
-## Freed constraints in eliminator : 97
-## Eliminator terminated.
-## Eliminator started.
-## Freed constraints in eliminator : 0
-## Eliminator terminated.
-## Eliminator - tries                  : 2                 time                   : 0.00            
-## Lin. dep.  - tries                  : 1                 time                   : 0.00            
-## Lin. dep.  - number                 : 0               
-## Presolve terminated. Time: 0.00    
-## Problem
-##   Name                   :                 
-##   Objective sense        : min             
-##   Type                   : CONIC (conic optimization problem)
-##   Constraints            : 805             
-##   Cones                  : 200             
-##   Scalar variables       : 1002            
-##   Matrix variables       : 0               
-##   Integer variables      : 0               
-## 
-## Optimizer  - threads                : 8               
-## Optimizer  - solved problem         : the primal      
-## Optimizer  - Constraints            : 399
-## Optimizer  - Cones                  : 200
-## Optimizer  - Scalar variables       : 797               conic                  : 600             
-## Optimizer  - Semi-definite variables: 0                 scalarized             : 0               
-## Factor     - setup time             : 0.00              dense det. time        : 0.00            
-## Factor     - ML order time          : 0.00              GP order time          : 0.00            
-## Factor     - nonzeros before factor : 1096              after factor           : 1195            
-## Factor     - dense dim.             : 0                 flops                  : 9.98e+03        
-## ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
-## 0   2.0e+00  2.0e+00  1.0e+00  0.00e+00   3.000000000e+00   3.000000000e+00   1.0e+00  0.00  
-## 1   9.8e-02  9.8e-02  3.6e-02  8.09e-03   2.337097696e+01   2.381037418e+01   4.9e-02  0.00  
-## 2   3.0e-02  3.0e-02  5.9e-03  9.07e-01   2.497269137e+01   2.510009374e+01   1.5e-02  0.00  
-## 3   1.8e-02  1.8e-02  2.8e-03  8.60e-01   2.573499888e+01   2.581426981e+01   8.9e-03  0.00  
-## 4   9.5e-03  9.5e-03  1.2e-03  7.82e-01   2.646269473e+01   2.651211672e+01   4.7e-03  0.00  
-## 5   5.8e-03  5.8e-03  6.2e-04  6.32e-01   2.703210695e+01   2.706964296e+01   2.9e-03  0.00  
-## 6   3.6e-03  3.6e-03  3.5e-04  4.95e-01   2.760465131e+01   2.763567985e+01   1.8e-03  0.00  
-## 7   2.4e-03  2.4e-03  2.1e-04  4.15e-01   2.808138705e+01   2.810862720e+01   1.2e-03  0.01  
-## 8   1.5e-03  1.5e-03  1.2e-04  3.59e-01   2.859924710e+01   2.862300633e+01   7.4e-04  0.01  
-## 9   8.9e-04  8.9e-04  6.8e-05  2.88e-01   2.918863319e+01   2.920927569e+01   4.5e-04  0.01  
-## 10  5.5e-04  5.5e-04  4.0e-05  2.22e-01   2.975795209e+01   2.977661930e+01   2.8e-04  0.01  
-## 11  3.5e-04  3.5e-04  2.4e-05  1.79e-01   3.032852599e+01   3.034566214e+01   1.7e-04  0.01  
-## 12  2.2e-04  2.2e-04  1.4e-05  1.55e-01   3.092071251e+01   3.093661751e+01   1.1e-04  0.01  
-## 13  1.5e-04  1.5e-04  9.3e-06  1.39e-01   3.144015322e+01   3.145501945e+01   7.3e-05  0.01  
-## 14  9.5e-05  9.5e-05  5.8e-06  1.38e-01   3.202678132e+01   3.204049001e+01   4.8e-05  0.01  
-## 15  5.4e-05  5.4e-05  3.1e-06  1.45e-01   3.281092355e+01   3.282327954e+01   2.7e-05  0.01  
-## 16  3.4e-05  3.4e-05  1.9e-06  1.69e-01   3.344558598e+01   3.345695554e+01   1.7e-05  0.01  
-## 17  2.1e-05  2.1e-05  1.1e-06  1.93e-01   3.414794995e+01   3.415807080e+01   1.0e-05  0.01  
-## 18  1.2e-05  1.2e-05  5.7e-07  2.38e-01   3.485767301e+01   3.486648079e+01   6.0e-06  0.01  
-## 19  6.5e-06  6.5e-06  2.8e-07  2.89e-01   3.558356999e+01   3.559091297e+01   3.3e-06  0.01  
-## 20  3.7e-06  3.7e-06  1.4e-07  3.56e-01   3.618481105e+01   3.619083697e+01   1.8e-06  0.01  
-## 21  1.8e-06  1.8e-06  6.0e-08  4.05e-01   3.681826351e+01   3.682287546e+01   8.8e-07  0.01  
-## 22  9.1e-07  9.1e-07  2.9e-08  4.08e-01   3.726582578e+01   3.726970136e+01   4.6e-07  0.01  
-## 23  7.1e-07  7.1e-07  2.1e-08  3.58e-01   3.744352129e+01   3.744713674e+01   3.5e-07  0.01  
-## 24  2.6e-07  2.6e-07  5.0e-09  6.28e-01   3.795360245e+01   3.795504497e+01   1.3e-07  0.01  
-## 25  1.4e-07  1.4e-07  2.1e-09  6.91e-01   3.814353907e+01   3.814447570e+01   6.8e-08  0.01  
-## 26  2.7e-08  2.7e-08  2.0e-10  8.09e-01   3.835972313e+01   3.835995066e+01   1.3e-08  0.01  
-## 27  3.3e-09  3.3e-09  9.4e-12  9.57e-01   3.841196999e+01   3.841200223e+01   1.7e-09  0.01  
-## 28  3.9e-10  3.9e-10  3.8e-13  9.93e-01   3.841881242e+01   3.841881630e+01   1.9e-10  0.01  
-## 29  4.2e-11  4.9e-11  1.3e-14  9.99e-01   3.841963937e+01   3.841963980e+01   2.1e-11  0.01  
-## 30  4.9e-12  1.2e-10  5.5e-16  1.00e+00   3.841972963e+01   3.841972968e+01   2.5e-12  0.01  
-## Optimizer terminated. Time: 0.01    
-## 
-## 
-## Interior-point solution summary
-##   Problem status  : PRIMAL_AND_DUAL_FEASIBLE
-##   Solution status : OPTIMAL
-##   Primal.  obj: 3.8419729627e+01    nrm: 1e+00    Viol.  con: 8e-10    var: 0e+00    cones: 0e+00  
-##   Dual.    obj: 3.8419729677e+01    nrm: 8e+02    Viol.  con: 2e-13    var: 2e-08    cones: 0e+00  
-## Optimizer summary
-##   Optimizer                 -                        time: 0.01    
-##     Interior-point          - iterations : 30        time: 0.01    
-##       Basis identification  -                        time: 0.00    
-##         Primal              - iterations : 0         time: 0.00    
-##         Dual                - iterations : 0         time: 0.00    
-##         Clean primal        - iterations : 0         time: 0.00    
-##         Clean dual          - iterations : 0         time: 0.00    
-##     Simplex                 -                        time: 0.00    
-##       Primal simplex        - iterations : 0         time: 0.00    
-##       Dual simplex          - iterations : 0         time: 0.00    
-##     Mixed integer           - relaxations: 0         time: 0.00</code></pre>
 <p>to obtain the new result.</p>
 <p>The figure below shows the solution of this modified catenary problem
 for <span class="math inline">\(m = 101\)</span> and <span class="math inline">\(h = 0.04\)</span>. The chain is shown hanging in blue,
@@ -329,19 +150,18 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 ## [1] ggplot2_3.2.1 CVXR_1.0     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.2   
-##  [5] pillar_1.4.3      R.methodsS3_1.7.1 R.utils_2.9.2     tools_3.6.2      
-##  [9] digest_0.6.23     bit_1.1-14        evaluate_0.14     lifecycle_0.1.0  
-## [13] tibble_2.1.3      gtable_0.3.0      lattice_0.20-38   pkgconfig_2.0.3  
-## [17] rlang_0.4.2       Matrix_1.2-18     gurobi_9.0-0      Rglpk_0.6-4      
-## [21] yaml_2.2.0        blogdown_0.17     xfun_0.11         withr_2.1.2      
-## [25] dplyr_0.8.3       Rmpfr_0.7-2       stringr_1.4.0     knitr_1.26       
-## [29] tidyselect_0.2.5  bit64_0.9-7       grid_3.6.2        glue_1.3.1       
-## [33] R6_2.4.1          rmarkdown_2.0     bookdown_0.16     farver_2.0.1     
-## [37] purrr_0.3.3       magrittr_1.5      scales_1.1.0      htmltools_0.4.0  
-## [41] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3      Rcplex_0.3-3     
-## [45] stringi_1.4.3     Rmosek_9.1.0      lazyeval_0.2.2    munsell_0.5.0    
-## [49] slam_0.1-47       crayon_1.3.4      R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5     Rcpp_1.0.3       highr_0.8        compiler_3.6.2  
+##  [5] pillar_1.4.3     tools_3.6.2      digest_0.6.23    bit_1.1-14      
+##  [9] evaluate_0.14    lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0    
+## [13] lattice_0.20-38  pkgconfig_2.0.3  rlang_0.4.2      Matrix_1.2-18   
+## [17] gurobi_9.0-0     Rglpk_0.6-4      yaml_2.2.0       blogdown_0.17   
+## [21] xfun_0.11        withr_2.1.2      Rmpfr_0.7-2      stringr_1.4.0   
+## [25] dplyr_0.8.3      knitr_1.26       tidyselect_0.2.5 bit64_0.9-7     
+## [29] grid_3.6.2       glue_1.3.1       R6_2.4.1         rmarkdown_2.0   
+## [33] bookdown_0.16    farver_2.0.1     purrr_0.3.3      magrittr_1.5    
+## [37] scales_1.1.0     htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1
+## [41] labeling_0.3     Rcplex_0.3-3     stringi_1.4.5    Rmosek_9.1.0    
+## [45] lazyeval_0.2.2   munsell_0.5.0    slam_0.1-47      crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

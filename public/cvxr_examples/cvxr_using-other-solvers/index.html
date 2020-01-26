@@ -58,7 +58,7 @@ CRAN.</li>
             GLPK = &quot;Rglpk&quot;),
        function(x) x %in% installed.packages()[, 1])</code></pre>
 <pre><code>## $CBC
-## [1] FALSE
+## [1] TRUE
 ## 
 ## $GLPK
 ## [1] TRUE</code></pre>
@@ -112,8 +112,8 @@ macOS is shown below for reference.</p>
 <div id="example-session" class="section level3">
 <h3>Example session</h3>
 <pre class="r"><code>installed_solvers()</code></pre>
-<pre><code>## [1] &quot;ECOS&quot;    &quot;ECOS_BB&quot; &quot;CPLEX&quot;   &quot;GLPK_MI&quot; &quot;GLPK&quot;    &quot;SCS&quot;     &quot;GUROBI&quot; 
-## [8] &quot;MOSEK&quot;   &quot;OSQP&quot;</code></pre>
+<pre><code>##  [1] &quot;ECOS&quot;    &quot;ECOS_BB&quot; &quot;CBC&quot;     &quot;CPLEX&quot;   &quot;GLPK_MI&quot; &quot;GLPK&quot;    &quot;SCS&quot;    
+##  [8] &quot;GUROBI&quot;  &quot;MOSEK&quot;   &quot;OSQP&quot;</code></pre>
 </div>
 </div>
 <div id="session-info" class="section level2">
@@ -136,14 +136,14 @@ macOS is shown below for reference.</p>
 ## [1] CVXR_1.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.3        knitr_1.26        magrittr_1.5      bit_1.1-14       
-##  [5] lattice_0.20-38   R6_2.4.1          rlang_0.4.2       stringr_1.4.0    
-##  [9] tools_3.6.2       grid_3.6.2        xfun_0.11         R.oo_1.23.0      
-## [13] htmltools_0.4.0   yaml_2.2.0        bit64_0.9-7       digest_0.6.23    
-## [17] bookdown_0.16     Matrix_1.2-18     gmp_0.5-13.5      Rglpk_0.6-4      
-## [21] R.utils_2.9.2     slam_0.1-47       evaluate_0.14     rmarkdown_2.0    
-## [25] blogdown_0.17     Rcplex_0.3-3      gurobi_9.0-0      stringi_1.4.3    
-## [29] compiler_3.6.2    Rmpfr_0.7-2       Rmosek_9.1.0      R.methodsS3_1.7.1</code></pre>
+##  [1] Rcpp_1.0.3       knitr_1.26       magrittr_1.5     bit_1.1-14      
+##  [5] lattice_0.20-38  R6_2.4.1         rlang_0.4.2      stringr_1.4.0   
+##  [9] tools_3.6.2      grid_3.6.2       xfun_0.11        htmltools_0.4.0 
+## [13] yaml_2.2.0       bit64_0.9-7      digest_0.6.23    assertthat_0.2.1
+## [17] bookdown_0.16    Matrix_1.2-18    gmp_0.5-13.5     Rglpk_0.6-4     
+## [21] slam_0.1-47      evaluate_0.14    rmarkdown_2.0    blogdown_0.17   
+## [25] Rcplex_0.3-3     gurobi_9.0-0     stringi_1.4.5    compiler_3.6.2  
+## [29] Rmpfr_0.7-2      Rmosek_9.1.0     rcbc_0.1.0.9001</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

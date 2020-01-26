@@ -17,8 +17,8 @@
       <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/whats_new_1.0/</guid>
-      <description>CVXR 1.0 includes a major rewrite of the CVXR internals, as wellas a number of changes to the user interface. The goal is to followcvxpy as much as possible. We first give an overview of the changes,before diving into the details. We only cover changes that might be ofinterest to users.
-OverviewDisciplined geometric programming (DGP): Starting with version 1.0.11, CVXR lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs.</description>
+      <description>CVXR 1.0 includes a major rewrite of the CVXR internals, as well as a number of changes to the user interface. The goal is to follow cvxpy as much as possible. We first give an overview of the changes, before diving into the details. We only cover changes that might be of interest to users.
+Overview  Disciplined geometric programming (DGP): Starting with version 1.0.11, CVXR lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs.</description>
     </item>
     
   </channel>
