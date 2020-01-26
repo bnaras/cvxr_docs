@@ -28,8 +28,8 @@
 	
 
 
-<div id="overview" class="section level1">
-<h1>Overview</h1>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
 <p><code>CVXR</code> 1.0 has now updated how it handles its solver-specific
 parameters and has diverged slightly from how <code>cvxpy</code> handles it. It
 now features five standard parameters that are the default parameters
@@ -54,13 +54,13 @@ function based on what solver they specify. On the whole, the
 additional parameters given by the user will override the five values
 specified above.</p>
 </div>
-<div id="solver-specific-parameters" class="section level1">
-<h1>Solver-Specific Parameters</h1>
+<div id="solver-specific-parameters" class="section level2">
+<h2>Solver-Specific Parameters</h2>
 <p>We will go over some examples for each solvers supported by <code>CVXR</code>,
 the available parameters for each solver, and where to find the
 documentation for each solver.</p>
-<div id="osqp" class="section level2">
-<h2>OSQP</h2>
+<div id="osqp" class="section level3">
+<h3>OSQP</h3>
 <p>The parameters available for <code>OSQP</code> can be found in this
 <a href="https://osqp.org/docs/interfaces/solver_settings.html">link</a>. The
 parameters can be entered individually in the arguments of the solve
@@ -86,8 +86,8 @@ result &lt;- solve(prob, solver = &quot;OSQP&quot;, verbose = FALSE, more_params
 <p>In the second case that the <code>verbose</code> in the <code>more_params</code> list overrides
 the value of <code>verbose</code> listed earlier in the invocation.</p>
 </div>
-<div id="scs" class="section level2">
-<h2>SCS</h2>
+<div id="scs" class="section level3">
+<h3>SCS</h3>
 <p>The parameters available for <code>SCS</code> can be found in this
 <a href="https://cran.r-project.org/web/packages/scs/scs.pdf">link</a> under the
 <code>scs_control</code> function. Much like <code>OSQP</code>, the parameters can be
@@ -116,8 +116,8 @@ result  &lt;- solve(prob, solver = &quot;SCS&quot;, verbose = FALSE, feastol = 1
 <p>Notice how in this case a warning is thrown: the <code>SCS</code> solver does not
 support the feasible tolerance parameter, so the solver ignores it.</p>
 </div>
-<div id="ecos" class="section level2">
-<h2>ECOS</h2>
+<div id="ecos" class="section level3">
+<h3>ECOS</h3>
 <p>The parameters available for <code>ECOS</code> can be found in this
 <a href="https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf">link</a>
 under the <code>ecos.control</code> function. Much like <code>OSQP</code>, the parameters
@@ -131,8 +131,8 @@ obj &lt;- Minimize(x)
 prob &lt;- Problem(obj, list(x &gt;= 0))
 result  &lt;- solve(prob, solver = &quot;ECOS&quot;, verbose = FALSE, feastol = 1e-2, reltol_inacc = 1e-5)</code></pre>
 </div>
-<div id="cplex" class="section level2">
-<h2>CPLEX</h2>
+<div id="cplex" class="section level3">
+<h3>CPLEX</h3>
 <p>The parameters available for <code>CPLEX</code> can be found in this
 <a href="https://cran.r-project.org/web/packages/Rcplex/Rcplex.pdf">link</a>
 under the details section for the function <code>Rcplex</code> function on
@@ -150,8 +150,8 @@ result  &lt;- solve(prob, solver = &quot;CPLEX&quot;, verbose = FALSE, eps_abs_t
 <p>As you can see, <code>eps_abs_tol</code> is not one of <code>CPLEX</code>’s specified
 parameters, so the solver threw a warning.</p>
 </div>
-<div id="mosek" class="section level2">
-<h2>MOSEK</h2>
+<div id="mosek" class="section level3">
+<h3>MOSEK</h3>
 <p>The parameters available for <code>MOSEK</code> can be seen in this
 <a href="https://docs.mosek.com/9.1/rmosek/parameters.html#doc-all-parameter-list">link</a>. As
 you can see, the number of parameters is quite massive. They are also
@@ -194,8 +194,8 @@ them might be needed in order to invert the solution. Therefore,
 proceed with caution when using these variables as they can cause the
 solver to not obtain the answer.</p>
 </div>
-<div id="gurobi" class="section level2">
-<h2>GUROBI</h2>
+<div id="gurobi" class="section level3">
+<h3>GUROBI</h3>
 <p>The parameters available for <code>GUROBI</code> can be seen in this
 <a href="https://www.gurobi.com/documentation/6.5/refman/parameters.html#sec:Parameters">link</a>. If
 an unaccepted parameter is passed into the <code>solve</code> function, then the
@@ -207,8 +207,8 @@ obj &lt;- Minimize(x)
 prob &lt;- Problem(obj, list(x &gt;= 0))
 result  &lt;- solve(prob, solver = &quot;GUROBI&quot;, verbose = FALSE, BarIterLimit = 20, Quad = 1)</code></pre>
 </div>
-<div id="glpk" class="section level2">
-<h2>GLPK</h2>
+<div id="glpk" class="section level3">
+<h3>GLPK</h3>
 <p>The parameters available for <code>GLPK</code> can be seen in this
 <a href="https://cran.r-project.org/web/packages/Rglpk/Rglpk.pdf">link</a> under
 the <code>Details</code> section in page 4. There are only four parameters in
@@ -219,8 +219,8 @@ obj &lt;- Minimize(x)
 prob &lt;- Problem(obj, list(x &gt;= 0))
 result  &lt;- solve(prob, solver = &quot;GLPK&quot;, verbose = FALSE, presolve = FALSE, tm_limit = 10, canonicalize_status = TRUE)</code></pre>
 </div>
-<div id="cbc" class="section level2">
-<h2>CBC</h2>
+<div id="cbc" class="section level3">
+<h3>CBC</h3>
 <p>The parameters available for <code>CBC</code> can be seen in this
 <a href="https://projects.coin-or.org/CoinBinary/export/1059/OptimizationSuite/trunk/Installer/files/doc/cbcCommandLine.pdf">link</a>. Much
 like most of the solvers outlined above, if the user passes in a
@@ -230,6 +230,7 @@ the parameter and proceeds to solve the problem. Here is an example</p>
 obj &lt;- Minimize(x)
 prob &lt;- Problem(obj, list(x &gt;= 0))
 result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, maxn = 10)</code></pre>
+</div>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -264,7 +265,6 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 <div id="source" class="section level2">
 <h2>Source</h2>
 <p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/cvxr_parameters.Rmd">R Markdown</a></p>
-</div>
 </div>
 
 
