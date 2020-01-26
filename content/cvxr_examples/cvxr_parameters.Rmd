@@ -12,7 +12,7 @@ params:
 suppressMessages(library(CVXR))
 ```
 
-# Overview
+## Overview
 
 `CVXR` 1.0 has now updated how it handles its solver-specific
 parameters and has diverged slightly from how `cvxpy` handles it. It
@@ -42,13 +42,13 @@ function based on what solver they specify. On the whole, the
 additional parameters given by the user will override the five values
 specified above.
 
-# Solver-Specific Parameters
+## Solver-Specific Parameters
 
 We will go over some examples for each solvers supported by `CVXR`,
 the available parameters for each solver, and where to find the
 documentation for each solver.
 
-## OSQP
+### OSQP
 
 The parameters available for `OSQP` can be found in this
 [link](https://osqp.org/docs/interfaces/solver_settings.html). The
@@ -79,7 +79,7 @@ result <- solve(prob, solver = "OSQP", verbose = FALSE, more_params)
 In the second case that the `verbose` in the `more_params` list overrides
 the value of `verbose` listed earlier in the invocation.
 
-## SCS
+### SCS
 
 The parameters available for `SCS` can be found in this
 [link](https://cran.r-project.org/web/packages/scs/scs.pdf) under the
@@ -110,7 +110,7 @@ result  <- solve(prob, solver = "SCS", verbose = FALSE, feastol = 1e-2, cg_rate 
 Notice how in this case a warning is thrown: the `SCS` solver does not
 support the feasible tolerance parameter, so the solver ignores it.
 
-## ECOS
+### ECOS
 
 The parameters available for `ECOS` can be found in this
 [link](https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf)
@@ -128,7 +128,7 @@ prob <- Problem(obj, list(x >= 0))
 result  <- solve(prob, solver = "ECOS", verbose = FALSE, feastol = 1e-2, reltol_inacc = 1e-5)
 ```    
 
-## CPLEX
+### CPLEX
 
 The parameters available for `CPLEX` can be found in this
 [link](https://cran.r-project.org/web/packages/Rcplex/Rcplex.pdf)
@@ -149,7 +149,7 @@ result  <- solve(prob, solver = "CPLEX", verbose = FALSE, eps_abs_tol = 1e-2, ep
 As you can see, `eps_abs_tol` is not one of `CPLEX`'s specified
 parameters, so the solver threw a warning.
 
-## MOSEK
+### MOSEK
 
 The parameters available for `MOSEK` can be seen in this
 [link](https://docs.mosek.com/9.1/rmosek/parameters.html#doc-all-parameter-list). As
@@ -194,7 +194,7 @@ them might be needed in order to invert the solution. Therefore,
 proceed with caution when using these variables as they can cause the
 solver to not obtain the answer.
 
-## GUROBI
+### GUROBI
 
 The parameters available for `GUROBI` can be seen in this
 [link](https://www.gurobi.com/documentation/6.5/refman/parameters.html#sec:Parameters). If
@@ -210,7 +210,7 @@ prob <- Problem(obj, list(x >= 0))
 result  <- solve(prob, solver = "GUROBI", verbose = FALSE, BarIterLimit = 20, Quad = 1)
 ```    
     
-## GLPK
+### GLPK
 
 The parameters available for `GLPK` can be seen in this
 [link](https://cran.r-project.org/web/packages/Rglpk/Rglpk.pdf) under
@@ -225,7 +225,7 @@ prob <- Problem(obj, list(x >= 0))
 result  <- solve(prob, solver = "GLPK", verbose = FALSE, presolve = FALSE, tm_limit = 10, canonicalize_status = TRUE)
 ```    
     
-## CBC
+### CBC
 
 The parameters available for `CBC` can be seen in this
 [link](https://projects.coin-or.org/CoinBinary/export/1059/OptimizationSuite/trunk/Installer/files/doc/cbcCommandLine.pdf). Much
