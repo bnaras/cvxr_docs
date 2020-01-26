@@ -1,0 +1,252 @@
+---
+title: "Dealing with Solver-Specific Parameters"
+author: Anqi Fu, David Kang and Balasubramanian Narasimhan
+date: "2020-01-15"
+params:
+  mode: i
+  testdata_dir: test_data
+  data_dir: solver_specific
+---
+
+```{r, echo = FALSE}
+suppressMessages(library(CVXR))
+```
+
+# Overview
+
+`CVXR` 1.0 has now updated how it handles its solver-specific
+parameters and has diverged slightly from how `cvxpy` handles it. It
+now features five standard parameters that are the default parameters
+for each solve function. Here are the five parameters
+
+* `verbose` : A parameter that deals with the verbosity of the
+  solver. It is a boolean variable for all solvers, but it can also
+  take integer values for the `MOSEK` solver, whose interface deals
+  with an integer verbosity parameter with the default of 10. The
+  default value of `verbose` for `CVXR` is set to `FALSE`.
+
+* `reltol` : Deals with the relative tolerance of the solver. Its
+  default value is set at `1e-8`
+
+* `feastol` : Deals with feasible tolerance of the solver. Its default
+  value is set at `1e-8`
+
+* `abstol` : Deals with the absolute tolerance of the solver. Its
+  default value is set at `1e-8`
+
+* `num_iter` : A parameter that specifies the maximum number of
+  iterations for the solver. Its default value is set at `1e6`.
+
+The users can also pass in solver-specific parameters to the `solve`
+function based on what solver they specify. On the whole, the
+additional parameters given by the user will override the five values
+specified above.
+
+# Solver-Specific Parameters
+
+We will go over some examples for each solvers supported by `CVXR`,
+the available parameters for each solver, and where to find the
+documentation for each solver.
+
+## OSQP
+
+The parameters available for `OSQP` can be found in this
+[link](https://osqp.org/docs/interfaces/solver_settings.html). The
+parameters can be entered individually in the arguments of the solve
+function or can be passed through as a list. If the user enters in a
+parameter that is not specified or accepted by `OSQP`, then the solver
+will ignore the parameter and proceed to solve the problem. Here is an
+example
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+
+# Inside Function
+result  <- solve(prob, solver = "OSQP", verbose = FALSE, feastol = 1e-2, eps_prim_inf = 1e-5)
+
+# Can also do it by passing in a list
+more_params <- list()
+more_params$verbose = TRUE
+more_params$feastol = 1e-2
+more_params$eps_prim_inf = 1e-5
+more_params$eps_prim_inf = 1e-3
+
+result <- solve(prob, solver = "OSQP", verbose = FALSE, more_params)
+```
+
+In the second case that the `verbose` in the `more_params` list overrides
+the value of `verbose` listed earlier in the invocation.
+
+## SCS
+
+The parameters available for `SCS` can be found in this
+[link](https://cran.r-project.org/web/packages/scs/scs.pdf) under the
+`scs_control` function. Much like `OSQP`, the parameters can be
+entered individually in the arguments of the solve function or can be
+passed through as a list. If the user enters in a parameter that is
+not specified or accepted by `SCS`, then the solver will ignore the
+parameter and proceed to solve the problem. Here is an example:
+
+```{r}
+n<-3
+p<-3
+C <- matrix(rnorm(n^2), ncol = n)
+A <- list(matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n))
+b <- matrix(rnorm(p), nrow = p)
+
+X <- Variable(c(n, n), symmetric = TRUE)
+constraints <- list(X >= 0)
+for(i in 1:p){
+  constraints <- c(constraints, list(matrix_trace(A[[i]]%*%X) == b[i] ))
+}
+
+obj <- Minimize(matrix_trace(C %*% X))
+prob <- Problem(obj, constraints)
+result  <- solve(prob, solver = "SCS", verbose = FALSE, feastol = 1e-2, cg_rate = 1.5, scale = 2)
+```
+
+Notice how in this case a warning is thrown: the `SCS` solver does not
+support the feasible tolerance parameter, so the solver ignores it.
+
+## ECOS
+
+The parameters available for `ECOS` can be found in this
+[link](https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf)
+under the `ecos.control` function. Much like `OSQP`, the parameters
+can be entered individually in the arguments of the solve function or
+can be passed through as a list. If the user enters in a parameter
+that is not specified or accepted by `ECOS`, then the solver will
+ignore the parameter and proceed to solve the problem. Here is an
+example:
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- solve(prob, solver = "ECOS", verbose = FALSE, feastol = 1e-2, reltol_inacc = 1e-5)
+```    
+
+## CPLEX
+
+The parameters available for `CPLEX` can be found in this
+[link](https://cran.r-project.org/web/packages/Rcplex/Rcplex.pdf)
+under the details section for the function `Rcplex` function on
+page 3. Much like `OSQP`, the parameters can be entered individually
+in the arguments of the solve function or can be passed through as a
+list. If the user enters in a parameter that is not specified or
+accepted by `CPLEX`, then the solver will give the user a warning but
+will proceed to solve the problem. Here is an example:
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- solve(prob, solver = "CPLEX", verbose = FALSE, eps_abs_tol = 1e-2, epagap = 1e-5)
+```
+
+As you can see, `eps_abs_tol` is not one of `CPLEX`'s specified
+parameters, so the solver threw a warning.
+
+## MOSEK
+
+The parameters available for `MOSEK` can be seen in this
+[link](https://docs.mosek.com/9.1/rmosek/parameters.html#doc-all-parameter-list). As
+you can see, the number of parameters is quite massive. They are also
+split between three times of parameters in "Double," "Integer," and
+"String" parameters. To pass these into the solver, they must be put
+in a list beforehand. Moreover, there are also general solver
+parameters that do not belong in any of the three categories. These
+parameters can be found in detail in the `Rmosek` package
+documentation, but here are the parameters
+
+* `verbose` (Another important note here is while the default values of `TRUE` and `FALSE` work, `MOSEK` uses integer values for verbose with the default being 10. The `TRUE` value for verbose corresponds to 10 in the solver)
+* `usesol`
+* `useparam`
+* `soldetail`
+* `getinfo`
+* `writebefore`
+* `writeafter`
+
+These parameters are passed into the `solve` function as normal. Here is an example:
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+iparam <- list()
+iparam$AUTO_UPDATE_SOL_INFO <- "OFF"
+iparam$BI_IGNORE_NUM_ERROR <- "OFF"
+iparam$BI_MAX_ITERATIONS <- 100000
+
+dparam <- list()
+dparam$BASIS_REL_TOL_S <- 1.0e-12
+dparam$BASIS_TOL_S <- 1.0e-6
+
+result  <- solve(prob, solver = "MOSEK", verbose = FALSE, soldetail = 3, dparam = dparam, iparam = iparam)
+```
+
+A quick detail in this case is that the solver threw a warning about
+the `soldetail` parameter. Both the `soldetail` and `getinfo`
+parameter controls the amount of data the solve returns, and some of
+them might be needed in order to invert the solution. Therefore,
+proceed with caution when using these variables as they can cause the
+solver to not obtain the answer.
+
+## GUROBI
+
+The parameters available for `GUROBI` can be seen in this
+[link](https://www.gurobi.com/documentation/6.5/refman/parameters.html#sec:Parameters). If
+an unaccepted parameter is passed into the `solve` function, then the
+function will not run to completion. The solver will also not let you
+know which parameter is at fault unless the parameter is
+continuous. Here is an example.
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- solve(prob, solver = "GUROBI", verbose = FALSE, BarIterLimit = 20, Quad = 1)
+```    
+    
+## GLPK
+
+The parameters available for `GLPK` can be seen in this
+[link](https://cran.r-project.org/web/packages/Rglpk/Rglpk.pdf) under
+the `Details` section in page 4. There are only four parameters in
+`verbose`, `presolve`, `tm_limit`, `canonicalize_status`. Here is an
+example
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- solve(prob, solver = "GLPK", verbose = FALSE, presolve = FALSE, tm_limit = 10, canonicalize_status = TRUE)
+```    
+    
+## CBC
+
+The parameters available for `CBC` can be seen in this
+[link](https://projects.coin-or.org/CoinBinary/export/1059/OptimizationSuite/trunk/Installer/files/doc/cbcCommandLine.pdf). Much
+like most of the solvers outlined above, if the user passes in a
+unspecified parameter into the solver, then the solver just ignores
+the parameter and proceeds to solve the problem. Here is an example
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- solve(prob, solver = "CBC", verbose = FALSE, sec = 5, maxn = 10)
+```
+	
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/cvxr_parameters.Rmd)
+

@@ -7,6 +7,10 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: sparse_inverse_covariance_estimation
 ---
 
 
@@ -17,7 +21,7 @@ tags: []
 set of symmetric positive semidefinite matrices, has a sparse inverse
 <span class="math inline">\(S = \Sigma^{-1}\)</span>. Let <span class="math inline">\(Q = \frac{1}{m-1}\sum_{i=1}^m (x_i - \bar x)(x_i - \bar x)^T\)</span> be our sample covariance. One way to estimate
 <span class="math inline">\(\Sigma\)</span> is to maximize the log-likelihood with the prior knowledge
-that <span class="math inline">\(S\)</span> is sparse <span class="citation">(Friedman, Hastie, and Tibshirani <a href="#ref-spinvcov">2008</a>)</span>, which amounts to the optimization
+that <span class="math inline">\(S\)</span> is sparse <span class="citation">(Friedman, Hastie, and Tibshirani <a href="#ref-spinvcov" role="doc-biblioref">2008</a>)</span>, which amounts to the optimization
 problem:</p>
 <p><span class="math display">\[
 \begin{array}{ll} \underset{S}{\mbox{maximize}} &amp; \log\det(S) - \mbox{tr}(SQ) \\
@@ -46,8 +50,15 @@ symmetric.</p>
 <pre class="r"><code>x_sample &lt;- matrix(stats::rnorm(n * m), nrow = m, ncol = n) %*% t(expm::sqrtm(R))
 Q &lt;- cov(x_sample)    ## Sample covariance matrix</code></pre>
 <p>Finally, we solve our convex program for a set of <span class="math inline">\(\alpha\)</span> values.</p>
+<p><strong>Version 1.0 Note:</strong> Positive semi-definite variables are now
+designated using <code>PSD = TRUE</code> rather than the <code>Semidef</code> function!</p>
 <pre class="r"><code>alphas &lt;- c(10, 8, 6, 4, 1)
-S &lt;- Semidef(n)    ## Variable constrained to positive semidefinite cone
+if (packageVersion(&quot;CVXR&quot;) &gt; &quot;0.99-7&quot;) {
+    S  &lt;- Variable(n, n, PSD = TRUE)
+} else {
+    S &lt;- Semidef(n)    ## Variable constrained to positive semidefinite cone
+}
+
 obj &lt;- Maximize(log_det(S) - matrix_trace(S %*% Q))
 
 S.est &lt;- lapply(alphas,
@@ -82,14 +93,14 @@ achieve the true percentage of non-zeros.</p>
 <pre class="r"><code>do.call(multiplot, args = c(list(plotSpMat(Strue)),
                             mapply(plotSpMat, S.est, alphas, SIMPLIFY = FALSE),
                             list(layout = matrix(1:6, nrow = 2, byrow = TRUE))))</code></pre>
-<p><img src="/cvxr_examples/sparse-inverse-covariance-estimation_files/figure-html/unnamed-chunk-6-1.png" width="576" /></p>
+<p><img src="/cvxr_examples/sparse-inverse-covariance-estimation_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -102,24 +113,21 @@ achieve the true percentage of non-zeros.</p>
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] expm_0.999-4  Matrix_1.2-17 ggplot2_3.2.1 CVXR_0.99-7  
+## [1] expm_0.999-4  Matrix_1.2-18 ggplot2_3.2.1 CVXR_1.0     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5       Rcpp_1.0.2         RColorBrewer_1.1-2
-##  [4] compiler_3.6.1     pillar_1.4.2       R.methodsS3_1.7.1 
-##  [7] R.utils_2.9.0      tools_3.6.1        digest_0.6.22     
-## [10] bit_1.1-14         evaluate_0.14      tibble_2.1.3      
-## [13] gtable_0.3.0       lattice_0.20-38    pkgconfig_2.0.3   
-## [16] rlang_0.4.1        yaml_2.2.0         blogdown_0.16     
-## [19] xfun_0.10          withr_2.1.2        dplyr_0.8.3       
-## [22] Rmpfr_0.7-2        ECOSolveR_0.5.3    stringr_1.4.0     
-## [25] knitr_1.25         tidyselect_0.2.5   bit64_0.9-7       
-## [28] glue_1.3.1         R6_2.4.0           rmarkdown_1.16    
-## [31] bookdown_0.14      purrr_0.3.3        magrittr_1.5      
-## [34] scales_1.0.0       htmltools_0.4.0    scs_1.3-1         
-## [37] assertthat_0.2.1   colorspace_1.4-1   labeling_0.3      
-## [40] stringi_1.4.3      lazyeval_0.2.2     munsell_0.5.0     
-## [43] crayon_1.3.4       R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5       Rcpp_1.0.3         RColorBrewer_1.1-2 compiler_3.6.2    
+##  [5] pillar_1.4.3       tools_3.6.2        digest_0.6.23      bit_1.1-14        
+##  [9] evaluate_0.14      lifecycle_0.1.0    tibble_2.1.3       gtable_0.3.0      
+## [13] lattice_0.20-38    pkgconfig_2.0.3    rlang_0.4.2        gurobi_9.0-0      
+## [17] Rglpk_0.6-4        yaml_2.2.0         blogdown_0.17      xfun_0.11         
+## [21] withr_2.1.2        Rmpfr_0.7-2        stringr_1.4.0      dplyr_0.8.3       
+## [25] knitr_1.26         tidyselect_0.2.5   bit64_0.9-7        glue_1.3.1        
+## [29] R6_2.4.1           rmarkdown_2.0      bookdown_0.16      farver_2.0.1      
+## [33] purrr_0.3.3        magrittr_1.5       scs_1.3-2          rcbc_0.1.0.9001   
+## [37] scales_1.1.0       htmltools_0.4.0    assertthat_0.2.1   colorspace_1.4-1  
+## [41] labeling_0.3       Rcplex_0.3-3       stringi_1.4.5      Rmosek_9.1.0      
+## [45] lazyeval_0.2.2     munsell_0.5.0      slam_0.1-47        crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

@@ -7,6 +7,10 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: isotonic-regression
 ---
 
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
@@ -23,7 +27,7 @@ methods to perform the fit.</p>
 </div>
 <div id="pituitary-data-example" class="section level2">
 <h2>Pituitary Data Example</h2>
-<p>We will use data from the <code>isotone</code> package (see <span class="citation">de Leeuw, Hornik, and Mair (<a href="#ref-isotone">2009</a>)</span>) on the size
+<p>We will use data from the <code>isotone</code> package (see <span class="citation">de Leeuw, Hornik, and Mair (<a href="#ref-isotone" role="doc-biblioref">2009</a>)</span>) on the size
 of pituitary fissures for 11 subjects between 8 and 14 years of age.</p>
 <pre class="r"><code>data(&quot;pituitary&quot;)
 str(pituitary)</code></pre>
@@ -47,25 +51,25 @@ str(pituitary)</code></pre>
 <pre class="r"><code>cbind(res_p$x, x_p)</code></pre>
 <pre><code>##         [,1]     [,2]
 ##  [1,] 21.000 20.99998
-##  [2,] 22.375 22.37499
-##  [3,] 22.375 22.37499
-##  [4,] 22.375 22.37499
-##  [5,] 22.375 22.37499
-##  [6,] 22.375 22.37499
-##  [7,] 22.375 22.37499
-##  [8,] 22.375 22.37499
-##  [9,] 22.375 22.37499
-## [10,] 23.500 23.50003
-## [11,] 25.000 25.00004</code></pre>
+##  [2,] 22.375 22.37500
+##  [3,] 22.375 22.37500
+##  [4,] 22.375 22.37500
+##  [5,] 22.375 22.37500
+##  [6,] 22.375 22.37500
+##  [7,] 22.375 22.37500
+##  [8,] 22.375 22.37500
+##  [9,] 22.375 22.37500
+## [10,] 23.500 23.50001
+## [11,] 25.000 24.99999</code></pre>
 </div>
 <div id="handling-ties" class="section level2">
 <h2>Handling Ties</h2>
-<p>Package <code>isotone</code> provides additional methods for handling tied data besides the default <code>ties = &quot;primary&quot;</code> method; <code>ties = &quot;secondary&quot;</code> enforces equality within ties, and <code>ties = &quot;tertiary&quot;</code>
+<p>Package <code>isotone</code> provides additional methods for handling tied data besides the default <code>ties = "primary"</code> method; <code>ties = "secondary"</code> enforces equality within ties, and <code>ties = "tertiary"</code>
 enforces monotonicity on the means. (The latter may cause individual fits to be non-monotonic.)</p>
 <pre class="r"><code>res_s &lt;- with(pituitary, gpava(age, size, ties = &quot;secondary&quot;))
 res_t &lt;- with(pituitary, gpava(age, size, ties = &quot;tertiary&quot;))</code></pre>
 <p>In <code>CVXR</code>, the secondary method just requires an additional constraint to enforce
-equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
+equality within tied values; no other modification is necessary. We do that below by figuring out the tied observation indices using <code>base::split</code> and force those <code>x</code> values to be equal (i.e. <code>diff</code> == 0).</p>
 <pre class="r"><code>x_s &lt;- with(pituitary, {
     n &lt;- length(size)
     x &lt;- Variable(n)
@@ -100,7 +104,7 @@ in enforcing monotonicity.</p>
 <p>We can now compare all three solutions.</p>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-8">Table 1: </span>P = primary, S = Secondary, T = Tertiary
+<span id="tab:unnamed-chunk-9">Table 1: </span>P = primary, S = Secondary, T = Tertiary
 </caption>
 <thead>
 <tr>
@@ -150,7 +154,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -170,7 +174,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -190,7 +194,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -210,7 +214,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -230,7 +234,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -250,7 +254,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -270,7 +274,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -290,7 +294,7 @@ CVXR (T)
 22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-22.37
+22.38
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 22.22
@@ -356,9 +360,9 @@ observations using the above as a guide.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -370,26 +374,23 @@ observations using the above as a guide.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 isotone_1.1-0    CVXR_0.99-7     
+## [1] kableExtra_1.1.0 isotone_1.1-0    CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        highr_0.8        
-##  [4] pillar_1.4.2      compiler_3.6.1    R.methodsS3_1.7.1
-##  [7] R.utils_2.9.0     tools_3.6.1       zeallot_0.1.0    
-## [10] digest_0.6.22     bit_1.1-14        viridisLite_0.3.0
-## [13] tibble_2.1.3      evaluate_0.14     lattice_0.20-38  
-## [16] pkgconfig_2.0.3   rlang_0.4.1       Matrix_1.2-17    
-## [19] rstudioapi_0.10   yaml_2.2.0        blogdown_0.16    
-## [22] xfun_0.10         xml2_1.2.2        httr_1.4.1       
-## [25] Rmpfr_0.7-2       ECOSolveR_0.5.3   stringr_1.4.0    
-## [28] knitr_1.25        vctrs_0.2.0       hms_0.5.2        
-## [31] webshot_0.5.1     bit64_0.9-7       grid_3.6.1       
-## [34] glue_1.3.1        R6_2.4.0          rmarkdown_1.16   
-## [37] bookdown_0.14     readr_1.3.1       magrittr_1.5     
-## [40] scales_1.0.0      backports_1.1.5   htmltools_0.4.0  
-## [43] scs_1.3-1         nnls_1.4          rvest_0.3.4      
-## [46] colorspace_1.4-1  stringi_1.4.3     munsell_0.5.0    
-## [49] crayon_1.3.4      R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.2   
+##  [5] pillar_1.4.3      tools_3.6.2       zeallot_0.1.0     digest_0.6.23    
+##  [9] bit_1.1-14        viridisLite_0.3.0 lifecycle_0.1.0   evaluate_0.14    
+## [13] tibble_2.1.3      lattice_0.20-38   pkgconfig_2.0.3   rlang_0.4.2      
+## [17] Matrix_1.2-18     gurobi_9.0-0      rstudioapi_0.10   Rglpk_0.6-4      
+## [21] yaml_2.2.0        blogdown_0.17     xfun_0.11         xml2_1.2.2       
+## [25] httr_1.4.1        Rmpfr_0.7-2       stringr_1.4.0     knitr_1.26       
+## [29] vctrs_0.2.1       hms_0.5.2         webshot_0.5.2     bit64_0.9-7      
+## [33] grid_3.6.2        glue_1.3.1        R6_2.4.1          rmarkdown_2.0    
+## [37] bookdown_0.16     readr_1.3.1       magrittr_1.5      rcbc_0.1.0.9001  
+## [41] scales_1.1.0      backports_1.1.5   htmltools_0.4.0   nnls_1.4         
+## [45] assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3     
+## [49] stringi_1.4.5     Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47      
+## [53] crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

@@ -7,7 +7,21 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: fast-mixing-mc
 ---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
@@ -135,31 +149,47 @@ Table 1 from @FMMC is reproduced below.
 ![](../../../img/fmmc/table1.png)
 
 
+
 We reproduce the results for various rows of the table.
 
 ```{r, fig.cap="Row 1, line graph", out.width="100%"}
 g <- list("1" = 2, "2" = c(1,3), "3" = c(2,4), "4" = 3)
-result <- FMMC(g, verbose = TRUE)
-disp_result(names(g), result$P)
+result1 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result1$P)
 ```
 
 ```{r, fig.cap="Row 2, triangle plus one edge", out.width="100%"}
 g <- list("1" = 2, "2" = c(1,3,4), "3" = c(2,4), "4" = c(2,3))
-result <- FMMC(g, verbose = TRUE)
-disp_result(names(g), result$P)
+result2 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result2$P)
 ```
 
 ```{r, fig.cap="Bipartite 2 plus 3", out.width="100%"}
 g <- list("1" = c(2,4,5), "2" = c(1,3), "3" = c(2,4,5), "4" = c(1,3), "5" = c(1,3))
-result <- FMMC(g, verbose = TRUE)
-disp_result(names(g), result$P)
+result3 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result3$P)
 ```
 
 ```{r, fig.cap="Square plus central point", out.width="100%"}
 g <- list("1" = c(2,3,5), "2" = c(1,4,5), "3" = c(1,4,5), "4" = c(2,3,5), "5" = c(1,2,3,4,5))
-result <- FMMC(g, verbose = TRUE)
-disp_result(names(g), result$P)
+result4 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result4$P)
 ```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), error = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(result1 = result1, result2 = result2, result3 = result3, result4 = result4),
+            file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    fmix <- readRDS(file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
+    expect_equal(result1, fmix$result1, tol = 1e-4)
+    expect_equal(result2, fmix$result2, tol = 1e-4)
+    expect_equal(result3, fmix$result3, tol = 1e-4)
+    expect_equal(result4, fmix$result4, tol = 1e-4)
+}
+```
+
 
 ## Extensions
 

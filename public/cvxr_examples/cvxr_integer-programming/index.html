@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.58.3" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Integer Programming &mdash; CVXR</title>
 	
@@ -48,7 +48,11 @@ integer and boolean variables. These can be combined with <code>vstack</code>
 new expressions.</p>
 <p>The above problem now in <code>CVXR</code>.</p>
 <pre class="r"><code>y1 &lt;- Variable(2)
-y2 &lt;- Int(1)
+if (packageVersion(&quot;CVXR&quot;) &gt; &quot;0.99-7&quot;) {
+    y2 &lt;- Variable(1, integer = TRUE)
+} else {
+    y2 &lt;- Int(1)
+}
 y3 &lt;- Variable(1)
 x &lt;- vstack(y1, y2, y3) ## Create x expression
 C &lt;- matrix(c(1, 2, -0.1, -3), nrow = 1)
@@ -64,7 +68,7 @@ problem &lt;- Problem(objective, constraints)</code></pre>
 <p>We can solve this problem as usual using the default <code>ECOS</code> (actually
 <code>ECOS_BB</code>) solver and obtain the optimal value as well as the
 solution.</p>
-<pre class="r"><code>result &lt;- solve(problem)
+<pre class="r"><code>result &lt;- solve(problem, solver = &quot;ECOS_BB&quot;)
 cat(sprintf(&quot;Optimal value: %.3f\n&quot;, result$value))</code></pre>
 <pre><code>## Optimal value: 8.133</code></pre>
 <pre class="r"><code>ecos_solution &lt;- result$getValue(x)</code></pre>
@@ -74,8 +78,9 @@ cat(sprintf(&quot;Optimal value: %.3f\n&quot;, result$value))</code></pre>
 <code>LPSOLVE</code> and <code>GLPK</code> provided the respective R packages are installed
 as documented in the tutorial <a href="../../cvxr_examples/using-other-solvers/">Using Other
 Solvers</a>.</p>
-<pre class="r"><code>result &lt;- solve(problem, solver = &quot;LPSOLVE&quot;)
-lpsolve_solution &lt;- result$getValue(x)
+<p><em>Note:</em> <code>LPSOLVE</code> is now orphaned on CRAN and so no longer supported.</p>
+<pre class="r"><code>##result &lt;- solve(problem, solver = &quot;LPSOLVE&quot;)
+##lpsolve_solution &lt;- result$getValue(x)
 result &lt;- solve(problem, solver = &quot;GLPK&quot;)
 glpk_solution &lt;- result$getValue(x)</code></pre>
 <p>Finally, we can also try a commercial solver that can handle integer
@@ -84,13 +89,13 @@ programs.</p>
 gurobi_solution &lt;- result$getValue(x)</code></pre>
 <p>Below is the table is solutions from all the solvers we used.</p>
 <pre class="r"><code>solutions &lt;- data.frame(ECOS = ecos_solution,
-                        LPSOLVE = lpsolve_solution,
+                        ## LPSOLVE = lpsolve_solution,
                         GLPK = glpk_solution,
                         GUROBI = gurobi_solution)
 row.names(solutions) &lt;- c(&quot;$x_1$&quot;, &quot;$x_2$&quot;, &quot;$x_3$&quot;, &quot;$x_4$&quot;)
 knitr::kable(solutions, format = &quot;html&quot;) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
-    column_spec(1:5, background = &quot;#ececec&quot;)</code></pre>
+    column_spec(1:4, background = &quot;#ececec&quot;)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -98,9 +103,6 @@ knitr::kable(solutions, format = &quot;html&quot;) %&gt;%
 </th>
 <th style="text-align:right;">
 ECOS
-</th>
-<th style="text-align:right;">
-LPSOLVE
 </th>
 <th style="text-align:right;">
 GLPK
@@ -114,9 +116,6 @@ GUROBI
 <tr>
 <td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(x_1\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec !important;">
-1.666667
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 1.666667
@@ -141,9 +140,6 @@ GUROBI
 <td style="text-align:right;background-color: #ececec !important;">
 3.333333
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
-3.333333
-</td>
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec !important;">
@@ -158,16 +154,10 @@ GUROBI
 <td style="text-align:right;background-color: #ececec !important;">
 2.000000
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
-2.000000
-</td>
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec !important;">
 <span class="math inline">\(x_4\)</span>
-</td>
-<td style="text-align:right;background-color: #ececec !important;">
-0.000000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000000
@@ -197,7 +187,7 @@ others. Additionally, Peter and Tom often work together, so should be
 in adjacent offices. Marcelo and Rakesh often work together, and
 should be in adjacent offices.</p>
 <pre class="r"><code>draw_office_layout()</code></pre>
-<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>The office layout is shown above. Offices 1, 2, 3, and 4 are inside
 offices (no windows). Offices 5, 6, and 7 have windows, but the window
 in office 5 is smaller than the other two.</p>
@@ -224,17 +214,27 @@ weightvector &lt;- seniority / sum(seniority)
 PM &lt;- diag(weightvector) %*% preference_matrix</code></pre>
 <p>We define the the occupancy variable which indicates, using values 1
 or 0, who occupies which office.</p>
-<pre class="r"><code>occupy &lt;- Int(length(people), length(offices))</code></pre>
+<pre class="r"><code>if (packageVersion(&quot;CVXR&quot;) &gt; &quot;0.99-7&quot;) {
+    occupy &lt;- Variable(length(people), length(offices), integer = TRUE)
+} else {
+    occupy &lt;- Int(length(people), length(offices))
+}</code></pre>
 <p>The objective is to <em>maximize the satisfaction</em> of the preferences
 weighted by seniority constrained by the fact the a person can only
 occupy a single office and no office can have more than 1 person.</p>
-<pre class="r"><code>objective &lt;- Maximize(sum_entries(mul_elemwise(PM, occupy)))
+<pre class="r"><code>objective &lt;- if (packageVersion(&quot;CVXR&quot;) &gt; &quot;0.99-7&quot;) {
+                 Maximize(sum_entries(multiply(PM, occupy)))
+             } else {
+                 Maximize(sum_entries(mul_elemwise(PM, occupy)))
+             }
+
 constraints &lt;- list(
     occupy &gt;= 0,
     occupy &lt;= 1,
     sum_entries(occupy, axis = 1) == 1,
     sum_entries(occupy, axis = 2) &lt;= 1
 )</code></pre>
+<p><strong>Version 1.0 Note</strong> The pre-1.0 function <code>mul_elemwise</code> is now <code>multiply</code>.</p>
 <p>We further add the constraint that Tom (person 3) and Peter (person 4)
 should be no more than one office away, and ditto for Marcelo (person
 5) and Rakesh (person 6).</p>
@@ -261,7 +261,7 @@ marcelo_rakesh &lt;- list(
 constraints &lt;- c(constraints, tom_peter, marcelo_rakesh)</code></pre>
 <p>We are now ready to solve the problem.</p>
 <pre class="r"><code>problem &lt;- Problem(objective, constraints)
-ecos_result &lt;- solve(problem)
+ecos_result &lt;- solve(problem, solver = &quot;ECOS_BB&quot;)
 ecos_soln &lt;- round(ecos_result$getValue(occupy), 0)
 rownames(ecos_soln) &lt;- people
 colnames(ecos_soln) &lt;- offices</code></pre>
@@ -270,14 +270,14 @@ colnames(ecos_soln) &lt;- offices</code></pre>
 office_occupants &lt;- names(office_assignment)[match(c(5:7, 1:4), office_assignment)]
 office_occupants[is.na(office_occupants)] &lt;- &quot;Empty&quot;
 draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
-<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -289,40 +289,25 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.2.1    kableExtra_1.1.0 CVXR_0.99-7     
+## [1] ggplot2_3.2.1    kableExtra_1.1.0 CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reticulate_1.13         tidyselect_0.2.5       
-##  [3] xfun_0.10               slam_0.1-46            
-##  [5] purrr_0.3.3             lattice_0.20-38        
-##  [7] colorspace_1.4-1        vctrs_0.2.0            
-##  [9] htmltools_0.4.0         viridisLite_0.3.0      
-## [11] yaml_2.2.0              gmp_0.5-13.5           
-## [13] rlang_0.4.1             R.oo_1.23.0            
-## [15] pillar_1.4.2            glue_1.3.1             
-## [17] Rmpfr_0.7-2             withr_2.1.2            
-## [19] R.utils_2.9.0           bit64_0.9-7            
-## [21] scs_1.3-1               stringr_1.4.0          
-## [23] munsell_0.5.0           blogdown_0.16          
-## [25] gtable_0.3.0            rvest_0.3.4            
-## [27] R.methodsS3_1.7.1       lpSolveAPI_5.5.2.0-17.4
-## [29] evaluate_0.14           labeling_0.3           
-## [31] knitr_1.25              highr_0.8              
-## [33] Rcpp_1.0.2              readr_1.3.1            
-## [35] backports_1.1.5         scales_1.0.0           
-## [37] jsonlite_1.6            webshot_0.5.1          
-## [39] bit_1.1-14              hms_0.5.2              
-## [41] digest_0.6.22           stringi_1.4.3          
-## [43] bookdown_0.14           dplyr_0.8.3            
-## [45] grid_3.6.1              Rglpk_0.6-4            
-## [47] ECOSolveR_0.5.3         tools_3.6.1            
-## [49] magrittr_1.5            lazyeval_0.2.2         
-## [51] tibble_2.1.3            crayon_1.3.4           
-## [53] pkgconfig_2.0.3         zeallot_0.1.0          
-## [55] Matrix_1.2-17           xml2_1.2.2             
-## [57] assertthat_0.2.1        rmarkdown_1.16         
-## [59] httr_1.4.1              rstudioapi_0.10        
-## [61] R6_2.4.0                compiler_3.6.1</code></pre>
+##  [1] tidyselect_0.2.5  xfun_0.11         slam_0.1-47       purrr_0.3.3      
+##  [5] lattice_0.20-38   Rmosek_9.1.0      colorspace_1.4-1  vctrs_0.2.1      
+##  [9] htmltools_0.4.0   viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5     
+## [13] rlang_0.4.2       pillar_1.4.3      glue_1.3.1        Rmpfr_0.7-2      
+## [17] withr_2.1.2       Rcplex_0.3-3      bit64_0.9-7       lifecycle_0.1.0  
+## [21] stringr_1.4.0     munsell_0.5.0     blogdown_0.17     gtable_0.3.0     
+## [25] gurobi_9.0-0      rvest_0.3.5       evaluate_0.14     labeling_0.3     
+## [29] knitr_1.26        highr_0.8         Rcpp_1.0.3        readr_1.3.1      
+## [33] backports_1.1.5   scales_1.1.0      webshot_0.5.2     farver_2.0.1     
+## [37] bit_1.1-14        hms_0.5.2         digest_0.6.23     stringi_1.4.5    
+## [41] bookdown_0.16     dplyr_0.8.3       Rglpk_0.6-4       grid_3.6.2       
+## [45] ECOSolveR_0.5.3   tools_3.6.2       magrittr_1.5      lazyeval_0.2.2   
+## [49] tibble_2.1.3      crayon_1.3.4      pkgconfig_2.0.3   zeallot_0.1.0    
+## [53] rcbc_0.1.0.9001   Matrix_1.2-18     xml2_1.2.2        assertthat_0.2.1 
+## [57] rmarkdown_2.0     httr_1.4.1        rstudioapi_0.10   R6_2.4.1         
+## [61] compiler_3.6.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -373,19 +358,23 @@ Markdown</a></p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -397,7 +386,7 @@ Markdown</a></p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

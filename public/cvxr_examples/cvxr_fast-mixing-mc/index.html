@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.58.3" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Fastest Mixing Markov Chain &mdash; CVXR</title>
 	
@@ -30,7 +30,7 @@
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This example is derived from the results in <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, section 2. Let
+<p>This example is derived from the results in <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC" role="doc-biblioref">2004</a>)</span>, section 2. Let
 <span class="math inline">\(\mathcal{G} = (\mathcal{V}, \mathcal{E})\)</span> be a connected graph with
 vertices <span class="math inline">\(\mathcal{V} = \{1,\ldots,n\}\)</span> and edges
 <span class="math inline">\(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\)</span>. Assume that
@@ -77,7 +77,7 @@ result &lt;- solve(prob)</code></pre>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>In order to reproduce some of the examples from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span>, we create
+<p>In order to reproduce some of the examples from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC" role="doc-biblioref">2004</a>)</span>, we create
 functions to build up the graph, solve the optimization problem and
 finally display the chain graphically.</p>
 <pre class="r"><code>## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
@@ -131,45 +131,45 @@ disp_result &lt;- function(states, P, tol = 1e-3) {
 }</code></pre>
 <div id="results" class="section level3">
 <h3>Results</h3>
-<p>Table 1 from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC">2004</a>)</span> is reproduced below.</p>
+<p>Table 1 from <span class="citation">Boyd, Diaconis, and Xiao (<a href="#ref-FMMC" role="doc-biblioref">2004</a>)</span> is reproduced below.</p>
 <p><img src="../../../img/fmmc/table1.png" /></p>
 <p>We reproduce the results for various rows of the table.</p>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = 2, &quot;2&quot; = c(1,3), &quot;3&quot; = c(2,4), &quot;4&quot; = 3)
-result &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.7071066</code></pre>
-<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-3"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-3-1.png" alt="Row 1, line graph" width="100%" />
+result1 &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.7071068</code></pre>
+<pre class="r"><code>disp_result(names(g), result1$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-4"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-4-1.png" alt="Row 1, line graph" width="100%" />
 <p class="caption">
 Figure 1: Row 1, line graph
 </p>
 </div>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = 2, &quot;2&quot; = c(1,3,4), &quot;3&quot; = c(2,4), &quot;4&quot; = c(2,3))
-result &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.6363641</code></pre>
-<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-4"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-4-1.png" alt="Row 2, triangle plus one edge" width="100%" />
+result2 &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.6363636</code></pre>
+<pre class="r"><code>disp_result(names(g), result2$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-5"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-5-1.png" alt="Row 2, triangle plus one edge" width="100%" />
 <p class="caption">
 Figure 2: Row 2, triangle plus one edge
 </p>
 </div>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = c(2,4,5), &quot;2&quot; = c(1,3), &quot;3&quot; = c(2,4,5), &quot;4&quot; = c(1,3), &quot;5&quot; = c(1,3))
-result &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.4285715</code></pre>
-<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-5"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-5-1.png" alt="Bipartite 2 plus 3" width="100%" />
+result3 &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.4285714</code></pre>
+<pre class="r"><code>disp_result(names(g), result3$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-6"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-6-1.png" alt="Bipartite 2 plus 3" width="100%" />
 <p class="caption">
 Figure 3: Bipartite 2 plus 3
 </p>
 </div>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = c(2,3,5), &quot;2&quot; = c(1,4,5), &quot;3&quot; = c(1,4,5), &quot;4&quot; = c(2,3,5), &quot;5&quot; = c(1,2,3,4,5))
-result &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.2500045</code></pre>
-<pre class="r"><code>disp_result(names(g), result$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-6"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-6-1.png" alt="Square plus central point" width="100%" />
+result4 &lt;- FMMC(g, verbose = TRUE)</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.25</code></pre>
+<pre class="r"><code>disp_result(names(g), result4$P)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-7"></span>
+<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-7-1.png" alt="Square plus central point" width="100%" />
 <p class="caption">
 Figure 4: Square plus central point
 </p>
@@ -188,9 +188,9 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -202,22 +202,19 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] markovchain_0.8.0 CVXR_0.99-7      
+## [1] markovchain_0.8.1 CVXR_1.0         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5       Rcpp_1.0.2         compiler_3.6.1    
-##  [4] highr_0.8          R.methodsS3_1.7.1  R.utils_2.9.0     
-##  [7] tools_3.6.1        digest_0.6.22      bit_1.1-14        
-## [10] evaluate_0.14      lattice_0.20-38    pkgconfig_2.0.3   
-## [13] rlang_0.4.1        Matrix_1.2-17      igraph_1.2.4.1    
-## [16] yaml_2.2.0         parallel_3.6.1     expm_0.999-4      
-## [19] blogdown_0.16      xfun_0.10          Rmpfr_0.7-2       
-## [22] ECOSolveR_0.5.3    stringr_1.4.0      knitr_1.25        
-## [25] stats4_3.6.1       bit64_0.9-7        grid_3.6.1        
-## [28] R6_2.4.0           rmarkdown_1.16     bookdown_0.14     
-## [31] matlab_1.0.2       magrittr_1.5       htmltools_0.4.0   
-## [34] scs_1.3-1          stringi_1.4.3      RcppParallel_4.4.4
-## [37] R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5       Rcpp_1.0.3         highr_0.8          compiler_3.6.2    
+##  [5] tools_3.6.2        digest_0.6.23      bit_1.1-14         evaluate_0.14     
+##  [9] lattice_0.20-38    pkgconfig_2.0.3    rlang_0.4.2        Matrix_1.2-18     
+## [13] igraph_1.2.4.2     gurobi_9.0-0       Rglpk_0.6-4        yaml_2.2.0        
+## [17] parallel_3.6.2     expm_0.999-4       blogdown_0.17      xfun_0.11         
+## [21] Rmpfr_0.7-2        stringr_1.4.0      knitr_1.26         stats4_3.6.2      
+## [25] bit64_0.9-7        grid_3.6.2         R6_2.4.1           rmarkdown_2.0     
+## [29] bookdown_0.16      matlab_1.0.2       magrittr_1.5       rcbc_0.1.0.9001   
+## [33] htmltools_0.4.0    assertthat_0.2.1   Rcplex_0.3-3       stringi_1.4.5     
+## [37] Rmosek_9.1.0       RcppParallel_4.4.4 slam_0.1-47</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -227,7 +224,7 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-FMMC">
-<p>Boyd, S., P. Diaconis, and L. Xiao. 2004. “Fastest Mixing Markov Chain on a Graph.” <em>SIAM Review</em> 46 (4). SIAM: 667–89.</p>
+<p>Boyd, S., P. Diaconis, and L. Xiao. 2004. “Fastest Mixing Markov Chain on a Graph.” <em>SIAM Review</em> 46 (4): 667–89.</p>
 </div>
 </div>
 </div>
@@ -272,19 +269,23 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -296,7 +297,7 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

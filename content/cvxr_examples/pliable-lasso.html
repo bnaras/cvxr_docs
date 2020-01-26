@@ -7,6 +7,10 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: plasso
 ---
 
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
@@ -14,7 +18,7 @@ tags: []
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p><span class="citation">Tibshirani and Friedman (<a href="#ref-tibsjhf:2017">2017</a>)</span> propose a generalization of the lasso that allows the
+<p><span class="citation">Tibshirani and Friedman (<a href="#ref-tibsjhf:2017" role="doc-biblioref">2017</a>)</span> propose a generalization of the lasso that allows the
 model coefficients to vary as a function of a general set of modifying
 variables, such as gender, age or time. The pliable lasso model has
 the form</p>
@@ -49,7 +53,7 @@ needed in this example.</p>
 </div>
 <div id="the-pliable-lasso-in-cvxr" class="section level2">
 <h2>The pliable lasso in <code>CVXR</code></h2>
-<p>We will use a simulated example from section 3 of <span class="citation">Tibshirani and Friedman (<a href="#ref-tibsjhf:2017">2017</a>)</span> with
+<p>We will use a simulated example from section 3 of <span class="citation">Tibshirani and Friedman (<a href="#ref-tibsjhf:2017" role="doc-biblioref">2017</a>)</span> with
 <span class="math inline">\(n=100\)</span>, <span class="math inline">\(p=50\)</span> and <span class="math inline">\(K=4\)</span>. The response is generated as</p>
 <p><span class="math display">\[
 \begin{eqnarray*}
@@ -148,7 +152,7 @@ y_hat &lt;- beta0 + X %*% beta + Z %*% theta0 + XZ_term</code></pre>
 <div id="the-problem-and-its-solution" class="section level3">
 <h3>The problem and its solution</h3>
 <pre class="r"><code>prob &lt;- Problem(Minimize(objective))
-result &lt;- solve(prob, verbose = verbose)
+result &lt;- solve(prob, verbose = TRUE)
 beta_hat &lt;- result$getValue(beta)</code></pre>
 </div>
 <div id="the-return-values" class="section level3">
@@ -197,7 +201,7 @@ list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0.0,
         (1 - alpha) * lambda * (penalty_term1 + penalty_term2) +
         alpha * lambda * penalty_term3
     prob &lt;- Problem(Minimize(objective))
-    result &lt;- solve(prob, verbose = verbose)
+    result &lt;- solve(prob, verbose = TRUE)
     beta_hat &lt;- result$getValue(beta)
     theta0_hat &lt;- result$getValue(theta0)
     theta_hat &lt;- result$getValue(theta)
@@ -217,9 +221,89 @@ list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0.0,
 <h2>The Results</h2>
 <p>Using <span class="math inline">\(\lambda = 0.6\)</span> we fit the pliable lasso without an intercept</p>
 <pre class="r"><code>result &lt;- plasso_fit(y, X, Z, lambda = 0.6, alpha = 0.5, intercept = FALSE)</code></pre>
+<pre><code>## Acquiring MOSEK environment
+## Problem
+##   Name                   :                 
+##   Objective sense        : min             
+##   Type                   : CONIC (conic optimization problem)
+##   Constraints            : 1056            
+##   Cones                  : 101             
+##   Scalar variables       : 1208            
+##   Matrix variables       : 0               
+##   Integer variables      : 0               
+## 
+## Optimizer started.
+## Presolve started.
+## Linear dependency checker started.
+## Linear dependency checker terminated.
+## Eliminator started.
+## Freed constraints in eliminator : 0
+## Eliminator terminated.
+## Eliminator - tries                  : 1                 time                   : 0.00            
+## Lin. dep.  - tries                  : 1                 time                   : 0.00            
+## Lin. dep.  - number                 : 0               
+## Presolve terminated. Time: 0.00    
+## Problem
+##   Name                   :                 
+##   Objective sense        : min             
+##   Type                   : CONIC (conic optimization problem)
+##   Constraints            : 1056            
+##   Cones                  : 101             
+##   Scalar variables       : 1208            
+##   Matrix variables       : 0               
+##   Integer variables      : 0               
+## 
+## Optimizer  - threads                : 8               
+## Optimizer  - solved problem         : the dual        
+## Optimizer  - Constraints            : 456
+## Optimizer  - Cones                  : 101
+## Optimizer  - Scalar variables       : 1056              conic                  : 652             
+## Optimizer  - Semi-definite variables: 0                 scalarized             : 0               
+## Factor     - setup time             : 0.00              dense det. time        : 0.00            
+## Factor     - ML order time          : 0.00              GP order time          : 0.00            
+## Factor     - nonzeros before factor : 3.92e+04          after factor           : 4.56e+04        
+## Factor     - dense dim.             : 6                 flops                  : 8.86e+06        
+## ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
+## 0   2.4e+01  1.0e+00  3.2e+01  0.00e+00   3.000000000e+01   -1.000000000e+00  1.0e+00  0.01  
+## 1   1.2e+01  5.0e-01  5.4e+00  8.77e-01   2.078449558e+01   9.709212181e+00   5.0e-01  0.01  
+## 2   8.8e+00  3.6e-01  2.5e+00  2.61e+00   1.168682614e+01   6.734272672e+00   3.6e-01  0.02  
+## 3   4.9e+00  2.0e-01  8.6e-01  2.07e+00   8.411428087e+00   6.525838553e+00   2.0e-01  0.02  
+## 4   4.1e+00  1.7e-01  6.7e-01  1.53e+00   7.702191074e+00   6.148222756e+00   1.7e-01  0.02  
+## 5   1.6e+00  6.5e-02  1.8e-01  1.58e+00   6.264895892e+00   5.725386628e+00   6.5e-02  0.02  
+## 6   9.4e-01  3.9e-02  9.4e-02  8.10e-01   5.765244946e+00   5.383979330e+00   3.9e-02  0.03  
+## 7   4.4e-01  1.8e-02  3.1e-02  9.72e-01   5.324228020e+00   5.138001741e+00   1.8e-02  0.03  
+## 8   2.1e-01  8.7e-03  1.5e-02  3.50e-01   4.901890831e+00   4.766653954e+00   8.7e-03  0.03  
+## 9   4.5e-02  1.9e-03  1.8e-03  8.29e-01   4.445497087e+00   4.410689416e+00   1.9e-03  0.04  
+## 10  9.0e-03  3.7e-04  1.8e-04  7.41e-01   4.226277835e+00   4.217766978e+00   3.7e-04  0.04  
+## 11  1.8e-03  7.4e-05  1.6e-05  8.61e-01   4.167494691e+00   4.165673328e+00   7.4e-05  0.04  
+## 12  6.2e-04  2.5e-05  3.2e-06  9.55e-01   4.158096355e+00   4.157458056e+00   2.5e-05  0.04  
+## 13  1.1e-04  4.6e-06  2.5e-07  9.81e-01   4.154142654e+00   4.154025382e+00   4.6e-06  0.05  
+## 14  7.2e-06  2.1e-07  2.5e-09  9.95e-01   4.153324216e+00   4.153318763e+00   2.1e-07  0.05  
+## 15  4.5e-04  1.3e-08  4.0e-11  1.00e+00   4.153291052e+00   4.153290713e+00   1.3e-08  0.05  
+## 16  1.7e-02  3.4e-10  1.7e-13  1.00e+00   4.153288707e+00   4.153288698e+00   3.4e-10  0.06  
+## Optimizer terminated. Time: 0.06    
+## 
+## 
+## Interior-point solution summary
+##   Problem status  : PRIMAL_AND_DUAL_FEASIBLE
+##   Solution status : OPTIMAL
+##   Primal.  obj: 4.1532887070e+00    nrm: 4e+02    Viol.  con: 3e-14    var: 0e+00    cones: 1e-09  
+##   Dual.    obj: 4.1532886983e+00    nrm: 9e-01    Viol.  con: 9e-11    var: 8e-11    cones: 1e-10  
+## Optimizer summary
+##   Optimizer                 -                        time: 0.06    
+##     Interior-point          - iterations : 16        time: 0.06    
+##       Basis identification  -                        time: 0.00    
+##         Primal              - iterations : 0         time: 0.00    
+##         Dual                - iterations : 0         time: 0.00    
+##         Clean primal        - iterations : 0         time: 0.00    
+##         Clean dual          - iterations : 0         time: 0.00    
+##     Simplex                 -                        time: 0.00    
+##       Primal simplex        - iterations : 0         time: 0.00    
+##       Dual simplex          - iterations : 0         time: 0.00    
+##     Mixed integer           - relaxations: 0         time: 0.00</code></pre>
 <p>We can print the various estimates.</p>
 <pre class="r"><code>cat(sprintf(&quot;Objective value: %f\n&quot;, result$criterion))</code></pre>
-<pre><code>## Objective value: 4.279446</code></pre>
+<pre><code>## Objective value: 4.153289</code></pre>
 <p>We only print the nonzero <span class="math inline">\(\beta\)</span> values.</p>
 <pre class="r"><code>index &lt;- which(result$beta_hat != 0)
 est.table &lt;- data.frame(matrix(result$beta_hat[index], nrow = 1))
@@ -244,36 +328,24 @@ knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
 <th style="text-align:right;">
 <span class="math inline">\(\beta_{20}\)</span>
 </th>
-<th style="text-align:right;">
-<span class="math inline">\(\beta_{34}\)</span>
-</th>
-<th style="text-align:right;">
-<span class="math inline">\(\beta_{39}\)</span>
-</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:right;">
-1.783
+1.716
 </td>
 <td style="text-align:right;">
--1.373
+-1.385
 </td>
 <td style="text-align:right;">
-2.736
+2.217
 </td>
 <td style="text-align:right;">
-0.021
+0.285
 </td>
 <td style="text-align:right;">
--0.141
-</td>
-<td style="text-align:right;">
--0.093
-</td>
-<td style="text-align:right;">
-0.066
+-0.038
 </td>
 </tr>
 </tbody>
@@ -305,16 +377,16 @@ knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
 <tbody>
 <tr>
 <td style="text-align:right;">
--0.153
+-0.136
 </td>
 <td style="text-align:right;">
-0.281
+0.25
 </td>
 <td style="text-align:right;">
--0.65
+-0.516
 </td>
 <td style="text-align:right;">
-0.102
+0.068
 </td>
 </tr>
 </tbody>
@@ -345,72 +417,72 @@ knitr::kable(est.table, format = &quot;html&quot;, digits = 3) %&gt;%
 <tbody>
 <tr>
 <td style="text-align:right;">
-0
+0.000
 </td>
 <td style="text-align:right;">
 0.000
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0
+0.000
 </td>
 <td style="text-align:right;">
 0.000
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0
+0.528
 </td>
 <td style="text-align:right;">
 0.000
 </td>
 <td style="text-align:right;">
-0
+0.085
 </td>
 <td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
--0.093
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
+0.308
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0
+0.063
+</td>
+<td style="text-align:right;">
+-0.592
+</td>
+<td style="text-align:right;">
+-0.019
+</td>
+<td style="text-align:right;">
+-0.185
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.000
 </td>
 <td style="text-align:right;">
 0.000
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 </tbody>
@@ -429,9 +501,9 @@ similarly.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -443,26 +515,22 @@ similarly.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_0.99-7     
+## [1] kableExtra_1.1.0 CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        highr_0.8        
-##  [4] compiler_3.6.1    pillar_1.4.2      R.methodsS3_1.7.1
-##  [7] R.utils_2.9.0     tools_3.6.1       zeallot_0.1.0    
-## [10] digest_0.6.22     bit_1.1-14        viridisLite_0.3.0
-## [13] evaluate_0.14     tibble_2.1.3      lattice_0.20-38  
-## [16] pkgconfig_2.0.3   rlang_0.4.1       Matrix_1.2-17    
-## [19] rstudioapi_0.10   yaml_2.2.0        blogdown_0.16    
-## [22] xfun_0.10         xml2_1.2.2        httr_1.4.1       
-## [25] Rmpfr_0.7-2       ECOSolveR_0.5.3   stringr_1.4.0    
-## [28] knitr_1.25        vctrs_0.2.0       hms_0.5.2        
-## [31] webshot_0.5.1     bit64_0.9-7       grid_3.6.1       
-## [34] glue_1.3.1        R6_2.4.0          rmarkdown_1.16   
-## [37] bookdown_0.14     readr_1.3.1       magrittr_1.5     
-## [40] scales_1.0.0      backports_1.1.5   htmltools_0.4.0  
-## [43] scs_1.3-1         rvest_0.3.4       colorspace_1.4-1 
-## [46] stringi_1.4.3     munsell_0.5.0     crayon_1.3.4     
-## [49] R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.2   
+##  [5] pillar_1.4.3      tools_3.6.2       zeallot_0.1.0     digest_0.6.23    
+##  [9] bit_1.1-14        viridisLite_0.3.0 lifecycle_0.1.0   evaluate_0.14    
+## [13] tibble_2.1.3      lattice_0.20-38   pkgconfig_2.0.3   rlang_0.4.2      
+## [17] Matrix_1.2-18     gurobi_9.0-0      rstudioapi_0.10   Rglpk_0.6-4      
+## [21] yaml_2.2.0        blogdown_0.17     xfun_0.11         xml2_1.2.2       
+## [25] httr_1.4.1        Rmpfr_0.7-2       stringr_1.4.0     knitr_1.26       
+## [29] vctrs_0.2.1       hms_0.5.2         webshot_0.5.2     bit64_0.9-7      
+## [33] grid_3.6.2        glue_1.3.1        R6_2.4.1          rmarkdown_2.0    
+## [37] bookdown_0.16     readr_1.3.1       magrittr_1.5      rcbc_0.1.0.9001  
+## [41] scales_1.1.0      backports_1.1.5   htmltools_0.4.0   assertthat_0.2.1 
+## [45] rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.5    
+## [49] Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -472,7 +540,7 @@ similarly.</p>
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-tibsjhf:2017">
-<p>Tibshirani, Robert J., and Jerome H. Friedman. 2017. “A Pliable Lasso.” <em>arXiv Preprint Arxiv:1712.00484</em>. <a href="https://arxiv.org/abs/1712.00484" class="uri">https://arxiv.org/abs/1712.00484</a>.</p>
+<p>Tibshirani, Robert J., and Jerome H. Friedman. 2017. “A Pliable Lasso.” <em>arXiv Preprint Arxiv:1712.00484</em>. <a href="https://arxiv.org/abs/1712.00484">https://arxiv.org/abs/1712.00484</a>.</p>
 </div>
 </div>
 </div>

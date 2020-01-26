@@ -7,11 +7,15 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: solver-peculiarities
 ---
 
 
 
-<p>The default solver in <code>CVXR</code> is <code>ECOS</code>. However, it is not always the
+<p>The default solver in <code>CVXR</code> used to be <code>ECOS</code>. However, it is not always the
 best solver to use. As an example, let us consider again the <a href="/cvxr_examples/cvxr_catenary/">catenary
 problem</a>.</p>
 <p>We will change the problem slightly to use a finer discretization from
@@ -33,7 +37,7 @@ constraints &lt;- list(x[1] == 0, y[1] == 1,
 
 ## Solve the catenary problem
 prob &lt;- Problem(objective, constraints)
-result &lt;- solve(prob)</code></pre>
+result &lt;- solve(prob, solver = &quot;ECOS&quot;)</code></pre>
 <p>The solution status is no longer optimal.</p>
 <pre class="r"><code>cat(&quot;Solution status is&quot;, result$status)</code></pre>
 <pre><code>## Solution status is optimal_inaccurate</code></pre>
@@ -48,7 +52,7 @@ not completely solve the problem and in fact throws an error.</p>
 <div id="further-development" class="section level2">
 <h2>Further Development</h2>
 <p><code>CVXR v1.x</code> will improve support for the commercial solvers by taking
-advantage of problem reductions described in <span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018">2018</a>)</span> to hand
+advantage of problem reductions described in <span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018" role="doc-biblioref">2018</a>)</span> to hand
 the problem to solvers in a form that is closer to what the R packages
 (for those solvers) expect. This should provide better behavior and
 error reporting.</p>
@@ -56,9 +60,9 @@ error reporting.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -70,20 +74,17 @@ error reporting.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_0.99-7
+## [1] CVXR_1.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.2        knitr_1.25        magrittr_1.5     
-##  [4] bit_1.1-14        lattice_0.20-38   R6_2.4.0         
-##  [7] rlang_0.4.1       stringr_1.4.0     tools_3.6.1      
-## [10] grid_3.6.1        xfun_0.10         R.oo_1.23.0      
-## [13] scs_1.3-1         htmltools_0.4.0   yaml_2.2.0       
-## [16] bit64_0.9-7       digest_0.6.22     bookdown_0.14    
-## [19] Matrix_1.2-17     gmp_0.5-13.5      ECOSolveR_0.5.3  
-## [22] R.utils_2.9.0     evaluate_0.14     rmarkdown_1.16   
-## [25] blogdown_0.16     stringi_1.4.3     compiler_3.6.1   
-## [28] Rmpfr_0.7-2       R.methodsS3_1.7.1 jsonlite_1.6     
-## [31] reticulate_1.13</code></pre>
+##  [1] Rcpp_1.0.3       knitr_1.26       magrittr_1.5     bit_1.1-14      
+##  [5] lattice_0.20-38  R6_2.4.1         rlang_0.4.2      stringr_1.4.0   
+##  [9] tools_3.6.2      grid_3.6.2       xfun_0.11        htmltools_0.4.0 
+## [13] yaml_2.2.0       bit64_0.9-7      digest_0.6.23    assertthat_0.2.1
+## [17] bookdown_0.16    Matrix_1.2-18    gmp_0.5-13.5     ECOSolveR_0.5.3 
+## [21] Rglpk_0.6-4      slam_0.1-47      evaluate_0.14    rmarkdown_2.0   
+## [25] blogdown_0.17    Rcplex_0.3-3     gurobi_9.0-0     stringi_1.4.5   
+## [29] compiler_3.6.2   Rmpfr_0.7-2      Rmosek_9.1.0     rcbc_0.1.0.9001</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -93,7 +94,7 @@ error reporting.</p>
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-rewriting:2018">
-<p>Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. “A Rewriting System for Convex Optimization Problems.” <em>Journal of Control and Decision</em> 5 (1). Taylor &amp; Francis: 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554" class="uri">https://doi.org/10.1080/23307706.2017.1397554</a>.</p>
+<p>Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. “A Rewriting System for Convex Optimization Problems.” <em>Journal of Control and Decision</em> 5 (1): 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554">https://doi.org/10.1080/23307706.2017.1397554</a>.</p>
 </div>
 </div>
 </div>

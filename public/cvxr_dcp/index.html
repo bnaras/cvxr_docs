@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.58.3" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Discplined Convex Programming &mdash; CVXR</title>
 	
@@ -50,13 +50,13 @@ x &lt;- Variable()
 y &lt;- Variable()
 ## Examples of cvxr expressions.
 3.69 + x / 3</code></pre>
-<pre><code>## AddExpression(c(&quot;Expression(AFFINE, UNKNOWN, 1)&quot;, &quot;Expression(AFFINE, UNKNOWN, 1)&quot;), Constant(CONSTANT, POSITIVE, (1,1)))</code></pre>
+<pre><code>## AddExpression(c(&quot;list() / 3&quot;, &quot;varNA / 3&quot;), 3.69)</code></pre>
 <pre class="r"><code>x - 4 * y</code></pre>
-<pre><code>## AddExpression(Variable(1, 1), c(&quot;Expression(AFFINE, UNKNOWN, 1)&quot;, &quot;Expression(AFFINE, UNKNOWN, 1)&quot;))</code></pre>
+<pre><code>## AddExpression(varNA, c(&quot;-list() * varNA&quot;, &quot;-4 * varNA&quot;))</code></pre>
 <pre class="r"><code>sqrt(x) - min_elemwise(y, x - 2.5)</code></pre>
-<pre><code>## AddExpression(c(&quot;Expression(CONCAVE, POSITIVE, 1)&quot;, &quot;Expression(CONCAVE, POSITIVE, 1)&quot;), c(&quot;Expression(CONVEX, UNKNOWN, 1)&quot;, &quot;Expression(CONVEX, UNKNOWN, 1)&quot;))</code></pre>
+<pre><code>## AddExpression(Power(varNA, 1/2), -MinElemwise(varNA, varNA + -2.5))</code></pre>
 <pre class="r"><code>max_elemwise(2.66 - sqrt(y), abs(x + 2 * y))</code></pre>
-<pre><code>## MaxElemwise(c(&quot;Expression(CONVEX, UNKNOWN, 1)&quot;, &quot;Expression(CONVEX, UNKNOWN, 1)&quot;), c(&quot;Expression(CONVEX, POSITIVE, 1)&quot;, &quot;Expression(CONVEX, POSITIVE, 1)&quot;))</code></pre>
+<pre><code>## MaxElemwise(-Power(varNA, 1/2) + 2.66, Abs(varNA + c(&quot;list() * varNA&quot;, &quot;2 * varNA&quot;)))</code></pre>
 <p>Expressions can be scalars, vectors, or matrices. The dimensions of an
 expression can be obtained using the function <code>size</code>. <code>CVXR</code> will
 raise an exception if an expression is used in a way that doesn’t make
@@ -67,14 +67,14 @@ A &lt;- matrix(1, nrow = 2, ncol = 5)
 
 ## Use size to get the dimensions.
 cat(&quot;dimensions of Z:&quot;, size(Z), &quot;\n&quot;)</code></pre>
-<pre><code>## dimensions of Z: 5 4</code></pre>
+<pre><code>## dimensions of Z: 20</code></pre>
 <pre class="r"><code>cat(&quot;dimensions of sum_entries(Z):&quot;, size(sum_entries(Z)), &quot;\n&quot;)</code></pre>
-<pre><code>## dimensions of sum_entries(Z): 1 1</code></pre>
+<pre><code>## dimensions of sum_entries(Z): 1</code></pre>
 <pre class="r"><code>cat(&quot;dimensions of A %*% Z:&quot;, size(A %*% Z), &quot;\n&quot;)</code></pre>
-<pre><code>## dimensions of A %*% Z: 2 4</code></pre>
+<pre><code>## dimensions of A %*% Z: 8</code></pre>
 <p>Error raised for invalid dimensions.</p>
 <pre class="r"><code>tryCatch(A + Z, error = function(e) geterrmessage())</code></pre>
-<pre><code>## [1] &quot;Incompatible dimensions&quot;</code></pre>
+<pre><code>## [1] &quot;Cannot broadcast dimensions&quot;</code></pre>
 <p><code>CVXR</code> uses DCP analysis to determine the sign and curvature of each
 expression.</p>
 </div>
@@ -107,9 +107,9 @@ c &lt;- matrix(c(1, -1), ncol = 1)
 cat(&quot;sign of x:&quot;, sign(x), &quot;\n&quot;)</code></pre>
 <pre><code>## sign of x: UNKNOWN</code></pre>
 <pre class="r"><code>cat(&quot;sign of a:&quot;, sign(a), &quot;\n&quot;)</code></pre>
-<pre><code>## sign of a: NEGATIVE</code></pre>
+<pre><code>## sign of a: NONPOSITIVE</code></pre>
 <pre class="r"><code>cat(&quot;sign of abs(x):&quot;, sign(abs(x)), &quot;\n&quot;)</code></pre>
-<pre><code>## sign of abs(x): POSITIVE</code></pre>
+<pre><code>## sign of abs(x): NONNEGATIVE</code></pre>
 <pre class="r"><code>cat(&quot;sign of c*a:&quot;, sign(c * a), &quot;\n&quot;)</code></pre>
 <pre><code>## sign of c*a: UNKNOWN</code></pre>
 </div>
@@ -317,14 +317,14 @@ problem.</p>
 <pre class="r"><code>## A non-DCP problem.
 prob &lt;- Problem(Minimize(sqrt(x)))
 tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
-<pre><code>## [1] &quot;Problem does not follow DCP rules.&quot;</code></pre>
+<pre><code>## [1] &quot;Problem does not follow DCP rules. However, the problem does follow DGP rules. Consider calling this function with gp = TRUE&quot;</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -336,26 +336,22 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_0.99-7     
+## [1] kableExtra_1.1.0 CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        highr_0.8        
-##  [4] compiler_3.6.1    pillar_1.4.2      R.methodsS3_1.7.1
-##  [7] R.utils_2.9.0     tools_3.6.1       zeallot_0.1.0    
-## [10] digest_0.6.22     bit_1.1-14        viridisLite_0.3.0
-## [13] evaluate_0.14     tibble_2.1.3      lattice_0.20-38  
-## [16] pkgconfig_2.0.3   rlang_0.4.1       Matrix_1.2-17    
-## [19] rstudioapi_0.10   yaml_2.2.0        blogdown_0.16    
-## [22] xfun_0.10         xml2_1.2.2        httr_1.4.1       
-## [25] Rmpfr_0.7-2       ECOSolveR_0.5.3   stringr_1.4.0    
-## [28] knitr_1.25        vctrs_0.2.0       hms_0.5.2        
-## [31] webshot_0.5.1     bit64_0.9-7       grid_3.6.1       
-## [34] glue_1.3.1        R6_2.4.0          rmarkdown_1.16   
-## [37] bookdown_0.14     readr_1.3.1       magrittr_1.5     
-## [40] scales_1.0.0      backports_1.1.5   htmltools_0.4.0  
-## [43] scs_1.3-1         rvest_0.3.4       colorspace_1.4-1 
-## [46] stringi_1.4.3     munsell_0.5.0     crayon_1.3.4     
-## [49] R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.2   
+##  [5] pillar_1.4.3      tools_3.6.2       zeallot_0.1.0     digest_0.6.23    
+##  [9] bit_1.1-14        viridisLite_0.3.0 lifecycle_0.1.0   evaluate_0.14    
+## [13] tibble_2.1.3      lattice_0.20-38   pkgconfig_2.0.3   rlang_0.4.2      
+## [17] Matrix_1.2-18     gurobi_9.0-0      rstudioapi_0.10   Rglpk_0.6-4      
+## [21] yaml_2.2.0        blogdown_0.17     xfun_0.11         xml2_1.2.2       
+## [25] httr_1.4.1        Rmpfr_0.7-2       stringr_1.4.0     knitr_1.26       
+## [29] vctrs_0.2.1       hms_0.5.2         webshot_0.5.2     bit64_0.9-7      
+## [33] grid_3.6.2        glue_1.3.1        R6_2.4.1          rmarkdown_2.0    
+## [37] bookdown_0.16     readr_1.3.1       magrittr_1.5      rcbc_0.1.0.9001  
+## [41] scales_1.1.0      backports_1.1.5   htmltools_0.4.0   assertthat_0.2.1 
+## [45] rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.5    
+## [49] Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
 </div>
 
 
@@ -398,19 +394,23 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -422,7 +422,7 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

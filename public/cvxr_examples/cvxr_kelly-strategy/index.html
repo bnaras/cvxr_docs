@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.58.3" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Kelly Gambling &mdash; CVXR</title>
 	
@@ -30,7 +30,7 @@
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In Kelly gambling <span class="citation">(Kelly <a href="#ref-kelly">1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span>
+<p>In Kelly gambling <span class="citation">(Kelly <a href="#ref-kelly" role="doc-biblioref">1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span>
 possible outcomes, which yield a random non-negative return of <span class="math inline">\(r \in {\mathbf R}_+^n\)</span>. The return <span class="math inline">\(r\)</span> takes on exactly <span class="math inline">\(K\)</span> values
 <span class="math inline">\(r_1,\ldots,r_K\)</span> with known probabilities <span class="math inline">\(\pi_1,\ldots,\pi_K\)</span>. This
 gamble is repeated over <span class="math inline">\(T\)</span> periods. In a given period <span class="math inline">\(t\)</span>, let <span class="math inline">\(b_i \geq 0\)</span> denote the fraction of our wealth bet on outcome <span class="math inline">\(i\)</span>. Assuming
@@ -125,14 +125,14 @@ ggplot(data = plot.data) +
     scale_y_log10() +
     labs(x = &quot;Time&quot;, y = &quot;Wealth&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="../../cvxr_examples/kelly-strategy_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/kelly-strategy_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 <div id="extensions" class="section level2">
 <h2>Extensions</h2>
 <p>As observed in some trajectories above, wealth tends to drop by a
 significant amount before increasing eventually. One way to reduce
 this drawdown risk is to add a convex constraint as described in
-<span class="citation">Busseti, Ryu, and Boyd (<a href="#ref-RCK">2016</a>, 5.3)</span></p>
+<span class="citation">Busseti, Ryu, and Boyd (<a href="#ref-RCK" role="doc-biblioref">2016</a>, 5.3)</span></p>
 <p><span class="math display">\[
 \log\left(\sum_{j=1}^K \exp(\log\pi_j - \lambda
 \log(r_j^Tb))\right) \leq 0 
@@ -145,9 +145,9 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -159,26 +159,23 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.0.0   ggplot2_3.2.1 CVXR_0.99-7  
+## [1] tidyr_1.0.0   ggplot2_3.2.1 CVXR_1.0     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        compiler_3.6.1   
-##  [4] pillar_1.4.2      R.methodsS3_1.7.1 R.utils_2.9.0    
-##  [7] tools_3.6.1       zeallot_0.1.0     digest_0.6.22    
-## [10] bit_1.1-14        lifecycle_0.1.0   evaluate_0.14    
-## [13] tibble_2.1.3      gtable_0.3.0      lattice_0.20-38  
-## [16] pkgconfig_2.0.3   rlang_0.4.1       Matrix_1.2-17    
-## [19] yaml_2.2.0        blogdown_0.16     xfun_0.10        
-## [22] withr_2.1.2       dplyr_0.8.3       Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5.3   stringr_1.4.0     knitr_1.25       
-## [28] vctrs_0.2.0       tidyselect_0.2.5  bit64_0.9-7      
-## [31] grid_3.6.1        glue_1.3.1        R6_2.4.0         
-## [34] rmarkdown_1.16    bookdown_0.14     purrr_0.3.3      
-## [37] magrittr_1.5      ellipsis_0.3.0    backports_1.1.5  
-## [40] scales_1.0.0      htmltools_0.4.0   scs_1.3-1        
-## [43] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3     
-## [46] stringi_1.4.3     lazyeval_0.2.2    munsell_0.5.0    
-## [49] crayon_1.3.4      R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5     Rcpp_1.0.3       compiler_3.6.2   pillar_1.4.3    
+##  [5] tools_3.6.2      zeallot_0.1.0    digest_0.6.23    bit_1.1-14      
+##  [9] evaluate_0.14    lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0    
+## [13] lattice_0.20-38  pkgconfig_2.0.3  rlang_0.4.2      Matrix_1.2-18   
+## [17] gurobi_9.0-0     Rglpk_0.6-4      yaml_2.2.0       blogdown_0.17   
+## [21] xfun_0.11        ECOSolveR_0.5.3  withr_2.1.2      Rmpfr_0.7-2     
+## [25] stringr_1.4.0    dplyr_0.8.3      knitr_1.26       vctrs_0.2.1     
+## [29] tidyselect_0.2.5 bit64_0.9-7      grid_3.6.2       glue_1.3.1      
+## [33] R6_2.4.1         rmarkdown_2.0    bookdown_0.16    farver_2.0.1    
+## [37] purrr_0.3.3      magrittr_1.5     ellipsis_0.3.0   rcbc_0.1.0.9001 
+## [41] backports_1.1.5  scales_1.1.0     htmltools_0.4.0  assertthat_0.2.1
+## [45] colorspace_1.4-1 labeling_0.3     Rcplex_0.3-3     stringi_1.4.5   
+## [49] Rmosek_9.1.0     lazyeval_0.2.2   munsell_0.5.0    slam_0.1-47     
+## [53] crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -236,19 +233,23 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -260,7 +261,7 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

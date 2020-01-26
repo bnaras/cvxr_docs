@@ -10,6 +10,8 @@ type: homepage
 ```{r, echo = FALSE}
 ## Check pre-requisite packages for generating site
 required_pkgs <- c(
+    "here",
+    "testthat",
     "CVXR",
     "reticulate",
     "lpSolveAPI",

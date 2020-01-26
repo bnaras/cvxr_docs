@@ -5,6 +5,10 @@ date: '2017-10-29'
 categories:
   - Simple Least Squares
 slug: cvxr_intro
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: intro
 ---
 
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
@@ -186,7 +190,7 @@ lm est.
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--3.9196887
+-3.9196886
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 -3.9196886
@@ -197,7 +201,7 @@ lm est.
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--3.0117041
+-3.0117048
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 -3.0117048
@@ -208,7 +212,7 @@ lm est.
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--2.1248257
+-2.1248242
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 -2.1248242
@@ -219,7 +223,7 @@ lm est.
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.8666045
+-0.8666048
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 -0.8666048
@@ -230,7 +234,7 @@ lm est.
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.0914653
+0.0914658
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.0914658
@@ -241,7 +245,7 @@ lm est.
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.9490453
+0.9490454
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.9490454
@@ -252,7 +256,7 @@ lm est.
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.0764693
+2.0764700
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 2.0764700
@@ -263,7 +267,7 @@ lm est.
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-3.1272271
+3.1272275
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 3.1272275
@@ -274,7 +278,7 @@ lm est.
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-3.9609564
+3.9609565
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 3.9609565
@@ -285,7 +289,7 @@ lm est.
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-5.1348848
+5.1348845
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 5.1348845
@@ -352,7 +356,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.2374544
+1.2374488
 </td>
 </tr>
 <tr>
@@ -360,7 +364,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.6234659
+0.6234665
 </td>
 </tr>
 <tr>
@@ -368,7 +372,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.1230714
+2.1230663
 </td>
 </tr>
 <tr>
@@ -376,7 +380,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.8035606
+2.8035640
 </td>
 </tr>
 <tr>
@@ -384,7 +388,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-4.4448008
+4.4448016
 </td>
 </tr>
 <tr>
@@ -392,7 +396,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-5.2073465
+5.2073521
 </td>
 </tr>
 </tbody>
@@ -471,7 +475,7 @@ nnls est.
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.2374544
+1.2374488
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 1.2374488
@@ -482,7 +486,7 @@ nnls est.
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.6234659
+0.6234665
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.6234665
@@ -493,7 +497,7 @@ nnls est.
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.1230714
+2.1230663
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 2.1230663
@@ -504,7 +508,7 @@ nnls est.
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.8035606
+2.8035640
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 2.8035640
@@ -515,7 +519,7 @@ nnls est.
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-4.4448008
+4.4448016
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 4.4448016
@@ -526,7 +530,7 @@ nnls est.
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-5.2073465
+5.2073521
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 5.2073521
@@ -625,12 +629,12 @@ knitr::kable(A, format = &quot;html&quot;) %&gt;%
 </table>
 <p>The sum constraint is nothing but
 <span class="math display">\[
-A\beta &lt; 0
+A\beta &lt;= 0
 \]</span></p>
 <p>which we express in R as</p>
-<pre class="r"><code>constraint1 &lt;- A %*% betaHat &lt; 0</code></pre>
+<pre class="r"><code>constraint1 &lt;- A %*% betaHat &lt;= 0</code></pre>
 <p><em>NOTE</em>: The above constraint can also be expressed simply as</p>
-<pre class="r"><code>constraint1 &lt;- betaHat[2] + betaHat[3] &lt; 0</code></pre>
+<pre class="r"><code>constraint1 &lt;- betaHat[2] + betaHat[3] &lt;= 0</code></pre>
 <p>but it is easier working with matrices in general with <code>CVXR</code>.</p>
 <p>For the positivity for rest of the variables, we construct a <span class="math inline">\(10\times 10\)</span> matrix <span class="math inline">\(A\)</span> to have 1’s along the diagonal everywhere except rows 2
 and 3 and zeros everywhere.</p>
@@ -1031,10 +1035,10 @@ knitr::kable(B, format = &quot;html&quot;) %&gt;%
 </table>
 <p>The constraint for positivity is
 <span class="math display">\[
-B\beta &gt; 0
+B\beta &gt;= 0
 \]</span></p>
 <p>which we express in R as</p>
-<pre class="r"><code>constraint2 &lt;- B %*% betaHat &gt; 0</code></pre>
+<pre class="r"><code>constraint2 &lt;- B %*% betaHat &gt;= 0</code></pre>
 <p>Now we are ready to solve the problem just as before.</p>
 <pre class="r"><code>problem &lt;- Problem(objective, constraints = list(constraint1, constraint2))
 result &lt;- solve(problem)</code></pre>
@@ -1059,7 +1063,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--2.8447019
+-2.8446952
 </td>
 </tr>
 <tr>
@@ -1067,7 +1071,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--1.7109799
+-1.7109771
 </td>
 </tr>
 <tr>
@@ -1083,7 +1087,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.6641321
+0.6641308
 </td>
 </tr>
 <tr>
@@ -1091,7 +1095,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.1780936
+1.1781109
 </td>
 </tr>
 <tr>
@@ -1099,7 +1103,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.3286068
+2.3286139
 </td>
 </tr>
 <tr>
@@ -1107,7 +1111,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.4144816
+2.4144893
 </td>
 </tr>
 <tr>
@@ -1115,7 +1119,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-4.2119206
+4.2119052
 </td>
 </tr>
 <tr>
@@ -1123,7 +1127,7 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-4.9483132
+4.9483245
 </td>
 </tr>
 </tbody>
@@ -1151,9 +1155,9 @@ available to study and mimic.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -1165,26 +1169,23 @@ available to study and mimic.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] nnls_1.4         CVXR_0.99-7      kableExtra_1.1.0
+## [1] nnls_1.4         CVXR_1.0         kableExtra_1.1.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        pillar_1.4.2     
-##  [4] compiler_3.6.1    highr_0.8         R.methodsS3_1.7.1
-##  [7] R.utils_2.9.0     tools_3.6.1       bit_1.1-14       
-## [10] zeallot_0.1.0     digest_0.6.22     lattice_0.20-38  
-## [13] evaluate_0.14     tibble_2.1.3      viridisLite_0.3.0
-## [16] pkgconfig_2.0.3   rlang_0.4.1       Matrix_1.2-17    
-## [19] rstudioapi_0.10   yaml_2.2.0        blogdown_0.16    
-## [22] xfun_0.10         Rmpfr_0.7-2       ECOSolveR_0.5.3  
-## [25] stringr_1.4.0     httr_1.4.1        knitr_1.25       
-## [28] xml2_1.2.2        vctrs_0.2.0       hms_0.5.2        
-## [31] bit64_0.9-7       webshot_0.5.1     grid_3.6.1       
-## [34] glue_1.3.1        R6_2.4.0          rmarkdown_1.16   
-## [37] bookdown_0.14     readr_1.3.1       magrittr_1.5     
-## [40] scs_1.3-1         backports_1.1.5   scales_1.0.0     
-## [43] htmltools_0.4.0   rvest_0.3.4       colorspace_1.4-1 
-## [46] stringi_1.4.3     munsell_0.5.0     crayon_1.3.4     
-## [49] R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5      Rcpp_1.0.3        pillar_1.4.3      compiler_3.6.2   
+##  [5] highr_0.8         tools_3.6.2       bit_1.1-14        zeallot_0.1.0    
+##  [9] digest_0.6.23     lattice_0.20-38   evaluate_0.14     tibble_2.1.3     
+## [13] lifecycle_0.1.0   viridisLite_0.3.0 pkgconfig_2.0.3   rlang_0.4.2      
+## [17] Matrix_1.2-18     gurobi_9.0-0      rstudioapi_0.10   Rglpk_0.6-4      
+## [21] yaml_2.2.0        blogdown_0.17     xfun_0.11         osqp_0.6.0.3     
+## [25] Rmpfr_0.7-2       stringr_1.4.0     httr_1.4.1        knitr_1.26       
+## [29] xml2_1.2.2        vctrs_0.2.1       hms_0.5.2         bit64_0.9-7      
+## [33] grid_3.6.2        webshot_0.5.2     glue_1.3.1        R6_2.4.1         
+## [37] rmarkdown_2.0     bookdown_0.16     readr_1.3.1       magrittr_1.5     
+## [41] rcbc_0.1.0.9001   backports_1.1.5   scales_1.1.0      htmltools_0.4.0  
+## [45] assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3     
+## [49] stringi_1.4.5     Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47      
+## [53] crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

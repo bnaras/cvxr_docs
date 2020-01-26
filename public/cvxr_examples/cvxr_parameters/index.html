@@ -1,0 +1,366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.62.2" />
+	
+	<title>Dealing with Solver-Specific Parameters &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Dealing with Solver-Specific Parameters</h1>
+	
+	
+
+
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p><code>CVXR</code> 1.0 has now updated how it handles its solver-specific
+parameters and has diverged slightly from how <code>cvxpy</code> handles it. It
+now features five standard parameters that are the default parameters
+for each solve function. Here are the five parameters</p>
+<ul>
+<li><p><code>verbose</code> : A parameter that deals with the verbosity of the
+solver. It is a boolean variable for all solvers, but it can also
+take integer values for the <code>MOSEK</code> solver, whose interface deals
+with an integer verbosity parameter with the default of 10. The
+default value of <code>verbose</code> for <code>CVXR</code> is set to <code>FALSE</code>.</p></li>
+<li><p><code>reltol</code> : Deals with the relative tolerance of the solver. Its
+default value is set at <code>1e-8</code></p></li>
+<li><p><code>feastol</code> : Deals with feasible tolerance of the solver. Its default
+value is set at <code>1e-8</code></p></li>
+<li><p><code>abstol</code> : Deals with the absolute tolerance of the solver. Its
+default value is set at <code>1e-8</code></p></li>
+<li><p><code>num_iter</code> : A parameter that specifies the maximum number of
+iterations for the solver. Its default value is set at <code>1e6</code>.</p></li>
+</ul>
+<p>The users can also pass in solver-specific parameters to the <code>solve</code>
+function based on what solver they specify. On the whole, the
+additional parameters given by the user will override the five values
+specified above.</p>
+</div>
+<div id="solver-specific-parameters" class="section level1">
+<h1>Solver-Specific Parameters</h1>
+<p>We will go over some examples for each solvers supported by <code>CVXR</code>,
+the available parameters for each solver, and where to find the
+documentation for each solver.</p>
+<div id="osqp" class="section level2">
+<h2>OSQP</h2>
+<p>The parameters available for <code>OSQP</code> can be found in this
+<a href="https://osqp.org/docs/interfaces/solver_settings.html">link</a>. The
+parameters can be entered individually in the arguments of the solve
+function or can be passed through as a list. If the user enters in a
+parameter that is not specified or accepted by <code>OSQP</code>, then the solver
+will ignore the parameter and proceed to solve the problem. Here is an
+example</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+
+# Inside Function
+result  &lt;- solve(prob, solver = &quot;OSQP&quot;, verbose = FALSE, feastol = 1e-2, eps_prim_inf = 1e-5)
+
+# Can also do it by passing in a list
+more_params &lt;- list()
+more_params$verbose = TRUE
+more_params$feastol = 1e-2
+more_params$eps_prim_inf = 1e-5
+more_params$eps_prim_inf = 1e-3
+
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, verbose = FALSE, more_params)</code></pre>
+<p>In the second case that the <code>verbose</code> in the <code>more_params</code> list overrides
+the value of <code>verbose</code> listed earlier in the invocation.</p>
+</div>
+<div id="scs" class="section level2">
+<h2>SCS</h2>
+<p>The parameters available for <code>SCS</code> can be found in this
+<a href="https://cran.r-project.org/web/packages/scs/scs.pdf">link</a> under the
+<code>scs_control</code> function. Much like <code>OSQP</code>, the parameters can be
+entered individually in the arguments of the solve function or can be
+passed through as a list. If the user enters in a parameter that is
+not specified or accepted by <code>SCS</code>, then the solver will ignore the
+parameter and proceed to solve the problem. Here is an example:</p>
+<pre class="r"><code>n&lt;-3
+p&lt;-3
+C &lt;- matrix(rnorm(n^2), ncol = n)
+A &lt;- list(matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n))
+b &lt;- matrix(rnorm(p), nrow = p)
+
+X &lt;- Variable(c(n, n), symmetric = TRUE)
+constraints &lt;- list(X &gt;= 0)
+for(i in 1:p){
+  constraints &lt;- c(constraints, list(matrix_trace(A[[i]]%*%X) == b[i] ))
+}
+
+obj &lt;- Minimize(matrix_trace(C %*% X))
+prob &lt;- Problem(obj, constraints)
+result  &lt;- solve(prob, solver = &quot;SCS&quot;, verbose = FALSE, feastol = 1e-2, cg_rate = 1.5, scale = 2)</code></pre>
+<pre><code>## Warning in solve_via_data(object@solver, data, warm_start, verbose, feastol, :
+## A value has been set for feastol, but the SCS solver does not accept this
+## parameter. Solver will run without taking this parameter into consideration.</code></pre>
+<p>Notice how in this case a warning is thrown: the <code>SCS</code> solver does not
+support the feasible tolerance parameter, so the solver ignores it.</p>
+</div>
+<div id="ecos" class="section level2">
+<h2>ECOS</h2>
+<p>The parameters available for <code>ECOS</code> can be found in this
+<a href="https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf">link</a>
+under the <code>ecos.control</code> function. Much like <code>OSQP</code>, the parameters
+can be entered individually in the arguments of the solve function or
+can be passed through as a list. If the user enters in a parameter
+that is not specified or accepted by <code>ECOS</code>, then the solver will
+ignore the parameter and proceed to solve the problem. Here is an
+example:</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;ECOS&quot;, verbose = FALSE, feastol = 1e-2, reltol_inacc = 1e-5)</code></pre>
+</div>
+<div id="cplex" class="section level2">
+<h2>CPLEX</h2>
+<p>The parameters available for <code>CPLEX</code> can be found in this
+<a href="https://cran.r-project.org/web/packages/Rcplex/Rcplex.pdf">link</a>
+under the details section for the function <code>Rcplex</code> function on
+page 3. Much like <code>OSQP</code>, the parameters can be entered individually
+in the arguments of the solve function or can be passed through as a
+list. If the user enters in a parameter that is not specified or
+accepted by <code>CPLEX</code>, then the solver will give the user a warning but
+will proceed to solve the problem. Here is an example:</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;CPLEX&quot;, verbose = FALSE, eps_abs_tol = 1e-2, epagap = 1e-5)</code></pre>
+<pre><code>## Warning in Rcplex::Rcplex(cvec = q, Amat = Amat, bvec = bvec, Qmat = P, :
+## Unknown CPLEX parameter eps_abs_tol. Ignoring it.</code></pre>
+<p>As you can see, <code>eps_abs_tol</code> is not one of <code>CPLEX</code>’s specified
+parameters, so the solver threw a warning.</p>
+</div>
+<div id="mosek" class="section level2">
+<h2>MOSEK</h2>
+<p>The parameters available for <code>MOSEK</code> can be seen in this
+<a href="https://docs.mosek.com/9.1/rmosek/parameters.html#doc-all-parameter-list">link</a>. As
+you can see, the number of parameters is quite massive. They are also
+split between three times of parameters in “Double,” “Integer,” and
+“String” parameters. To pass these into the solver, they must be put
+in a list beforehand. Moreover, there are also general solver
+parameters that do not belong in any of the three categories. These
+parameters can be found in detail in the <code>Rmosek</code> package
+documentation, but here are the parameters</p>
+<ul>
+<li><code>verbose</code> (Another important note here is while the default values of <code>TRUE</code> and <code>FALSE</code> work, <code>MOSEK</code> uses integer values for verbose with the default being 10. The <code>TRUE</code> value for verbose corresponds to 10 in the solver)</li>
+<li><code>usesol</code></li>
+<li><code>useparam</code></li>
+<li><code>soldetail</code></li>
+<li><code>getinfo</code></li>
+<li><code>writebefore</code></li>
+<li><code>writeafter</code></li>
+</ul>
+<p>These parameters are passed into the <code>solve</code> function as normal. Here is an example:</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+iparam &lt;- list()
+iparam$AUTO_UPDATE_SOL_INFO &lt;- &quot;OFF&quot;
+iparam$BI_IGNORE_NUM_ERROR &lt;- &quot;OFF&quot;
+iparam$BI_MAX_ITERATIONS &lt;- 100000
+
+dparam &lt;- list()
+dparam$BASIS_REL_TOL_S &lt;- 1.0e-12
+dparam$BASIS_TOL_S &lt;- 1.0e-6
+
+result  &lt;- solve(prob, solver = &quot;MOSEK&quot;, verbose = FALSE, soldetail = 3, dparam = dparam, iparam = iparam)</code></pre>
+<pre><code>## Warning in solve_via_data(object@solver, data, warm_start, verbose, feastol, :
+## Solver might not output correct answer depending on the input of the soldetail
+## variable. Default is 3</code></pre>
+<p>A quick detail in this case is that the solver threw a warning about
+the <code>soldetail</code> parameter. Both the <code>soldetail</code> and <code>getinfo</code>
+parameter controls the amount of data the solve returns, and some of
+them might be needed in order to invert the solution. Therefore,
+proceed with caution when using these variables as they can cause the
+solver to not obtain the answer.</p>
+</div>
+<div id="gurobi" class="section level2">
+<h2>GUROBI</h2>
+<p>The parameters available for <code>GUROBI</code> can be seen in this
+<a href="https://www.gurobi.com/documentation/6.5/refman/parameters.html#sec:Parameters">link</a>. If
+an unaccepted parameter is passed into the <code>solve</code> function, then the
+function will not run to completion. The solver will also not let you
+know which parameter is at fault unless the parameter is
+continuous. Here is an example.</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;GUROBI&quot;, verbose = FALSE, BarIterLimit = 20, Quad = 1)</code></pre>
+</div>
+<div id="glpk" class="section level2">
+<h2>GLPK</h2>
+<p>The parameters available for <code>GLPK</code> can be seen in this
+<a href="https://cran.r-project.org/web/packages/Rglpk/Rglpk.pdf">link</a> under
+the <code>Details</code> section in page 4. There are only four parameters in
+<code>verbose</code>, <code>presolve</code>, <code>tm_limit</code>, <code>canonicalize_status</code>. Here is an
+example</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;GLPK&quot;, verbose = FALSE, presolve = FALSE, tm_limit = 10, canonicalize_status = TRUE)</code></pre>
+</div>
+<div id="cbc" class="section level2">
+<h2>CBC</h2>
+<p>The parameters available for <code>CBC</code> can be seen in this
+<a href="https://projects.coin-or.org/CoinBinary/export/1059/OptimizationSuite/trunk/Installer/files/doc/cbcCommandLine.pdf">link</a>. Much
+like most of the solvers outlined above, if the user passes in a
+unspecified parameter into the solver, then the solver just ignores
+the parameter and proceeds to solve the problem. Here is an example</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, maxn = 10)</code></pre>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
+## 
+## locale:
+## [1] C
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] CVXR_1.0
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.3       knitr_1.26       magrittr_1.5     bit_1.1-14      
+##  [5] lattice_0.20-38  R6_2.4.1         rlang_0.4.2      stringr_1.4.0   
+##  [9] tools_3.6.2      grid_3.6.2       xfun_0.11        osqp_0.6.0.3    
+## [13] scs_1.3-2        htmltools_0.4.0  yaml_2.2.0       bit64_0.9-7     
+## [17] digest_0.6.23    assertthat_0.2.1 bookdown_0.16    Matrix_1.2-18   
+## [21] gmp_0.5-13.5     ECOSolveR_0.5.3  Rglpk_0.6-4      slam_0.1-47     
+## [25] evaluate_0.14    rmarkdown_2.0    blogdown_0.17    Rcplex_0.3-3    
+## [29] gurobi_9.0-0     stringi_1.4.5    compiler_3.6.2   Rmpfr_0.7-2     
+## [33] Rmosek_9.1.0     rcbc_0.1.0.9001</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/cvxr_parameters.Rmd">R Markdown</a></p>
+</div>
+</div>
+
+
+
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/whats_new_1.0/" title="What&#39;s new in 1.0?">What&#39;s new in 1.0?</a></li>
+  
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>

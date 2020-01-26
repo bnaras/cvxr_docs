@@ -7,6 +7,10 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: saturating_hinges
 ---
 
 
@@ -14,7 +18,7 @@ tags: []
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>The following example comes from work on saturating splines in
-<span class="citation">Boyd et al. (<a href="#ref-BoydHastie:2016">2016</a>)</span>. Adaptive regression splines are commonly used in
+<span class="citation">Boyd et al. (<a href="#ref-BoydHastie:2016" role="doc-biblioref">2016</a>)</span>. Adaptive regression splines are commonly used in
 statistical modeling, but the instability they exhibit beyond their
 boundary knots makes extrapolation dangerous. One way to correct this
 issue for linear splines is to require they <em>saturate</em>: remain
@@ -42,7 +46,7 @@ that by construction, the estimate <span class="math inline">\(\hat f\)</span> w
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>We demonstrate this technique on the bone density data for female
-patients from <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-ESL">2001</a>)</span>, section 5.4. There are a total of <span class="math inline">\(m = 259\)</span>
+patients from <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-ESL" role="doc-biblioref">2001</a>)</span>, section 5.4. There are a total of <span class="math inline">\(m = 259\)</span>
 observations. Our response <span class="math inline">\(y_i\)</span> is the change in spinal bone density
 between two visits, and our predictor <span class="math inline">\(x_i\)</span> is the patient’s age. We
 select <span class="math inline">\(k = 10\)</span> knots about evenly spaced across the range of <span class="math inline">\(X\)</span> and
@@ -113,7 +117,7 @@ ggplot() +
                          labels = sprintf(&quot;%0.2f&quot;, lambdas)) +
     labs(x = &quot;Age&quot;, y = &quot;Change in Bone Density&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="/cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>The squared error loss works well in this case, but the Huber loss is
 preferred when the dataset contains large outliers. To see this, we
 add 50 randomly generated
@@ -156,14 +160,14 @@ ggplot() +
                          labels = c(&quot;Huber&quot;, &quot;Squared&quot;)) +
     labs(x = &quot;Age&quot;, y = &quot;Change in Bone Density&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="/cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -175,26 +179,23 @@ ggplot() +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.0.0   ggplot2_3.2.1 CVXR_0.99-7  
+## [1] tidyr_1.0.0   ggplot2_3.2.1 CVXR_1.0     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        compiler_3.6.1   
-##  [4] pillar_1.4.2      R.methodsS3_1.7.1 R.utils_2.9.0    
-##  [7] tools_3.6.1       zeallot_0.1.0     digest_0.6.22    
-## [10] bit_1.1-14        lifecycle_0.1.0   evaluate_0.14    
-## [13] tibble_2.1.3      gtable_0.3.0      lattice_0.20-38  
-## [16] pkgconfig_2.0.3   rlang_0.4.1       Matrix_1.2-17    
-## [19] yaml_2.2.0        blogdown_0.16     xfun_0.10        
-## [22] withr_2.1.2       dplyr_0.8.3       Rmpfr_0.7-2      
-## [25] ECOSolveR_0.5.3   stringr_1.4.0     knitr_1.25       
-## [28] vctrs_0.2.0       tidyselect_0.2.5  bit64_0.9-7      
-## [31] grid_3.6.1        glue_1.3.1        R6_2.4.0         
-## [34] rmarkdown_1.16    bookdown_0.14     purrr_0.3.3      
-## [37] magrittr_1.5      ellipsis_0.3.0    backports_1.1.5  
-## [40] scales_1.0.0      htmltools_0.4.0   scs_1.3-1        
-## [43] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3     
-## [46] stringi_1.4.3     lazyeval_0.2.2    munsell_0.5.0    
-## [49] crayon_1.3.4      R.oo_1.23.0</code></pre>
+##  [1] gmp_0.5-13.5     Rcpp_1.0.3       compiler_3.6.2   pillar_1.4.3    
+##  [5] tools_3.6.2      zeallot_0.1.0    digest_0.6.23    bit_1.1-14      
+##  [9] evaluate_0.14    lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0    
+## [13] lattice_0.20-38  pkgconfig_2.0.3  rlang_0.4.2      Matrix_1.2-18   
+## [17] gurobi_9.0-0     Rglpk_0.6-4      yaml_2.2.0       blogdown_0.17   
+## [21] xfun_0.11        osqp_0.6.0.3     withr_2.1.2      Rmpfr_0.7-2     
+## [25] stringr_1.4.0    dplyr_0.8.3      knitr_1.26       vctrs_0.2.1     
+## [29] tidyselect_0.2.5 bit64_0.9-7      grid_3.6.2       glue_1.3.1      
+## [33] R6_2.4.1         rmarkdown_2.0    bookdown_0.16    farver_2.0.1    
+## [37] purrr_0.3.3      magrittr_1.5     ellipsis_0.3.0   rcbc_0.1.0.9001 
+## [41] backports_1.1.5  scales_1.1.0     htmltools_0.4.0  assertthat_0.2.1
+## [45] colorspace_1.4-1 labeling_0.3     Rcplex_0.3-3     stringi_1.4.5   
+## [49] Rmosek_9.1.0     lazyeval_0.2.2   munsell_0.5.0    slam_0.1-47     
+## [53] crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

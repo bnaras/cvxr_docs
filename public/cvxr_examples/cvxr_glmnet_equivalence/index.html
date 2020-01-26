@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.58.3" />
+	<meta name="generator" content="Hugo 0.62.2" />
 	
 	<title>Getting Equivalent Results from `glmnet` and `CVXR` &mdash; CVXR</title>
 	
@@ -65,7 +65,34 @@ specification.</p>
 <pre class="r"><code>beta &lt;- Variable(p + 1)
 obj &lt;- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob &lt;- Problem(Minimize(obj))
-result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh)</code></pre>
+result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, verbose = TRUE)</code></pre>
+<pre><code>## -----------------------------------------------------------------
+##            OSQP v0.6.0  -  Operator Splitting QP Solver
+##               (c) Bartolomeo Stellato,  Goran Banjac
+##         University of Oxford  -  Stanford University 2019
+## -----------------------------------------------------------------
+## problem:  variables n = 141, constraints m = 140
+##           nnz(P) + nnz(A) = 2380
+## settings: linear system solver = qdldl,
+##           eps_abs = 1.0e-05, eps_rel = 1.0e-05,
+##           eps_prim_inf = 1.0e-04, eps_dual_inf = 1.0e-04,
+##           rho = 1.00e-01 (adaptive),
+##           sigma = 1.00e-06, alpha = 1.60, max_iter = 10000
+##           check_termination: on (interval 25),
+##           scaling: on, scaled_termination: off
+##           warm start: on, polish: on, time_limit: off
+## 
+## iter   objective    pri res    dua res    rho        time
+##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   3.87e-04s
+##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.32e-03s
+## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.56e-03s
+## 
+## status:               solved
+## solution polish:      successful
+## number of iterations: 125
+## optimal objective:    0.3711
+## run time:             1.56e-03s
+## optimal rho estimate: 2.90e+00</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
 compare. The results below should be close, and any differences are
 minor, due to different solver implementations.</p>
@@ -365,10 +392,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{0}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.179
+-0.228
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.181
+-0.226
 </td>
 </tr>
 <tr>
@@ -387,10 +414,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.044
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.048
 </td>
 </tr>
 <tr>
@@ -398,10 +425,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.084
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.090
+0.000
 </td>
 </tr>
 <tr>
@@ -409,10 +436,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.250
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+0.252
 </td>
 </tr>
 <tr>
@@ -442,10 +469,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.121
+-0.786
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.117
+-0.785
 </td>
 </tr>
 <tr>
@@ -464,10 +491,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.083
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.076
 </td>
 </tr>
 <tr>
@@ -475,10 +502,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.058
+0.018
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.057
+0.016
 </td>
 </tr>
 <tr>
@@ -486,10 +513,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{11}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.189
+0.091
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.185
+0.084
 </td>
 </tr>
 <tr>
@@ -497,10 +524,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{12}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.324
+0.198
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.326
+0.203
 </td>
 </tr>
 <tr>
@@ -508,10 +535,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{13}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.043
+-0.307
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.056
+-0.323
 </td>
 </tr>
 <tr>
@@ -519,10 +546,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{14}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.059
+0.266
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.061
+0.269
 </td>
 </tr>
 <tr>
@@ -530,10 +557,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{15}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.110
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000
+-0.114
 </td>
 </tr>
 <tr>
@@ -541,10 +568,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{16}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.025
+-0.004
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
--0.042
+-0.028
 </td>
 </tr>
 <tr>
@@ -552,10 +579,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{17}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.164
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.152
+0.000
 </td>
 </tr>
 <tr>
@@ -574,10 +601,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{19}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.019
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.015
+0.000
 </td>
 </tr>
 <tr>
@@ -585,10 +612,10 @@ GLMNET.est
 <span class="math inline">\(\beta_{20}\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.170
+0.000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.162
+0.000
 </td>
 </tr>
 </tbody>
@@ -597,9 +624,9 @@ GLMNET.est
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -611,27 +638,24 @@ GLMNET.est
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_3.0       Matrix_1.2-17    kableExtra_1.1.0 CVXR_0.99-7     
+## [1] glmnet_3.0-2     Matrix_1.2-18    kableExtra_1.1.0 CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.2        highr_0.8        
-##  [4] compiler_3.6.1    pillar_1.4.2      iterators_1.0.12 
-##  [7] R.methodsS3_1.7.1 R.utils_2.9.0     tools_3.6.1      
-## [10] zeallot_0.1.0     digest_0.6.22     bit_1.1-14       
-## [13] viridisLite_0.3.0 evaluate_0.14     tibble_2.1.3     
-## [16] lattice_0.20-38   pkgconfig_2.0.3   rlang_0.4.1      
-## [19] foreach_1.4.7     rstudioapi_0.10   yaml_2.2.0       
-## [22] blogdown_0.16     xfun_0.10         xml2_1.2.2       
-## [25] httr_1.4.1        Rmpfr_0.7-2       ECOSolveR_0.5.3  
-## [28] stringr_1.4.0     knitr_1.25        vctrs_0.2.0      
-## [31] hms_0.5.2         webshot_0.5.1     bit64_0.9-7      
-## [34] grid_3.6.1        glue_1.3.1        R6_2.4.0         
-## [37] rmarkdown_1.16    bookdown_0.14     readr_1.3.1      
-## [40] magrittr_1.5      codetools_0.2-16  scales_1.0.0     
-## [43] backports_1.1.5   htmltools_0.4.0   scs_1.3-1        
-## [46] rvest_0.3.4       shape_1.4.4       colorspace_1.4-1 
-## [49] stringi_1.4.3     munsell_0.5.0     crayon_1.3.4     
-## [52] R.oo_1.23.0</code></pre>
+##  [1] shape_1.4.4       xfun_0.11         slam_0.1-47       lattice_0.20-38  
+##  [5] Rmosek_9.1.0      colorspace_1.4-1  vctrs_0.2.1       htmltools_0.4.0  
+##  [9] viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5      rlang_0.4.2      
+## [13] pillar_1.4.3      glue_1.3.1        Rmpfr_0.7-2       Rcplex_0.3-3     
+## [17] bit64_0.9-7       foreach_1.4.7     lifecycle_0.1.0   stringr_1.4.0    
+## [21] munsell_0.5.0     blogdown_0.17     rvest_0.3.5       gurobi_9.0-0     
+## [25] codetools_0.2-16  evaluate_0.14     knitr_1.26        highr_0.8        
+## [29] Rcpp_1.0.3        readr_1.3.1       backports_1.1.5   scales_1.1.0     
+## [33] osqp_0.6.0.3      webshot_0.5.2     bit_1.1-14        hms_0.5.2        
+## [37] digest_0.6.23     stringi_1.4.5     bookdown_0.16     grid_3.6.2       
+## [41] Rglpk_0.6-4       ECOSolveR_0.5.3   tools_3.6.2       magrittr_1.5     
+## [45] tibble_2.1.3      crayon_1.3.4      pkgconfig_2.0.3   zeallot_0.1.0    
+## [49] rcbc_0.1.0.9001   xml2_1.2.2        assertthat_0.2.1  rmarkdown_2.0    
+## [53] httr_1.4.1        rstudioapi_0.10   iterators_1.0.12  R6_2.4.1         
+## [57] compiler_3.6.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -678,19 +702,23 @@ GLMNET.est
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://anqif.github.io/CVXR">Package Docs</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">A Quick Intro</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">A Longer Intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial Examples</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -702,7 +730,7 @@ GLMNET.est
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function Reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

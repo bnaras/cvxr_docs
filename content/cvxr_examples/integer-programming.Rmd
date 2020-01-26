@@ -7,7 +7,21 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: integer-programming
 ---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
@@ -80,7 +94,11 @@ The above problem now in `CVXR`.
 
 ```{r}
 y1 <- Variable(2)
-y2 <- Int(1)
+if (packageVersion("CVXR") > "0.99-7") {
+    y2 <- Variable(1, integer = TRUE)
+} else {
+    y2 <- Int(1)
+}
 y3 <- Variable(1)
 x <- vstack(y1, y2, y3) ## Create x expression
 C <- matrix(c(1, 2, -0.1, -3), nrow = 1)
@@ -100,7 +118,7 @@ We can solve this problem as usual using the default `ECOS` (actually
 solution. 
 
 ```{r}
-result <- solve(problem)
+result <- solve(problem, solver = "ECOS_BB")
 cat(sprintf("Optimal value: %.3f\n", result$value))
 ecos_solution <- result$getValue(x)
 ```
@@ -112,9 +130,11 @@ We can try other solvers and compare the solutions obtained, like
 as documented in the tutorial [Using Other
 Solvers](/cvxr_examples/using-other-solvers/).
 
+_Note:_ `LPSOLVE` is now orphaned on CRAN and so no longer supported.
+
 ```{r}
-result <- solve(problem, solver = "LPSOLVE")
-lpsolve_solution <- result$getValue(x)
+##result <- solve(problem, solver = "LPSOLVE")
+##lpsolve_solution <- result$getValue(x)
 result <- solve(problem, solver = "GLPK")
 glpk_solution <- result$getValue(x)
 ```
@@ -131,13 +151,25 @@ Below is the table is solutions from all the solvers we used.
 
 ```{r}
 solutions <- data.frame(ECOS = ecos_solution,
-                        LPSOLVE = lpsolve_solution,
+                        ## LPSOLVE = lpsolve_solution,
                         GLPK = glpk_solution,
                         GUROBI = gurobi_solution)
 row.names(solutions) <- c("$x_1$", "$x_2$", "$x_3$", "$x_4$")
 knitr::kable(solutions, format = "html") %>%
     kable_styling("striped") %>%
-    column_spec(1:5, background = "#ececec")
+    column_spec(1:4, background = "#ececec")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), error = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(ecos = ecos_solution, glpk = glpk_solution, gurobi = gurobi_solution), file = file.path(testdata_dir, "integer-programming1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    intprog <- readRDS(file = file.path(testdata_dir, "integer-programming1.RDS"))
+    expect_identical(ecos_solution, intprog$ecos)
+    expect_identical(glpk_solution, intprog$glpk)
+    expect_identical(gurobi_solution, intprog$gurobi)
+}
 ```
 
 ## Office Assignment Problem
@@ -197,7 +229,11 @@ We define the the occupancy variable which indicates, using values 1
 or 0, who occupies which office.
 
 ```{r}
-occupy <- Int(length(people), length(offices))
+if (packageVersion("CVXR") > "0.99-7") {
+    occupy <- Variable(length(people), length(offices), integer = TRUE)
+} else {
+    occupy <- Int(length(people), length(offices))
+}
 ```
 
 The objective is to _maximize the satisfaction_ of the preferences
@@ -205,7 +241,12 @@ weighted by seniority constrained by the fact the a person can only
 occupy a single office and no office can have more than 1 person.
 
 ```{r}
-objective <- Maximize(sum_entries(mul_elemwise(PM, occupy)))
+objective <- if (packageVersion("CVXR") > "0.99-7") {
+                 Maximize(sum_entries(multiply(PM, occupy)))
+             } else {
+                 Maximize(sum_entries(mul_elemwise(PM, occupy)))
+             }
+
 constraints <- list(
     occupy >= 0,
     occupy <= 1,
@@ -213,6 +254,7 @@ constraints <- list(
     sum_entries(occupy, axis = 2) <= 1
 )
 ```
+__Version 1.0 Note__ The pre-1.0 function `mul_elemwise` is now `multiply`.
 
 We further add the constraint that Tom (person 3) and Peter (person 4)
 should be no more than one office away, and ditto for Marcelo (person
@@ -246,7 +288,7 @@ We are now ready to solve the problem.
 
 ```{r}
 problem <- Problem(objective, constraints)
-ecos_result <- solve(problem)
+ecos_result <- solve(problem, solver = "ECOS_BB")
 ecos_soln <- round(ecos_result$getValue(occupy), 0)
 rownames(ecos_soln) <- people
 colnames(ecos_soln) <- offices
@@ -261,6 +303,16 @@ office_occupants[is.na(office_occupants)] <- "Empty"
 draw_office_layout(c("WC", office_occupants))
 ```
 
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), error = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(solution = ecos_soln), file = file.path(testdata_dir, "integer-programming2.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    intprog <- readRDS(file = file.path(testdata_dir, "integer-programming2.RDS"))
+    expect_identical(ecos_soln, intprog$solution)
+}
+```
 
 ## Session Info
 

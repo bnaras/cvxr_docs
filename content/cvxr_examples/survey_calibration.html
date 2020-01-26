@@ -7,6 +7,10 @@ bibliography: ../bibtex/cvxr_refs.bib
 link-citations: true
 categories: []
 tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data
+  data_dir: survey_calibration
 ---
 
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
@@ -22,10 +26,10 @@ improve the initial weights <span class="math inline">\(d_i\)</span> by finding 
 incorporate this auxiliary information while perturbing the initial
 weights as little as possible, , the ratio <span class="math inline">\(g_i = w_i/d_i\)</span> must
 be close to one. Such reweighting improves precision of estimates
-(Chapter 7, <span class="citation">Lumley (<a href="#ref-Lumley:2010">2010</a>)</span>).</p>
+(Chapter 7, <span class="citation">Lumley (<a href="#ref-Lumley:2010" role="doc-biblioref">2010</a>)</span>).</p>
 <p>Let <span class="math inline">\(X \in {\mathbf R}^{m \times n}\)</span> be the matrix of survey samples, with
 each column corresponding to an auxiliary variable. Reweighting can be
-expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016">2016</a>)</span>):</p>
+expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016" role="doc-biblioref">2016</a>)</span>):</p>
 <p><span class="math display">\[
     \begin{array}{ll}
         \mbox{minimize} &amp; \sum_{i=1}^m d_i\phi(g_i) \\
@@ -41,7 +45,7 @@ and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is relat
 function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibration
 metric.</p>
 <p>We illustrate with the California Academic Performance Index data in
-the <code>survey</code> package (<span class="citation">Lumley (<a href="#ref-lumley:2018">2018</a>)</span>) which also supplies facilities for
+the <code>survey</code> package (<span class="citation">Lumley (<a href="#ref-lumley:2018" role="doc-biblioref">2018</a>)</span>) which also supplies facilities for
 calibration via the function <code>calibrate</code>. Both the population dataset
 (<code>apipop</code>) and a simple random sample of <span class="math inline">\(m = 200\)</span> (<code>apisrs</code>) are
 provided. Suppose that we wish to reweight the observations in the
@@ -79,7 +83,7 @@ build_table(d1 = build_df(apisrs, &quot;Survey&quot;, w_survey),
             title = &quot;Calibration weights from Raking&quot;)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-3">Table 1: </span>Calibration weights from Raking
+<span id="tab:unnamed-chunk-4">Table 1: </span>Calibration weights from Raking
 </caption>
 <thead>
 <tr>
@@ -257,11 +261,11 @@ the default <code>ECOS</code> solver produced a different number of unique
 weights. With updates to both <code>ECOSolveR</code> and <code>scs</code>, the situation is
 now reversed. <em>Such differences are not unheard of among solvers!</em>
 However, one can obtain the same results by using additional arguments
-<code>solver = &quot;SCS&quot;</code> and <code>acceleration_lookback = 5L</code> in the call to
+<code>solver = "SCS"</code> and <code>acceleration_lookback = 5L</code> in the call to
 <code>CVXR::solve()</code> above.</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-5">Table 2: </span>Calibration weights from Quadratic metric
+<span id="tab:unnamed-chunk-6">Table 2: </span>Calibration weights from Quadratic metric
 </caption>
 <thead>
 <tr>
@@ -423,7 +427,7 @@ res &lt;- solve(p)
 w_cvxr_l &lt;- di * res$getValue(g)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-7">Table 3: </span>Calibration weights from Logit metric
+<span id="tab:unnamed-chunk-8">Table 3: </span>Calibration weights from Logit metric
 </caption>
 <thead>
 <tr>
@@ -586,7 +590,7 @@ res &lt;- solve(p)
 w_cvxr_h &lt;- di * res$getValue(g)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-9">Table 4: </span>Calibration weights from Hellinger distance metric
+<span id="tab:unnamed-chunk-10">Table 4: </span>Calibration weights from Hellinger distance metric
 </caption>
 <thead>
 <tr>
@@ -742,7 +746,7 @@ res &lt;- solve(p)
 w_cvxr_s &lt;- di * res$getValue(g)</code></pre>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-11">Table 5: </span>Calibration weights from derivative of sinh metric
+<span id="tab:unnamed-chunk-12">Table 5: </span>Calibration weights from derivative of sinh metric
 </caption>
 <thead>
 <tr>
@@ -893,9 +897,9 @@ Yes
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin19.0.0 (64-bit)
-## Running under: macOS Catalina 10.15.1
+<pre><code>## R version 3.6.2 (2019-12-12)
+## Platform: x86_64-apple-darwin19.2.0 (64-bit)
+## Running under: macOS Catalina 10.15.2
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
@@ -908,28 +912,25 @@ Yes
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] survey_3.36       survival_2.44-1.1 Matrix_1.2-17     dplyr_0.8.3      
-## [5] kableExtra_1.1.0  CVXR_0.99-7      
+## [1] survey_3.36      survival_3.1-8   Matrix_1.2-18    dplyr_0.8.3     
+## [5] kableExtra_1.1.0 CVXR_1.0        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5  xfun_0.10         purrr_0.3.3      
-##  [4] mitools_2.4       splines_3.6.1     lattice_0.20-38  
-##  [7] colorspace_1.4-1  vctrs_0.2.0       htmltools_0.4.0  
-## [10] viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5     
-## [13] rlang_0.4.1       R.oo_1.23.0       pillar_1.4.2     
-## [16] glue_1.3.1        Rmpfr_0.7-2       DBI_1.0.0        
-## [19] R.utils_2.9.0     bit64_0.9-7       scs_1.3-1        
-## [22] stringr_1.4.0     munsell_0.5.0     blogdown_0.16    
-## [25] rvest_0.3.4       R.methodsS3_1.7.1 evaluate_0.14    
-## [28] knitr_1.25        highr_0.8         Rcpp_1.0.2       
-## [31] readr_1.3.1       backports_1.1.5   scales_1.0.0     
-## [34] webshot_0.5.1     bit_1.1-14        hms_0.5.2        
-## [37] digest_0.6.22     stringi_1.4.3     bookdown_0.14    
-## [40] ECOSolveR_0.5.3   tools_3.6.1       magrittr_1.5     
-## [43] tibble_2.1.3      crayon_1.3.4      pkgconfig_2.0.3  
-## [46] zeallot_0.1.0     MASS_7.3-51.4     xml2_1.2.2       
-## [49] assertthat_0.2.1  rmarkdown_1.16    httr_1.4.1       
-## [52] rstudioapi_0.10   R6_2.4.0          compiler_3.6.1</code></pre>
+##  [1] tidyselect_0.2.5  xfun_0.11         slam_0.1-47       purrr_0.3.3      
+##  [5] mitools_2.4       splines_3.6.2     lattice_0.20-38   Rmosek_9.1.0     
+##  [9] colorspace_1.4-1  vctrs_0.2.1       htmltools_0.4.0   viridisLite_0.3.0
+## [13] yaml_2.2.0        gmp_0.5-13.5      rlang_0.4.2       pillar_1.4.3     
+## [17] glue_1.3.1        Rmpfr_0.7-2       DBI_1.1.0         Rcplex_0.3-3     
+## [21] bit64_0.9-7       lifecycle_0.1.0   stringr_1.4.0     munsell_0.5.0    
+## [25] blogdown_0.17     gurobi_9.0-0      rvest_0.3.5       evaluate_0.14    
+## [29] knitr_1.26        highr_0.8         Rcpp_1.0.3        readr_1.3.1      
+## [33] backports_1.1.5   scales_1.1.0      osqp_0.6.0.3      webshot_0.5.2    
+## [37] bit_1.1-14        hms_0.5.2         digest_0.6.23     stringi_1.4.5    
+## [41] bookdown_0.16     Rglpk_0.6-4       ECOSolveR_0.5.3   tools_3.6.2      
+## [45] magrittr_1.5      tibble_2.1.3      crayon_1.3.4      pkgconfig_2.0.3  
+## [49] zeallot_0.1.0     MASS_7.3-51.5     rcbc_0.1.0.9001   xml2_1.2.2       
+## [53] assertthat_0.2.1  rmarkdown_2.0     httr_1.4.1        rstudioapi_0.10  
+## [57] R6_2.4.1          compiler_3.6.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -939,7 +940,7 @@ Yes
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-Davies:2016">
-<p>Davies, G., J. Gillard, and A. Zhigljavsky. 2016. “Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.” In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-29975-4_6" class="uri">https://doi.org/10.1007/978-3-319-29975-4_6</a>.</p>
+<p>Davies, G., J. Gillard, and A. Zhigljavsky. 2016. “Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.” In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-29975-4_6">https://doi.org/10.1007/978-3-319-29975-4_6</a>.</p>
 </div>
 <div id="ref-lumley:2018">
 <p>Lumley, Thomas. 2018. “Survey: Analysis of Complex Survey Samples.”</p>
