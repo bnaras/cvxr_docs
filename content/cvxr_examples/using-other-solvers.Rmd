@@ -28,18 +28,20 @@ The default installation of `CVXR` comes with several (imported) open source sol
 `CVXR` can also make use of several other open source solvers
 implemented in R packages. 
 
-- The linear and mixed integer programming package
-  [`lpSolve`](http://lpsolve.sourceforge.net/5.5/) via the 
-  [`lpSolveAPI`](https://cran.r-project.org/package=lpSolveAPI)
-  package. __NOTE:__ This solver is now orphaned on CRAN and so is not
-  supported any more.
+- The conic solver [`MOSEK`](https://www.mosek.com/) and the associated
+CRAN package `Rmosek`.
+- The commercial solver [`GUROBI`](https://www.gurobi.com/) that solves both 
+  Quadratic and Conic programs.
+- [`CPLEX`](https://www.ibm.com/analytics/cplex-optimizer) solver that handles 
+both Quadratic and Conic programs, along with the associated CRAN pack `rcplex`.
 - The linear and mixed integer programming package [`GLPK`](https://www.gnu.org/software/glpk/) via the 
   [`Rglpk`](https://cran.r-project.org/package=Rglpk) package.
 - The CBC solver via the R package
   [`rcbc`](https://github.com/dirkschumacher/rcbc). This is not yet on
   CRAN. 
 
-Since these are optional, you have to install these packages yourself.
+Since these are optional, you have to install these packages yourself. __NOTE__: `MOSEK`
+,`GUROBI`, and `CPLEX` require licenses to use them.
 
 ```{r}
 lapply(list("CBC" = "rcbc",

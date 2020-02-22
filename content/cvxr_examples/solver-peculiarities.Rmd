@@ -86,14 +86,6 @@ Here again, even commercial solvers differ; GUROBI, for example, does
 not completely solve the problem and in fact throws an error.
 
 
-## Further Development
-
-`CVXR v1.x` will improve support for the commercial solvers by taking
-advantage of problem reductions described in @rewriting:2018 to hand
-the problem to solvers in a form that is closer to what the R packages
-(for those solvers) expect.  This should provide better behavior and
-error reporting.
-
 ## Session Info
 
 ```{r}

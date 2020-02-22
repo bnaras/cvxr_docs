@@ -17,10 +17,10 @@
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_intro/</guid>
-      <description>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.
-We generate some synthetic data where we know the model completely, that is
+      <description>Consider a simple linear regression problem where it is desired toestimate a set of parameters using a least squares criterion.
+We generate some synthetic data where we know the model completely,that is
 \[ Y = X\beta + \epsilon \]
-where \(Y\) is a \(100\times 1\) vector, \(X\) is a \(100\times 10\) matrix, \(\beta = [-4,\ldots ,-1, 0, 1, \ldots, 5]\) is a \(10\times 1\) vector, and \(\epsilon \sim N(0, 1)\).</description>
+where \(Y\) is a \(100\times 1\) vector, \(X\) is a \(100\times 10\) matrix,\(\beta = [-4,\ldots ,-1, 0, 1, \ldots, 5]\) is a \(10\times 1\) vector, and\(\epsilon \sim N(0, 1)\).</description>
     </item>
     
   </channel>

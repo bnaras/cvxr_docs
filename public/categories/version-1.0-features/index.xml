@@ -6,10 +6,21 @@
     <description>Recent content in Version 1.0 features on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/version-1.0-features/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Warm Starts</title>
+      <link>/cvxr_examples/warm_starts/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/cvxr_examples/warm_starts/</guid>
+      <description>A new feature in 1.0 is warm starts for one of our solvers in OSQP. Having warm starts allows the user to retain data of a particular problem and change parameters of the problem without repeating any of the calculations.
+Lasso ExampleWe will demonstrate this in a simple lasso problem:
+\[\begin{array}{ll} \underset{x, \lambda}{\mbox{minimize}} &amp;amp; \frac{1}{2}||Ax - b||_2^2 + \lambda ||x||_1\\\mbox{subject to} &amp;amp; \lambda &amp;gt; 0\end{array}\]</description>
+    </item>
     
     <item>
       <title>What&#39;s new in 1.0?</title>
@@ -17,8 +28,8 @@
       <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/whats_new_1.0/</guid>
-      <description>CVXR 1.0 includes a major rewrite of the CVXR internals, as well as a number of changes to the user interface. The goal is to follow cvxpy as much as possible. We first give an overview of the changes, before diving into the details. We only cover changes that might be of interest to users.
-Overview  Disciplined geometric programming (DGP): Starting with version 1.0.11, CVXR lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs.</description>
+      <description>CVXR 1.0 includes a major rewrite of the CVXR internals, as wellas a number of changes to the user interface. The goal is to followcvxpy as much as possible. We first give an overview of the changes,before diving into the details. We only cover changes that might be ofinterest to users.
+OverviewDisciplined geometric programming (DGP): Starting with version 1.0.11, CVXR lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs.</description>
     </item>
     
   </channel>

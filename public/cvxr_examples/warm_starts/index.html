@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head lang="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+	<meta name="description" content="Disciplined Convex Programming in R">
+	<meta name="generator" content="Hugo 0.62.2" />
+	
+	<title>Warm Starts &mdash; CVXR</title>
+	
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+
+	
+
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+</head>
+
+	<body role="document">
+		<div class="document">
+			<div class="documentwrapper">
+				<div class="bodywrapper">
+					<div class="body" role="main">
+						
+	<h1>Warm Starts</h1>
+	
+	
+
+
+<p>A new feature in 1.0 is warm starts for one of our solvers in <code>OSQP</code>. Having warm starts allows the user to retain data of a particular problem and change parameters of the problem without repeating any of the calculations.</p>
+<div id="lasso-example" class="section level2">
+<h2>Lasso Example</h2>
+<p>We will demonstrate this in a simple lasso problem:</p>
+<p><span class="math display">\[
+    \begin{array}{ll} \underset{x, \lambda}{\mbox{minimize}} &amp; \frac{1}{2}||Ax - b||_2^2 + \lambda ||x||_1\\
+    \mbox{subject to} &amp; \lambda &gt; 0
+    \end{array}
+\]</span></p>
+<pre class="r"><code>#Problem data
+set.seed(1)
+m &lt;- 2000
+n &lt;- 1000
+A &lt;- Matrix(rnorm(m*n), nrow = m, ncol = n)
+b &lt;- rnorm(m)
+
+#Construct problem
+gamma &lt;- Parameter(pos = TRUE)
+x &lt;- Variable(n)
+obj &lt;- Minimize(.5 * sum_squares(A%*%x - b) + gamma * norm1(x))
+constraint &lt;- list(x &gt;= 0)
+prob &lt;- Problem(obj, constraint)
+
+#Solve first time
+value(gamma) = 1
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = T) #warm_start = T is not necessary for the first time
+print(paste0(&quot;First solve time is &quot;, result$solve_time))</code></pre>
+<pre><code>## [1] &quot;First solve time is 49.4078897&quot;</code></pre>
+<pre class="r"><code>#Solve second time
+value(gamma) = 2
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = T)
+print(paste0(&quot;Second solve time is &quot;, result$solve_time))</code></pre>
+<pre><code>## [1] &quot;Second solve time is 1.1889768&quot;</code></pre>
+<p>As you can see, there is a very significant speed up with warm starts than without.</p>
+</div>
+
+
+
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+	<div class="sphinxsidebarwrapper">
+		<p class="logo">
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+				<h1 class="logo logo-name"></h1>
+			</a>
+		</p>
+		
+		<p class="blurb">Disciplined Convex Programming in R</p>
+
+		
+
+	<p>
+		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+	</p>
+
+	
+
+	
+		
+
+		
+
+<h3>Navigation</h3>
+<ul>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../">Home</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+	</li>
+	
+	<li class="toctree-l1">
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+	</li>
+	
+</ul>
+
+
+		<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_parameters/" title="Dealing with Solver-Specific Parameters">Dealing with Solver-Specific Parameters</a></li>
+  
+</ul>
+
+	</div>
+</div>
+<div class="clearer"></div>
+</div>
+			<script type="text/javascript" src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+			
+
+			
+
+			
+		</div>
+	</body>
+</html>
