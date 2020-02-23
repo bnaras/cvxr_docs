@@ -19,7 +19,7 @@ interest to users.
 
 ## Overview
 
-* Disciplined geometric programming (DGP): Starting with version 1.0.11, `CVXR` lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs. To get started with DGP, check out the tutorial and consult the accompanying paper.
+* Disciplined geometric programming (DGP): Starting with version 1.0, `CVXR` lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs. To get started with DGP, check out the tutorial and consult the accompanying paper.
 
 * Reductions: `CVXR` 1.0 uses a modular system of reductions to convert problems input by the user into the format required by the solver, which makes it easy to support new standard forms, such as quadratic programs, and more advanced user inputs, such as problems with complex variables. See Reductions and the accompanying paper for further details.
 
