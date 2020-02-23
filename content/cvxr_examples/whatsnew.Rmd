@@ -23,7 +23,7 @@ interest to users.
 
 * Reductions: `CVXR` 1.0 uses a modular system of reductions to convert problems input by the user into the format required by the solver, which makes it easy to support new standard forms, such as quadratic programs, and more advanced user inputs, such as problems with complex variables. See the accompanying paper for further details.
 
-* Attributes: Variables and parameters now support a variety of attributes that describe their symbolic properties, such as nonnegative or symmetric. This unifies the treatment of symbolic properties for variables and parameters and replaces specialized variable classes such as Bool and Semidef.
+* Attributes: Variables and Parameters now support a variety of attributes that describe their symbolic properties, such as nonnegative or symmetric. This unifies the treatment of symbolic properties for variables and parameters and replaces specialized variable classes such as Bool and Semidef.
 
 ## Reductions
 
