@@ -25,22 +25,31 @@ for each solve function. Here are the five parameters
   with an integer verbosity parameter with the default of 10. The
   default value of `verbose` for `CVXR` is set to `FALSE`.
 
-* `reltol` : Deals with the relative tolerance of the solver. Its
-  default value is set at `1e-8`
+* `reltol` : Deals with the relative tolerance of the solver. 
 
-* `feastol` : Deals with feasible tolerance of the solver. Its default
-  value is set at `1e-8`
+* `feastol` : Deals with feasible tolerance of the solver. 
 
-* `abstol` : Deals with the absolute tolerance of the solver. Its
-  default value is set at `1e-8`
+* `abstol` : Deals with the absolute tolerance of the solver. 
 
 * `num_iter` : A parameter that specifies the maximum number of
-  iterations for the solver. Its default value is set at `1e6`.
+  iterations for the solver. 
 
 The users can also pass in solver-specific parameters to the `solve`
 function based on what solver they specify. On the whole, the
 additional parameters given by the user will override the five values
 specified above.
+
+Here are the default parameters for all of the solvers. The empty values 
+indicate that the solver does not accept that particular parameter.
+
+|              | OSQP  | ECOS | ECOS_BB | SCS  | CPLEX | MOSEK | GUROBI |
+|:------------:|:-----:|:----:|:-------:|:----:|:-----:|:-----:|:------:|
+| __num_iter__ | 10000 | 100  | 1000    | 2500 | 10000 | 10000 | 10000  |
+| __eps_abs__  | 1e-5  | 1e-8 | 1e-6    | 1e-4 |       |       |        |
+| __eps_rel__  | 1e-5  | 1e-8 | 1e-3    |      |       |       |        |
+| __eps_feas__ |       | 1e-8 | 1e-6    |      |       |       | 1e-6   |
+| __alpha__    |       |      |         | 1.8  |       |       |        |
+| __scale__    |       |      |         | 5.0  |       |       |        |
 
 ## Solver-Specific Parameters
 
