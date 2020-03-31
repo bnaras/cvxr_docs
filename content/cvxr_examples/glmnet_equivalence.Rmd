@@ -8,8 +8,8 @@ link-citations: test
 categories: []
 tags: []
 params:
-  mode: ignore
-  testdata_dir: test_data
+  mode: test
+  testdata_dir: test_data_1.0
   data_dir: glmnet_equivalence
 ---
 
@@ -27,6 +27,7 @@ if (params$mode == "test") {
 library(CVXR)
 library(kableExtra)
 library(glmnet)
+
 ```
 
 ## Introduction

@@ -14,8 +14,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$", "\\.rst$", "\\.
 	name = ""
 	description = "Disciplined Convex Programming in R"
 	
-	github_user   = "bnaras"
-	github_repo   = "cvxr_docs"
+	github_user   = "cvxgrp"
+	github_repo   = "CVXR"
 	github_banner = true
 
 	custom_css = []

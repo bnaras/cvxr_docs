@@ -8,8 +8,8 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: ignore
-  testdata_dir: test_data
+  mode: test
+  testdata_dir: test_data_1.0
   data_dir: survey_calibration
 ---
 
@@ -29,6 +29,7 @@ library(CVXR)
 library(kableExtra)
 library(dplyr)
 library(survey)
+
 build_df <- function(api, method, wt_value) {
     d <- data.frame(apisrs$stype, apisrs$sch.wide, wt_value )
     names(d) <- c("stype", "sch.wide", "weight")

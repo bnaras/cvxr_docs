@@ -8,8 +8,8 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: ignore
-  testdata_dir: test_data
+  mode: test
+  testdata_dir: test_data_1.0
   data_dir: catenary
 ---
 
@@ -81,6 +81,19 @@ catenary + stat_function(fun = ideal , colour = &quot;brown&quot;, alpha = 0.5, 
 Figure 1: Analytic (red) and computed solution (blue) to the catenary problem
 </p>
 </div>
+<pre><code>## Testthat Results: No output is good</code></pre>
+<pre><code>## Error: `xs` not identical to catenary1$xs.
+## 99/101 mismatches (average diff: 5.3e-06)
+## [2]  0.00452 - 0.00452 == -4.52e-07
+## [3]  0.00913 - 0.00913 == -4.11e-07
+## [4]  0.01383 - 0.01383 == -1.37e-07
+## [5]  0.01862 - 0.01862 ==  2.69e-07
+## [6]  0.02352 - 0.02352 ==  8.21e-07
+## [7]  0.02851 - 0.02851 ==  1.42e-06
+## [8]  0.03362 - 0.03362 ==  2.03e-06
+## [9]  0.03884 - 0.03883 ==  2.67e-06
+## [10] 0.04417 - 0.04417 ==  3.29e-06
+## ...</code></pre>
 </div>
 <div id="additional-ground-constraints" class="section level2">
 <h2>Additional Ground Constraints</h2>
@@ -129,16 +142,30 @@ ggplot(data.frame(x = xs, y = ys)) +
 Figure 2: Asymmetric catenary problem with ground constraints.
 </p>
 </div>
+<pre><code>## Testthat Results: No output is good</code></pre>
+<pre><code>## Error: `xs` not identical to catenary2$xs.
+## 99/101 mismatches (average diff: 1.77e-05)
+## [2]  0.00252 - 0.00252 == -8.82e-08
+## [3]  0.00512 - 0.00512 == -2.16e-07
+## [4]  0.00780 - 0.00780 == -3.89e-07
+## [5]  0.01057 - 0.01057 == -5.73e-07
+## [6]  0.01343 - 0.01343 == -8.03e-07
+## [7]  0.01639 - 0.01639 == -1.06e-06
+## [8]  0.01945 - 0.01945 == -1.39e-06
+## [9]  0.02262 - 0.02263 == -1.78e-06
+## [10] 0.02592 - 0.02592 == -2.27e-06
+## ...</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.2 (2019-12-12)
-## Platform: x86_64-apple-darwin19.2.0 (64-bit)
-## Running under: macOS Catalina 10.15.2
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin19.3.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -147,21 +174,22 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.2.1 CVXR_1.0     
+## [1] ggplot2_3.3.0  CVXR_1.0-1     testthat_2.3.2 here_0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5     Rcpp_1.0.3       highr_0.8        compiler_3.6.2  
-##  [5] pillar_1.4.3     tools_3.6.2      digest_0.6.23    bit_1.1-14      
-##  [9] evaluate_0.14    lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0    
-## [13] lattice_0.20-38  pkgconfig_2.0.3  rlang_0.4.2      Matrix_1.2-18   
-## [17] gurobi_9.0-0     Rglpk_0.6-4      yaml_2.2.0       blogdown_0.17   
-## [21] xfun_0.11        withr_2.1.2      Rmpfr_0.7-2      stringr_1.4.0   
-## [25] dplyr_0.8.3      knitr_1.26       tidyselect_0.2.5 bit64_0.9-7     
-## [29] grid_3.6.2       glue_1.3.1       R6_2.4.1         rmarkdown_2.0   
-## [33] bookdown_0.16    farver_2.0.1     purrr_0.3.3      magrittr_1.5    
-## [37] scales_1.1.0     htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1
-## [41] labeling_0.3     Rcplex_0.3-3     stringi_1.4.5    Rmosek_9.1.0    
-## [45] lazyeval_0.2.2   munsell_0.5.0    slam_0.1-47      crayon_1.3.4</code></pre>
+##  [1] gmp_0.5-13.6     Rcpp_1.0.4.3     highr_0.8        compiler_3.6.3  
+##  [5] pillar_1.4.3     tools_3.6.3      digest_0.6.25    bit_1.1-15.2    
+##  [9] evaluate_0.14    lifecycle_0.2.0  tibble_2.1.3     gtable_0.3.0    
+## [13] lattice_0.20-40  pkgconfig_2.0.3  rlang_0.4.5      Matrix_1.2-18   
+## [17] gurobi_9.0-1     Rglpk_0.6-4      yaml_2.2.1       blogdown_0.18   
+## [21] xfun_0.12        withr_2.1.2      dplyr_0.8.5      Rmpfr_0.8-1     
+## [25] stringr_1.4.0    knitr_1.28       tidyselect_1.0.0 rprojroot_1.3-2 
+## [29] bit64_0.9-7      grid_3.6.3       glue_1.3.2       R6_2.4.1        
+## [33] rmarkdown_2.1    bookdown_0.18    farver_2.0.3     purrr_0.3.3     
+## [37] magrittr_1.5     rcbc_0.1.0.9001  backports_1.1.5  scales_1.1.0    
+## [41] htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1 labeling_0.3    
+## [45] Rcplex_0.3-3     stringi_1.4.6    Rmosek_9.1.0     munsell_0.5.0   
+## [49] slam_0.1-47      crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

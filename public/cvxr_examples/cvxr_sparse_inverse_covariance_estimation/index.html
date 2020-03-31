@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.62.2" />
+	<meta name="generator" content="Hugo 0.68.3" />
 	
 	<title>Sparse Inverse Covariance Estimation &mdash; CVXR</title>
 	
@@ -94,6 +94,7 @@ because it is more efficient than making nested function calls.</p>
 <p>However, a standalone atom does not exist for the determinant, so we
 cannot replace <code>log_det(S)</code> with <code>log(det(S))</code> since <code>det</code> is
 undefined for a <code>Semidef</code> object.</p>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
@@ -111,12 +112,13 @@ achieve the true percentage of non-zeros.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.2 (2019-12-12)
-## Platform: x86_64-apple-darwin19.2.0 (64-bit)
-## Running under: macOS Catalina 10.15.2
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin19.3.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -126,21 +128,23 @@ achieve the true percentage of non-zeros.</p>
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] expm_0.999-4  Matrix_1.2-18 ggplot2_3.2.1 CVXR_1.0     
+## [1] expm_0.999-4   Matrix_1.2-18  ggplot2_3.3.0  CVXR_1.0-1     testthat_2.3.2
+## [6] here_0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5       Rcpp_1.0.3         RColorBrewer_1.1-2 compiler_3.6.2    
-##  [5] pillar_1.4.3       tools_3.6.2        digest_0.6.23      bit_1.1-14        
-##  [9] evaluate_0.14      lifecycle_0.1.0    tibble_2.1.3       gtable_0.3.0      
-## [13] lattice_0.20-38    pkgconfig_2.0.3    rlang_0.4.2        gurobi_9.0-0      
-## [17] Rglpk_0.6-4        yaml_2.2.0         blogdown_0.17      xfun_0.11         
-## [21] withr_2.1.2        Rmpfr_0.7-2        stringr_1.4.0      dplyr_0.8.3       
-## [25] knitr_1.26         tidyselect_0.2.5   bit64_0.9-7        glue_1.3.1        
-## [29] R6_2.4.1           rmarkdown_2.0      bookdown_0.16      farver_2.0.1      
-## [33] purrr_0.3.3        magrittr_1.5       scs_1.3-2          rcbc_0.1.0.9001   
-## [37] scales_1.1.0       htmltools_0.4.0    assertthat_0.2.1   colorspace_1.4-1  
-## [41] labeling_0.3       Rcplex_0.3-3       stringi_1.4.5      Rmosek_9.1.0      
-## [45] lazyeval_0.2.2     munsell_0.5.0      slam_0.1-47        crayon_1.3.4</code></pre>
+##  [1] gmp_0.5-13.6       Rcpp_1.0.4.3       RColorBrewer_1.1-2 compiler_3.6.3    
+##  [5] pillar_1.4.3       tools_3.6.3        digest_0.6.25      bit_1.1-15.2      
+##  [9] evaluate_0.14      lifecycle_0.2.0    tibble_2.1.3       gtable_0.3.0      
+## [13] lattice_0.20-40    pkgconfig_2.0.3    rlang_0.4.5        gurobi_9.0-1      
+## [17] Rglpk_0.6-4        yaml_2.2.1         blogdown_0.18      xfun_0.12         
+## [21] withr_2.1.2        dplyr_0.8.5        Rmpfr_0.8-1        stringr_1.4.0     
+## [25] knitr_1.28         tidyselect_1.0.0   rprojroot_1.3-2    bit64_0.9-7       
+## [29] glue_1.3.2         R6_2.4.1           rmarkdown_2.1      bookdown_0.18     
+## [33] farver_2.0.3       purrr_0.3.3        magrittr_1.5       scs_1.3-2         
+## [37] rcbc_0.1.0.9001    backports_1.1.5    scales_1.1.0       htmltools_0.4.0   
+## [41] assertthat_0.2.1   colorspace_1.4-1   labeling_0.3       Rcplex_0.3-3      
+## [45] stringi_1.4.6      Rmosek_9.1.0       munsell_0.5.0      slam_0.1-47       
+## [49] crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -176,7 +180,7 @@ achieve the true percentage of non-zeros.</p>
 		
 
 	<p>
-		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		<iframe src="https://ghbtns.com/github-btn.html?user=cvxgrp&repo=CVXR&type=watch&count=true&size=large"
 		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 	</p>
 

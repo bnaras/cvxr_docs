@@ -8,8 +8,8 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: ignore
-  testdata_dir: test_data
+  mode: test
+  testdata_dir: test_data_1.0
   data_dir: sparse_inverse_covariance_estimation
 ---
 
@@ -29,6 +29,7 @@ library(ggplot2)
 library(grid)
 library(Matrix)
 library(expm)
+
 ## 
 ## Reference: http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
 # Multiple plot function

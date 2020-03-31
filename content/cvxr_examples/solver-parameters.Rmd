@@ -2,9 +2,12 @@
 title: "Dealing with Solver-Specific Parameters"
 author: Anqi Fu, David Kang and Balasubramanian Narasimhan
 date: "2020-01-15"
+slug: cvxr_solver-parameters
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
 params:
-  mode: i
-  testdata_dir: test_data
+  mode: test
+  testdata_dir: test_data_1.0
   data_dir: solver_specific
 ---
 
@@ -35,7 +38,7 @@ for each solve function. Here are the five parameters
   default value is set at `1e-8`
 
 * `num_iter` : A parameter that specifies the maximum number of
-  iterations for the solver. Its default value is set at `1e6`.
+  iterations for the solver. Its default value is set at `100L`.
 
 The users can also pass in solver-specific parameters to the `solve`
 function based on what solver they specify. On the whole, the

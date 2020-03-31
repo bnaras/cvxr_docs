@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.62.2" />
+	<meta name="generator" content="Hugo 0.68.3" />
 	
 	<title>Warm Starts &mdash; CVXR</title>
 	
@@ -28,7 +28,10 @@
 	
 
 
-<p>A new feature in 1.0 is warm starts for one of our solvers in <code>OSQP</code>. Having warm starts allows the user to retain data of a particular problem and change parameters of the problem without repeating any of the calculations.</p>
+<p>A new feature in 1.0 is warm starts for one of our solvers in
+<code>OSQP</code>. Having warm starts allows the user to retain data of a
+particular problem and change parameters of the problem without
+repeating any of the calculations.</p>
 <div id="lasso-example" class="section level2">
 <h2>Lasso Example</h2>
 <p>We will demonstrate this in a simple lasso problem:</p>
@@ -55,13 +58,14 @@ prob &lt;- Problem(obj, constraint)
 value(gamma) = 1
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = T) #warm_start = T is not necessary for the first time
 print(paste0(&quot;First solve time is &quot;, result$solve_time))</code></pre>
-<pre><code>## [1] &quot;First solve time is 49.4078897&quot;</code></pre>
+<pre><code>## [1] &quot;First solve time is 31.237815006&quot;</code></pre>
 <pre class="r"><code>#Solve second time
 value(gamma) = 2
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = T)
 print(paste0(&quot;Second solve time is &quot;, result$solve_time))</code></pre>
-<pre><code>## [1] &quot;Second solve time is 1.1889768&quot;</code></pre>
-<p>As you can see, there is a very significant speed up with warm starts than without.</p>
+<pre><code>## [1] &quot;Second solve time is 1.059887469&quot;</code></pre>
+<p>As you can see, there is a very significant speed up with warm starts
+than without.</p>
 </div>
 
 
@@ -85,7 +89,7 @@ print(paste0(&quot;Second solve time is &quot;, result$solve_time))</code></pre>
 		
 
 	<p>
-		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		<iframe src="https://ghbtns.com/github-btn.html?user=cvxgrp&repo=CVXR&type=watch&count=true&size=large"
 		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 	</p>
 
@@ -141,7 +145,7 @@ print(paste0(&quot;Second solve time is &quot;, result$solve_time))</code></pre>
 		<h3>Related Topics</h3>
 <ul>
   <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_parameters/" title="Dealing with Solver-Specific Parameters">Dealing with Solver-Specific Parameters</a></li>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_solver-parameters/" title="Dealing with Solver-Specific Parameters">Dealing with Solver-Specific Parameters</a></li>
   
 </ul>
 

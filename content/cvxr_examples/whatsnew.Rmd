@@ -6,8 +6,8 @@ categories:
   - Version 1.0 features
 slug: whats_new_1.0
 params:
-  mode: ignore
-  testdata_dir: test_data
+  mode: test
+  testdata_dir: test_data_1.0
   data_dir: whats_new
 ---
 

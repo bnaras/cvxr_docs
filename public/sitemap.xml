@@ -8,11 +8,6 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2020-02-22T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/cvxr_examples/</loc>
     <lastmod>2020-02-22T00:00:00+00:00</lastmod>
   </url>
@@ -28,7 +23,7 @@
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_parameters/</loc>
+    <loc>/cvxr_examples/cvxr_solver-parameters/</loc>
     <lastmod>2020-01-15T00:00:00+00:00</lastmod>
   </url>
   
@@ -69,6 +64,11 @@
   
   <url>
     <loc>/cvxr_examples/cvxr_censored-regression/</loc>
+    <lastmod>2017-11-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
