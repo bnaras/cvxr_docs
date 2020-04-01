@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.62.2" />
+	<meta name="generator" content="Hugo 0.68.3" />
 	
 	<title>Prototyping the pliable lasso &mdash; CVXR</title>
 	
@@ -278,33 +278,33 @@ list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0.0,
 ## Factor     - dense dim.             : 6                 flops                  : 8.86e+06        
 ## ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
 ## 0   2.4e+01  1.0e+00  3.2e+01  0.00e+00   3.000000000e+01   -1.000000000e+00  1.0e+00  0.01  
-## 1   1.2e+01  5.0e-01  5.4e+00  8.77e-01   2.078449558e+01   9.709212181e+00   5.0e-01  0.01  
-## 2   8.8e+00  3.6e-01  2.5e+00  2.61e+00   1.168682614e+01   6.734272672e+00   3.6e-01  0.02  
-## 3   4.9e+00  2.0e-01  8.6e-01  2.07e+00   8.411428087e+00   6.525838553e+00   2.0e-01  0.02  
-## 4   4.1e+00  1.7e-01  6.7e-01  1.53e+00   7.702191074e+00   6.148222756e+00   1.7e-01  0.02  
-## 5   1.6e+00  6.5e-02  1.8e-01  1.58e+00   6.264895892e+00   5.725386628e+00   6.5e-02  0.02  
-## 6   9.4e-01  3.9e-02  9.4e-02  8.10e-01   5.765244946e+00   5.383979330e+00   3.9e-02  0.03  
-## 7   4.4e-01  1.8e-02  3.1e-02  9.72e-01   5.324228020e+00   5.138001741e+00   1.8e-02  0.03  
-## 8   2.1e-01  8.7e-03  1.5e-02  3.50e-01   4.901890831e+00   4.766653954e+00   8.7e-03  0.03  
-## 9   4.5e-02  1.9e-03  1.8e-03  8.29e-01   4.445497087e+00   4.410689416e+00   1.9e-03  0.04  
-## 10  9.0e-03  3.7e-04  1.8e-04  7.41e-01   4.226277835e+00   4.217766978e+00   3.7e-04  0.04  
-## 11  1.8e-03  7.4e-05  1.6e-05  8.61e-01   4.167494691e+00   4.165673328e+00   7.4e-05  0.04  
-## 12  6.2e-04  2.5e-05  3.2e-06  9.55e-01   4.158096355e+00   4.157458056e+00   2.5e-05  0.04  
-## 13  1.1e-04  4.6e-06  2.5e-07  9.81e-01   4.154142654e+00   4.154025382e+00   4.6e-06  0.05  
-## 14  7.2e-06  2.1e-07  2.5e-09  9.95e-01   4.153324216e+00   4.153318763e+00   2.1e-07  0.05  
-## 15  4.5e-04  1.3e-08  4.0e-11  1.00e+00   4.153291052e+00   4.153290713e+00   1.3e-08  0.05  
-## 16  1.7e-02  3.4e-10  1.7e-13  1.00e+00   4.153288707e+00   4.153288698e+00   3.4e-10  0.06  
-## Optimizer terminated. Time: 0.06    
+## 1   1.2e+01  5.0e-01  5.4e+00  8.77e-01   2.078449558e+01   9.709212181e+00   5.0e-01  0.03  
+## 2   8.8e+00  3.6e-01  2.5e+00  2.61e+00   1.168682614e+01   6.734272672e+00   3.6e-01  0.03  
+## 3   4.9e+00  2.0e-01  8.6e-01  2.07e+00   8.411428087e+00   6.525838553e+00   2.0e-01  0.03  
+## 4   4.1e+00  1.7e-01  6.7e-01  1.53e+00   7.702191074e+00   6.148222756e+00   1.7e-01  0.03  
+## 5   1.6e+00  6.5e-02  1.8e-01  1.58e+00   6.264895892e+00   5.725386628e+00   6.5e-02  0.04  
+## 6   9.4e-01  3.9e-02  9.4e-02  8.10e-01   5.765244946e+00   5.383979330e+00   3.9e-02  0.04  
+## 7   4.4e-01  1.8e-02  3.1e-02  9.72e-01   5.324228020e+00   5.138001741e+00   1.8e-02  0.04  
+## 8   2.1e-01  8.7e-03  1.5e-02  3.50e-01   4.901890831e+00   4.766653954e+00   8.7e-03  0.05  
+## 9   4.5e-02  1.9e-03  1.8e-03  8.29e-01   4.445497087e+00   4.410689416e+00   1.9e-03  0.05  
+## 10  9.0e-03  3.7e-04  1.8e-04  7.41e-01   4.226277835e+00   4.217766978e+00   3.7e-04  0.05  
+## 11  1.8e-03  7.4e-05  1.6e-05  8.61e-01   4.167494692e+00   4.165673328e+00   7.4e-05  0.06  
+## 12  6.2e-04  2.5e-05  3.2e-06  9.55e-01   4.158096355e+00   4.157458056e+00   2.5e-05  0.06  
+## 13  1.1e-04  4.6e-06  2.5e-07  9.81e-01   4.154142654e+00   4.154025382e+00   4.6e-06  0.06  
+## 14  5.3e-06  2.1e-07  2.5e-09  9.95e-01   4.153324216e+00   4.153318763e+00   2.1e-07  0.06  
+## 15  1.5e-04  1.3e-08  4.0e-11  1.00e+00   4.153291052e+00   4.153290713e+00   1.3e-08  0.07  
+## 16  1.7e-02  3.4e-10  1.6e-13  1.00e+00   4.153288707e+00   4.153288699e+00   3.4e-10  0.07  
+## Optimizer terminated. Time: 0.07    
 ## 
 ## 
 ## Interior-point solution summary
 ##   Problem status  : PRIMAL_AND_DUAL_FEASIBLE
 ##   Solution status : OPTIMAL
-##   Primal.  obj: 4.1532887070e+00    nrm: 4e+02    Viol.  con: 3e-14    var: 0e+00    cones: 1e-09  
-##   Dual.    obj: 4.1532886983e+00    nrm: 9e-01    Viol.  con: 9e-11    var: 8e-11    cones: 1e-10  
+##   Primal.  obj: 4.1532887070e+00    nrm: 4e+02    Viol.  con: 1e-14    var: 0e+00    cones: 1e-09  
+##   Dual.    obj: 4.1532886985e+00    nrm: 9e-01    Viol.  con: 9e-11    var: 8e-11    cones: 1e-10  
 ## Optimizer summary
-##   Optimizer                 -                        time: 0.06    
-##     Interior-point          - iterations : 16        time: 0.06    
+##   Optimizer                 -                        time: 0.07    
+##     Interior-point          - iterations : 16        time: 0.07    
 ##       Basis identification  -                        time: 0.00    
 ##         Primal              - iterations : 0         time: 0.00    
 ##         Dual                - iterations : 0         time: 0.00    
@@ -514,12 +514,13 @@ similarly.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.2 (2019-12-12)
-## Platform: x86_64-apple-darwin19.2.0 (64-bit)
-## Running under: macOS Catalina 10.15.2
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin19.3.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -528,22 +529,22 @@ similarly.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_1.0        
+## [1] kableExtra_1.1.0 CVXR_1.0-1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.5      Rcpp_1.0.3        highr_0.8         compiler_3.6.2   
-##  [5] pillar_1.4.3      tools_3.6.2       zeallot_0.1.0     digest_0.6.23    
-##  [9] bit_1.1-14        viridisLite_0.3.0 lifecycle_0.1.0   evaluate_0.14    
-## [13] tibble_2.1.3      lattice_0.20-38   pkgconfig_2.0.3   rlang_0.4.2      
-## [17] Matrix_1.2-18     gurobi_9.0-0      rstudioapi_0.10   Rglpk_0.6-4      
-## [21] yaml_2.2.0        blogdown_0.17     xfun_0.11         xml2_1.2.2       
-## [25] httr_1.4.1        Rmpfr_0.7-2       stringr_1.4.0     knitr_1.26       
-## [29] vctrs_0.2.1       hms_0.5.2         webshot_0.5.2     bit64_0.9-7      
-## [33] grid_3.6.2        glue_1.3.1        R6_2.4.1          rmarkdown_2.0    
-## [37] bookdown_0.16     readr_1.3.1       magrittr_1.5      rcbc_0.1.0.9001  
-## [41] scales_1.1.0      backports_1.1.5   htmltools_0.4.0   assertthat_0.2.1 
-## [45] rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.5    
-## [49] Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
+##  [1] gmp_0.5-13.6      Rcpp_1.0.4.3      highr_0.8         compiler_3.6.3   
+##  [5] pillar_1.4.3      tools_3.6.3       digest_0.6.25     bit_1.1-15.2     
+##  [9] viridisLite_0.3.0 lifecycle_0.2.0   evaluate_0.14     tibble_2.1.3     
+## [13] lattice_0.20-40   pkgconfig_2.0.3   rlang_0.4.5       Matrix_1.2-18    
+## [17] gurobi_9.0-1      rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
+## [21] blogdown_0.18     xfun_0.12         Rmpfr_0.8-1       stringr_1.4.0    
+## [25] httr_1.4.1        knitr_1.28        xml2_1.2.5        vctrs_0.2.4      
+## [29] hms_0.5.3         webshot_0.5.2     bit64_0.9-7       grid_3.6.3       
+## [33] glue_1.3.2        R6_2.4.1          rmarkdown_2.1     bookdown_0.18    
+## [37] readr_1.3.1       magrittr_1.5      rcbc_0.1.0.9001   scales_1.1.0     
+## [41] htmltools_0.4.0   assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1 
+## [45] Rcplex_0.3-3      stringi_1.4.6     Rmosek_9.1.0      munsell_0.5.0    
+## [49] slam_0.1-47       crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -579,7 +580,7 @@ similarly.</p>
 		
 
 	<p>
-		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		<iframe src="https://ghbtns.com/github-btn.html?user=cvxgrp&repo=CVXR&type=watch&count=true&size=large"
 		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 	</p>
 
@@ -602,7 +603,7 @@ similarly.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://www.cvxgrp.org/CVXR/">Package docs</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">

@@ -1,0 +1,52 @@
+---
+title: Warm Starts
+author: Anqi Fu, David Kang and Balasubramanian Narasimhan
+date: '2020-02-22'
+categories:
+  - Version 1.0 features
+slug: warm_starts
+params:
+  mode: ignore
+---
+
+
+
+<p>A new feature in 1.0 is warm starts for one of our solvers in
+<code>OSQP</code>. Having warm starts allows the user to retain data of a
+particular problem and change parameters of the problem without
+repeating any of the calculations.</p>
+<div id="lasso-example" class="section level2">
+<h2>Lasso Example</h2>
+<p>We will demonstrate this in a simple lasso problem:</p>
+<p><span class="math display">\[
+    \begin{array}{ll} \underset{x, \lambda}{\mbox{minimize}} &amp; \frac{1}{2}||Ax - b||_2^2 + \lambda ||x||_1\\
+    \mbox{subject to} &amp; \lambda &gt; 0
+    \end{array}
+\]</span></p>
+<pre class="r"><code>#Problem data
+set.seed(1)
+m &lt;- 2000
+n &lt;- 1000
+A &lt;- Matrix(rnorm(m*n), nrow = m, ncol = n)
+b &lt;- rnorm(m)
+
+#Construct problem
+gamma &lt;- Parameter(pos = TRUE)
+x &lt;- Variable(n)
+obj &lt;- Minimize(.5 * sum_squares(A%*%x - b) + gamma * norm1(x))
+constraint &lt;- list(x &gt;= 0)
+prob &lt;- Problem(obj, constraint)
+
+#Solve first time
+value(gamma) &lt;- 1
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
+cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
+<pre><code>## First solve time is 32.203576</code></pre>
+<pre class="r"><code>#Solve second time
+value(gamma) &lt;- 2
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
+cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
+<pre><code>## Second solve time is 1.080366</code></pre>
+<p>As you can see, there is a very significant speed up with warm starts
+than without.</p>
+</div>

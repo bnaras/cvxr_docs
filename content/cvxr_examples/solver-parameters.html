@@ -1,0 +1,860 @@
+---
+title: "Dealing with Solver-Specific Parameters"
+author: Anqi Fu, David Kang and Balasubramanian Narasimhan
+date: "2020-01-15"
+slug: cvxr_solver-parameters
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+params:
+  mode: ignore
+  testdata_dir: test_data_1.0
+  data_dir: solver_specific
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p><code>CVXR</code> 1.0 has now updated how it handles its solver-specific
+parameters and has diverged slightly from how <code>cvxpy</code> handles it. It
+now features five standard parameters that are the default parameters
+for each solve function. Here are the five parameters</p>
+<ul>
+<li><p><code>verbose</code> : A parameter that deals with the verbosity of the
+solver. It is a boolean variable for all solvers, but it can also
+take integer values for the <code>MOSEK</code> solver, whose interface deals
+with an integer verbosity parameter with the default of 10. The
+default value of <code>verbose</code> for <code>CVXR</code> is set to <code>FALSE</code>.</p></li>
+<li><p><code>reltol</code> : Deals with the relative tolerance of the solver.</p></li>
+<li><p><code>abstol</code> : Deals with the absolute tolerance of the solver.</p></li>
+<li><p><code>feastol</code> : Deals with feasible tolerance of the solver.</p></li>
+<li><p><code>num_iter</code> : A parameter that specifies the maximum number of
+iterations for the solver.</p></li>
+</ul>
+<p>The users can also pass in solver-specific parameters to the <code>solve</code>
+function based on the solver they specify. On the whole, the
+additional parameters given by the user will override the five values
+specified above.</p>
+<p>For each solver, the tables below show how the five standard
+parameters are mapped to the solver. Cells with <code>NA</code> values indicate
+no mapping and any specified value will result in a warning about
+parameter being ignored.</p>
+</div>
+<div id="solver-specific-parameters" class="section level2">
+<h2>Solver-Specific Parameters</h2>
+<p>We will go over some examples for each solvers supported by <code>CVXR</code>,
+the available parameters for each solver, and where to find the
+documentation for each solver.</p>
+<div id="osqp" class="section level3">
+<h3>OSQP</h3>
+<p>The parameters available for <code>OSQP</code> can be found in this
+<a href="https://osqp.org/docs/interfaces/solver_settings.html">link</a>.</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-2">Table 1: </span>Default CVXR-OSQP parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+OSQP
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+eps_rel
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+eps_abs
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+eps_{prim/dual}_inf
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+max_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+10000
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameters can be entered individually in the arguments of the
+solve function or can be passed through as a list. If the user enters
+in a parameter that is not specified or accepted by <code>OSQP</code>, then the
+solver will ignore the parameter and proceed to solve the
+problem. Here is an example.</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+
+# Inside Function
+result  &lt;- solve(prob, solver = &quot;OSQP&quot;, feastol = 1e-2, eps_prim_inf = 1e-5)
+
+# Can also do it by passing in a list
+more_params &lt;- list(verbose = TRUE, feastol = 1e-2,
+                    eps_prim_inf = 1e-5, eps_prim_inf = 1e-3)
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, verbose = FALSE, more_params)</code></pre>
+<p>In the second case that the <code>verbose</code> in the <code>more_params</code> list overrides
+the value of <code>verbose</code> listed earlier in the invocation.</p>
+</div>
+<div id="scs" class="section level3">
+<h3>SCS</h3>
+<p>The parameters available for <code>SCS</code> can be found in this
+<a href="https://cran.r-project.org/web/packages/scs/scs.pdf">link</a> under the
+<code>scs_control</code> function.</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-4">Table 2: </span>Default CVXR-SCS parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+SCS
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+max_iters
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+2500
+</td>
+</tr>
+</tbody>
+</table>
+<p>Much like <code>OSQP</code>, the parameters can be
+entered individually in the arguments of the solve function or can be
+passed through as a list. If the user enters in a parameter that is
+not specified or accepted by <code>SCS</code>, then the solver will ignore the
+parameter and proceed to solve the problem. Here is an example:</p>
+<pre class="r"><code>n&lt;-3
+p&lt;-3
+C &lt;- matrix(rnorm(n^2), ncol = n)
+A &lt;- list(matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n))
+b &lt;- matrix(rnorm(p), nrow = p)
+
+X &lt;- Variable(c(n, n), symmetric = TRUE)
+constraints &lt;- list(X &gt;= 0)
+for(i in 1:p){
+  constraints &lt;- c(constraints, list(matrix_trace(A[[i]]%*%X) == b[i] ))
+}
+
+obj &lt;- Minimize(matrix_trace(C %*% X))
+prob &lt;- Problem(obj, constraints)
+result  &lt;- solve(prob, solver = &quot;SCS&quot;, verbose = FALSE, feastol = 1e-2, cg_rate = 1.5, scale = 2)</code></pre>
+<pre><code>## Warning in solve_via_data(object@solver, data, warm_start, verbose, feastol, :
+## Ignoring inapplicable parameter feastol/reltol/abstol for SCS.</code></pre>
+<p>Notice how in this case a warning is thrown: the <code>SCS</code> solver does not
+support the feasible tolerance parameter, so the solver ignores it.</p>
+</div>
+<div id="ecos" class="section level3">
+<h3>ECOS</h3>
+<p>The parameters available for <code>ECOS</code> can be found in this
+<a href="https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf">link</a>
+under the <code>ecos.control</code> function.</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">Table 3: </span>Default CVXR-ECOS parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+ECOS
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+max_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+100
+</td>
+</tr>
+</tbody>
+</table>
+<p>Much like <code>OSQP</code>, the parameters can be entered individually in the
+arguments of the solve function or can be passed through as a list. If
+the user enters in a parameter that is not specified or accepted by
+<code>ECOS</code>, then the solver will ignore the parameter and proceed to solve
+the problem. Here is an example:</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;ECOS&quot;, verbose = FALSE, feastol = 1e-2, reltol_inacc = 1e-5)</code></pre>
+</div>
+<div id="cplex" class="section level3">
+<h3>CPLEX</h3>
+<p>The parameters available for <code>CPLEX</code> can be found in this
+<a href="https://cran.r-project.org/web/packages/Rcplex/Rcplex.pdf">link</a>
+under the details section for the function <code>Rcplex</code> function on
+page 3.</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-8">Table 4: </span>Default CVXR-CPLEX parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+CPLEX
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+trace
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+itlim
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+10000
+</td>
+</tr>
+</tbody>
+</table>
+<p>Much like <code>OSQP</code>, the parameters can be entered individually
+in the arguments of the solve function or can be passed through as a
+list. If the user enters in a parameter that is not specified or
+accepted by <code>CPLEX</code>, then the solver will give the user a warning but
+will proceed to solve the problem. Here is an example:</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;CPLEX&quot;, verbose = FALSE, eps_abs_tol = 1e-2, epagap = 1e-5)</code></pre>
+<pre><code>## Warning in Rcplex::Rcplex(cvec = q, Amat = Amat, bvec = bvec, Qmat = P, :
+## Unknown CPLEX parameter eps_abs_tol. Ignoring it.</code></pre>
+<p>As you can see, <code>eps_abs_tol</code> is not one of <code>CPLEX</code>’s specified
+parameters, so the solver threw a warning.</p>
+</div>
+<div id="mosek" class="section level3">
+<h3>MOSEK</h3>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-10">Table 5: </span>Default CVXR-MOSEK parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+MOSEK
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+10000
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameters available for <code>MOSEK</code> can be seen in this
+<a href="https://docs.mosek.com/9.1/rmosek/parameters.html#doc-all-parameter-list">link</a>. As
+you can see, the number of parameters is quite massive. They are also
+split between three times of parameters in <code>Doubl</code>, <code>Integer</code>, and
+<code>String</code> parameters. To pass these into the solver, they must be put
+in a list beforehand. Moreover, there are also general solver
+parameters that do not belong in any of the three categories. These
+parameters can be found in detail in the <code>Rmosek</code> package
+documentation, but here are the parameters</p>
+<ul>
+<li><code>verbose</code> (Another important note here is while the default values
+of <code>TRUE</code> and <code>FALSE</code> work, <code>MOSEK</code> uses integer values for verbose
+with the default being 10. The <code>TRUE</code> value for verbose corresponds
+to 10 in the solver)</li>
+<li><code>usesol</code></li>
+<li><code>useparam</code></li>
+<li><code>soldetail</code></li>
+<li><code>getinfo</code></li>
+<li><code>writebefore</code></li>
+<li><code>writeafter</code></li>
+</ul>
+<p>These parameters are passed into the <code>solve</code> function as normal. Here is an example:</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+iparam &lt;- list()
+iparam$AUTO_UPDATE_SOL_INFO &lt;- &quot;OFF&quot;
+iparam$BI_IGNORE_NUM_ERROR &lt;- &quot;OFF&quot;
+iparam$BI_MAX_ITERATIONS &lt;- 100000
+
+dparam &lt;- list()
+dparam$BASIS_REL_TOL_S &lt;- 1.0e-12
+dparam$BASIS_TOL_S &lt;- 1.0e-6
+
+result  &lt;- solve(prob, solver = &quot;MOSEK&quot;, verbose = FALSE, soldetail = 3, dparam = dparam, iparam = iparam)</code></pre>
+<pre><code>## Warning in solve_via_data(object@solver, data, warm_start, verbose, feastol, :
+## Solver might not output correct answer depending on the input of the soldetail
+## variable. Default is 3</code></pre>
+<p>A quick detail in this case is that the solver threw a warning about
+the <code>soldetail</code> parameter. Both the <code>soldetail</code> and <code>getinfo</code>
+parameter controls the amount of data the solve returns, and some of
+them might be needed in order to invert the solution. Therefore,
+proceed with caution when using these variables as they can cause the
+solver to not obtain the answer.</p>
+</div>
+<div id="gurobi" class="section level3">
+<h3>GUROBI</h3>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-12">Table 6: </span>Default CVXR-GUROBI parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+GUROBI
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+OutputFlag
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+{Feasibility/Optimality}Tol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+IterationLimit
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+10000
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameters available for <code>GUROBI</code> can be seen in this
+<a href="https://www.gurobi.com/documentation/6.5/refman/parameters.html#sec:Parameters">link</a>. If
+an unaccepted parameter is passed into the <code>solve</code> function, then the
+function will not run to completion. The solver will also not let you
+know which parameter is at fault unless the parameter is
+continuous. Here is an example.</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;GUROBI&quot;, verbose = FALSE, BarIterLimit = 20, Quad = 1)</code></pre>
+</div>
+<div id="glpk" class="section level3">
+<h3>GLPK</h3>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-14">Table 7: </span>Default CVXR-GLPK parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+GLPK
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+verbose
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameters available for <code>GLPK</code> can be seen in this
+<a href="https://cran.r-project.org/web/packages/Rglpk/Rglpk.pdf">link</a> under
+the <code>Details</code> section in page 4. There are only four parameters in
+<code>verbose</code>, <code>presolve</code>, <code>tm_limit</code>, <code>canonicalize_status</code>. Here is an
+example</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;GLPK&quot;, verbose = FALSE, presolve = FALSE, tm_limit = 10, canonicalize_status = TRUE)</code></pre>
+</div>
+<div id="cbc" class="section level3">
+<h3>CBC</h3>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-16">Table 8: </span>Default CVXR-CBC parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+CBC
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+verbose
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+NA
+</td>
+<td style="text-align:right;background-color: #ececec !important;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameters available for <code>CBC</code> can be seen in this
+<a href="https://projects.coin-or.org/CoinBinary/export/1059/OptimizationSuite/trunk/Installer/files/doc/cbcCommandLine.pdf">link</a>. Much
+like most of the solvers outlined above, if the user passes in a
+unspecified parameter into the solver, then the solver just ignores
+the parameter and proceeds to solve the problem. Here is an example</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, maxn = 10)</code></pre>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin19.3.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
+## 
+## Matrix products: default
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+## 
+## locale:
+## [1] C
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] kableExtra_1.1.0 tibble_2.1.3     CVXR_1.0-1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] gmp_0.5-13.6      Rcpp_1.0.4.3      highr_0.8         pillar_1.4.3     
+##  [5] compiler_3.6.3    tools_3.6.3       digest_0.6.25     bit_1.1-15.2     
+##  [9] viridisLite_0.3.0 evaluate_0.14     lifecycle_0.2.0   lattice_0.20-40  
+## [13] pkgconfig_2.0.3   rlang_0.4.5       Matrix_1.2-18     gurobi_9.0-1     
+## [17] rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1        blogdown_0.18    
+## [21] xfun_0.12         osqp_0.6.0.3      ECOSolveR_0.5.3   Rmpfr_0.8-1      
+## [25] stringr_1.4.0     httr_1.4.1        knitr_1.28        xml2_1.2.5       
+## [29] vctrs_0.2.4       hms_0.5.3         webshot_0.5.2     bit64_0.9-7      
+## [33] grid_3.6.3        glue_1.3.2        R6_2.4.1          rmarkdown_2.1    
+## [37] bookdown_0.18     readr_1.3.1       magrittr_1.5      scs_1.3-2        
+## [41] rcbc_0.1.0.9001   scales_1.1.0      htmltools_0.4.0   assertthat_0.2.1 
+## [45] rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.6    
+## [49] Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/cvxr_parameters.Rmd">R Markdown</a></p>
+</div>

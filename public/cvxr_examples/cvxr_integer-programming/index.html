@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.62.2" />
+	<meta name="generator" content="Hugo 0.68.3" />
 	
 	<title>Integer Programming &mdash; CVXR</title>
 	
@@ -118,7 +118,7 @@ GUROBI
 <span class="math inline">\(x_1\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-1.666667
+1.6666703
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 1.666667
@@ -132,7 +132,7 @@ GUROBI
 <span class="math inline">\(x_2\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-3.333333
+3.3333291
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 3.333333
@@ -146,7 +146,7 @@ GUROBI
 <span class="math inline">\(x_3\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-2.000000
+2.0000704
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 2.000000
@@ -160,7 +160,7 @@ GUROBI
 <span class="math inline">\(x_4\)</span>
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
-0.000000
+-0.0000018
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
 0.000000
@@ -275,12 +275,13 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.2 (2019-12-12)
-## Platform: x86_64-apple-darwin19.2.0 (64-bit)
-## Running under: macOS Catalina 10.15.2
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin19.3.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.7/lib/libopenblasp-r0.3.7.dylib
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
 ## 
 ## locale:
 ## [1] C
@@ -289,25 +290,24 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.2.1    kableExtra_1.1.0 CVXR_1.0        
+## [1] ggplot2_3.3.0    kableExtra_1.1.0 CVXR_1.0-1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5  xfun_0.11         slam_0.1-47       purrr_0.3.3      
-##  [5] lattice_0.20-38   Rmosek_9.1.0      colorspace_1.4-1  vctrs_0.2.1      
-##  [9] htmltools_0.4.0   viridisLite_0.3.0 yaml_2.2.0        gmp_0.5-13.5     
-## [13] rlang_0.4.2       pillar_1.4.3      glue_1.3.1        Rmpfr_0.7-2      
-## [17] withr_2.1.2       Rcplex_0.3-3      bit64_0.9-7       lifecycle_0.1.0  
-## [21] stringr_1.4.0     munsell_0.5.0     blogdown_0.17     gtable_0.3.0     
-## [25] gurobi_9.0-0      rvest_0.3.5       evaluate_0.14     labeling_0.3     
-## [29] knitr_1.26        highr_0.8         Rcpp_1.0.3        readr_1.3.1      
-## [33] backports_1.1.5   scales_1.1.0      webshot_0.5.2     farver_2.0.1     
-## [37] bit_1.1-14        hms_0.5.2         digest_0.6.23     stringi_1.4.5    
-## [41] bookdown_0.16     dplyr_0.8.3       Rglpk_0.6-4       grid_3.6.2       
-## [45] ECOSolveR_0.5.3   tools_3.6.2       magrittr_1.5      lazyeval_0.2.2   
-## [49] tibble_2.1.3      crayon_1.3.4      pkgconfig_2.0.3   zeallot_0.1.0    
-## [53] rcbc_0.1.0.9001   Matrix_1.2-18     xml2_1.2.2        assertthat_0.2.1 
-## [57] rmarkdown_2.0     httr_1.4.1        rstudioapi_0.10   R6_2.4.1         
-## [61] compiler_3.6.2</code></pre>
+##  [1] tidyselect_1.0.0  xfun_0.12         slam_0.1-47       purrr_0.3.3      
+##  [5] lattice_0.20-40   Rmosek_9.1.0      colorspace_1.4-1  vctrs_0.2.4      
+##  [9] htmltools_0.4.0   viridisLite_0.3.0 yaml_2.2.1        gmp_0.5-13.6     
+## [13] rlang_0.4.5       pillar_1.4.3      glue_1.3.2        Rmpfr_0.8-1      
+## [17] withr_2.1.2       Rcplex_0.3-3      bit64_0.9-7       lifecycle_0.2.0  
+## [21] stringr_1.4.0     munsell_0.5.0     blogdown_0.18     gtable_0.3.0     
+## [25] rvest_0.3.5       gurobi_9.0-1      evaluate_0.14     labeling_0.3     
+## [29] knitr_1.28        highr_0.8         Rcpp_1.0.4.3      readr_1.3.1      
+## [33] scales_1.1.0      webshot_0.5.2     farver_2.0.3      bit_1.1-15.2     
+## [37] hms_0.5.3         digest_0.6.25     stringi_1.4.6     bookdown_0.18    
+## [41] dplyr_0.8.5       grid_3.6.3        Rglpk_0.6-4       ECOSolveR_0.5.3  
+## [45] tools_3.6.3       magrittr_1.5      tibble_2.1.3      crayon_1.3.4     
+## [49] pkgconfig_2.0.3   rcbc_0.1.0.9001   Matrix_1.2-18     xml2_1.2.5       
+## [53] assertthat_0.2.1  rmarkdown_2.1     httr_1.4.1        rstudioapi_0.11  
+## [57] R6_2.4.1          compiler_3.6.3</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -339,7 +339,7 @@ Markdown</a></p>
 		
 
 	<p>
-		<iframe src="https://ghbtns.com/github-btn.html?user=bnaras&repo=cvxr_docs&type=watch&count=true&size=large"
+		<iframe src="https://ghbtns.com/github-btn.html?user=cvxgrp&repo=CVXR&type=watch&count=true&size=large"
 		allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 	</p>
 
@@ -362,7 +362,7 @@ Markdown</a></p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="https://www.cvxgrp.org/CVXR/">Package docs</a>
+		<a class="reference internal" href="https://anqif.github.io/CVXR">Package docs</a>
 	</li>
 	
 	<li class="toctree-l1">

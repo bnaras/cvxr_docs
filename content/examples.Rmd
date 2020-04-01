@@ -59,5 +59,6 @@ should hold.
 - [Getting Faster Results](/cvxr_examples/cvxr_speed/)
 - [Using Other Solvers](/cvxr_examples/cvxr_using-other-solvers/)
 - [Solver Peculiarities](/cvxr_examples/cvxr_solver-peculiarities/)
-- [Dealing with Solver-Specific Parameters](/cvxr_examples/cvxr_parameters/)
+- [Dealing with Solver-Specific Parameters](/cvxr_examples/cvxr_solver-parameters/)
+- [Warm starts](/cvxr_examples/warm_starts/)
 

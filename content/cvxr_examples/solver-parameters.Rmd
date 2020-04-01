@@ -2,14 +2,19 @@
 title: "Dealing with Solver-Specific Parameters"
 author: Anqi Fu, David Kang and Balasubramanian Narasimhan
 date: "2020-01-15"
+slug: cvxr_solver-parameters
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
 params:
-  mode: i
-  testdata_dir: test_data
+  mode: ignore
+  testdata_dir: test_data_1.0
   data_dir: solver_specific
 ---
 
 ```{r, echo = FALSE}
 suppressMessages(library(CVXR))
+library(tibble)
+library(kableExtra)
 ```
 
 ## Overview
@@ -25,22 +30,24 @@ for each solve function. Here are the five parameters
   with an integer verbosity parameter with the default of 10. The
   default value of `verbose` for `CVXR` is set to `FALSE`.
 
-* `reltol` : Deals with the relative tolerance of the solver. Its
-  default value is set at `1e-8`
+* `reltol` : Deals with the relative tolerance of the solver. 
 
-* `feastol` : Deals with feasible tolerance of the solver. Its default
-  value is set at `1e-8`
+* `abstol` : Deals with the absolute tolerance of the solver. 
 
-* `abstol` : Deals with the absolute tolerance of the solver. Its
-  default value is set at `1e-8`
+* `feastol` : Deals with feasible tolerance of the solver. 
 
 * `num_iter` : A parameter that specifies the maximum number of
-  iterations for the solver. Its default value is set at `1e6`.
+  iterations for the solver. 
 
 The users can also pass in solver-specific parameters to the `solve`
-function based on what solver they specify. On the whole, the
+function based on the solver they specify. On the whole, the
 additional parameters given by the user will override the five values
 specified above.
+
+For each solver, the tables below show how the five standard
+parameters are mapped to the solver. Cells with `NA` values indicate
+no mapping and any specified value will result in a warning about
+parameter being ignored.
 
 ## Solver-Specific Parameters
 
@@ -51,12 +58,26 @@ documentation for each solver.
 ### OSQP
 
 The parameters available for `OSQP` can be found in this
-[link](https://osqp.org/docs/interfaces/solver_settings.html). The
-parameters can be entered individually in the arguments of the solve
-function or can be passed through as a list. If the user enters in a
-parameter that is not specified or accepted by `OSQP`, then the solver
-will ignore the parameter and proceed to solve the problem. Here is an
-example
+[link](https://osqp.org/docs/interfaces/solver_settings.html). 
+
+```{r, echo = FALSE}
+osqp <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    OSQP = c("verbose", "eps_rel", "eps_abs", "eps_{prim/dual}_inf", "max_iter"),
+                    Value = c("FALSE", "1e-05", "1e-05", "1e-04", "10000")
+                )
+knitr::kable(osqp,
+             caption = "Default CVXR-OSQP parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+The parameters can be entered individually in the arguments of the
+solve function or can be passed through as a list. If the user enters
+in a parameter that is not specified or accepted by `OSQP`, then the
+solver will ignore the parameter and proceed to solve the
+problem. Here is an example.
 
 ```{r}
 x <- Variable(1)
@@ -64,15 +85,11 @@ obj <- Minimize(x)
 prob <- Problem(obj, list(x >= 0))
 
 # Inside Function
-result  <- solve(prob, solver = "OSQP", verbose = FALSE, feastol = 1e-2, eps_prim_inf = 1e-5)
+result  <- solve(prob, solver = "OSQP", feastol = 1e-2, eps_prim_inf = 1e-5)
 
 # Can also do it by passing in a list
-more_params <- list()
-more_params$verbose = TRUE
-more_params$feastol = 1e-2
-more_params$eps_prim_inf = 1e-5
-more_params$eps_prim_inf = 1e-3
-
+more_params <- list(verbose = TRUE, feastol = 1e-2,
+                    eps_prim_inf = 1e-5, eps_prim_inf = 1e-3)
 result <- solve(prob, solver = "OSQP", verbose = FALSE, more_params)
 ```
 
@@ -83,7 +100,23 @@ the value of `verbose` listed earlier in the invocation.
 
 The parameters available for `SCS` can be found in this
 [link](https://cran.r-project.org/web/packages/scs/scs.pdf) under the
-`scs_control` function. Much like `OSQP`, the parameters can be
+`scs_control` function. 
+
+```{r, echo = FALSE}
+scs <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    SCS = c("verbose", NA, NA, NA, "max_iters"),
+                    Value = c("FALSE", NA, NA, NA, "2500")
+                )
+knitr::kable(scs,
+             caption = "Default CVXR-SCS parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+
+Much like `OSQP`, the parameters can be
 entered individually in the arguments of the solve function or can be
 passed through as a list. If the user enters in a parameter that is
 not specified or accepted by `SCS`, then the solver will ignore the
@@ -114,12 +147,26 @@ support the feasible tolerance parameter, so the solver ignores it.
 
 The parameters available for `ECOS` can be found in this
 [link](https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf)
-under the `ecos.control` function. Much like `OSQP`, the parameters
-can be entered individually in the arguments of the solve function or
-can be passed through as a list. If the user enters in a parameter
-that is not specified or accepted by `ECOS`, then the solver will
-ignore the parameter and proceed to solve the problem. Here is an
-example:
+under the `ecos.control` function. 
+
+```{r, echo = FALSE}
+ecos <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    ECOS = c("verbose", "reltol", "abstol", "feastol", "max_iter"),
+                    Value = c("FALSE", "1e-08", "1e-08", "1e-08", "100")
+                )
+knitr::kable(ecos,
+             caption = "Default CVXR-ECOS parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+Much like `OSQP`, the parameters can be entered individually in the
+arguments of the solve function or can be passed through as a list. If
+the user enters in a parameter that is not specified or accepted by
+`ECOS`, then the solver will ignore the parameter and proceed to solve
+the problem. Here is an example:
 
 ```{r}
 x <- Variable(1)
@@ -133,7 +180,23 @@ result  <- solve(prob, solver = "ECOS", verbose = FALSE, feastol = 1e-2, reltol_
 The parameters available for `CPLEX` can be found in this
 [link](https://cran.r-project.org/web/packages/Rcplex/Rcplex.pdf)
 under the details section for the function `Rcplex` function on
-page 3. Much like `OSQP`, the parameters can be entered individually
+page 3. 
+
+```{r, echo = FALSE}
+cplex <- tibble::tibble(
+                     Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                     CPLEX = c("trace", NA, NA, NA, "itlim"),
+                     Value = c("FALSE", NA, NA, NA, "10000")
+                )
+knitr::kable(cplex,
+             caption = "Default CVXR-CPLEX parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+
+Much like `OSQP`, the parameters can be entered individually
 in the arguments of the solve function or can be passed through as a
 list. If the user enters in a parameter that is not specified or
 accepted by `CPLEX`, then the solver will give the user a warning but
@@ -151,17 +214,33 @@ parameters, so the solver threw a warning.
 
 ### MOSEK
 
+```{r, echo = FALSE}
+mosek <- tibble::tibble(
+                     Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                     MOSEK = c("verbose", NA, NA, NA, "num_iter"),
+                     Value = c(0, NA, NA, NA, "10000")
+                )
+knitr::kable(mosek,
+             caption = "Default CVXR-MOSEK parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
 The parameters available for `MOSEK` can be seen in this
 [link](https://docs.mosek.com/9.1/rmosek/parameters.html#doc-all-parameter-list). As
 you can see, the number of parameters is quite massive. They are also
-split between three times of parameters in "Double," "Integer," and
-"String" parameters. To pass these into the solver, they must be put
+split between three times of parameters in `Doubl`, `Integer`, and
+`String` parameters. To pass these into the solver, they must be put
 in a list beforehand. Moreover, there are also general solver
 parameters that do not belong in any of the three categories. These
 parameters can be found in detail in the `Rmosek` package
 documentation, but here are the parameters
 
-* `verbose` (Another important note here is while the default values of `TRUE` and `FALSE` work, `MOSEK` uses integer values for verbose with the default being 10. The `TRUE` value for verbose corresponds to 10 in the solver)
+* `verbose` (Another important note here is while the default values
+  of `TRUE` and `FALSE` work, `MOSEK` uses integer values for verbose
+  with the default being 10. The `TRUE` value for verbose corresponds
+  to 10 in the solver)
 * `usesol`
 * `useparam`
 * `soldetail`
@@ -196,6 +275,20 @@ solver to not obtain the answer.
 
 ### GUROBI
 
+
+```{r, echo = FALSE}
+gurobi <- tibble::tibble(
+                      Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                      GUROBI = c("OutputFlag", NA, NA, "{Feasibility/Optimality}Tol", "IterationLimit"),
+                      Value = c(0, NA, NA, "1e-06", "10000")
+                  )
+knitr::kable(gurobi,
+             caption = "Default CVXR-GUROBI parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
 The parameters available for `GUROBI` can be seen in this
 [link](https://www.gurobi.com/documentation/6.5/refman/parameters.html#sec:Parameters). If
 an unaccepted parameter is passed into the `solve` function, then the
@@ -212,6 +305,20 @@ result  <- solve(prob, solver = "GUROBI", verbose = FALSE, BarIterLimit = 20, Qu
     
 ### GLPK
 
+
+```{r, echo = FALSE}
+glpk <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    GLPK = c("verbose", NA, NA, NA, NA),
+                    Value = c(0, NA, NA, NA, NA)
+                )
+knitr::kable(glpk,
+             caption = "Default CVXR-GLPK parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
 The parameters available for `GLPK` can be seen in this
 [link](https://cran.r-project.org/web/packages/Rglpk/Rglpk.pdf) under
 the `Details` section in page 4. There are only four parameters in
@@ -226,6 +333,20 @@ result  <- solve(prob, solver = "GLPK", verbose = FALSE, presolve = FALSE, tm_li
 ```    
     
 ### CBC
+
+
+```{r, echo = FALSE}
+cbc <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    CBC = c("verbose", NA, NA, NA, NA),
+                    Value = c(0, NA, NA, NA, NA)
+                )
+knitr::kable(cbc,
+             caption = "Default CVXR-CBC parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
 
 The parameters available for `CBC` can be seen in this
 [link](https://projects.coin-or.org/CoinBinary/export/1059/OptimizationSuite/trunk/Installer/files/doc/cbcCommandLine.pdf). Much

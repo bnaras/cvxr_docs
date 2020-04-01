@@ -1,4 +1,5 @@
 library(here)
+library(fs)
 
 #' Set the rendering parameters for markdowns to be either "test" or
 #' "save" or "ignore", the default
@@ -20,7 +21,7 @@ library(here)
 #' @param testdata_dir a directory under static directory of the
 #'     blogdown site for test data
 #'
-set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test_data") {
+set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test_data_1.0") {
     mode  <- match.arg(mode)
     rmds  <- list.files(file.path(here(), "content", "cvxr_examples"), pattern = ".Rmd$",
                         full.names = TRUE)
@@ -39,12 +40,13 @@ set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test
     invisible(TRUE)
 }
 
-
 ## For testing use set_mode("test")
-## set_mode("test")
+## set_params("test")
 
 ## For saving use
-## set_mode("save")
+## set_params("save")
 
-## For publishing use, which is the default
-set_mode("ignore")
+## For publishing use, which is the default, use one of
+##set_params("ignore")
+## or
+set_params()

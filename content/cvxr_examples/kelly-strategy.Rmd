@@ -9,7 +9,7 @@ categories: []
 tags: []
 params:
   mode: ignore
-  testdata_dir: test_data
+  testdata_dir: test_data_1.0
   data_dir: kelly-strategy
 ---
 
