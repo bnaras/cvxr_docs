@@ -5,7 +5,7 @@ date: '2017-10-29'
 slug: cvxr_gentle-intro
 bibliography: ../bibtex/cvxr_refs.bib
 params:
-  mode: test
+  mode: ignore
   testdata_dir: test_data_1.0
   data_dir: gentle_intro
 ---
@@ -568,8 +568,8 @@ as
 and [Julia](http://convexjl.readthedocs.io/en/latest/types.html).
 
 `CVXR` implements the same rules, and a short introduction
-is [available here](/post/cvxr_dcp).  The set of DCP functions are
-described in [Function Reference](/post/cvxr_functions/).
+is [available here](/cvxr_dcp).  The set of DCP functions are
+described in [Function Reference](/cvxr_functions/).
 
 ## Session Info
 

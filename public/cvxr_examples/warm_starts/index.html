@@ -55,15 +55,15 @@ constraint &lt;- list(x &gt;= 0)
 prob &lt;- Problem(obj, constraint)
 
 #Solve first time
-value(gamma) = 1
-result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = T) #warm_start = T is not necessary for the first time
-print(paste0(&quot;First solve time is &quot;, result$solve_time))</code></pre>
-<pre><code>## [1] &quot;First solve time is 31.237815006&quot;</code></pre>
+value(gamma) &lt;- 1
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
+cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
+<pre><code>## First solve time is 32.203576</code></pre>
 <pre class="r"><code>#Solve second time
-value(gamma) = 2
-result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = T)
-print(paste0(&quot;Second solve time is &quot;, result$solve_time))</code></pre>
-<pre><code>## [1] &quot;Second solve time is 1.059887469&quot;</code></pre>
+value(gamma) &lt;- 2
+result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
+cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
+<pre><code>## Second solve time is 1.080366</code></pre>
 <p>As you can see, there is a very significant speed up with warm starts
 than without.</p>
 </div>

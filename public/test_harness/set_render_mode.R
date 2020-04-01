@@ -41,10 +41,12 @@ set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test
 }
 
 ## For testing use set_mode("test")
-set_params("test")
+## set_params("test")
 
 ## For saving use
 ## set_params("save")
 
-## For publishing use, which is the default
+## For publishing use, which is the default, use one of
 ##set_params("ignore")
+## or
+set_params()

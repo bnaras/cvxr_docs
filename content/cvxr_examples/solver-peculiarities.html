@@ -8,7 +8,7 @@ link-citations: true
 categories: []
 tags: []
 params:
-  mode: test
+  mode: ignore
   testdata_dir: test_data_1.0
   data_dir: solver-peculiarities
 ---
@@ -41,13 +41,11 @@ result &lt;- solve(prob, solver = &quot;ECOS&quot;)</code></pre>
 <p>The solution status is no longer optimal.</p>
 <pre class="r"><code>cat(&quot;Solution status is&quot;, result$status)</code></pre>
 <pre><code>## Solution status is optimal_inaccurate</code></pre>
-<pre><code>## Testthat Results: No output is good</code></pre>
 <p>In such cases, using a different solver may give more accurate
 results. Let us try <code>MOSEK</code> for example.</p>
 <pre class="r"><code>result &lt;- solve(prob, solver = &quot;MOSEK&quot;)
 cat(&quot;Solution status is&quot;, result$status)</code></pre>
 <pre><code>## Solution status is optimal</code></pre>
-<pre><code>## Testthat Results: No output is good</code></pre>
 <p>This returns an optimal solution.</p>
 <p>Here again, even commercial solvers differ; GUROBI, for example, does
 not completely solve the problem and in fact throws an error.</p>
@@ -69,18 +67,17 @@ not completely solve the problem and in fact throws an error.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_1.0-1     testthat_2.3.2 here_0.1      
+## [1] CVXR_1.0-1
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.4.3     knitr_1.28       magrittr_1.5     bit_1.1-15.2    
 ##  [5] lattice_0.20-40  R6_2.4.1         rlang_0.4.5      stringr_1.4.0   
 ##  [9] tools_3.6.3      grid_3.6.3       xfun_0.12        htmltools_0.4.0 
-## [13] assertthat_0.2.1 yaml_2.2.1       bit64_0.9-7      rprojroot_1.3-2 
-## [17] digest_0.6.25    bookdown_0.18    Matrix_1.2-18    gmp_0.5-13.6    
-## [21] ECOSolveR_0.5.3  Rglpk_0.6-4      slam_0.1-47      evaluate_0.14   
-## [25] rmarkdown_2.1    blogdown_0.18    Rcplex_0.3-3     gurobi_9.0-1    
-## [29] stringi_1.4.6    compiler_3.6.3   Rmpfr_0.8-1      Rmosek_9.1.0    
-## [33] backports_1.1.5  rcbc_0.1.0.9001</code></pre>
+## [13] yaml_2.2.1       bit64_0.9-7      digest_0.6.25    assertthat_0.2.1
+## [17] bookdown_0.18    Matrix_1.2-18    gmp_0.5-13.6     ECOSolveR_0.5.3 
+## [21] Rglpk_0.6-4      slam_0.1-47      evaluate_0.14    rmarkdown_2.1   
+## [25] blogdown_0.18    Rcplex_0.3-3     gurobi_9.0-1     stringi_1.4.6   
+## [29] compiler_3.6.3   Rmpfr_0.8-1      Rmosek_9.1.0     rcbc_0.1.0.9001</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

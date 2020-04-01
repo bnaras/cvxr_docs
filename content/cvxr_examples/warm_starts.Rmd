@@ -6,7 +6,7 @@ categories:
   - Version 1.0 features
 slug: warm_starts
 params:
-  mode: test
+  mode: ignore
 ---
 
 A new feature in 1.0 is warm starts for one of our solvers in
@@ -47,14 +47,14 @@ constraint <- list(x >= 0)
 prob <- Problem(obj, constraint)
 
 #Solve first time
-value(gamma) = 1
-result <- solve(prob, solver = "OSQP", warm_start = T) #warm_start = T is not necessary for the first time
-print(paste0("First solve time is ", result$solve_time))
+value(gamma) <- 1
+result <- solve(prob, solver = "OSQP", warm_start = TRUE) #warm_start = T is not necessary for the first time
+cat(sprintf("First solve time is %f\n", result$solve_time))
 
 #Solve second time
-value(gamma) = 2
-result <- solve(prob, solver = "OSQP", warm_start = T)
-print(paste0("Second solve time is ", result$solve_time))
+value(gamma) <- 2
+result <- solve(prob, solver = "OSQP", warm_start = TRUE)
+cat(sprintf("Second solve time is %f\n", result$solve_time))
 
 ```
 

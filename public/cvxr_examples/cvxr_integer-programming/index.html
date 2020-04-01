@@ -171,13 +171,6 @@ GUROBI
 </tr>
 </tbody>
 </table>
-<pre><code>## Testthat Results: No output is good</code></pre>
-<pre><code>## Error: `ecos_solution` not identical to intprog$ecos.
-## 4/4 mismatches (average diff: 2e-05)
-## [1]  1.67e+00 -  1.67e+00 ==  3.61e-06
-## [2]  3.33e+00 -  3.33e+00 == -4.19e-06
-## [3]  2.00e+00 -  2.00e+00 ==  7.04e-05
-## [4] -1.79e-06 - -3.34e-11 == -1.79e-06</code></pre>
 </div>
 <div id="office-assignment-problem" class="section level2">
 <h2>Office Assignment Problem</h2>
@@ -278,7 +271,6 @@ office_occupants &lt;- names(office_assignment)[match(c(5:7, 1:4), office_assign
 office_occupants[is.na(office_occupants)] &lt;- &quot;Empty&quot;
 draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 <p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -298,8 +290,7 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.3.0    kableExtra_1.1.0 CVXR_1.0-1       testthat_2.3.2  
-## [5] here_0.1        
+## [1] ggplot2_3.3.0    kableExtra_1.1.0 CVXR_1.0-1      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] tidyselect_1.0.0  xfun_0.12         slam_0.1-47       purrr_0.3.3      
@@ -308,15 +299,15 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [13] rlang_0.4.5       pillar_1.4.3      glue_1.3.2        Rmpfr_0.8-1      
 ## [17] withr_2.1.2       Rcplex_0.3-3      bit64_0.9-7       lifecycle_0.2.0  
 ## [21] stringr_1.4.0     munsell_0.5.0     blogdown_0.18     gtable_0.3.0     
-## [25] gurobi_9.0-1      rvest_0.3.5       evaluate_0.14     labeling_0.3     
+## [25] rvest_0.3.5       gurobi_9.0-1      evaluate_0.14     labeling_0.3     
 ## [29] knitr_1.28        highr_0.8         Rcpp_1.0.4.3      readr_1.3.1      
-## [33] backports_1.1.5   scales_1.1.0      webshot_0.5.2     farver_2.0.3     
-## [37] bit_1.1-15.2      hms_0.5.3         digest_0.6.25     stringi_1.4.6    
-## [41] bookdown_0.18     dplyr_0.8.5       grid_3.6.3        rprojroot_1.3-2  
-## [45] Rglpk_0.6-4       ECOSolveR_0.5.3   tools_3.6.3       magrittr_1.5     
-## [49] tibble_2.1.3      crayon_1.3.4      pkgconfig_2.0.3   rcbc_0.1.0.9001  
-## [53] Matrix_1.2-18     xml2_1.2.5        assertthat_0.2.1  rmarkdown_2.1    
-## [57] httr_1.4.1        rstudioapi_0.11   R6_2.4.1          compiler_3.6.3</code></pre>
+## [33] scales_1.1.0      webshot_0.5.2     farver_2.0.3      bit_1.1-15.2     
+## [37] hms_0.5.3         digest_0.6.25     stringi_1.4.6     bookdown_0.18    
+## [41] dplyr_0.8.5       grid_3.6.3        Rglpk_0.6-4       ECOSolveR_0.5.3  
+## [45] tools_3.6.3       magrittr_1.5      tibble_2.1.3      crayon_1.3.4     
+## [49] pkgconfig_2.0.3   rcbc_0.1.0.9001   Matrix_1.2-18     xml2_1.2.5       
+## [53] assertthat_0.2.1  rmarkdown_2.1     httr_1.4.1        rstudioapi_0.11  
+## [57] R6_2.4.1          compiler_3.6.3</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

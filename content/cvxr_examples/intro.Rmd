@@ -6,7 +6,7 @@ categories:
   - Simple Least Squares
 slug: cvxr_intro
 params:
-  mode: test
+  mode: ignore
   testdata_dir: test_data_1.0
   data_dir: intro
 ---
@@ -299,7 +299,7 @@ variability.
 ## Further Reading
 
 We hope we have whet your appetite. You may wish to
-read [a longer introduction](/cvxr_examples/gentle-intro/)
+read [a longer introduction](/cvxr_examples/cvxr_gentle-intro/)
 with more examples. 
 
 We also have a number of [tutorial examples](/examples/)
