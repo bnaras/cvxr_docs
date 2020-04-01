@@ -60,3 +60,15 @@ cat(sprintf("Second solve time is %f\n", result$solve_time))
 
 As you can see, there is a very significant speed up with warm starts
 than without. 
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/warm_starts.Rmd)
+
+## References

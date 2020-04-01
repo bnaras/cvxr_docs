@@ -58,14 +58,51 @@ prob &lt;- Problem(obj, constraint)
 value(gamma) &lt;- 1
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
 cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## First solve time is 32.203576</code></pre>
+<pre><code>## First solve time is 32.004170</code></pre>
 <pre class="r"><code>#Solve second time
 value(gamma) &lt;- 2
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
 cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## Second solve time is 1.080366</code></pre>
+<pre><code>## Second solve time is 1.134443</code></pre>
 <p>As you can see, there is a very significant speed up with warm starts
 than without.</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin19.3.0 (64-bit)
+## Running under: macOS Catalina 10.15.4
+## 
+## Matrix products: default
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] Matrix_1.2-18 CVXR_1.0-1   
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.4.3     knitr_1.28       magrittr_1.5     bit_1.1-15.2    
+##  [5] lattice_0.20-40  R6_2.4.1         rlang_0.4.5      stringr_1.4.0   
+##  [9] tools_3.6.3      grid_3.6.3       xfun_0.12        osqp_0.6.0.3    
+## [13] htmltools_0.4.0  yaml_2.2.1       bit64_0.9-7      digest_0.6.25   
+## [17] assertthat_0.2.1 bookdown_0.18    gmp_0.5-13.6     Rglpk_0.6-4     
+## [21] slam_0.1-47      evaluate_0.14    rmarkdown_2.1    blogdown_0.18   
+## [25] Rcplex_0.3-3     gurobi_9.0-1     stringi_1.4.6    compiler_3.6.3  
+## [29] Rmpfr_0.8-1      Rmosek_9.1.0     rcbc_0.1.0.9001</code></pre>
+</div>
+<div id="source" class="section level2">
+<h2>Source</h2>
+<p><a href="https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/warm_starts.Rmd">R Markdown</a></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
 </div>
 
 
