@@ -9,12 +9,12 @@
 	
 	<title>Getting Equivalent Results from `glmnet` and `CVXR` &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="https://cvxr.rbind.io/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="https://cvxr.rbind.io/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="https://cvxr.rbind.io/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -83,15 +83,15 @@ result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, ver
 ##           warm start: on, polish: on, time_limit: off
 ## 
 ## iter   objective    pri res    dua res    rho        time
-##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   3.51e-04s
-##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.19e-03s
-## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.40e-03s
+##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   3.92e-04s
+##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.34e-03s
+## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.59e-03s
 ## 
 ## status:               solved
 ## solution polish:      successful
 ## number of iterations: 125
 ## optimal objective:    0.3711
-## run time:             1.40e-03s
+## run time:             1.59e-03s
 ## optimal rho estimate: 2.90e+00</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
 compare. The results below should be close, and any differences are
@@ -672,8 +672,8 @@ GLMNET.est
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="https://cvxr.rbind.io/">
+				<img class="logo" src="https://cvxr.rbind.io/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -738,9 +738,9 @@ GLMNET.est
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_survey_calibration/" title="Survey Calibration">Survey Calibration</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_pliable_lasso/" title="Prototyping the pliable lasso">Prototyping the pliable lasso</a></li>
+  <li><a href="https://cvxr.rbind.io/">Documentation overview</a><ul>
+  <li>Previous: <a href="https://cvxr.rbind.io/cvxr_examples/cvxr_survey_calibration/" title="Survey Calibration">Survey Calibration</a></li>
+  <li>Next: <a href="https://cvxr.rbind.io/cvxr_examples/cvxr_pliable_lasso/" title="Prototyping the pliable lasso">Prototyping the pliable lasso</a></li>
 </ul>
 
 	</div>

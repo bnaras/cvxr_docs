@@ -3,202 +3,202 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/categories/</loc>
+    <loc>https://cvxr.rbind.io/categories/</loc>
     <lastmod>2020-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/</loc>
     <lastmod>2020-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/version-1.0-features/</loc>
+    <loc>https://cvxr.rbind.io/categories/version-1.0-features/</loc>
     <lastmod>2020-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/warm_starts/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/warm_starts/</loc>
     <lastmod>2020-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_solver-parameters/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_solver-parameters/</loc>
     <lastmod>2020-01-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/whats_new_1.0/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/whats_new_1.0/</loc>
     <lastmod>2020-01-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_pliable_lasso/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_pliable_lasso/</loc>
     <lastmod>2018-11-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_glmnet_equivalence/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_glmnet_equivalence/</loc>
     <lastmod>2018-10-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_survey_calibration/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_survey_calibration/</loc>
     <lastmod>2018-10-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_integer-programming/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_integer-programming/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_solver-peculiarities/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_solver-peculiarities/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_using-other-solvers/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_using-other-solvers/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_censored-regression/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_censored-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>https://cvxr.rbind.io/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_elastic-net/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_elastic-net/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_fast-mixing-mc/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_fast-mixing-mc/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_speed/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_speed/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_huber-regression/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_huber-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_kelly-strategy/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_kelly-strategy/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_l1-trend-filtering/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_l1-trend-filtering/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_2d_ball/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_2d_ball/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_log-concave/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_log-concave/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_logistic-regression/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_logistic-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_portfolio-optimization/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_portfolio-optimization/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_quantile-regression/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_quantile-regression/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_saturating_hinges/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_saturating_hinges/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_catenary/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_catenary/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/examples/</loc>
+    <loc>https://cvxr.rbind.io/examples/</loc>
     <lastmod>2017-11-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_direct-standardization/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_direct-standardization/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_isotonic-regression/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_isotonic-regression/</loc>
     <lastmod>2017-11-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr/</loc>
+    <loc>https://cvxr.rbind.io/cvxr/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_functions/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_functions/</loc>
     <lastmod>2017-10-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_gentle-intro/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_gentle-intro/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_dcp/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_dcp/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_faq/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_faq/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cvxr_examples/cvxr_intro/</loc>
+    <loc>https://cvxr.rbind.io/cvxr_examples/cvxr_intro/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/simple-least-squares/</loc>
+    <loc>https://cvxr.rbind.io/categories/simple-least-squares/</loc>
     <lastmod>2017-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>https://cvxr.rbind.io/tags/</loc>
   </url>
   
 </urlset>

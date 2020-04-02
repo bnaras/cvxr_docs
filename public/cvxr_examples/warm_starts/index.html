@@ -9,12 +9,12 @@
 	
 	<title>Warm Starts &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="https://cvxr.rbind.io/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="https://cvxr.rbind.io/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="https://cvxr.rbind.io/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -58,12 +58,12 @@ prob &lt;- Problem(obj, constraint)
 value(gamma) &lt;- 1
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
 cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## First solve time is 32.004170</code></pre>
+<pre><code>## First solve time is 30.594040</code></pre>
 <pre class="r"><code>#Solve second time
 value(gamma) &lt;- 2
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
 cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## Second solve time is 1.134443</code></pre>
+<pre><code>## Second solve time is 1.071613</code></pre>
 <p>As you can see, there is a very significant speed up with warm starts
 than without.</p>
 </div>
@@ -115,8 +115,8 @@ than without.</p>
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="https://cvxr.rbind.io/">
+				<img class="logo" src="https://cvxr.rbind.io/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -181,8 +181,8 @@ than without.</p>
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_solver-parameters/" title="Dealing with Solver-Specific Parameters">Dealing with Solver-Specific Parameters</a></li>
+  <li><a href="https://cvxr.rbind.io/">Documentation overview</a><ul>
+  <li>Previous: <a href="https://cvxr.rbind.io/cvxr_examples/cvxr_solver-parameters/" title="Dealing with Solver-Specific Parameters">Dealing with Solver-Specific Parameters</a></li>
   
 </ul>
 
