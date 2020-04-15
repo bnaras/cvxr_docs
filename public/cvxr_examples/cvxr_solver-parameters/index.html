@@ -9,12 +9,12 @@
 	
 	<title>Dealing with Solver-Specific Parameters &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="https://cvxr.rbind.io/css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="https://cvxr.rbind.io/css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="https://cvxr.rbind.io/favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -264,8 +264,8 @@ result  &lt;- solve(prob, solver = &quot;SCS&quot;, verbose = FALSE, feastol = 1
 <p>Notice how in this case a warning is thrown: the <code>SCS</code> solver does not
 support the feasible tolerance parameter, so the solver ignores it.</p>
 </div>
-<div id="ecos" class="section level3">
-<h3>ECOS</h3>
+<div id="ecosecos_bb" class="section level3">
+<h3>ECOS/ECOS_BB</h3>
 <p>The parameters available for <code>ECOS</code> can be found in this
 <a href="https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf">link</a>
 under the <code>ecos.control</code> function.</p>
@@ -282,7 +282,13 @@ Standard
 ECOS
 </th>
 <th style="text-align:left;">
-Value
+ECOS Value
+</th>
+<th style="text-align:left;">
+ECOS_BB
+</th>
+<th style="text-align:left;">
+ECOS_BB Value
 </th>
 </tr>
 </thead>
@@ -290,6 +296,12 @@ Value
 <tr>
 <td style="text-align:left;">
 verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+verbose
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+FALSE
 </td>
 <td style="text-align:left;background-color: #ececec !important;">
 verbose
@@ -308,6 +320,12 @@ reltol
 <td style="text-align:left;background-color: #ececec !important;">
 1e-08
 </td>
+<td style="text-align:left;background-color: #ececec !important;">
+reltol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-03
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -319,6 +337,12 @@ abstol
 <td style="text-align:left;background-color: #ececec !important;">
 1e-08
 </td>
+<td style="text-align:left;background-color: #ececec !important;">
+abstol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-06
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -329,6 +353,12 @@ feastol
 </td>
 <td style="text-align:left;background-color: #ececec !important;">
 1e-08
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+feastol
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1e-06
 </td>
 </tr>
 <tr>
@@ -336,10 +366,16 @@ feastol
 num_iter
 </td>
 <td style="text-align:left;background-color: #ececec !important;">
-max_iter
+maxit
 </td>
 <td style="text-align:left;background-color: #ececec !important;">
 100
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+mi_max_iters
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+1000
 </td>
 </tr>
 </tbody>
@@ -852,22 +888,23 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 tibble_2.1.3     CVXR_1.0-1      
+## [1] kableExtra_1.1.0 tibble_3.0.0     CVXR_1.0-1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.6      Rcpp_1.0.4.3      highr_0.8         pillar_1.4.3     
-##  [5] compiler_3.6.3    tools_3.6.3       digest_0.6.25     bit_1.1-15.2     
-##  [9] viridisLite_0.3.0 evaluate_0.14     lifecycle_0.2.0   lattice_0.20-40  
-## [13] pkgconfig_2.0.3   rlang_0.4.5       Matrix_1.2-18     gurobi_9.0-1     
-## [17] rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1        blogdown_0.18    
-## [21] xfun_0.12         osqp_0.6.0.3      ECOSolveR_0.5.3   Rmpfr_0.8-1      
-## [25] stringr_1.4.0     httr_1.4.1        knitr_1.28        xml2_1.2.5       
-## [29] vctrs_0.2.4       hms_0.5.3         webshot_0.5.2     bit64_0.9-7      
-## [33] grid_3.6.3        glue_1.3.2        R6_2.4.1          rmarkdown_2.1    
-## [37] bookdown_0.18     readr_1.3.1       magrittr_1.5      scs_1.3-2        
-## [41] rcbc_0.1.0.9001   scales_1.1.0      htmltools_0.4.0   assertthat_0.2.1 
-## [45] rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.6    
-## [49] Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
+##  [1] xfun_0.13         slam_0.1-47       lattice_0.20-41   Rmosek_9.1.0     
+##  [5] colorspace_1.4-1  vctrs_0.2.4       htmltools_0.4.0   viridisLite_0.3.0
+##  [9] yaml_2.2.1        gmp_0.5-13.6      rlang_0.4.5       pillar_1.4.3     
+## [13] glue_1.4.0        Rmpfr_0.8-1       Rcplex_0.3-3      bit64_0.9-7      
+## [17] scs_1.3-2         lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0    
+## [21] blogdown_0.18     rvest_0.3.5       gurobi_9.0-1      evaluate_0.14    
+## [25] knitr_1.28        fansi_0.4.1       highr_0.8         Rcpp_1.0.4.6     
+## [29] readr_1.3.1       scales_1.1.0      osqp_0.6.0.3      webshot_0.5.2    
+## [33] bit_1.1-15.2      hms_0.5.3         digest_0.6.25     stringi_1.4.6    
+## [37] bookdown_0.18     grid_3.6.3        Rglpk_0.6-4       ECOSolveR_0.5.3  
+## [41] cli_2.0.2         tools_3.6.3       magrittr_1.5      crayon_1.3.4     
+## [45] pkgconfig_2.0.3   ellipsis_0.3.0    rcbc_0.1.0.9001   Matrix_1.2-18    
+## [49] xml2_1.3.1        assertthat_0.2.1  rmarkdown_2.1     httr_1.4.1       
+## [53] rstudioapi_0.11   R6_2.4.1          compiler_3.6.3</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -884,8 +921,8 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="https://cvxr.rbind.io/">
-				<img class="logo" src="https://cvxr.rbind.io/favicon.ico" alt="Logo"/>
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -950,9 +987,9 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="https://cvxr.rbind.io/">Documentation overview</a><ul>
-  <li>Previous: <a href="https://cvxr.rbind.io/cvxr_examples/whats_new_1.0/" title="What&#39;s new in 1.0?">What&#39;s new in 1.0?</a></li>
-  <li>Next: <a href="https://cvxr.rbind.io/cvxr_examples/warm_starts/" title="Warm Starts">Warm Starts</a></li>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/whats_new_1.0/" title="What&#39;s new in 1.0?">What&#39;s new in 1.0?</a></li>
+  <li>Next: <a href="../../cvxr_examples/warm_starts/" title="Warm Starts">Warm Starts</a></li>
 </ul>
 
 	</div>

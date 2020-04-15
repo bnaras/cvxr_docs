@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Cvxr_examples on CVXR</title>
-    <link>https://cvxr.rbind.io/cvxr_examples/</link>
+    <link>/cvxr_examples/</link>
     <description>Recent content in Cvxr_examples on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://cvxr.rbind.io/cvxr_examples/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/cvxr_examples/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Warm Starts</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/warm_starts/</link>
+      <link>/cvxr_examples/warm_starts/</link>
       <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/warm_starts/</guid>
+      <guid>/cvxr_examples/warm_starts/</guid>
       <description>A new feature in 1.0 is warm starts for one of our solvers in OSQP. Having warm starts allows the user to retain data of a particular problem and change parameters of the problem without repeating any of the calculations.
 Lasso Example We will demonstrate this in a simple lasso problem:
 \[ \begin{array}{ll} \underset{x, \lambda}{\mbox{minimize}} &amp;amp; \frac{1}{2}||Ax - b||_2^2 + \lambda ||x||_1\\ \mbox{subject to} &amp;amp; \lambda &amp;gt; 0 \end{array} \]</description>
@@ -24,30 +24,30 @@ Lasso Example We will demonstrate this in a simple lasso problem:
     
     <item>
       <title>Dealing with Solver-Specific Parameters</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_solver-parameters/</link>
+      <link>/cvxr_examples/cvxr_solver-parameters/</link>
       <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_solver-parameters/</guid>
+      <guid>/cvxr_examples/cvxr_solver-parameters/</guid>
       <description>Overview CVXR 1.0 has now updated how it handles its solver-specific parameters and has diverged slightly from how cvxpy handles it. It now features five standard parameters that are the default parameters for each solve function. Here are the five parameters
  verbose : A parameter that deals with the verbosity of the solver. It is a boolean variable for all solvers, but it can also take integer values for the MOSEK solver, whose interface deals with an integer verbosity parameter with the default of 10.</description>
     </item>
     
     <item>
       <title>What&#39;s new in 1.0?</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/whats_new_1.0/</link>
+      <link>/cvxr_examples/whats_new_1.0/</link>
       <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/whats_new_1.0/</guid>
+      <guid>/cvxr_examples/whats_new_1.0/</guid>
       <description>CVXR 1.0 includes a major rewrite of the CVXR internals, as well as a number of changes to the user interface. The goal is to follow cvxpy as much as possible. We first give an overview of the changes, before diving into the details. We only cover changes that might be of interest to users.
 Overview  Disciplined geometric programming (DGP): Starting with version 1.0, CVXR lets you formulate and solve log-log convex programs, which generalize both traditional geometric programs and generalized geometric programs.</description>
     </item>
     
     <item>
       <title>Prototyping the pliable lasso</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_pliable_lasso/</link>
+      <link>/cvxr_examples/cvxr_pliable_lasso/</link>
       <pubDate>Fri, 30 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_pliable_lasso/</guid>
+      <guid>/cvxr_examples/cvxr_pliable_lasso/</guid>
       <description>Introduction Tibshirani and Friedman (2017) propose a generalization of the lasso that allows the model coefficients to vary as a function of a general set of modifying variables, such as gender, age or time. The pliable lasso model has the form
 \[ \begin{equation} \hat{y} = \beta_0{\mathbf 1} + Z\theta_0 + \sum_{j=1}^p(X_j\beta_j + W_j\theta_j) \end{equation} \]
 where \(\hat{y}\) is the predicted \(N\times1\) vector, \(\beta_0\) is a scalar, \(\theta_0\) is a \(K\)-vector, \(X\) and \(Z\) are \(N\times p\) and \(N\times K\) matrices containing values of the predictor and modifying variables respectively with \(W_j=X_j \circ Z\) denoting the elementwise multiplication of Z by column \(X_j\) of \(X\).</description>
@@ -55,10 +55,10 @@ where \(\hat{y}\) is the predicted \(N\times1\) vector, \(\beta_0\) is a scalar,
     
     <item>
       <title>Getting Equivalent Results from `glmnet` and `CVXR`</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_glmnet_equivalence/</link>
+      <link>/cvxr_examples/cvxr_glmnet_equivalence/</link>
       <pubDate>Sun, 21 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_glmnet_equivalence/</guid>
+      <guid>/cvxr_examples/cvxr_glmnet_equivalence/</guid>
       <description>Introduction We’ve had several questions of the following type:
 When I fit the same model in glmnet and CVXR, why are the results different?
 For example, see this.
@@ -67,19 +67,19 @@ Obviously, unless one actually solves the same problem in both places, there’s
     
     <item>
       <title>Survey Calibration</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_survey_calibration/</link>
+      <link>/cvxr_examples/cvxr_survey_calibration/</link>
       <pubDate>Mon, 01 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_survey_calibration/</guid>
+      <guid>/cvxr_examples/cvxr_survey_calibration/</guid>
       <description>Introduction Calibration is a widely used technique in survey sampling. Suppose \(m\) sampling units in a survey have been assigned initial weights \(d_i\) for \(i = 1,\ldots,m\), and furthermore, there are \(n\) auxiliary variables whose values in the sample are known. Calibration seeks to improve the initial weights \(d_i\) by finding new weights \(w_i\) that incorporate this auxiliary information while perturbing the initial weights as little as possible, , the ratio \(g_i = w_i/d_i\) must be close to one.</description>
     </item>
     
     <item>
       <title>Integer Programming</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_integer-programming/</link>
+      <link>/cvxr_examples/cvxr_integer-programming/</link>
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_integer-programming/</guid>
+      <guid>/cvxr_examples/cvxr_integer-programming/</guid>
       <description>Consider the following optimization problem.
 \[ \begin{array}{ll} \mbox{Maximize} &amp;amp; x_1 + 2x_2 - 0.1x_3 - 3x_4\\ \mbox{subject to} &amp;amp; x_1, x_2, x_3, x_4 &amp;gt;= 0\\ &amp;amp; x_1 + x_2 &amp;lt;= 5\\ &amp;amp; 2x_1 - x_2 &amp;gt;= 0\\ &amp;amp; -x_1 + 3x_2 &amp;gt;= 0\\ &amp;amp; x_3 + x_4 &amp;gt;= 0.5\\ &amp;amp; x_3 &amp;gt;= 1.1\\ &amp;amp; x_3 \mbox{ is integer.} \end{array} \]
 CVXR provides the Int and Bool constructors for specifying integer and boolean variables.</description>
@@ -87,10 +87,10 @@ CVXR provides the Int and Bool constructors for specifying integer and boolean v
     
     <item>
       <title>Solver Peculiarities</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_solver-peculiarities/</link>
+      <link>/cvxr_examples/cvxr_solver-peculiarities/</link>
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_solver-peculiarities/</guid>
+      <guid>/cvxr_examples/cvxr_solver-peculiarities/</guid>
       <description>The default solver in CVXR used to be ECOS. However, it is not always the best solver to use. As an example, let us consider again the catenary problem.
 We will change the problem slightly to use a finer discretization from 101 points to say 501.
 ## Problem data m &amp;lt;- 501 L &amp;lt;- 2 h &amp;lt;- L / (m - 1) ## Form objective x &amp;lt;- Variable(m) y &amp;lt;- Variable(m) objective &amp;lt;- Minimize(sum(y)) ## Form constraints constraints &amp;lt;- list(x[1] == 0, y[1] == 1, x[m] == 1, y[m] == 1, diff(x)^2 + diff(y)^2 &amp;lt;= h^2) ## Solve the catenary problem prob &amp;lt;- Problem(objective, constraints) result &amp;lt;- solve(prob, solver = &amp;quot;ECOS&amp;quot;) The solution status is no longer optimal.</description>
@@ -98,31 +98,31 @@ We will change the problem slightly to use a finer discretization from 101 point
     
     <item>
       <title>Using Other Solvers</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_using-other-solvers/</link>
+      <link>/cvxr_examples/cvxr_using-other-solvers/</link>
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_using-other-solvers/</guid>
+      <guid>/cvxr_examples/cvxr_using-other-solvers/</guid>
       <description>Introduction The default installation of CVXR comes with several (imported) open source solvers:
- ECOS and its mixed integer cousin ECOS_BB via the CRAN package ECOSolveR OSQP SCS via the CRAN package scs.  CVXR can also make use of several other open source solvers implemented in R packages.
- The conic solver MOSEK and the associated CRAN package Rmosek. The commercial solver GUROBI that solves both Quadratic and Conic programs.</description>
+ ECOS and its mixed integer cousin ECOS_BB OSQP SCS  CVXR can also make use of commercial solvers and other open-source solvers:
+ The commercial solver MOSEK The commercial solver GUROBI The commercial solver CPLEX The open source linear and mixed integer programming package GLPK via the Rglpk package. The CBC solver via the R package rcbc.</description>
     </item>
     
     <item>
       <title>Censored Regression</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_censored-regression/</link>
+      <link>/cvxr_examples/cvxr_censored-regression/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_censored-regression/</guid>
+      <guid>/cvxr_examples/cvxr_censored-regression/</guid>
       <description>Introduction Data collected from an experimental study is sometimes censored, so that only partial information is known about a subset of observations. For instance, when measuring the lifespan of mice, we may find a number of subjects live beyond the duration of the project. Thus, all we know is the lower bound on their lifespan. This right censoring can be incorporated into a regression model via convex optimization.
 Suppose that only \(K\) of our observations \((x_i,y_i)\) are fully observed, and the remaining are censored such that we observe \(x_i\), but only know \(y_i \geq D\) for \(i = K+1,\ldots,m\) and some constant \(D \in {\mathbf R}\).</description>
     </item>
     
     <item>
       <title>Elastic Net</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_elastic-net/</link>
+      <link>/cvxr_examples/cvxr_elastic-net/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_elastic-net/</guid>
+      <guid>/cvxr_examples/cvxr_elastic-net/</guid>
       <description>Introduction Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the \(l_1\)-norm and squared \(l_2\)-norm, combined in the elastic net regression model (H. Zou 2005, @glmnet),
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2m}\|y - X\beta\|_2^2 + \lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). \end{array} \]
 Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0,1]\) controls the relative \(l_1\) versus squared \(l_2\) penalty.</description>
@@ -130,29 +130,29 @@ Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0
     
     <item>
       <title>Fastest Mixing Markov Chain</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_fast-mixing-mc/</link>
+      <link>/cvxr_examples/cvxr_fast-mixing-mc/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_fast-mixing-mc/</guid>
+      <guid>/cvxr_examples/cvxr_fast-mixing-mc/</guid>
       <description>Introduction This example is derived from the results in Boyd, Diaconis, and Xiao (2004), section 2. Let \(\mathcal{G} = (\mathcal{V}, \mathcal{E})\) be a connected graph with vertices \(\mathcal{V} = \{1,\ldots,n\}\) and edges \(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\). Assume that \((i,i) \in \mathcal{E}\) for all \(i = 1,\ldots,n\), and \((i,j) \in \mathcal{E}\) implies \((j,i) \in \mathcal{E}\). Under these conditions, a discrete-time Markov chain on \(\mathcal{V}\) will have the uniform distribution as one of its equilibrium distributions.</description>
     </item>
     
     <item>
       <title>Getting Faster Results</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_speed/</link>
+      <link>/cvxr_examples/cvxr_speed/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_speed/</guid>
+      <guid>/cvxr_examples/cvxr_speed/</guid>
       <description>Warning The solution described below is useful when you mathematically know a problem is DCP-compliant and none of your data inputs will change the nature of the problem. We recommend that users check the DCP-compliance of a problem (via a call to is_dcp(prob) for example) at least once to ensure this is the case. Not verifying DCP-compliance may result in garbage!
  Note also that the large speed gains in previous versions are no longer evident in the version 1.</description>
     </item>
     
     <item>
       <title>Huber Regression</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_huber-regression/</link>
+      <link>/cvxr_examples/cvxr_huber-regression/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_huber-regression/</guid>
+      <guid>/cvxr_examples/cvxr_huber-regression/</guid>
       <description>Introduction Huber regression (Huber 1964) is a regression technique that is robust to outliers. The idea is to use a different loss function rather than the traditional least-squares; we solve
 \begin{array}{ll} &amp;amp; _{i=1}^m (y_i - x_i^T) \end{array}
 for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber function with threshold \(M &amp;gt; 0\), \[ \phi(u) = \begin{cases} u^2 &amp;amp; \mbox{if } |u| \leq M \\ 2Mu - M^2 &amp;amp; \mbox{if } |u| &amp;gt; M.</description>
@@ -160,19 +160,19 @@ for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber f
     
     <item>
       <title>Kelly Gambling</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_kelly-strategy/</link>
+      <link>/cvxr_examples/cvxr_kelly-strategy/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_kelly-strategy/</guid>
+      <guid>/cvxr_examples/cvxr_kelly-strategy/</guid>
       <description>Introduction In Kelly gambling (Kelly 1956), we are given the opportunity to bet on \(n\) possible outcomes, which yield a random non-negative return of \(r \in {\mathbf R}_+^n\). The return \(r\) takes on exactly \(K\) values \(r_1,\ldots,r_K\) with known probabilities \(\pi_1,\ldots,\pi_K\). This gamble is repeated over \(T\) periods. In a given period \(t\), let \(b_i \geq 0\) denote the fraction of our wealth bet on outcome \(i\). Assuming the \(n\)th outcome is equivalent to not wagering (it returns one with certainty), the fractions must satisfy \(\sum_{i=1}^n b_i = 1\).</description>
     </item>
     
     <item>
       <title>L1 Trend Filtering</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_l1-trend-filtering/</link>
+      <link>/cvxr_examples/cvxr_l1-trend-filtering/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_l1-trend-filtering/</guid>
+      <guid>/cvxr_examples/cvxr_l1-trend-filtering/</guid>
       <description>Introduction Kim et al. (2009) propose the \(l_1\) trend filtering method for trend estimation. The method solves an optimization problem of the form
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1 \end{array} \] where the variable to be estimated is \(\beta\) and we are given the problem data \(y\) and \(\lambda\). The matrix \(D\) is the second-order difference matrix,
 \[ D = \left[ \begin{matrix} 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; \ddots &amp;amp; \ddots &amp;amp; \ddots &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1\\ \end{matrix} \right].</description>
@@ -180,10 +180,10 @@ for variable \(\beta \in {\mathbf R}^n\), where the loss \(\phi\) is the Huber f
     
     <item>
       <title>Largest Ball in a Polyhedron in 2D</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_2d_ball/</link>
+      <link>/cvxr_examples/cvxr_2d_ball/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_2d_ball/</guid>
+      <guid>/cvxr_examples/cvxr_2d_ball/</guid>
       <description>Problem The following is a problem from Boyd and Vandenberghe (2004), section 4.3.1.
 Find the largest Euclidean ball (i.e. its center and radius) that lies in a polyhedron described by affine inequalites:
 \[ P = {x : a_i&amp;#39;*x &amp;lt;= b_i, i=1,...,m} \]
@@ -194,30 +194,30 @@ a1 &amp;lt;- matrix(c(2,1)) a2 &amp;lt;- matrix(c(2,-1)) a3 &amp;lt;- matrix(c(-
     
     <item>
       <title>Log-Concave Distribution Estimation</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_log-concave/</link>
+      <link>/cvxr_examples/cvxr_log-concave/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_log-concave/</guid>
+      <guid>/cvxr_examples/cvxr_log-concave/</guid>
       <description>Introduction Let \(n = 1\) and suppose \(x_i\) are i.i.d. samples from a log-concave discrete distribution on \(\{0,\ldots,K\}\) for some \(K \in {\mathbf Z}_+\). Define \(p_k := {\mathbf {Prob}}(X = k)\) to be the probability mass function. One method for estimating \(\{p_0,\ldots,p_K\}\) is to maximize the log-likelihood function subject to a log-concavity constraint , i.e.,
 \[ \begin{array}{ll} \underset{p}{\mbox{maximize}} &amp;amp; \sum_{k=0}^K M_k\log p_k \\ \mbox{subject to} &amp;amp; p \geq 0, \quad \sum_{k=0}^K p_k = 1, \\ &amp;amp; p_k \geq \sqrt{p_{k-1}p_{k+1}}, \quad k = 1,\ldots,K-1, \end{array} \]</description>
     </item>
     
     <item>
       <title>Logistic Regression</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_logistic-regression/</link>
+      <link>/cvxr_examples/cvxr_logistic-regression/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_logistic-regression/</guid>
+      <guid>/cvxr_examples/cvxr_logistic-regression/</guid>
       <description>Introduction In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression (Cox 1958, @Freedman:2009).
 Suppose now that \(y_i \in \{0,1\}\) is a binary class indicator. The conditional response is modeled as \(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\), where \(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\) is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</description>
     </item>
     
     <item>
       <title>Near Isotonic and Near Convex Regression</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</link>
+      <link>/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</guid>
+      <guid>/cvxr_examples/cvxr_near-isotonic-and-near-convex-regression/</guid>
       <description>Given a set of data points \(y \in {\mathbf R}^m\), Tibshirani, Hoefling, and Tibshirani (2011) fit a nearly-isotonic approximation \(\beta \in {\mathbf R}^m\) by solving
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+, \end{array} \]
 where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can be directly formulated in CVXR. As an example, we use global warming data from the Carbon Dioxide Information Analysis Center (CDIAC).</description>
@@ -225,20 +225,20 @@ where \(\lambda \geq 0\) is a penalty parameter and \(x_+ =\max(x,0)\). This can
     
     <item>
       <title>Portfolio Optimization</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_portfolio-optimization/</link>
+      <link>/cvxr_examples/cvxr_portfolio-optimization/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_portfolio-optimization/</guid>
+      <guid>/cvxr_examples/cvxr_portfolio-optimization/</guid>
       <description>Introduction In this example, we solve the Markowitz portfolio problem under various constraints (Markowitz 1952; Roy 1952; Lobo, Fazel, and Boyd 2007).
 We have \(n\) assets or stocks in our portfolio and must determine the amount of money to invest in each. Let \(w_i\) denote the fraction of our budget invested in asset \(i = 1,\ldots,m\), and let \(r_i\) be the returns (, fractional change in price) over the period of interest.</description>
     </item>
     
     <item>
       <title>Quantile Regression</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_quantile-regression/</link>
+      <link>/cvxr_examples/cvxr_quantile-regression/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_quantile-regression/</guid>
+      <guid>/cvxr_examples/cvxr_quantile-regression/</guid>
       <description>Introduction Quantile regression is another variation on least squares . The loss is the tilted \(l_1\) function,
 \[ \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u, \]
 where \(\tau \in (0,1)\) specifies the quantile. The problem as before is to minimize the total residual loss. This model is commonly used in ecology, healthcare, and other fields where the mean alone is not enough to capture complex relationships between variables.</description>
@@ -246,28 +246,28 @@ where \(\tau \in (0,1)\) specifies the quantile. The problem as before is to min
     
     <item>
       <title>Saturating Hinges Fit</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_saturating_hinges/</link>
+      <link>/cvxr_examples/cvxr_saturating_hinges/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_saturating_hinges/</guid>
+      <guid>/cvxr_examples/cvxr_saturating_hinges/</guid>
       <description>Introduction The following example comes from work on saturating splines in Boyd et al. (2016). Adaptive regression splines are commonly used in statistical modeling, but the instability they exhibit beyond their boundary knots makes extrapolation dangerous. One way to correct this issue for linear splines is to require they saturate: remain constant outside their boundary. This problem can be solved using a heuristic that is an extension of lasso regression, producing a weighted sum of hinge functions, which we call a saturating hinge.</description>
     </item>
     
     <item>
       <title>Sparse Inverse Covariance Estimation</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/</link>
+      <link>/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/</guid>
+      <guid>/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/</guid>
       <description>Introduction Assume we are given i.i.d. observations \(x_i \sim N(0,\Sigma)\) for \(i = 1,\ldots,m\), and the covariance matrix \(\Sigma \in {\mathbf S}_+^n\), the set of symmetric positive semidefinite matrices, has a sparse inverse \(S = \Sigma^{-1}\). Let \(Q = \frac{1}{m-1}\sum_{i=1}^m (x_i - \bar x)(x_i - \bar x)^T\) be our sample covariance. One way to estimate \(\Sigma\) is to maximize the log-likelihood with the prior knowledge that \(S\) is sparse (Friedman, Hastie, and Tibshirani 2008), which amounts to the optimization problem:</description>
     </item>
     
     <item>
       <title>The Catenary Problem</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_catenary/</link>
+      <link>/cvxr_examples/cvxr_catenary/</link>
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_catenary/</guid>
+      <guid>/cvxr_examples/cvxr_catenary/</guid>
       <description>Introduction A chain with uniformly distributed mass hangs from the endpoints \((0,1)\) and \((1,1)\) on a 2-D plane. Gravitational force acts in the negative \(y\) direction. Our goal is to find the shape of the chain in equilibrium, which is equivalent to determining the \((x,y)\) coordinates of every point along its curve when its potential energy is minimized.
 This is the famous catenary problem.
  A Discrete Version To formulate as an optimization problem, we parameterize the chain by its arc length and divide it into \(m\) discrete links.</description>
@@ -275,39 +275,39 @@ This is the famous catenary problem.
     
     <item>
       <title>Direct Standardization</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_direct-standardization/</link>
+      <link>/cvxr_examples/cvxr_direct-standardization/</link>
       <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_direct-standardization/</guid>
+      <guid>/cvxr_examples/cvxr_direct-standardization/</guid>
       <description>Introduction Consider a set of observations \((x_i,y_i)\) drawn non-uniformly from an unknown distribution. We know the expected value of the columns of \(X\), denoted by \(b \in {\mathbf R}^n\), and want to estimate the true distribution of \(y\). This situation may arise, for instance, if we wish to analyze the health of a population based on a sample skewed toward young males, knowing the average population-level sex, age, etc. The empirical distribution that places equal probability \(1/m\) on each \(y_i\) is not a good estimate.</description>
     </item>
     
     <item>
       <title>Isotonic Regression</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_isotonic-regression/</link>
+      <link>/cvxr_examples/cvxr_isotonic-regression/</link>
       <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_isotonic-regression/</guid>
+      <guid>/cvxr_examples/cvxr_isotonic-regression/</guid>
       <description>Introduction Isotonic regression is regression with monotonic constraints. There are several packages in R to fit isotonic regression models. In this example, we consider isotone which uses a pooled-adjacent-violators algorithm (PAVA) and active set methods to perform the fit.
  Pituitary Data Example We will use data from the isotone package (see de Leeuw, Hornik, and Mair (2009)) on the size of pituitary fissures for 11 subjects between 8 and 14 years of age.</description>
     </item>
     
     <item>
       <title>A Gentle Introduction to `CVXR`</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_gentle-intro/</link>
+      <link>/cvxr_examples/cvxr_gentle-intro/</link>
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_gentle-intro/</guid>
+      <guid>/cvxr_examples/cvxr_gentle-intro/</guid>
       <description>Introduction Welcome to CVXR: a modeling language for describing and solving convex optimization problems that follows the natural, mathematical notation of convex optimization rather than the requirements of any particular solver. The purpose of this document is both to introduce the reader to CVXR and to generate excitement for its possibilities in the field of statistics.
 Convex optimization is a powerful and very general tool. As a practical matter, the set of convex optimization problems includes almost every optimization problem that can be solved exactly and efficiently (i.</description>
     </item>
     
     <item>
       <title>Introduction</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_intro/</link>
+      <link>/cvxr_examples/cvxr_intro/</link>
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_intro/</guid>
+      <guid>/cvxr_examples/cvxr_intro/</guid>
       <description>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.
 We generate some synthetic data where we know the model completely, that is
 \[ Y = X\beta + \epsilon \]

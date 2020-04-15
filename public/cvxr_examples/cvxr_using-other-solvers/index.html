@@ -9,12 +9,12 @@
 	
 	<title>Using Other Solvers &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="https://cvxr.rbind.io/css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="https://cvxr.rbind.io/css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="https://cvxr.rbind.io/favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,6 +26,7 @@
 	<h1>Using Other Solvers</h1>
 	
 	
+<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <div id="introduction" class="section level2">
@@ -33,39 +34,298 @@
 <p>The default installation of <code>CVXR</code> comes with several (imported) open source solvers:</p>
 <ul>
 <li><a href="https://github.com/embotech/ecos">ECOS</a> and its mixed integer
-cousin <code>ECOS_BB</code> via the CRAN package
-<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a></li>
+cousin <code>ECOS_BB</code></li>
 <li><a href="https://www.osqp.org">OSQP</a></li>
-<li><a href="https://github.com/cvxgrp/scs">SCS</a> via the CRAN package
-<a href="https://cran.r-project.org/package=scs">scs</a>.</li>
+<li><a href="https://github.com/cvxgrp/scs">SCS</a></li>
 </ul>
-<p><code>CVXR</code> can also make use of several other open source solvers
-implemented in R packages.</p>
+<p><code>CVXR</code> can also make use of commercial solvers and other open-source solvers:</p>
 <ul>
-<li>The conic solver <a href="https://www.mosek.com/"><code>MOSEK</code></a> and the associated
-CRAN package <code>Rmosek</code>.</li>
-<li>The commercial solver <a href="https://www.gurobi.com/"><code>GUROBI</code></a> that solves both
-Quadratic and Conic programs.</li>
-<li><a href="https://www.ibm.com/analytics/cplex-optimizer"><code>CPLEX</code></a> solver that handles
-both Quadratic and Conic programs, along with the associated CRAN pack <code>rcplex</code>.</li>
-<li>The linear and mixed integer programming package <a href="https://www.gnu.org/software/glpk/"><code>GLPK</code></a> via the
+<li>The commercial solver <a href="https://www.mosek.com/"><code>MOSEK</code></a></li>
+<li>The commercial solver <a href="https://www.gurobi.com/"><code>GUROBI</code></a></li>
+<li>The commercial solver <a href="https://www.ibm.com/analytics/cplex-optimizer"><code>CPLEX</code></a></li>
+<li>The open source linear and mixed integer programming package
+<a href="https://www.gnu.org/software/glpk/"><code>GLPK</code></a> via the
 <a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a> package.</li>
 <li>The CBC solver via the R package
 <a href="https://github.com/dirkschumacher/rcbc"><code>rcbc</code></a>. This is not yet on
-CRAN.</li>
+CRAN but can be installed directly from github.</li>
 </ul>
-<p>Since these are optional, you have to install these packages yourself. <strong>NOTE</strong>: <code>MOSEK</code>
-,<code>GUROBI</code>, and <code>CPLEX</code> require licenses to use them.</p>
-<pre class="r"><code>lapply(list(&quot;CBC&quot; = &quot;rcbc&quot;,
-            GLPK = &quot;Rglpk&quot;),
-       function(x) x %in% installed.packages()[, 1])</code></pre>
-<pre><code>## $CBC
-## [1] TRUE
-## 
-## $GLPK
-## [1] TRUE</code></pre>
-<p>Once the packages are installed, a call to <code>installed_solvers</code> will
-indicate what solvers <code>CVXR</code> is aware of.</p>
+<p>Since these are optional, you have to install these packages
+yourself.</p>
+<p><strong>NOTE</strong>: <code>MOSEK</code> ,<code>GUROBI</code>, and <code>CPLEX</code> require licenses to use them
+but free academic licenses are available for all three.</p>
+</div>
+<div id="solver-capabilities" class="section level2">
+<h2>Solver capabilities</h2>
+<p>Table 1 below shows the capabilities of various solvers. Once the
+appropriate packages are installed, a call to
+<code>CVXR::installed_solvers()</code> will indicate what solvers <code>CVXR</code> is aware
+of.</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-1">Table 1: </span>Solver Capabilities
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Solver
+</th>
+<th style="text-align:left;">
+R package
+</th>
+<th style="text-align:left;">
+LP
+</th>
+<th style="text-align:left;">
+QP
+</th>
+<th style="text-align:left;">
+SOCP
+</th>
+<th style="text-align:left;">
+SDP
+</th>
+<th style="text-align:left;">
+EXP
+</th>
+<th style="text-align:left;">
+MIP
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+CBC
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://github.com/dirkschumacher/rcbc">rcbc</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+GLPK
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+GLPK_MI
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+OSQP
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://www.osqp.org">osqp</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+CPLEX
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rcplex">Rcplex</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+ECOS
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+ECOS_BB
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+GUROBI
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://www.gurobi.com/documentation/9.0/refman/ins_the_r_package.html">gurobi</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+MOSEK
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rglpk">Rmosek</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+SCS
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=scs">scs</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="commercial-solvers" class="section level2">
 <h2>Commercial Solvers</h2>
@@ -77,6 +337,7 @@ now directly supported: <a href="https://www.mosek.com">MOSEK</a> and
 <a href="https://cran.r-project.org/package=reticulate"><code>reticulate</code></a>, <em>not R
 packages</em>. Version 1.x directly uses native R packages that have now
 become available, resulting in a cleaner, more efficient interface.</p>
+<p>Brief pointers on installation follow.</p>
 <div id="installing-mosek" class="section level3">
 <h3>Installing <code>MOSEK</code></h3>
 <p><a href="https://www.mosek.com">MOSEK</a> provides an academic version that is
@@ -113,7 +374,7 @@ macOS is shown below for reference.</p>
 </div>
 <div id="example-session" class="section level3">
 <h3>Example session</h3>
-<pre class="r"><code>installed_solvers()</code></pre>
+<pre class="r"><code>CVXR::installed_solvers()</code></pre>
 <pre><code>##  [1] &quot;ECOS&quot;    &quot;ECOS_BB&quot; &quot;CBC&quot;     &quot;CPLEX&quot;   &quot;GLPK_MI&quot; &quot;GLPK&quot;    &quot;SCS&quot;    
 ##  [8] &quot;GUROBI&quot;  &quot;MOSEK&quot;   &quot;OSQP&quot;</code></pre>
 </div>
@@ -136,17 +397,22 @@ macOS is shown below for reference.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_1.0-1
+## [1] kableExtra_1.1.0 magrittr_1.5     CVXR_1.0-2      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.4.3     knitr_1.28       magrittr_1.5     bit_1.1-15.2    
-##  [5] lattice_0.20-40  R6_2.4.1         rlang_0.4.5      stringr_1.4.0   
-##  [9] tools_3.6.3      grid_3.6.3       xfun_0.12        htmltools_0.4.0 
-## [13] yaml_2.2.1       bit64_0.9-7      digest_0.6.25    assertthat_0.2.1
-## [17] bookdown_0.18    Matrix_1.2-18    gmp_0.5-13.6     Rglpk_0.6-4     
-## [21] slam_0.1-47      evaluate_0.14    rmarkdown_2.1    blogdown_0.18   
-## [25] Rcplex_0.3-3     gurobi_9.0-1     stringi_1.4.6    compiler_3.6.3  
-## [29] Rmpfr_0.8-1      Rmosek_9.1.0     rcbc_0.1.0.9001</code></pre>
+##  [1] gmp_0.5-13.6      Rcpp_1.0.4.3      highr_0.8         compiler_3.6.3   
+##  [5] pillar_1.4.3      tools_3.6.3       digest_0.6.25     bit_1.1-15.2     
+##  [9] viridisLite_0.3.0 lifecycle_0.2.0   evaluate_0.14     tibble_2.1.3     
+## [13] lattice_0.20-40   pkgconfig_2.0.3   rlang_0.4.5       Matrix_1.2-18    
+## [17] gurobi_9.0-1      rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
+## [21] blogdown_0.18     xfun_0.12         Rmpfr_0.8-1       stringr_1.4.0    
+## [25] httr_1.4.1        knitr_1.28        xml2_1.2.5        vctrs_0.2.4      
+## [29] hms_0.5.3         webshot_0.5.2     bit64_0.9-7       grid_3.6.3       
+## [33] glue_1.3.2        R6_2.4.1          rmarkdown_2.1     bookdown_0.18    
+## [37] readr_1.3.1       rcbc_0.1.0.9001   scales_1.1.0      htmltools_0.4.0  
+## [41] assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3     
+## [45] stringi_1.4.6     Rmosek_9.1.0      munsell_0.5.0     slam_0.1-47      
+## [49] crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -166,8 +432,8 @@ macOS is shown below for reference.</p>
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="https://cvxr.rbind.io/">
-				<img class="logo" src="https://cvxr.rbind.io/favicon.ico" alt="Logo"/>
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -232,9 +498,9 @@ macOS is shown below for reference.</p>
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="https://cvxr.rbind.io/">Documentation overview</a><ul>
-  <li>Previous: <a href="https://cvxr.rbind.io/cvxr_examples/cvxr_censored-regression/" title="Censored Regression">Censored Regression</a></li>
-  <li>Next: <a href="https://cvxr.rbind.io/cvxr_examples/cvxr_solver-peculiarities/" title="Solver Peculiarities">Solver Peculiarities</a></li>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_censored-regression/" title="Censored Regression">Censored Regression</a></li>
+  <li>Next: <a href="../../cvxr_examples/cvxr_solver-peculiarities/" title="Solver Peculiarities">Solver Peculiarities</a></li>
 </ul>
 
 	</div>

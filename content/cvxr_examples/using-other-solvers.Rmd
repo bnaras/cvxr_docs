@@ -12,6 +12,8 @@ tags: []
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+library(magrittr)
+library(kableExtra)
 ```
 
 ## Introduction
@@ -19,38 +21,62 @@ library(CVXR)
 The default installation of `CVXR` comes with several (imported) open source solvers:
 
 - [ECOS](https://github.com/embotech/ecos) and its mixed integer
-  cousin `ECOS_BB` via the CRAN package
-  [ECOSolveR](https://cran.r-project.org/package=ECOSolveR)
-- [OSQP](https://www.osqp.org) 
-- [SCS](https://github.com/cvxgrp/scs) via the CRAN package
-  [scs](https://cran.r-project.org/package=scs).
+  cousin `ECOS_BB`
+- [OSQP](https://www.osqp.org)
+- [SCS](https://github.com/cvxgrp/scs)
   
-`CVXR` can also make use of several other open source solvers
-implemented in R packages. 
+`CVXR` can also make use of commercial solvers and other open-source solvers:
 
-- The conic solver [`MOSEK`](https://www.mosek.com/) and the associated
-CRAN package `Rmosek`.
-- The commercial solver [`GUROBI`](https://www.gurobi.com/) that solves both 
-  Quadratic and Conic programs.
-- [`CPLEX`](https://www.ibm.com/analytics/cplex-optimizer) solver that handles 
-both Quadratic and Conic programs, along with the associated CRAN pack `rcplex`.
-- The linear and mixed integer programming package [`GLPK`](https://www.gnu.org/software/glpk/) via the 
+- The commercial solver [`MOSEK`](https://www.mosek.com/)
+- The commercial solver [`GUROBI`](https://www.gurobi.com/)
+- The commercial solver [`CPLEX`](https://www.ibm.com/analytics/cplex-optimizer)
+- The open source linear and mixed integer programming package
+  [`GLPK`](https://www.gnu.org/software/glpk/) via the
   [`Rglpk`](https://cran.r-project.org/package=Rglpk) package.
 - The CBC solver via the R package
   [`rcbc`](https://github.com/dirkschumacher/rcbc). This is not yet on
-  CRAN. 
+  CRAN but can be installed directly from github.
 
-Since these are optional, you have to install these packages yourself. __NOTE__: `MOSEK`
-,`GUROBI`, and `CPLEX` require licenses to use them.
+Since these are optional, you have to install these packages
+yourself. 
 
-```{r}
-lapply(list("CBC" = "rcbc",
-            GLPK = "Rglpk"),
-       function(x) x %in% installed.packages()[, 1])
+__NOTE__: `MOSEK` ,`GUROBI`, and `CPLEX` require licenses to use them
+but free academic licenses are available for all three.
+
+## Solver capabilities
+
+Table 1 below shows the capabilities of various solvers.  Once the
+appropriate packages are installed, a call to
+`CVXR::installed_solvers()` will indicate what solvers `CVXR` is aware
+of.
+
+
+```{r, echo = FALSE}
+check <- "\U2713"
+d  <- tibble::tibble(
+                  Solver = c("CBC", "GLPK", "GLPK_MI", "OSQP", "CPLEX", "ECOS", "ECOS_BB", "GUROBI", "MOSEK", "SCS"),
+                  `R package` = c("[rcbc](https://github.com/dirkschumacher/rcbc)",
+                                  "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
+                                  "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
+                                  "[osqp](https://www.osqp.org)",
+                                  "[Rcplex](https://cran.r-project.org/package=Rcplex)",
+                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
+                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
+                                  "[gurobi](https://www.gurobi.com/documentation/9.0/refman/ins_the_r_package.html)",
+                                  "[Rmosek](https://cran.r-project.org/package=Rglpk)",
+                                  "[scs](https://cran.r-project.org/package=scs)"),
+                  LP = c(check, check, check, check, check, check, " " , check, check, check),
+                  QP = c(" " , " " , " " , check, check, check, " " , check, check, check),
+                  SOCP = c(" " , " " , " " , " " , check, check, " " , check, check, check),
+                  SDP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
+                  EXP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
+                  MIP = c(check, " " , check, " " , " " , " " , check, check, check, check)
+              )
+knitr::kable(d, format = "html", caption = "Solver Capabilities") %>%
+    kable_styling("striped") %>%
+    column_spec(1:8, background = "#ececec")
+                  
 ```
-
-Once the packages are installed, a call to `installed_solvers` will
-indicate what solvers `CVXR` is aware of.
 
 ## Commercial Solvers
 
@@ -63,6 +89,8 @@ Pre-1.0 versions of `CVXR` used vendor python solver packages via
 [`reticulate`](https://cran.r-project.org/package=reticulate), _not R
 packages_. Version 1.x directly uses native R packages that have now
 become available, resulting in a cleaner, more efficient interface.
+
+Brief pointers on installation follow.
 
 ### Installing `MOSEK`
 
@@ -109,7 +137,7 @@ R CMD INSTALL Rcplex_0.3-3.tar.gz --configure-args="--with-cplex-include=/Applic
 ### Example session
 
 ```{r}
-installed_solvers()
+CVXR::installed_solvers()
 ```
 
 ## Session Info

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Simple Least Squares on CVXR</title>
-    <link>https://cvxr.rbind.io/categories/simple-least-squares/</link>
+    <link>/categories/simple-least-squares/</link>
     <description>Recent content in Simple Least Squares on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 29 Oct 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://cvxr.rbind.io/categories/simple-least-squares/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/categories/simple-least-squares/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Introduction</title>
-      <link>https://cvxr.rbind.io/cvxr_examples/cvxr_intro/</link>
+      <link>/cvxr_examples/cvxr_intro/</link>
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://cvxr.rbind.io/cvxr_examples/cvxr_intro/</guid>
+      <guid>/cvxr_examples/cvxr_intro/</guid>
       <description>Consider a simple linear regression problem where it is desired to estimate a set of parameters using a least squares criterion.
 We generate some synthetic data where we know the model completely, that is
 \[ Y = X\beta + \epsilon \]

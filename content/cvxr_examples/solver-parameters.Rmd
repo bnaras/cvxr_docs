@@ -143,7 +143,7 @@ result  <- solve(prob, solver = "SCS", verbose = FALSE, feastol = 1e-2, cg_rate 
 Notice how in this case a warning is thrown: the `SCS` solver does not
 support the feasible tolerance parameter, so the solver ignores it.
 
-### ECOS
+### ECOS/ECOS_BB
 
 The parameters available for `ECOS` can be found in this
 [link](https://cran.r-project.org/web/packages/ECOSolveR/ECOSolveR.pdf)
@@ -152,14 +152,16 @@ under the `ecos.control` function.
 ```{r, echo = FALSE}
 ecos <- tibble::tibble(
                     Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
-                    ECOS = c("verbose", "reltol", "abstol", "feastol", "max_iter"),
-                    Value = c("FALSE", "1e-08", "1e-08", "1e-08", "100")
+                    ECOS = c("verbose", "reltol", "abstol", "feastol", "maxit"),
+                    `ECOS Value` = c("FALSE", "1e-08", "1e-08", "1e-08", "100"),
+                    ECOS_BB = c("verbose", "reltol", "abstol", "feastol", "mi_max_iters"),
+                    `ECOS_BB Value` = c("FALSE", "1e-03", "1e-06", "1e-06", "1000")                    
                 )
 knitr::kable(ecos,
              caption = "Default CVXR-ECOS parameter mappings",
              format = "html") %>%
     kable_styling("striped") %>%
-    column_spec(2:3, background = "#ececec")
+    column_spec(2:5, background = "#ececec")
 ```
 
 Much like `OSQP`, the parameters can be entered individually in the
