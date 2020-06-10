@@ -54,12 +54,12 @@ $$
 
 We solve the Kelly gambling problem for $K = 100$ and $n = 20$. The
 probabilities $\pi_j \sim \mbox{Uniform}(0,1)$, and the potential
-returns $r_j \sim \mbox{Uniform}(0.5,1.5)$ except for $r_n = {\mathbf 1}$,
+returns $r_{ji} \sim \mbox{Uniform}(0.5,1.5)$ except for $r_{jn} = 1$,
 which represents the payoff from not wagering. With an initial wealth
 of $w_0 = 1$, we simulate the growth trajectory of our Kelly optimal
 bets over $P = 100$ periods, assuming returns are i.i.d. over time. In
 the following code, `rets` is the $K \times n$ matrix of possible
-returns with row $r_i$, while `ps` is the vector of return
+returns with rows $r_j$, while `ps` is the vector of return
 probabilities $(\pi_1,\ldots,\pi_K)$.
 
 
