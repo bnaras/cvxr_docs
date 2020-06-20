@@ -398,7 +398,7 @@ Elementwise functions
 These functions operate on each element of their arguments. For example, if ``X`` is a 5 by 4 matrix variable,
 then ``abs(X)`` is a 5 by 4 matrix expression. ``abs(X)[1, 2]`` is equivalent to ``abs(X[1, 2])``.
 
-Elementwise functions that take multiple arguments, such as ``max_elemwise`` and ``mul_elemwise``, operate on the corresponding elements of each argument.
+Elementwise functions that take multiple arguments, such as ``max_elemwise`` and ``multiply``, operate on the corresponding elements of each argument.
 For example, if ``X`` and ``Y`` are both 3 by 3 matrix variables, then ``max_elemwise(X, Y)`` is a 3 by 3 matrix expression.
 ``max_elemwise(X, Y)[2, 0]`` is equivalent to ``max_elemwise(X[2, 0], Y[2, 0])``. This means all arguments must have the same dimensions or be
 scalars, which are promoted.
@@ -498,7 +498,7 @@ scalars, which are promoted.
      - |concave| concave
      - |incr| incr.
 
-   * - mul_elemwise(c, |_| x)
+   * - multiply(c, |_| x)
 
        :math:`c \in \mathbf{R}`
      - c*x
@@ -685,7 +685,7 @@ and returns a vector or matrix.
      - |affine| affine
      - depends |_| on C
 
-   * - reshape(X, |_| n', |_| m')
+   * - reshape_expr(X, c(|_| m', |_| n'))
      - :math:`X' \in\mathbf{R}^{m' \times n'}`
      - :math:`X \in\mathbf{R}^{m \times n}`
 
@@ -721,7 +721,7 @@ The output :math:`y` of ``conv(c, x)`` has size :math:`n+m-1` and is defined as
 The output :math:`x'` of ``vec(X)`` is the matrix :math:`X` flattened in column-major order into a vector.
 Formally, :math:`x'_i = X_{i \bmod{m}, \left \lfloor{i/m}\right \rfloor }`.
 
-The output :math:`X'` of ``reshape(X, m', n')`` is the matrix :math:`X` cast into an :math:`m' \times n'` matrix.
+The output :math:`X'` of ``reshape_expr(X, c(m', n'))`` is the matrix :math:`X` cast into an :math:`m' \times n'` matrix.
 The entries are taken from :math:`X` in column-major order and stored in :math:`X'` in column-major order.
 Formally, :math:`X'_{ij} = \mathbf{vec}(X)_{m'j + i}`.
 

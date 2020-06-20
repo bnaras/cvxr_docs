@@ -211,7 +211,7 @@ example, if `X` is a 5 by 4 matrix variable, then `abs(X)` is a 5 by 4
 matrix expression. `abs(X)[1, 2]` is equivalent to `abs(X[1, 2])`.
 
 Elementwise functions that take multiple arguments, such as
-`max_elemwise` and `mul_elemwise`, operate on the corresponding
+`max_elemwise` and `multiply`, operate on the corresponding
 elements of each argument.  For example, if `X` and `Y` are both 3 by
 3 matrix variables, then `max_elemwise(X, Y)` is a 3 by 3 matrix
 expression. `max_elemwise(X, Y)[2, 1]` is equivalent to
@@ -361,7 +361,7 @@ $y[k]=\sum_{j=0}^k c[j]x[k-j].$
 The output $x$ of `vec(X)` is the matrix $X$ flattened in column-major order into a vector.
 Formally, $x'_i = X_{i \bmod{m}, \left \lfloor{i/m}\right \rfloor }$.
 
-The output $X$ of `reshape_expr(X, m', n')` is the matrix $X$ cast into an $m' \times n'$ matrix.
+The output $X$ of `reshape_expr(X, c(m', n'))` is the matrix $X$ cast into an $m' \times n'$ matrix.
 The entries are taken from $X$ in column-major order and stored in $X'$ in column-major order.
 Formally, $X'_{ij} = \mathbf{vec}(X)_{m'j + i}$.
 
