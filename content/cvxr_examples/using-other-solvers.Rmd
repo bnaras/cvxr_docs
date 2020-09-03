@@ -80,11 +80,6 @@ knitr::kable(d, format = "html", caption = "Solver Capabilities") %>%
 
 ## Commercial Solvers
 
-We are excited to note that the following commercial solvers are also
-now directly supported: [MOSEK](https://www.mosek.com) and
-[GUROBI](https://www.gurobi.com),
-[CPLEX](https://www.ibm.com/analytics/cplex-optimizer).
-
 Pre-1.0 versions of `CVXR` used vendor python solver packages via
 [`reticulate`](https://cran.r-project.org/package=reticulate), _not R
 packages_. Version 1.x directly uses native R packages that have now

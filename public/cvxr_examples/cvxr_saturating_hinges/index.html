@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.70.0" />
+	<meta name="generator" content="Hugo 0.74.3" />
 	
 	<title>Saturating Hinges Fit &mdash; CVXR</title>
 	
@@ -26,6 +26,7 @@
 	<h1>Saturating Hinges Fit</h1>
 	
 	
+<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="introduction" class="section level2">
@@ -178,13 +179,12 @@ ggplot() +
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin19.3.0 (64-bit)
-## Running under: macOS Catalina 10.15.4
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-apple-darwin19.5.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
 ## 
 ## Matrix products: default
-## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -193,22 +193,22 @@ ggplot() +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.0.2   ggplot2_3.3.0 CVXR_1.0-1   
+## [1] tidyr_1.1.0   ggplot2_3.3.2 CVXR_1.0-2   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.6     Rcpp_1.0.4.3     compiler_3.6.3   pillar_1.4.3    
-##  [5] tools_3.6.3      digest_0.6.25    bit_1.1-15.2     evaluate_0.14   
-##  [9] lifecycle_0.2.0  tibble_2.1.3     gtable_0.3.0     lattice_0.20-40 
-## [13] pkgconfig_2.0.3  rlang_0.4.5      Matrix_1.2-18    gurobi_9.0-1    
-## [17] Rglpk_0.6-4      yaml_2.2.1       blogdown_0.18    xfun_0.12       
-## [21] osqp_0.6.0.3     withr_2.1.2      Rmpfr_0.8-1      stringr_1.4.0   
-## [25] dplyr_0.8.5      knitr_1.28       vctrs_0.2.4      tidyselect_1.0.0
-## [29] bit64_0.9-7      grid_3.6.3       glue_1.3.2       R6_2.4.1        
-## [33] rmarkdown_2.1    bookdown_0.18    farver_2.0.3     purrr_0.3.3     
-## [37] magrittr_1.5     ellipsis_0.3.0   rcbc_0.1.0.9001  scales_1.1.0    
-## [41] htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1 labeling_0.3    
-## [45] Rcplex_0.3-3     stringi_1.4.6    Rmosek_9.1.0     munsell_0.5.0   
-## [49] slam_0.1-47      crayon_1.3.4</code></pre>
+##  [1] tidyselect_1.1.0 xfun_0.15        slam_0.1-47      purrr_0.3.4     
+##  [5] lattice_0.20-41  Rmosek_9.2.3     colorspace_1.4-1 vctrs_0.3.2     
+##  [9] generics_0.0.2   htmltools_0.5.0  yaml_2.2.1       gmp_0.6-0       
+## [13] rlang_0.4.7      pillar_1.4.6     glue_1.4.1       Rmpfr_0.8-1     
+## [17] withr_2.2.0      Rcplex_0.3-3     bit64_0.9-7      lifecycle_0.2.0 
+## [21] stringr_1.4.0    munsell_0.5.0    blogdown_0.19    gtable_0.3.0    
+## [25] gurobi_9.0-3     evaluate_0.14    labeling_0.3     knitr_1.28      
+## [29] Rcpp_1.0.5       scales_1.1.1     osqp_0.6.0.3     farver_2.0.3    
+## [33] bit_1.1-15.2     digest_0.6.25    stringi_1.4.6    bookdown_0.19   
+## [37] dplyr_1.0.0      grid_4.0.2       Rglpk_0.6-4      tools_4.0.2     
+## [41] magrittr_1.5     tibble_3.0.3     crayon_1.3.4     pkgconfig_2.0.3 
+## [45] ellipsis_0.3.1   rcbc_0.1.0.9001  Matrix_1.2-18    assertthat_0.2.1
+## [49] rmarkdown_2.3    R6_2.4.1         compiler_4.0.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -216,7 +216,7 @@ ggplot() +
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references">
+<div id="refs" class="references hanging-indent">
 <div id="ref-BoydHastie:2016">
 <p>Boyd, N., T. Hastie, S. Boyd, B. Recht, and M. Jordan. 2016. “Saturating Splines and Feature Selection.” <em>arXiv Preprint arXiv:1609.06764</em>.</p>
 </div>

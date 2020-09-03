@@ -13,6 +13,7 @@ params:
   data_dir: solver-peculiarities
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>The default solver in <code>CVXR</code> used to be <code>ECOS</code>. However, it is not always the
@@ -52,13 +53,12 @@ not completely solve the problem and in fact throws an error.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin19.3.0 (64-bit)
-## Running under: macOS Catalina 10.15.4
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-apple-darwin19.5.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
 ## 
 ## Matrix products: default
-## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -67,17 +67,17 @@ not completely solve the problem and in fact throws an error.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_1.0-1
+## [1] CVXR_1.0-2
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.4.3     knitr_1.28       magrittr_1.5     bit_1.1-15.2    
-##  [5] lattice_0.20-40  R6_2.4.1         rlang_0.4.5      stringr_1.4.0   
-##  [9] tools_3.6.3      grid_3.6.3       xfun_0.12        htmltools_0.4.0 
+##  [1] Rcpp_1.0.5       knitr_1.28       magrittr_1.5     bit_1.1-15.2    
+##  [5] lattice_0.20-41  R6_2.4.1         rlang_0.4.7      stringr_1.4.0   
+##  [9] tools_4.0.2      grid_4.0.2       xfun_0.15        htmltools_0.5.0 
 ## [13] yaml_2.2.1       bit64_0.9-7      digest_0.6.25    assertthat_0.2.1
-## [17] bookdown_0.18    Matrix_1.2-18    gmp_0.5-13.6     ECOSolveR_0.5.3 
-## [21] Rglpk_0.6-4      slam_0.1-47      evaluate_0.14    rmarkdown_2.1   
-## [25] blogdown_0.18    Rcplex_0.3-3     gurobi_9.0-1     stringi_1.4.6   
-## [29] compiler_3.6.3   Rmpfr_0.8-1      Rmosek_9.1.0     rcbc_0.1.0.9001</code></pre>
+## [17] bookdown_0.19    Matrix_1.2-18    gmp_0.6-0        ECOSolveR_0.5.3 
+## [21] Rglpk_0.6-4      slam_0.1-47      evaluate_0.14    rmarkdown_2.3   
+## [25] blogdown_0.19    Rcplex_0.3-3     gurobi_9.0-3     stringi_1.4.6   
+## [29] compiler_4.0.2   Rmpfr_0.8-1      Rmosek_9.2.3     rcbc_0.1.0.9001</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

@@ -92,7 +92,7 @@ profvis({
     beta <- Variable(m)
     obj <- Minimize(0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta))))
     prob <- Problem(obj)
-    soln <- solve(prob)
+    soln <- solve(prob, solver = "ECOS")
     betaHat <- soln$getValue(beta)
 })
 ```

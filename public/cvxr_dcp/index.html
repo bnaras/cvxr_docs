@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.70.0" />
+	<meta name="generator" content="Hugo 0.74.3" />
 	
 	<title>Discplined Convex Programming &mdash; CVXR</title>
 	
@@ -26,6 +26,7 @@
 	<h1>Discplined Convex Programming</h1>
 	
 	
+<script src="../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="../rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
@@ -317,18 +318,17 @@ problem.</p>
 <pre class="r"><code>## A non-DCP problem.
 prob &lt;- Problem(Minimize(sqrt(x)))
 tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
-<pre><code>## [1] &quot;Problem does not follow DCP rules. However, the problem does follow DGP rules. Consider calling this function with gp = TRUE&quot;</code></pre>
+<pre><code>## [1] &quot;Problem does not follow DCP rules.&quot;</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin19.3.0 (64-bit)
-## Running under: macOS Catalina 10.15.4
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-apple-darwin19.5.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
 ## 
 ## Matrix products: default
-## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -337,22 +337,22 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_1.0-1      
+## [1] kableExtra_1.1.0 CVXR_1.0-2      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.6      Rcpp_1.0.4.3      highr_0.8         compiler_3.6.3   
-##  [5] pillar_1.4.3      tools_3.6.3       digest_0.6.25     bit_1.1-15.2     
-##  [9] viridisLite_0.3.0 lifecycle_0.2.0   evaluate_0.14     tibble_2.1.3     
-## [13] lattice_0.20-40   pkgconfig_2.0.3   rlang_0.4.5       Matrix_1.2-18    
-## [17] gurobi_9.0-1      rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
-## [21] blogdown_0.18     xfun_0.12         Rmpfr_0.8-1       stringr_1.4.0    
-## [25] httr_1.4.1        knitr_1.28        xml2_1.2.5        vctrs_0.2.4      
-## [29] hms_0.5.3         webshot_0.5.2     bit64_0.9-7       grid_3.6.3       
-## [33] glue_1.3.2        R6_2.4.1          rmarkdown_2.1     bookdown_0.18    
-## [37] readr_1.3.1       magrittr_1.5      rcbc_0.1.0.9001   scales_1.1.0     
-## [41] htmltools_0.4.0   assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1 
-## [45] Rcplex_0.3-3      stringi_1.4.6     Rmosek_9.1.0      munsell_0.5.0    
-## [49] slam_0.1-47       crayon_1.3.4</code></pre>
+##  [1] gmp_0.6-0         Rcpp_1.0.5        highr_0.8         compiler_4.0.2   
+##  [5] pillar_1.4.6      tools_4.0.2       digest_0.6.25     bit_1.1-15.2     
+##  [9] viridisLite_0.3.0 evaluate_0.14     tibble_3.0.3      lifecycle_0.2.0  
+## [13] lattice_0.20-41   pkgconfig_2.0.3   rlang_0.4.7       Matrix_1.2-18    
+## [17] gurobi_9.0-3      rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
+## [21] blogdown_0.19     xfun_0.15         xml2_1.3.2        httr_1.4.2       
+## [25] Rmpfr_0.8-1       stringr_1.4.0     knitr_1.28        vctrs_0.3.2      
+## [29] hms_0.5.3         webshot_0.5.2     bit64_0.9-7       grid_4.0.2       
+## [33] glue_1.4.1        R6_2.4.1          rmarkdown_2.3     bookdown_0.19    
+## [37] readr_1.3.1       magrittr_1.5      rcbc_0.1.0.9001   scales_1.1.1     
+## [41] htmltools_0.5.0   ellipsis_0.3.1    assertthat_0.2.1  rvest_0.3.5      
+## [45] colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.6     Rmosek_9.2.3     
+## [49] munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
 </div>
 
 

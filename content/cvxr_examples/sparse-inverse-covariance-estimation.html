@@ -13,6 +13,7 @@ params:
   data_dir: sparse_inverse_covariance_estimation
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="introduction" class="section level2">
@@ -98,13 +99,12 @@ achieve the true percentage of non-zeros.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin19.3.0 (64-bit)
-## Running under: macOS Catalina 10.15.4
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-apple-darwin19.5.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
 ## 
 ## Matrix products: default
-## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -114,21 +114,22 @@ achieve the true percentage of non-zeros.</p>
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] expm_0.999-4  Matrix_1.2-18 ggplot2_3.3.0 CVXR_1.0-1   
+## [1] expm_0.999-5  Matrix_1.2-18 ggplot2_3.3.2 CVXR_1.0-2   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.5-13.6       Rcpp_1.0.4.3       RColorBrewer_1.1-2 compiler_3.6.3    
-##  [5] pillar_1.4.3       tools_3.6.3        digest_0.6.25      bit_1.1-15.2      
-##  [9] evaluate_0.14      lifecycle_0.2.0    tibble_2.1.3       gtable_0.3.0      
-## [13] lattice_0.20-40    pkgconfig_2.0.3    rlang_0.4.5        gurobi_9.0-1      
-## [17] Rglpk_0.6-4        yaml_2.2.1         blogdown_0.18      xfun_0.12         
-## [21] withr_2.1.2        Rmpfr_0.8-1        stringr_1.4.0      dplyr_0.8.5       
-## [25] knitr_1.28         tidyselect_1.0.0   bit64_0.9-7        glue_1.3.2        
-## [29] R6_2.4.1           rmarkdown_2.1      bookdown_0.18      farver_2.0.3      
-## [33] purrr_0.3.3        magrittr_1.5       scs_1.3-2          rcbc_0.1.0.9001   
-## [37] scales_1.1.0       htmltools_0.4.0    assertthat_0.2.1   colorspace_1.4-1  
-## [41] labeling_0.3       Rcplex_0.3-3       stringi_1.4.6      Rmosek_9.1.0      
-## [45] munsell_0.5.0      slam_0.1-47        crayon_1.3.4</code></pre>
+##  [1] gmp_0.6-0          Rcpp_1.0.5         RColorBrewer_1.1-2 compiler_4.0.2    
+##  [5] pillar_1.4.6       tools_4.0.2        digest_0.6.25      bit_1.1-15.2      
+##  [9] evaluate_0.14      lifecycle_0.2.0    tibble_3.0.3       gtable_0.3.0      
+## [13] lattice_0.20-41    pkgconfig_2.0.3    rlang_0.4.7        gurobi_9.0-3      
+## [17] Rglpk_0.6-4        yaml_2.2.1         blogdown_0.19      xfun_0.15         
+## [21] withr_2.2.0        dplyr_1.0.0        Rmpfr_0.8-1        stringr_1.4.0     
+## [25] knitr_1.28         generics_0.0.2     vctrs_0.3.2        tidyselect_1.1.0  
+## [29] bit64_0.9-7        glue_1.4.1         R6_2.4.1           rmarkdown_2.3     
+## [33] bookdown_0.19      farver_2.0.3       purrr_0.3.4        magrittr_1.5      
+## [37] rcbc_0.1.0.9001    scales_1.1.1       htmltools_0.5.0    ellipsis_0.3.1    
+## [41] assertthat_0.2.1   colorspace_1.4-1   labeling_0.3       Rcplex_0.3-3      
+## [45] stringi_1.4.6      Rmosek_9.2.3       munsell_0.5.0      slam_0.1-47       
+## [49] crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -136,7 +137,7 @@ achieve the true percentage of non-zeros.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references">
+<div id="refs" class="references hanging-indent">
 <div id="ref-spinvcov">
 <p>Friedman, J., T. Hastie, and R. Tibshirani. 2008. “Sparse Inverse Covariance Estimation with the Graphical Lasso.” <em>Biostatistics</em> 9 (3): 432–41.</p>
 </div>
