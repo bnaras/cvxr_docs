@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.70.0" />
+	<meta name="generator" content="Hugo 0.74.3" />
 	
 	<title>Dealing with Solver-Specific Parameters &mdash; CVXR</title>
 	
@@ -26,6 +26,7 @@
 	<h1>Dealing with Solver-Specific Parameters</h1>
 	
 	
+<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
@@ -873,13 +874,12 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin19.3.0 (64-bit)
-## Running under: macOS Catalina 10.15.4
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-apple-darwin19.5.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
 ## 
 ## Matrix products: default
-## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-## LAPACK: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
 ## 
 ## locale:
 ## [1] C
@@ -888,23 +888,23 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 tibble_3.0.0     CVXR_1.0-1      
+## [1] kableExtra_1.1.0 tibble_3.0.3     CVXR_1.0-2      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] xfun_0.13         slam_0.1-47       lattice_0.20-41   Rmosek_9.1.0     
-##  [5] colorspace_1.4-1  vctrs_0.2.4       htmltools_0.4.0   viridisLite_0.3.0
-##  [9] yaml_2.2.1        gmp_0.5-13.6      rlang_0.4.5       pillar_1.4.3     
-## [13] glue_1.4.0        Rmpfr_0.8-1       Rcplex_0.3-3      bit64_0.9-7      
-## [17] scs_1.3-2         lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0    
-## [21] blogdown_0.18     rvest_0.3.5       gurobi_9.0-1      evaluate_0.14    
-## [25] knitr_1.28        fansi_0.4.1       highr_0.8         Rcpp_1.0.4.6     
-## [29] readr_1.3.1       scales_1.1.0      osqp_0.6.0.3      webshot_0.5.2    
-## [33] bit_1.1-15.2      hms_0.5.3         digest_0.6.25     stringi_1.4.6    
-## [37] bookdown_0.18     grid_3.6.3        Rglpk_0.6-4       ECOSolveR_0.5.3  
-## [41] cli_2.0.2         tools_3.6.3       magrittr_1.5      crayon_1.3.4     
-## [45] pkgconfig_2.0.3   ellipsis_0.3.0    rcbc_0.1.0.9001   Matrix_1.2-18    
-## [49] xml2_1.3.1        assertthat_0.2.1  rmarkdown_2.1     httr_1.4.1       
-## [53] rstudioapi_0.11   R6_2.4.1          compiler_3.6.3</code></pre>
+##  [1] xfun_0.15         slam_0.1-47       lattice_0.20-41   Rmosek_9.2.3     
+##  [5] colorspace_1.4-1  vctrs_0.3.2       htmltools_0.5.0   viridisLite_0.3.0
+##  [9] yaml_2.2.1        gmp_0.6-0         rlang_0.4.7       pillar_1.4.6     
+## [13] glue_1.4.1        Rmpfr_0.8-1       Rcplex_0.3-3      bit64_0.9-7      
+## [17] scs_1.3-3         lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0    
+## [21] blogdown_0.19     rvest_0.3.5       gurobi_9.0-3      evaluate_0.14    
+## [25] knitr_1.28        highr_0.8         Rcpp_1.0.5        readr_1.3.1      
+## [29] scales_1.1.1      osqp_0.6.0.3      webshot_0.5.2     bit_1.1-15.2     
+## [33] hms_0.5.3         digest_0.6.25     stringi_1.4.6     bookdown_0.19    
+## [37] grid_4.0.2        Rglpk_0.6-4       ECOSolveR_0.5.3   tools_4.0.2      
+## [41] magrittr_1.5      crayon_1.3.4      pkgconfig_2.0.3   ellipsis_0.3.1   
+## [45] rcbc_0.1.0.9001   Matrix_1.2-18     xml2_1.3.2        assertthat_0.2.1 
+## [49] rmarkdown_2.3     httr_1.4.2        rstudioapi_0.11   R6_2.4.1         
+## [53] compiler_4.0.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
