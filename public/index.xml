@@ -82,7 +82,7 @@ Obviously, unless one actually solves the same problem in both places, there’s
       <guid>/cvxr_examples/cvxr_integer-programming/</guid>
       <description>Consider the following optimization problem.
 \[ \begin{array}{ll} \mbox{Maximize} &amp;amp; x_1 + 2x_2 - 0.1x_3 - 3x_4\\ \mbox{subject to} &amp;amp; x_1, x_2, x_3, x_4 &amp;gt;= 0\\ &amp;amp; x_1 + x_2 &amp;lt;= 5\\ &amp;amp; 2x_1 - x_2 &amp;gt;= 0\\ &amp;amp; -x_1 + 3x_2 &amp;gt;= 0\\ &amp;amp; x_3 + x_4 &amp;gt;= 0.5\\ &amp;amp; x_3 &amp;gt;= 1.1\\ &amp;amp; x_3 \mbox{ is integer.} \end{array} \]
-CVXR provides the Int and Bool constructors for specifying integer and boolean variables.</description>
+CVXR provides constructors for the integer and boolean variables via the parameter integer = TRUE or boolean = TRUE to the Variable() function.</description>
     </item>
     
     <item>
