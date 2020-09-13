@@ -41,31 +41,42 @@ and parameters using a library of functions with known mathematical
 properties. <code>CVXR</code> then applies
 signed <a href="./post/cvxr_dcp">disciplined convex programming (DCP)</a> to
 verify the problem’s convexity. Once verified, the problem is
-converted into standard conic form using graph implementations and
-passed to a cone solver such
+converted into standard form using graph implementations and
+passed to a quadratic solver such as <a href="https://osqp.org/">OSQP</a>, or a cone solver such
 as <a href="https://github.com/embotech/ecos">ECOS</a>
-or <a href="https://github.com/cvxgrp/scs">SCS</a>.</p>
+or <a href="https://github.com/cvxgrp/scs">SCS</a>, or even commericial solvers,
+if installed.</p>
 </div>
-<div id="cvxr-paper" class="section level2">
-<h2><code>CVXR</code> paper</h2>
-<p>A preliminary draft our paper is
-available
-<a href="https://web.stanford.edu/~boyd/papers/cvxr_paper.html">here</a>.</p>
+<div id="citing-cvxr" class="section level2">
+<h2>Citing <code>CVXR</code></h2>
+<p><code>CVXR</code> is published in <span class="citation">Fu, Narasimhan, and Boyd (2020)</span>
+&lt;<a href="https://dx.doi.org/10.18637/jss.v094.i14">doi:10.18637/jss.v094.i14</a>&gt;. A
+BibTeX citation entry using citation key <code>cvxr2020</code> is below.</p>
+<pre><code>@Article{cvxr2020,
+    title = {{CVXR}: An {R} Package for Disciplined Convex Optimization},
+    author = {Anqi Fu and Balasubramanian Narasimhan and Stephen Boyd},
+    journal = {Journal of Statistical Software},
+    year = {2020},
+    volume = {94},
+    number = {14},
+    pages = {1--34},
+    doi = {10.18637/jss.v094.i14},
+  }</code></pre>
 </div>
 <div id="news" class="section level2">
 <h2>News</h2>
 <p>For the latest news, please see the <a href="https://www.cvxgrp.org/CVXR">Package
 Documentation</a>.</p>
 <p><code>CVXR</code> continues to be developed on
-<a href="https://github.com/cvxgrp/CVXR">Github</a>. The 1.0 version of <code>CVXR</code>
-has now been released and now implements the reductions framework as
-referenced <a href="http://stanford.edu/~boyd/papers/cvxpy_rewriting.html">here</a>.
-More details of all the changes can be seen <a href="./cvxr_examples/whats_new_1.0/">here</a></p>
+<a href="https://github.com/cvxgrp/CVXR">Github</a>. Version 1.0 was a major
+release implementing the reductions framework described in
+<span class="citation">Agrawal et al. (2018)</span>. More details of all the changes can be found in
+<a href="./cvxr_examples/whats_new_1.0/">What’s new in 1.0</a>.</p>
 </div>
 <div id="installing-cvxr" class="section level2">
 <h2>Installing <code>CVXR</code></h2>
-<p><code>CVXR</code> is installed like any other R package
-from <a href="https://cloud.r-project.org">CRAN</a>.</p>
+<p><code>CVXR</code> is installed like any other R package from
+<a href="https://cloud.r-project.org">CRAN</a>.</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
@@ -87,21 +98,15 @@ viewed using <code>vignette("cvxr_intro", package = "CVXR")</code>.</p>
 <p>A large set of examples, many ported from <code>CVXPY</code>, are available on
 this site in the <a href="./post/cvxr_examples/">Examples</a> section.</p>
 </div>
-<div id="citing-cvxr" class="section level2">
-<h2>Citing <code>CVXR</code></h2>
-<p>If you use <code>CVXR</code> in your work, please consider citing the paper
-by <span class="citation">Fu, Narasimhan, and Boyd (2017)</span> below.</p>
-</div>
 <div id="acknowledgements" class="section level2">
 <h2>Acknowledgements</h2>
-<p>We are grateful
-to
-<a href="https://web.stanford.edu/~stevend2/">Steven Diamond</a>,
-<a href="https://people.eecs.berkeley.edu/~miller_john/">John Miller</a>, and
-Paul Kunsberg Rosenfield for their contributions to the software’s
+<p>We are grateful to <a href="https://web.stanford.edu/~stevend2/">Steven
+Diamond</a>, <a href="https://people.eecs.berkeley.edu/~miller_john/">John
+Miller</a>, and Paul
+Kunsberg Rosenfield for their contributions to the software’s
 development. In particular, we are indebted to Steven Diamond for his
-work on <a href="http://www.cvxpy.org/en/latest/">CVXPY</a>. Most of <code>CVXR</code>’s code,
-documentation, and examples were ported from his Python library.</p>
+work on <a href="http://www.cvxpy.org/en/latest/">CVXPY</a>. Most of <code>CVXR</code>’s
+code, documentation, and examples were ported from his Python library.</p>
 </div>
 <div id="about-this-site" class="section level2">
 <h2>About this site</h2>
@@ -119,8 +124,11 @@ the <a href="https://github.com/bnaras/cvxr_docs">CVXR docs</a> repository.</p>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references hanging-indent">
-<div id="ref-fu:naras:boyd:2017">
-<p>Fu, Anqi, Balasubramanian Narasimhan, and Stephen Boyd. 2017. “CVXR: An R Package for Disciplined Convex Optimization.” <a href="https://web.stanford.edu/~boyd/papers/cvxr_paper.html">https://web.stanford.edu/~boyd/papers/cvxr_paper.html</a>.</p>
+<div id="ref-rewriting:2018">
+<p>Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. “A Rewriting System for Convex Optimization Problems.” <em>Journal of Control and Decision</em> 5 (1): 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554">https://doi.org/10.1080/23307706.2017.1397554</a>.</p>
+</div>
+<div id="ref-cvxr2020">
+<p>Fu, Anqi, Balasubramanian Narasimhan, and Stephen Boyd. 2020. “CVXR: An R Package for Disciplined Convex Optimization.” <em>Journal of Statistical Software</em> 94 (14): 1–34. <a href="https://doi.org/10.18637/jss.v094.i14">https://doi.org/10.18637/jss.v094.i14</a>.</p>
 </div>
 </div>
 </div>

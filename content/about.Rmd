@@ -57,16 +57,30 @@ and parameters using a library of functions with known mathematical
 properties. `CVXR` then applies
 signed [disciplined convex programming (DCP)](/post/cvxr_dcp) to
 verify the problem’s convexity. Once verified, the problem is
-converted into standard conic form using graph implementations and
-passed to a cone solver such
+converted into standard form using graph implementations and
+passed to a quadratic solver such as [OSQP](https://osqp.org/), or a cone solver such
 as [ECOS](https://github.com/embotech/ecos)
-or [SCS](https://github.com/cvxgrp/scs).
+or [SCS](https://github.com/cvxgrp/scs), or even commericial solvers,
+if installed.
 
-## `CVXR` paper
+## Citing `CVXR`
 
-A preliminary draft our paper is
-available
-[here](https://web.stanford.edu/~boyd/papers/cvxr_paper.html). 
+`CVXR` is published in @cvxr2020
+<[doi:10.18637/jss.v094.i14](https://dx.doi.org/10.18637/jss.v094.i14)>. A
+BibTeX citation entry using citation key `cvxr2020` is below.
+
+```
+@Article{cvxr2020,
+    title = {{CVXR}: An {R} Package for Disciplined Convex Optimization},
+    author = {Anqi Fu and Balasubramanian Narasimhan and Stephen Boyd},
+    journal = {Journal of Statistical Software},
+    year = {2020},
+    volume = {94},
+    number = {14},
+    pages = {1--34},
+    doi = {10.18637/jss.v094.i14},
+  }
+```
 
 ## News
 
@@ -74,17 +88,16 @@ For the latest news, please see the [Package
 Documentation](https://www.cvxgrp.org/CVXR). 
 
 `CVXR` continues to be developed on
-[Github](https://github.com/cvxgrp/CVXR). The 1.0 version of `CVXR`
-has now been released and now implements the reductions framework as
-referenced [here](http://stanford.edu/~boyd/papers/cvxpy_rewriting.html). 
-More details of all the changes can be seen [here](/cvxr_examples/whats_new_1.0/)
+[Github](https://github.com/cvxgrp/CVXR). Version 1.0 was a major
+release implementing the reductions framework described in
+@rewriting:2018. More details of all the changes can be found in
+[What's new in 1.0](/cvxr_examples/whats_new_1.0/).
   
-
 
 ## Installing `CVXR`
 
-`CVXR` is installed like any other R package
-from [CRAN](https://cloud.r-project.org).
+`CVXR` is installed like any other R package from
+[CRAN](https://cloud.r-project.org).
 
 ## Documentation
 
@@ -108,22 +121,15 @@ viewed using `vignette("cvxr_intro", package = "CVXR")`.
 A large set of examples, many ported from `CVXPY`, are available on
 this site in the [Examples](/post/cvxr_examples/) section.
 
-## Citing `CVXR`
-
-If you use `CVXR` in your work, please consider citing the paper
-by @fu:naras:boyd:2017 below.
-
-
 ## Acknowledgements
 
-We are grateful
-to
-[Steven Diamond](https://web.stanford.edu/~stevend2/),
-[John Miller](https://people.eecs.berkeley.edu/~miller_john/), and
-Paul Kunsberg Rosenfield for their contributions to the software’s
+We are grateful to [Steven
+Diamond](https://web.stanford.edu/~stevend2/), [John
+Miller](https://people.eecs.berkeley.edu/~miller_john/), and Paul
+Kunsberg Rosenfield for their contributions to the software’s
 development. In particular, we are indebted to Steven Diamond for his
-work on [CVXPY](http://www.cvxpy.org/en/latest/). Most of `CVXR`'s code,
-documentation, and examples were ported from his Python library.
+work on [CVXPY](http://www.cvxpy.org/en/latest/). Most of `CVXR`'s
+code, documentation, and examples were ported from his Python library.
 
 ## About this site
 

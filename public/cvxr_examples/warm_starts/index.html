@@ -59,12 +59,12 @@ prob &lt;- Problem(obj, constraint)
 value(gamma) &lt;- 1
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
 cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## First solve time is 31.586499</code></pre>
+<pre><code>## First solve time is 27.303340</code></pre>
 <pre class="r"><code>#Solve second time
 value(gamma) &lt;- 2
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
 cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## Second solve time is 1.067505</code></pre>
+<pre><code>## Second solve time is 1.282807</code></pre>
 <p>As you can see, there is a very significant speed up with warm starts
 than without.</p>
 </div>
@@ -85,17 +85,18 @@ than without.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] Matrix_1.2-18 CVXR_1.0-2   
+## [1] Matrix_1.2-18 CVXR_1.0-8   
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.5       knitr_1.28       magrittr_1.5     bit_1.1-15.2    
 ##  [5] lattice_0.20-41  R6_2.4.1         rlang_0.4.7      stringr_1.4.0   
 ##  [9] tools_4.0.2      grid_4.0.2       xfun_0.15        osqp_0.6.0.3    
 ## [13] htmltools_0.5.0  yaml_2.2.1       bit64_0.9-7      digest_0.6.25   
-## [17] assertthat_0.2.1 bookdown_0.19    gmp_0.6-0        Rglpk_0.6-4     
-## [21] slam_0.1-47      evaluate_0.14    rmarkdown_2.3    blogdown_0.19   
-## [25] Rcplex_0.3-3     gurobi_9.0-3     stringi_1.4.6    compiler_4.0.2  
-## [29] Rmpfr_0.8-1      Rmosek_9.2.3     rcbc_0.1.0.9001</code></pre>
+## [17] assertthat_0.2.1 bookdown_0.19    cccp_0.2-4       gmp_0.6-0       
+## [21] Rglpk_0.6-4      codetools_0.2-16 slam_0.1-47      evaluate_0.14   
+## [25] rmarkdown_2.3    blogdown_0.19    Rcplex_0.3-3     gurobi_9.0-3    
+## [29] stringi_1.4.6    compiler_4.0.2   Rmpfr_0.8-1      Rmosek_9.2.3    
+## [33] rcbc_0.1.0.9001</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
