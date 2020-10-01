@@ -25,7 +25,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
-## We don't restrict ourselves to solvers on CRAN since 
+## We restrict ourselves to solvers on CRAN
 CVXR::add_to_solver_blacklist(c("CPLEX", "GUROBI", "MOSEK", "CBC"))
 library(markovchain)
 ```
@@ -125,7 +125,7 @@ FMMC <- function(g, verbose = FALSE) {
     prob <- Problem(objective, constraints)
     result <- solve(prob)
     if(verbose)
-        cat("Status: ", result$status, ", Optimal Value = ", result$value)
+        cat("Status: ", result$status, ", Optimal Value = ", result$value, ", Solver = ", result$solver)
     list(status = result$status, value = result$value, P = result$getValue(P))
 }
 
