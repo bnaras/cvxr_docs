@@ -27,6 +27,7 @@
 		<h1>Convex Optimization in R</h1>
 		
 <script src="./rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="./rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <div id="what-is-cvxr" class="section level2">
@@ -62,6 +63,272 @@ BibTeX citation entry using citation key <code>cvxr2020</code> is below.</p>
     pages = {1--34},
     doi = {10.18637/jss.v094.i14},
   }</code></pre>
+</div>
+<div id="supported-solvers" class="section level2">
+<h2>Supported Solvers</h2>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Solver
+</th>
+<th style="text-align:left;">
+R package
+</th>
+<th style="text-align:left;">
+LP
+</th>
+<th style="text-align:left;">
+QP
+</th>
+<th style="text-align:left;">
+SOCP
+</th>
+<th style="text-align:left;">
+SDP
+</th>
+<th style="text-align:left;">
+EXP
+</th>
+<th style="text-align:left;">
+MIP
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+CBC
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://github.com/dirkschumacher/rcbc">rcbc</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+GLPK
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+GLPK_MI
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+OSQP
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://www.osqp.org">osqp</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+CPLEX
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rcplex">Rcplex</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+ECOS
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+ECOS_BB
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+GUROBI
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://www.gurobi.com/documentation/9.0/refman/ins_the_r_package.html">gurobi</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+MOSEK
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=Rglpk">Rmosek</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: #ececec !important;">
+SCS
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+<a href="https://cran.r-project.org/package=scs">scs</a>
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+<td style="text-align:left;background-color: #ececec !important;">
+✓
+</td>
+</tr>
+</tbody>
+</table>
+<p>For more detail, see <a href="./cvxr_examples/cvxr_using-other-solvers/">Using other solvers</a>.</p>
 </div>
 <div id="news" class="section level2">
 <h2>News</h2>

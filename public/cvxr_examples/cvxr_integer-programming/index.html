@@ -80,16 +80,23 @@ Solvers</a>.</p>
 ##lpsolve_solution &lt;- result$getValue(x)
 result &lt;- solve(problem, solver = &quot;GLPK&quot;)
 glpk_solution &lt;- result$getValue(x)</code></pre>
-<p>Finally, we can also try a commercial solver, Gurobi, that can handle integer
+<p>We can also try a commercial solver, Gurobi, that can handle integer
 programs. This requires installation of the Gurobi solver, discussed
 in <a href="../../cvxr_examples/cvxr_using-other-solvers/">Using Other Solvers</a>.</p>
 <pre class="r"><code>result &lt;- solve(problem, solver = &quot;GUROBI&quot;)
 gurobi_solution &lt;- result$getValue(x)</code></pre>
+<p>Finally, two other commercial solvers, <code>MOSEK</code> and <code>CPLEX</code>.</p>
+<pre class="r"><code>result &lt;- solve(problem, solver = &quot;CPLEX&quot;)
+cplex_solution &lt;- result$getValue(x)
+result &lt;- solve(problem, solver = &quot;MOSEK&quot;)
+mosek_solution &lt;- result$getValue(x)</code></pre>
 <p>Below is the table is solutions from all the solvers we used.</p>
 <pre class="r"><code>solutions &lt;- data.frame(ECOS = ecos_solution,
                         ## LPSOLVE = lpsolve_solution,
                         GLPK = glpk_solution,
-                        GUROBI = gurobi_solution)
+                        GUROBI = gurobi_solution,
+                        MOSEK = mosek_solution,
+                        CPLEX = cplex_solution)
 row.names(solutions) &lt;- c(&quot;$x_1$&quot;, &quot;$x_2$&quot;, &quot;$x_3$&quot;, &quot;$x_4$&quot;)
 knitr::kable(solutions, format = &quot;html&quot;) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
@@ -108,6 +115,12 @@ GLPK
 <th style="text-align:right;">
 GUROBI
 </th>
+<th style="text-align:right;">
+MOSEK
+</th>
+<th style="text-align:right;">
+CPLEX
+</th>
 </tr>
 </thead>
 <tbody>
@@ -124,6 +137,12 @@ GUROBI
 <td style="text-align:right;background-color: #ececec !important;">
 1.666667
 </td>
+<td style="text-align:right;">
+1.666667
+</td>
+<td style="text-align:right;">
+1.666667
+</td>
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec !important;">
@@ -136,6 +155,12 @@ GUROBI
 3.333333
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
+3.333333
+</td>
+<td style="text-align:right;">
+3.333333
+</td>
+<td style="text-align:right;">
 3.333333
 </td>
 </tr>
@@ -152,6 +177,12 @@ GUROBI
 <td style="text-align:right;background-color: #ececec !important;">
 2.000000
 </td>
+<td style="text-align:right;">
+2.000000
+</td>
+<td style="text-align:right;">
+2.000000
+</td>
 </tr>
 <tr>
 <td style="text-align:left;background-color: #ececec !important;">
@@ -164,6 +195,12 @@ GUROBI
 0.000000
 </td>
 <td style="text-align:right;background-color: #ececec !important;">
+0.000000
+</td>
+<td style="text-align:right;">
+0.000000
+</td>
+<td style="text-align:right;">
 0.000000
 </td>
 </tr>
@@ -185,7 +222,7 @@ others. Additionally, Peter and Tom often work together, so should be
 in adjacent offices. Marcelo and Rakesh often work together, and
 should be in adjacent offices.</p>
 <pre class="r"><code>draw_office_layout()</code></pre>
-<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>The office layout is shown above. Offices 1, 2, 3, and 4 are inside
 offices (no windows). Offices 5, 6, and 7 have windows, but the window
 in office 5 is smaller than the other two.</p>
@@ -259,14 +296,14 @@ colnames(ecos_soln) &lt;- offices</code></pre>
 office_occupants &lt;- names(office_assignment)[match(c(5:7, 1:4), office_assignment)]
 office_occupants[is.na(office_occupants)] &lt;- &quot;Empty&quot;
 draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
-<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.6
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
@@ -278,7 +315,7 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.3.2    kableExtra_1.1.0 CVXR_1.0-8      
+## [1] ggplot2_3.3.2    kableExtra_1.1.0 CVXR_1.0-9      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] tidyselect_1.1.0  xfun_0.15         slam_0.1-47       purrr_0.3.4      
@@ -287,7 +324,7 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [13] gmp_0.6-0         rlang_0.4.7       pillar_1.4.6      glue_1.4.1       
 ## [17] Rmpfr_0.8-1       withr_2.2.0       Rcplex_0.3-3      bit64_0.9-7      
 ## [21] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     blogdown_0.19    
-## [25] gtable_0.3.0      gurobi_9.0-3      rvest_0.3.5       codetools_0.2-16 
+## [25] gtable_0.3.0      gurobi_9.0.3.1    rvest_0.3.5       codetools_0.2-16 
 ## [29] evaluate_0.14     labeling_0.3      knitr_1.28        cccp_0.2-4       
 ## [33] highr_0.8         Rcpp_1.0.5        readr_1.3.1       scales_1.1.1     
 ## [37] webshot_0.5.2     farver_2.0.3      bit_1.1-15.2      hms_0.5.3        

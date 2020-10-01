@@ -42,12 +42,12 @@ prob &lt;- Problem(obj, constraint)
 value(gamma) &lt;- 1
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
 cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## First solve time is 27.303340</code></pre>
+<pre><code>## First solve time is 29.043055</code></pre>
 <pre class="r"><code>#Solve second time
 value(gamma) &lt;- 2
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
 cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## Second solve time is 1.282807</code></pre>
+<pre><code>## Second solve time is 1.042841</code></pre>
 <p>As you can see, there is a very significant speed up with warm starts
 than without.</p>
 </div>
@@ -56,7 +56,7 @@ than without.</p>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.6
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
@@ -68,7 +68,7 @@ than without.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] Matrix_1.2-18 CVXR_1.0-8   
+## [1] Matrix_1.2-18 CVXR_1.0-9   
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.5       knitr_1.28       magrittr_1.5     bit_1.1-15.2    
@@ -77,7 +77,7 @@ than without.</p>
 ## [13] htmltools_0.5.0  yaml_2.2.1       bit64_0.9-7      digest_0.6.25   
 ## [17] assertthat_0.2.1 bookdown_0.19    cccp_0.2-4       gmp_0.6-0       
 ## [21] Rglpk_0.6-4      codetools_0.2-16 slam_0.1-47      evaluate_0.14   
-## [25] rmarkdown_2.3    blogdown_0.19    Rcplex_0.3-3     gurobi_9.0-3    
+## [25] rmarkdown_2.3    blogdown_0.19    Rcplex_0.3-3     gurobi_9.0.3.1  
 ## [29] stringi_1.4.6    compiler_4.0.2   Rmpfr_0.8-1      Rmosek_9.2.3    
 ## [33] rcbc_0.1.0.9001</code></pre>
 </div>

@@ -13,6 +13,11 @@ params:
   data_dir: speed
 ---
 
+```{r prereqs, echo = FALSE, message = FALSE}
+## We restrict ourselves to solvers on CRAN
+CVXR::add_to_solver_blacklist(c("CPLEX", "GUROBI", "MOSEK", "CBC"))
+```
+
 ## Warning
 
 1. The solution described below is useful when you mathematically know

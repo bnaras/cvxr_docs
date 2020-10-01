@@ -21,6 +21,11 @@ if (params$mode == "test") {
 }
 ```
 
+```{r prereqs, echo = FALSE}
+## We restrict ourselves to solvers on CRAN
+CVXR::add_to_solver_blacklist(c("CPLEX", "GUROBI", "MOSEK", "CBC"))
+```
+
 Consider a simple linear regression problem where it is desired to
 estimate a set of parameters using a least squares criterion. 
 

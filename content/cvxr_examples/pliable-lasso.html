@@ -222,86 +222,6 @@ list(beta0_hat = if (intercept) result$getValue(beta0)[1] else 0.0,
 <h2>The Results</h2>
 <p>Using <span class="math inline">\(\lambda = 0.6\)</span> we fit the pliable lasso without an intercept</p>
 <pre class="r"><code>result &lt;- plasso_fit(y, X, Z, lambda = 0.6, alpha = 0.5, intercept = FALSE)</code></pre>
-<pre><code>## Acquiring MOSEK environment
-## Problem
-##   Name                   :                 
-##   Objective sense        : min             
-##   Type                   : CONIC (conic optimization problem)
-##   Constraints            : 1056            
-##   Cones                  : 101             
-##   Scalar variables       : 1208            
-##   Matrix variables       : 0               
-##   Integer variables      : 0               
-## 
-## Optimizer started.
-## Presolve started.
-## Linear dependency checker started.
-## Linear dependency checker terminated.
-## Eliminator started.
-## Freed constraints in eliminator : 0
-## Eliminator terminated.
-## Eliminator - tries                  : 1                 time                   : 0.00            
-## Lin. dep.  - tries                  : 1                 time                   : 0.00            
-## Lin. dep.  - number                 : 0               
-## Presolve terminated. Time: 0.00    
-## Problem
-##   Name                   :                 
-##   Objective sense        : min             
-##   Type                   : CONIC (conic optimization problem)
-##   Constraints            : 1056            
-##   Cones                  : 101             
-##   Scalar variables       : 1208            
-##   Matrix variables       : 0               
-##   Integer variables      : 0               
-## 
-## Optimizer  - threads                : 8               
-## Optimizer  - solved problem         : the dual        
-## Optimizer  - Constraints            : 456
-## Optimizer  - Cones                  : 101
-## Optimizer  - Scalar variables       : 1056              conic                  : 652             
-## Optimizer  - Semi-definite variables: 0                 scalarized             : 0               
-## Factor     - setup time             : 0.00              dense det. time        : 0.00            
-## Factor     - ML order time          : 0.00              GP order time          : 0.00            
-## Factor     - nonzeros before factor : 3.92e+04          after factor           : 4.56e+04        
-## Factor     - dense dim.             : 6                 flops                  : 8.86e+06        
-## ITE PFEAS    DFEAS    GFEAS    PRSTATUS   POBJ              DOBJ              MU       TIME  
-## 0   2.4e+01  1.0e+00  3.2e+01  0.00e+00   3.000000000e+01   -1.000000000e+00  1.0e+00  0.01  
-## 1   1.2e+01  5.0e-01  5.4e+00  8.77e-01   2.078449558e+01   9.709212181e+00   5.0e-01  0.01  
-## 2   8.8e+00  3.6e-01  2.5e+00  2.61e+00   1.168682614e+01   6.734272672e+00   3.6e-01  0.02  
-## 3   4.9e+00  2.0e-01  8.6e-01  2.07e+00   8.411428087e+00   6.525838553e+00   2.0e-01  0.02  
-## 4   4.1e+00  1.7e-01  6.7e-01  1.53e+00   7.702191074e+00   6.148222756e+00   1.7e-01  0.02  
-## 5   1.6e+00  6.5e-02  1.8e-01  1.58e+00   6.264895892e+00   5.725386628e+00   6.5e-02  0.02  
-## 6   9.4e-01  3.9e-02  9.4e-02  8.10e-01   5.765244946e+00   5.383979330e+00   3.9e-02  0.03  
-## 7   4.4e-01  1.8e-02  3.1e-02  9.72e-01   5.324228020e+00   5.138001741e+00   1.8e-02  0.03  
-## 8   2.1e-01  8.7e-03  1.5e-02  3.50e-01   4.901890831e+00   4.766653954e+00   8.7e-03  0.03  
-## 9   4.5e-02  1.9e-03  1.8e-03  8.29e-01   4.445497087e+00   4.410689416e+00   1.9e-03  0.04  
-## 10  9.0e-03  3.7e-04  1.8e-04  7.41e-01   4.226277835e+00   4.217766978e+00   3.7e-04  0.04  
-## 11  1.8e-03  7.4e-05  1.6e-05  8.61e-01   4.167494691e+00   4.165673328e+00   7.4e-05  0.04  
-## 12  6.2e-04  2.5e-05  3.2e-06  9.55e-01   4.158096355e+00   4.157458056e+00   2.5e-05  0.04  
-## 13  1.1e-04  4.6e-06  2.5e-07  9.81e-01   4.154142654e+00   4.154025382e+00   4.6e-06  0.05  
-## 14  7.2e-06  2.1e-07  2.5e-09  9.95e-01   4.153324216e+00   4.153318763e+00   2.1e-07  0.05  
-## 15  4.5e-04  1.3e-08  4.0e-11  1.00e+00   4.153291052e+00   4.153290713e+00   1.3e-08  0.05  
-## 16  1.7e-02  3.4e-10  1.7e-13  1.00e+00   4.153288707e+00   4.153288698e+00   3.4e-10  0.06  
-## Optimizer terminated. Time: 0.06    
-## 
-## 
-## Interior-point solution summary
-##   Problem status  : PRIMAL_AND_DUAL_FEASIBLE
-##   Solution status : OPTIMAL
-##   Primal.  obj: 4.1532887070e+00    nrm: 4e+02    Viol.  con: 3e-14    var: 0e+00    cones: 1e-09  
-##   Dual.    obj: 4.1532886983e+00    nrm: 9e-01    Viol.  con: 9e-11    var: 8e-11    cones: 1e-10  
-## Optimizer summary
-##   Optimizer                 -                        time: 0.06    
-##     Interior-point          - iterations : 16        time: 0.06    
-##       Basis identification  -                        time: 0.00    
-##         Primal              - iterations : 0         time: 0.00    
-##         Dual                - iterations : 0         time: 0.00    
-##         Clean primal        - iterations : 0         time: 0.00    
-##         Clean dual          - iterations : 0         time: 0.00    
-##     Simplex                 -                        time: 0.00    
-##       Primal simplex        - iterations : 0         time: 0.00    
-##       Dual simplex          - iterations : 0         time: 0.00    
-##     Mixed integer           - relaxations: 0         time: 0.00</code></pre>
 <p>We can print the various estimates.</p>
 <pre class="r"><code>cat(sprintf(&quot;Objective value: %f\n&quot;, result$criterion))</code></pre>
 <pre><code>## Objective value: 4.153289</code></pre>
@@ -504,7 +424,7 @@ similarly.</p>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.6
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
@@ -516,23 +436,23 @@ similarly.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_1.0-8      
+## [1] kableExtra_1.1.0 CVXR_1.0-9      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.6-0         Rcpp_1.0.5        highr_0.8         compiler_4.0.2   
 ##  [5] pillar_1.4.6      tools_4.0.2       digest_0.6.25     bit_1.1-15.2     
 ##  [9] viridisLite_0.3.0 evaluate_0.14     tibble_3.0.3      lifecycle_0.2.0  
 ## [13] lattice_0.20-41   pkgconfig_2.0.3   rlang_0.4.7       Matrix_1.2-18    
-## [17] gurobi_9.0-3      rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
-## [21] blogdown_0.19     xfun_0.15         cccp_0.2-4        xml2_1.3.2       
-## [25] httr_1.4.2        Rmpfr_0.8-1       stringr_1.4.0     knitr_1.28       
-## [29] vctrs_0.3.2       hms_0.5.3         webshot_0.5.2     bit64_0.9-7      
-## [33] grid_4.0.2        glue_1.4.1        R6_2.4.1          rmarkdown_2.3    
-## [37] bookdown_0.19     readr_1.3.1       magrittr_1.5      codetools_0.2-16 
-## [41] rcbc_0.1.0.9001   scales_1.1.1      htmltools_0.5.0   ellipsis_0.3.1   
-## [45] assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3     
-## [49] stringi_1.4.6     Rmosek_9.2.3      munsell_0.5.0     slam_0.1-47      
-## [53] crayon_1.3.4</code></pre>
+## [17] gurobi_9.0.3.1    rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
+## [21] blogdown_0.19     xfun_0.15         cccp_0.2-4        ECOSolveR_0.5.3  
+## [25] xml2_1.3.2        httr_1.4.2        Rmpfr_0.8-1       stringr_1.4.0    
+## [29] knitr_1.28        vctrs_0.3.2       hms_0.5.3         webshot_0.5.2    
+## [33] bit64_0.9-7       grid_4.0.2        glue_1.4.1        R6_2.4.1         
+## [37] rmarkdown_2.3     bookdown_0.19     readr_1.3.1       magrittr_1.5     
+## [41] codetools_0.2-16  rcbc_0.1.0.9001   scales_1.1.1      htmltools_0.5.0  
+## [45] ellipsis_0.3.1    assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1 
+## [49] Rcplex_0.3-3      stringi_1.4.6     Rmosek_9.2.3      munsell_0.5.0    
+## [53] slam_0.1-47       crayon_1.3.4</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

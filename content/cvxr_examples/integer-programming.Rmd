@@ -135,7 +135,7 @@ result <- solve(problem, solver = "GLPK")
 glpk_solution <- result$getValue(x)
 ```
 
-Finally, we can also try a commercial solver, Gurobi, that can handle integer
+We can also try a commercial solver, Gurobi, that can handle integer
 programs. This requires installation of the Gurobi solver, discussed
 in [Using Other Solvers](/cvxr_examples/cvxr_using-other-solvers/).
 
@@ -144,13 +144,24 @@ result <- solve(problem, solver = "GUROBI")
 gurobi_solution <- result$getValue(x)
 ```
 
+Finally, two other commercial solvers, `MOSEK` and `CPLEX`.
+
+```{r}
+result <- solve(problem, solver = "CPLEX")
+cplex_solution <- result$getValue(x)
+result <- solve(problem, solver = "MOSEK")
+mosek_solution <- result$getValue(x)
+```
+
 Below is the table is solutions from all the solvers we used.
 
 ```{r}
 solutions <- data.frame(ECOS = ecos_solution,
                         ## LPSOLVE = lpsolve_solution,
                         GLPK = glpk_solution,
-                        GUROBI = gurobi_solution)
+                        GUROBI = gurobi_solution,
+                        MOSEK = mosek_solution,
+                        CPLEX = cplex_solution)
 row.names(solutions) <- c("$x_1$", "$x_2$", "$x_3$", "$x_4$")
 knitr::kable(solutions, format = "html") %>%
     kable_styling("striped") %>%

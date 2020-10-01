@@ -25,6 +25,8 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+## We restrict ourselves to solvers on CRAN
+CVXR::add_to_solver_blacklist(c("CPLEX", "GUROBI", "MOSEK", "CBC"))
 library(ggplot2)
 library(ggforce)
 ```

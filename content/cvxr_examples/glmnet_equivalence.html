@@ -71,15 +71,15 @@ result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, ver
 ##           warm start: on, polish: on, time_limit: off
 ## 
 ## iter   objective    pri res    dua res    rho        time
-##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   4.09e-04s
-##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.33e-03s
-## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.56e-03s
+##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   2.74e-04s
+##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.34e-03s
+## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.53e-03s
 ## 
 ## status:               solved
 ## solution polish:      successful
 ## number of iterations: 125
 ## optimal objective:    0.3711
-## run time:             1.56e-03s
+## run time:             1.53e-03s
 ## optimal rho estimate: 2.90e+00</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
 compare. The results below should be close, and any differences are
@@ -614,7 +614,7 @@ GLMNET.est
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.6
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
@@ -626,7 +626,7 @@ GLMNET.est
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_4.0-2     Matrix_1.2-18    kableExtra_1.1.0 CVXR_1.0-8      
+## [1] glmnet_4.0-2     Matrix_1.2-18    kableExtra_1.1.0 CVXR_1.0-9      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] shape_1.4.4       xfun_0.15         slam_0.1-47       splines_4.0.2    
@@ -635,15 +635,15 @@ GLMNET.est
 ## [13] survival_3.1-12   rlang_0.4.7       pillar_1.4.6      glue_1.4.1       
 ## [17] Rmpfr_0.8-1       Rcplex_0.3-3      bit64_0.9-7       foreach_1.5.0    
 ## [21] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     blogdown_0.19    
-## [25] gurobi_9.0-3      rvest_0.3.5       codetools_0.2-16  evaluate_0.14    
+## [25] gurobi_9.0.3.1    rvest_0.3.5       codetools_0.2-16  evaluate_0.14    
 ## [29] knitr_1.28        cccp_0.2-4        highr_0.8         Rcpp_1.0.5       
 ## [33] readr_1.3.1       scales_1.1.1      osqp_0.6.0.3      webshot_0.5.2    
 ## [37] bit_1.1-15.2      hms_0.5.3         digest_0.6.25     stringi_1.4.6    
-## [41] bookdown_0.19     Rglpk_0.6-4       grid_4.0.2        tools_4.0.2      
-## [45] magrittr_1.5      tibble_3.0.3      crayon_1.3.4      pkgconfig_2.0.3  
-## [49] ellipsis_0.3.1    rcbc_0.1.0.9001   xml2_1.3.2        assertthat_0.2.1 
-## [53] rmarkdown_2.3     httr_1.4.2        rstudioapi_0.11   iterators_1.0.12 
-## [57] R6_2.4.1          compiler_4.0.2</code></pre>
+## [41] bookdown_0.19     Rglpk_0.6-4       grid_4.0.2        ECOSolveR_0.5.3  
+## [45] tools_4.0.2       magrittr_1.5      tibble_3.0.3      crayon_1.3.4     
+## [49] pkgconfig_2.0.3   ellipsis_0.3.1    rcbc_0.1.0.9001   xml2_1.3.2       
+## [53] assertthat_0.2.1  rmarkdown_2.3     httr_1.4.2        rstudioapi_0.11  
+## [57] iterators_1.0.12  R6_2.4.1          compiler_4.0.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

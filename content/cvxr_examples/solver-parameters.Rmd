@@ -160,7 +160,7 @@ ecos <- tibble::tibble(
 knitr::kable(ecos,
              caption = "Default CVXR-ECOS parameter mappings",
              format = "html") %>%
-    kable_styling("striped") %>%
+    kable_styling("striped", full_width = TRUE) %>%
     column_spec(2:5, background = "#ececec")
 ```
 
@@ -193,7 +193,7 @@ cplex <- tibble::tibble(
 knitr::kable(cplex,
              caption = "Default CVXR-CPLEX parameter mappings",
              format = "html") %>%
-    kable_styling("striped") %>%
+    kable_styling("striped", full_width = TRUE) %>%
     column_spec(2:3, background = "#ececec")
 ```
 

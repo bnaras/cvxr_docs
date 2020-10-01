@@ -82,6 +82,38 @@ BibTeX citation entry using citation key `cvxr2020` is below.
   }
 ```
 
+## Supported Solvers
+
+```{r, echo = FALSE}
+`%>%`  <- magrittr::`%>%`
+check <- "\U2713"
+d  <- tibble::tibble(
+                  Solver = c("CBC", "GLPK", "GLPK_MI", "OSQP", "CPLEX", "ECOS", "ECOS_BB", "GUROBI", "MOSEK", "SCS"),
+                  `R package` = c("[rcbc](https://github.com/dirkschumacher/rcbc)",
+                                  "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
+                                  "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
+                                  "[osqp](https://www.osqp.org)",
+                                  "[Rcplex](https://cran.r-project.org/package=Rcplex)",
+                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
+                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
+                                  "[gurobi](https://www.gurobi.com/documentation/9.0/refman/ins_the_r_package.html)",
+                                  "[Rmosek](https://cran.r-project.org/package=Rglpk)",
+                                  "[scs](https://cran.r-project.org/package=scs)"),
+                  LP = c(check, check, check, check, check, check, " " , check, check, check),
+                  QP = c(" " , " " , " " , check, check, check, " " , check, check, check),
+                  SOCP = c(" " , " " , " " , " " , check, check, " " , check, check, check),
+                  SDP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
+                  EXP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
+                  MIP = c(check, " " , check, " " , " " , " " , check, check, check, check)
+              )
+knitr::kable(d, format = "html") %>%
+    kableExtra::kable_styling("striped") %>%
+    kableExtra::column_spec(1:8, background = "#ececec")
+                  
+```
+
+For more detail, see [Using other solvers](/cvxr_examples/cvxr_using-other-solvers/).
+
 ## News
 
 For the latest news, please see the [Package
