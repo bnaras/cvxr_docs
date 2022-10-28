@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Getting Equivalent Results from `glmnet` and `CVXR` &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	<h1>Getting Equivalent Results from `glmnet` and `CVXR`</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -84,15 +84,15 @@ result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, ver
 ##           warm start: on, polish: on, time_limit: off
 ## 
 ## iter   objective    pri res    dua res    rho        time
-##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   2.74e-04s
-##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.34e-03s
-## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.53e-03s
+##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   1.12e-03s
+##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   4.28e-03s
+## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   4.88e-03s
 ## 
 ## status:               solved
 ## solution polish:      successful
 ## number of iterations: 125
 ## optimal objective:    0.3711
-## run time:             1.53e-03s
+## run time:             4.88e-03s
 ## optimal rho estimate: 2.90e+00</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
 compare. The results below should be close, and any differences are
@@ -349,6 +349,7 @@ GLMNET.est
 </tr>
 </tbody>
 </table>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="a-penalized-logistic-example" class="section level2">
 <h2>A Penalized Logistic Example</h2>
@@ -361,7 +362,7 @@ fit2 &lt;-  glmnet(x, y2, lambda = lambda, thresh = thresh, family = &quot;binom
 objective minimized is the negative log-likelihood divided by <span class="math inline">\(n\)</span> plus
 the penalty term which once again excludes the intercept in the
 default invocation. Below is the <code>CVXR</code> formulation, where we use the
-<code>logistic</code> atom as noted earlier in our other example on <a href="../../cvxr_examples/logistic-regression">logistic
+<code>logistic</code> atom as noted earlier in our other example on <a href="/cvxr_examples/logistic-regression">logistic
 regression.</a></p>
 <pre class="r"><code>beta &lt;- Variable(p + 1)
 obj2 &lt;- (sum(xDesign[y2 &lt;= 0, ] %*% beta) + sum(logistic(-xDesign %*% beta))) / n +
@@ -621,16 +622,18 @@ GLMNET.est
 </tr>
 </tbody>
 </table>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -639,24 +642,27 @@ GLMNET.est
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_4.0-2     Matrix_1.2-18    kableExtra_1.1.0 CVXR_1.0-9      
+## [1] glmnet_4.1-4     Matrix_1.5-1     kableExtra_1.3.4 CVXR_1.0-11     
+## [5] testthat_3.1.5   here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] shape_1.4.4       xfun_0.15         slam_0.1-47       splines_4.0.2    
-##  [5] lattice_0.20-41   Rmosek_9.2.3      colorspace_1.4-1  vctrs_0.3.2      
-##  [9] htmltools_0.5.0   viridisLite_0.3.0 yaml_2.2.1        gmp_0.6-0        
-## [13] survival_3.1-12   rlang_0.4.7       pillar_1.4.6      glue_1.4.1       
-## [17] Rmpfr_0.8-1       Rcplex_0.3-3      bit64_0.9-7       foreach_1.5.0    
-## [21] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     blogdown_0.19    
-## [25] gurobi_9.0.3.1    rvest_0.3.5       codetools_0.2-16  evaluate_0.14    
-## [29] knitr_1.28        cccp_0.2-4        highr_0.8         Rcpp_1.0.5       
-## [33] readr_1.3.1       scales_1.1.1      osqp_0.6.0.3      webshot_0.5.2    
-## [37] bit_1.1-15.2      hms_0.5.3         digest_0.6.25     stringi_1.4.6    
-## [41] bookdown_0.19     Rglpk_0.6-4       grid_4.0.2        ECOSolveR_0.5.3  
-## [45] tools_4.0.2       magrittr_1.5      tibble_3.0.3      crayon_1.3.4     
-## [49] pkgconfig_2.0.3   ellipsis_0.3.1    rcbc_0.1.0.9001   xml2_1.3.2       
-## [53] assertthat_0.2.1  rmarkdown_2.3     httr_1.4.2        rstudioapi_0.11  
-## [57] iterators_1.0.12  R6_2.4.1          compiler_4.0.2</code></pre>
+##  [1] Rcpp_1.0.9        svglite_2.1.0     gurobi_9.5-2      lattice_0.20-45  
+##  [5] rcbc_0.1.0.9001   Rmosek_10.0.25    utf8_1.2.2        assertthat_0.2.1 
+##  [9] rprojroot_2.0.3   digest_0.6.30     foreach_1.5.2     gmp_0.6-6        
+## [13] slam_0.1-50       R6_2.5.1          evaluate_0.17     httr_1.4.4       
+## [17] highr_0.9         blogdown_1.13     pillar_1.8.1      rlang_1.0.6      
+## [21] rstudioapi_0.14   jquerylib_0.1.4   rmarkdown_2.17    desc_1.4.2       
+## [25] splines_4.2.1     webshot_0.5.4     osqp_0.6.0.5      stringr_1.4.1    
+## [29] bit_4.0.4         munsell_0.5.0     compiler_4.2.1    xfun_0.34        
+## [33] systemfonts_1.0.4 shape_1.4.6       Rglpk_0.6-4       htmltools_0.5.3  
+## [37] Rcplex_0.3-5      bookdown_0.29     codetools_0.2-18  fansi_1.0.3      
+## [41] viridisLite_0.4.1 brio_1.1.3        grid_4.2.1        jsonlite_1.8.3   
+## [45] lifecycle_1.0.3   magrittr_2.0.3    scales_1.2.1      cli_3.4.1        
+## [49] stringi_1.7.8     cachem_1.0.6      Rmpfr_0.8-9       xml2_1.3.3       
+## [53] bslib_0.4.0       vctrs_0.5.0       iterators_1.0.14  tools_4.2.1      
+## [57] bit64_4.0.5       glue_1.6.2        pkgload_1.3.0     fastmap_1.1.0    
+## [61] survival_3.4-0    yaml_2.3.6        colorspace_2.0-3  cccp_0.2-9       
+## [65] rvest_1.0.3       ECOSolveR_0.5.4   knitr_1.40        sass_0.4.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -673,8 +679,8 @@ GLMNET.est
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -699,11 +705,11 @@ GLMNET.est
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -711,27 +717,27 @@ GLMNET.est
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -739,9 +745,9 @@ GLMNET.est
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_survey_calibration/" title="Survey Calibration">Survey Calibration</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_pliable_lasso/" title="Prototyping the pliable lasso">Prototyping the pliable lasso</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_survey_calibration/" title="Survey Calibration">Survey Calibration</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_pliable_lasso/" title="Prototyping the pliable lasso">Prototyping the pliable lasso</a></li>
 </ul>
 
 	</div>

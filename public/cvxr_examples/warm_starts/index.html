@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Warm Starts &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,7 +26,6 @@
 	<h1>Warm Starts</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>A new feature in 1.0 is warm starts for one of our solvers in
@@ -59,24 +58,25 @@ prob &lt;- Problem(obj, constraint)
 value(gamma) &lt;- 1
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
 cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## First solve time is 29.043055</code></pre>
+<pre><code>## First solve time is 49.142922</code></pre>
 <pre class="r"><code>#Solve second time
 value(gamma) &lt;- 2
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
 cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## Second solve time is 1.042841</code></pre>
+<pre><code>## Second solve time is 2.525417</code></pre>
 <p>As you can see, there is a very significant speed up with warm starts
 than without.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -85,18 +85,19 @@ than without.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] Matrix_1.2-18 CVXR_1.0-9   
+## [1] Matrix_1.5-1 CVXR_1.0-11 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5       knitr_1.28       magrittr_1.5     bit_1.1-15.2    
-##  [5] lattice_0.20-41  R6_2.4.1         rlang_0.4.7      stringr_1.4.0   
-##  [9] tools_4.0.2      grid_4.0.2       xfun_0.15        osqp_0.6.0.3    
-## [13] htmltools_0.5.0  yaml_2.2.1       bit64_0.9-7      digest_0.6.25   
-## [17] assertthat_0.2.1 bookdown_0.19    cccp_0.2-4       gmp_0.6-0       
-## [21] Rglpk_0.6-4      codetools_0.2-16 slam_0.1-47      evaluate_0.14   
-## [25] rmarkdown_2.3    blogdown_0.19    Rcplex_0.3-3     gurobi_9.0.3.1  
-## [29] stringi_1.4.6    compiler_4.0.2   Rmpfr_0.8-1      Rmosek_9.2.3    
-## [33] rcbc_0.1.0.9001</code></pre>
+##  [1] gmp_0.6-6        Rcpp_1.0.9       bslib_0.4.0      compiler_4.2.1  
+##  [5] jquerylib_0.1.4  tools_4.2.1      digest_0.6.30    bit_4.0.4       
+##  [9] jsonlite_1.8.3   evaluate_0.17    lattice_0.20-45  rlang_1.0.6     
+## [13] gurobi_9.5-2     cli_3.4.1        Rglpk_0.6-4      yaml_2.3.6      
+## [17] blogdown_1.13    xfun_0.34        osqp_0.6.0.5     cccp_0.2-9      
+## [21] fastmap_1.1.0    Rmpfr_0.8-9      stringr_1.4.1    knitr_1.40      
+## [25] sass_0.4.2       bit64_4.0.5      grid_4.2.1       R6_2.5.1        
+## [29] rmarkdown_2.17   bookdown_0.29    magrittr_2.0.3   rcbc_0.1.0.9001 
+## [33] codetools_0.2-18 htmltools_0.5.3  assertthat_0.2.1 Rcplex_0.3-5    
+## [37] stringi_1.7.8    Rmosek_10.0.25   cachem_1.0.6     slam_0.1-50</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -116,8 +117,8 @@ than without.</p>
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -142,11 +143,11 @@ than without.</p>
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -154,27 +155,27 @@ than without.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -182,8 +183,8 @@ than without.</p>
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_solver-parameters/" title="Dealing with Solver-Specific Parameters">Dealing with Solver-Specific Parameters</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_solver-parameters/" title="Dealing with Solver-Specific Parameters">Dealing with Solver-Specific Parameters</a></li>
   
 </ul>
 

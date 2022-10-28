@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Fastest Mixing Markov Chain &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,7 +26,6 @@
 	<h1>Fastest Mixing Markov Chain</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="introduction" class="section level2">
@@ -137,44 +136,47 @@ disp_result &lt;- function(states, P, tol = 1e-3) {
 <p>We reproduce the results for various rows of the table.</p>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = 2, &quot;2&quot; = c(1,3), &quot;3&quot; = c(2,4), &quot;4&quot; = 3)
 result1 &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.7071073 , Solver =  SCS</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.707188 , Solver =  SCS</code></pre>
 <pre class="r"><code>disp_result(names(g), result1$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-4"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-4-1.png" alt="Row 1, line graph" width="100%" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="/cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-4-1.png" alt="Row 1, line graph" width="100%" />
 <p class="caption">
 Figure 1: Row 1, line graph
 </p>
 </div>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = 2, &quot;2&quot; = c(1,3,4), &quot;3&quot; = c(2,4), &quot;4&quot; = c(2,3))
 result2 &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.636361 , Solver =  SCS</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.63641 , Solver =  SCS</code></pre>
 <pre class="r"><code>disp_result(names(g), result2$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-5"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-5-1.png" alt="Row 2, triangle plus one edge" width="100%" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
+<img src="/cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-5-1.png" alt="Row 2, triangle plus one edge" width="100%" />
 <p class="caption">
 Figure 2: Row 2, triangle plus one edge
 </p>
 </div>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = c(2,4,5), &quot;2&quot; = c(1,3), &quot;3&quot; = c(2,4,5), &quot;4&quot; = c(1,3), &quot;5&quot; = c(1,3))
 result3 &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.4285698 , Solver =  SCS</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.4285398 , Solver =  SCS</code></pre>
 <pre class="r"><code>disp_result(names(g), result3$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-6"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-6-1.png" alt="Bipartite 2 plus 3" width="100%" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<img src="/cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-6-1.png" alt="Bipartite 2 plus 3" width="100%" />
 <p class="caption">
 Figure 3: Bipartite 2 plus 3
 </p>
 </div>
 <pre class="r"><code>g &lt;- list(&quot;1&quot; = c(2,3,5), &quot;2&quot; = c(1,4,5), &quot;3&quot; = c(1,4,5), &quot;4&quot; = c(2,3,5), &quot;5&quot; = c(1,2,3,4,5))
 result4 &lt;- FMMC(g, verbose = TRUE)</code></pre>
-<pre><code>## Status:  optimal , Optimal Value =  0.25 , Solver =  SCS</code></pre>
+<pre><code>## Status:  optimal , Optimal Value =  0.2501638 , Solver =  SCS</code></pre>
 <pre class="r"><code>disp_result(names(g), result4$P)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-7"></span>
-<img src="../../cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-7-1.png" alt="Square plus central point" width="100%" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
+<img src="/cvxr_examples/fast_mixing_mc_files/figure-html/unnamed-chunk-7-1.png" alt="Square plus central point" width="100%" />
 <p class="caption">
 Figure 4: Square plus central point
 </p>
 </div>
+<pre><code>## Testthat Results: No output is good</code></pre>
+<pre><code>## Error: `result1` not equal to fmix$result1.
+## Component &quot;value&quot;: Mean relative difference: 0.0001148633</code></pre>
 </div>
 </div>
 <div id="extensions" class="section level2">
@@ -189,12 +191,13 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -203,20 +206,24 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] markovchain_0.8.5 CVXR_1.0-9       
+## [1] markovchain_0.9.0 CVXR_1.0-11       testthat_3.1.5    here_1.0.1       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.6-0          Rcpp_1.0.5         highr_0.8          compiler_4.0.2    
-##  [5] tools_4.0.2        digest_0.6.25      bit_1.1-15.2       evaluate_0.14     
-##  [9] lattice_0.20-41    pkgconfig_2.0.3    rlang_0.4.7        Matrix_1.2-18     
-## [13] igraph_1.2.5       gurobi_9.0.3.1     Rglpk_0.6-4        yaml_2.2.1        
-## [17] parallel_4.0.2     expm_0.999-5       blogdown_0.19      xfun_0.15         
-## [21] cccp_0.2-4         Rmpfr_0.8-1        stringr_1.4.0      knitr_1.28        
-## [25] stats4_4.0.2       bit64_0.9-7        grid_4.0.2         R6_2.4.1          
-## [29] rmarkdown_2.3      bookdown_0.19      matlab_1.0.2       magrittr_1.5      
-## [33] scs_1.3-3          rcbc_0.1.0.9001    codetools_0.2-16   htmltools_0.5.0   
-## [37] assertthat_0.2.1   Rcplex_0.3-3       stringi_1.4.6      Rmosek_9.2.3      
-## [41] RcppParallel_5.0.1 slam_0.1-47</code></pre>
+##  [1] xfun_0.34          bslib_0.4.0        slam_0.1-50        lattice_0.20-45   
+##  [5] vctrs_0.5.0        Rmosek_10.0.25     expm_0.999-6       htmltools_0.5.3   
+##  [9] stats4_4.2.1       yaml_2.3.6         gmp_0.6-6          utf8_1.2.2        
+## [13] rlang_1.0.6        jquerylib_0.1.4    pillar_1.8.1       glue_1.6.2        
+## [17] Rmpfr_0.8-9        Rcplex_0.3-5       bit64_4.0.5        scs_3.0-1         
+## [21] lifecycle_1.0.3    stringr_1.4.1      blogdown_1.13      gurobi_9.5-2      
+## [25] codetools_0.2-18   evaluate_0.17      knitr_1.40         fastmap_1.1.0     
+## [29] parallel_4.2.1     fansi_1.0.3        cccp_0.2-9         highr_0.9         
+## [33] Rcpp_1.0.9         cachem_1.0.6       desc_1.4.2         pkgload_1.3.0     
+## [37] RcppParallel_5.1.5 jsonlite_1.8.3     bit_4.0.4          brio_1.1.3        
+## [41] digest_0.6.30      stringi_1.7.8      bookdown_0.29      grid_4.2.1        
+## [45] rprojroot_2.0.3    Rglpk_0.6-4        cli_3.4.1          tools_4.2.1       
+## [49] magrittr_2.0.3     sass_0.4.2         pkgconfig_2.0.3    rcbc_0.1.0.9001   
+## [53] Matrix_1.5-1       assertthat_0.2.1   rmarkdown_2.17     R6_2.5.1          
+## [57] igraph_1.3.5       compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -224,9 +231,9 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-FMMC">
-<p>Boyd, S., P. Diaconis, and L. Xiao. 2004. “Fastest Mixing Markov Chain on a Graph.” <em>SIAM Review</em> 46 (4): 667–89.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-FMMC" class="csl-entry">
+Boyd, S., P. Diaconis, and L. Xiao. 2004. <span>“Fastest Mixing <span>M</span>arkov Chain on a Graph.”</span> <em>SIAM Review</em> 46 (4): 667–89.
 </div>
 </div>
 </div>
@@ -241,8 +248,8 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -267,11 +274,11 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -279,27 +286,27 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -307,9 +314,9 @@ setting <span class="math inline">\(n = 5\)</span> and</p>
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_speed/" title="Getting Faster Results">Getting Faster Results</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_elastic-net/" title="Elastic Net">Elastic Net</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_speed/" title="Getting Faster Results">Getting Faster Results</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_elastic-net/" title="Elastic Net">Elastic Net</a></li>
 </ul>
 
 	</div>

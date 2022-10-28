@@ -6,8 +6,8 @@ slug: cvxr_dcp
 bibliography: bibtex/cvxr_refs.bib
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <p>Disciplined convex programming (DCP) is a system for constructing
@@ -303,12 +303,13 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -317,21 +318,21 @@ tryCatch(solve(prob), error = function(e) geterrmessage())</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_1.0-9      
+## [1] kableExtra_1.3.4 CVXR_1.0-11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.6-0         Rcpp_1.0.5        highr_0.8         compiler_4.0.2   
-##  [5] pillar_1.4.6      tools_4.0.2       digest_0.6.25     bit_1.1-15.2     
-##  [9] viridisLite_0.3.0 evaluate_0.14     tibble_3.0.3      lifecycle_0.2.0  
-## [13] lattice_0.20-41   pkgconfig_2.0.3   rlang_0.4.7       Matrix_1.2-18    
-## [17] gurobi_9.0.3.1    rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
-## [21] blogdown_0.19     xfun_0.15         cccp_0.2-4        xml2_1.3.2       
-## [25] httr_1.4.2        Rmpfr_0.8-1       stringr_1.4.0     knitr_1.28       
-## [29] vctrs_0.3.2       hms_0.5.3         webshot_0.5.2     bit64_0.9-7      
-## [33] grid_4.0.2        glue_1.4.1        R6_2.4.1          rmarkdown_2.3    
-## [37] bookdown_0.19     readr_1.3.1       magrittr_1.5      codetools_0.2-16 
-## [41] rcbc_0.1.0.9001   scales_1.1.1      htmltools_0.5.0   ellipsis_0.3.1   
-## [45] assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3     
-## [49] stringi_1.4.6     Rmosek_9.2.3      munsell_0.5.0     slam_0.1-47      
-## [53] crayon_1.3.4</code></pre>
+##  [1] gmp_0.6-6         Rcpp_1.0.9        highr_0.9         bslib_0.4.0      
+##  [5] compiler_4.2.1    jquerylib_0.1.4   tools_4.2.1       digest_0.6.30    
+##  [9] bit_4.0.4         viridisLite_0.4.1 jsonlite_1.8.3    evaluate_0.17    
+## [13] lifecycle_1.0.3   lattice_0.20-45   rlang_1.0.6       Matrix_1.5-1     
+## [17] gurobi_9.5-2      cli_3.4.1         rstudioapi_0.14   Rglpk_0.6-4      
+## [21] yaml_2.3.6        blogdown_1.13     xfun_0.34         cccp_0.2-9       
+## [25] fastmap_1.1.0     Rmpfr_0.8-9       stringr_1.4.1     httr_1.4.4       
+## [29] knitr_1.40        xml2_1.3.3        systemfonts_1.0.4 sass_0.4.2       
+## [33] webshot_0.5.4     bit64_4.0.5       grid_4.2.1        svglite_2.1.0    
+## [37] glue_1.6.2        R6_2.5.1          rmarkdown_2.17    bookdown_0.29    
+## [41] magrittr_2.0.3    codetools_0.2-18  rcbc_0.1.0.9001   scales_1.2.1     
+## [45] htmltools_0.5.3   assertthat_0.2.1  rvest_1.0.3       colorspace_2.0-3 
+## [49] Rcplex_0.3-5      stringi_1.7.8     Rmosek_10.0.25    munsell_0.5.0    
+## [53] slam_0.1-50       cachem_1.0.6</code></pre>
 </div>

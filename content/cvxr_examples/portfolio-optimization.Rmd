@@ -140,7 +140,7 @@ ggplot(data = tidyW, mapping = aes(x = gamma, y = fraction)) +
     geom_bar(mapping = aes(fill = grp), stat = "identity") +
     scale_x_discrete(labels = parse(text = levels(tidyW$gamma))) +
     scale_fill_manual(values = cbPalette) +
-    guides(fill = FALSE) +
+    guides(fill = "none") +
     labs(x = "Risk Aversion", y = "Fraction of Budget")
 ```
 

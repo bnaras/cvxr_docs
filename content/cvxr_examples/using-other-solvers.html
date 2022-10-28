@@ -9,8 +9,8 @@ categories: []
 tags: []
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -349,8 +349,11 @@ provides details.</p>
 a community edition. After installation, the
 <a href="https://cran.r-project.org/package=Rcplex"><code>Rcplex</code></a> package needs to
 be told where to find the libraries for linking. A sample session on
-macOS is shown below for reference.</p>
-<pre class="bash"><code>R CMD INSTALL Rcplex_0.3-3.tar.gz --configure-args=&quot;--with-cplex-include=/Applications/CPLEX_Studio_Community129/cplex/include --with-cplex-lib=&#39;-L/Applications/CPLEX_Studio_Community129/cplex/lib/x86-64_osx/static_pic -lilocplex -lcplex&#39;&quot;</code></pre>
+macOS is shown below for reference, where CPLEX version 22.1 was installed in the
+standard <code>Applications</code> folder.</p>
+<pre class="bash"><code>cplex_location &lt;- &quot;/Applications/CPLEX_Studio_Community221&quot;
+configure_args &lt;- c(Rcplex = sprintf(&quot;--with-cplex-include=&#39;%s/cplex/include&#39; --with-cplex-lib=&#39;-L%s/cplex/lib/x86-64_osx/static_pic -lilocplex -lcplex&#39;&quot;, cplex_location, cplex_location))
+install.packages(&quot;Rcplex&quot;, configure.args = configure_args)</code></pre>
 </div>
 <div id="example-session" class="section level3">
 <h3>Example session</h3>
@@ -362,12 +365,13 @@ macOS is shown below for reference.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -376,22 +380,24 @@ macOS is shown below for reference.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 magrittr_1.5     CVXR_1.0-9      
+## [1] kableExtra_1.3.4 magrittr_2.0.3   CVXR_1.0-11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.6-0         Rcpp_1.0.5        highr_0.8         compiler_4.0.2   
-##  [5] pillar_1.4.6      tools_4.0.2       digest_0.6.25     bit_1.1-15.2     
-##  [9] viridisLite_0.3.0 evaluate_0.14     tibble_3.0.3      lifecycle_0.2.0  
-## [13] lattice_0.20-41   pkgconfig_2.0.3   rlang_0.4.7       Matrix_1.2-18    
-## [17] gurobi_9.0.3.1    rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
-## [21] blogdown_0.19     xfun_0.15         cccp_0.2-4        xml2_1.3.2       
-## [25] httr_1.4.2        Rmpfr_0.8-1       stringr_1.4.0     knitr_1.28       
-## [29] vctrs_0.3.2       hms_0.5.3         webshot_0.5.2     bit64_0.9-7      
-## [33] grid_4.0.2        glue_1.4.1        R6_2.4.1          rmarkdown_2.3    
-## [37] bookdown_0.19     readr_1.3.1       codetools_0.2-16  rcbc_0.1.0.9001  
-## [41] scales_1.1.1      htmltools_0.5.0   ellipsis_0.3.1    assertthat_0.2.1 
-## [45] rvest_0.3.5       colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.6    
-## [49] Rmosek_9.2.3      munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
+##  [1] xfun_0.34         bslib_0.4.0       slam_0.1-50       lattice_0.20-45  
+##  [5] Rmosek_10.0.25    colorspace_2.0-3  vctrs_0.5.0       htmltools_0.5.3  
+##  [9] viridisLite_0.4.1 yaml_2.3.6        gmp_0.6-6         utf8_1.2.2       
+## [13] rlang_1.0.6       jquerylib_0.1.4   pillar_1.8.1      glue_1.6.2       
+## [17] Rmpfr_0.8-9       Rcplex_0.3-5      bit64_4.0.5       lifecycle_1.0.3  
+## [21] stringr_1.4.1     munsell_0.5.0     blogdown_1.13     gurobi_9.5-2     
+## [25] rvest_1.0.3       codetools_0.2-18  evaluate_0.17     knitr_1.40       
+## [29] fastmap_1.1.0     cccp_0.2-9        fansi_1.0.3       highr_0.9        
+## [33] Rcpp_1.0.9        scales_1.2.1      cachem_1.0.6      webshot_0.5.4    
+## [37] jsonlite_1.8.3    systemfonts_1.0.4 bit_4.0.4         digest_0.6.30    
+## [41] stringi_1.7.8     bookdown_0.29     Rglpk_0.6-4       grid_4.2.1       
+## [45] cli_3.4.1         tools_4.2.1       sass_0.4.2        tibble_3.1.8     
+## [49] pkgconfig_2.0.3   rcbc_0.1.0.9001   Matrix_1.5-1      xml2_1.3.3       
+## [53] assertthat_0.2.1  rmarkdown_2.17    svglite_2.1.0     httr_1.4.4       
+## [57] rstudioapi_0.14   R6_2.5.1          compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

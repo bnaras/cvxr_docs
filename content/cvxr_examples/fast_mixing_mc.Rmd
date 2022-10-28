@@ -185,7 +185,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     fmix <- readRDS(file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
-    expect_equal(result1, fmix$result1, tol = 1e-4)
+    expect_equal(result1, fmix$result1, tol = 1e-4) # small errors ok
     expect_equal(result2, fmix$result2, tol = 1e-4)
     expect_equal(result3, fmix$result3, tol = 1e-4)
     expect_equal(result4, fmix$result4, tol = 1e-4)

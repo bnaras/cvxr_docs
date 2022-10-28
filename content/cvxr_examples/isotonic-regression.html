@@ -13,8 +13,8 @@ params:
   data_dir: isotonic-regression
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -361,12 +361,13 @@ observations using the above as a guide.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -375,23 +376,23 @@ observations using the above as a guide.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 isotone_1.1-0    CVXR_1.0-9      
+## [1] kableExtra_1.3.4 isotone_1.1-0    CVXR_1.0-11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.6-0         Rcpp_1.0.5        highr_0.8         compiler_4.0.2   
-##  [5] pillar_1.4.6      tools_4.0.2       digest_0.6.25     bit_1.1-15.2     
-##  [9] viridisLite_0.3.0 evaluate_0.14     tibble_3.0.3      lifecycle_0.2.0  
-## [13] lattice_0.20-41   pkgconfig_2.0.3   rlang_0.4.7       Matrix_1.2-18    
-## [17] gurobi_9.0.3.1    rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
-## [21] blogdown_0.19     xfun_0.15         cccp_0.2-4        ECOSolveR_0.5.3  
-## [25] xml2_1.3.2        httr_1.4.2        Rmpfr_0.8-1       stringr_1.4.0    
-## [29] knitr_1.28        vctrs_0.3.2       hms_0.5.3         webshot_0.5.2    
-## [33] bit64_0.9-7       grid_4.0.2        glue_1.4.1        R6_2.4.1         
-## [37] rmarkdown_2.3     bookdown_0.19     readr_1.3.1       magrittr_1.5     
-## [41] codetools_0.2-16  rcbc_0.1.0.9001   scales_1.1.1      htmltools_0.5.0  
-## [45] ellipsis_0.3.1    nnls_1.4          assertthat_0.2.1  rvest_0.3.5      
-## [49] colorspace_1.4-1  Rcplex_0.3-3      stringi_1.4.6     Rmosek_9.2.3     
-## [53] munsell_0.5.0     slam_0.1-47       crayon_1.3.4</code></pre>
+##  [1] xfun_0.34         bslib_0.4.0       slam_0.1-50       lattice_0.20-45  
+##  [5] Rmosek_10.0.25    colorspace_2.0-3  htmltools_0.5.3   viridisLite_0.4.1
+##  [9] yaml_2.3.6        gmp_0.6-6         rlang_1.0.6       jquerylib_0.1.4  
+## [13] glue_1.6.2        Rmpfr_0.8-9       Rcplex_0.3-5      bit64_4.0.5      
+## [17] lifecycle_1.0.3   stringr_1.4.1     munsell_0.5.0     blogdown_1.13    
+## [21] rvest_1.0.3       gurobi_9.5-2      codetools_0.2-18  evaluate_0.17    
+## [25] knitr_1.40        fastmap_1.1.0     cccp_0.2-9        highr_0.9        
+## [29] Rcpp_1.0.9        scales_1.2.1      cachem_1.0.6      webshot_0.5.4    
+## [33] jsonlite_1.8.3    systemfonts_1.0.4 bit_4.0.4         digest_0.6.30    
+## [37] stringi_1.7.8     bookdown_0.29     grid_4.2.1        Rglpk_0.6-4      
+## [41] ECOSolveR_0.5.4   cli_3.4.1         tools_4.2.1       magrittr_2.0.3   
+## [45] sass_0.4.2        rcbc_0.1.0.9001   Matrix_1.5-1      xml2_1.3.3       
+## [49] nnls_1.4          assertthat_0.2.1  rmarkdown_2.17    svglite_2.1.0    
+## [53] httr_1.4.4        rstudioapi_0.14   R6_2.5.1          compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -399,9 +400,9 @@ observations using the above as a guide.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-isotone">
-<p>de Leeuw, J., K. Hornik, and P. Mair. 2009. “Isotone Optimization in R: Pool-Adjacent-Violators Algorithm (PAVA) and Active Set Methods.” <em>Journal of Statistical Software</em> 32 (5): 1–24.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-isotone" class="csl-entry">
+de Leeuw, J., K. Hornik, and P. Mair. 2009. <span>“Isotone Optimization in <span>R</span>: Pool-Adjacent-Violators Algorithm (<span>PAVA</span>) and Active Set Methods.”</span> <em>Journal of Statistical Software</em> 32 (5): 1–24.
 </div>
 </div>
 </div>

@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Survey Calibration &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	<h1>Survey Calibration</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -40,7 +40,7 @@ improve the initial weights <span class="math inline">\(d_i\)</span> by finding 
 incorporate this auxiliary information while perturbing the initial
 weights as little as possible, , the ratio <span class="math inline">\(g_i = w_i/d_i\)</span> must
 be close to one. Such reweighting improves precision of estimates
-(Chapter 7, <span class="citation">Lumley (<a href="#ref-Lumley:2010" role="doc-biblioref">2010</a>)</span>).</p>
+(Chapter 7, <span class="citation">T. S. Lumley (<a href="#ref-Lumley:2010" role="doc-biblioref">2010</a>)</span>).</p>
 <p>Let <span class="math inline">\(X \in {\mathbf R}^{m \times n}\)</span> be the matrix of survey samples, with
 each column corresponding to an auxiliary variable. Reweighting can be
 expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016" role="doc-biblioref">2016</a>)</span>):</p>
@@ -59,7 +59,7 @@ and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is relat
 function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibration
 metric.</p>
 <p>We illustrate with the California Academic Performance Index data in
-the <code>survey</code> package (<span class="citation">Lumley (<a href="#ref-lumley:2018" role="doc-biblioref">2018</a>)</span>) which also supplies facilities for
+the <code>survey</code> package (<span class="citation">T. Lumley (<a href="#ref-lumley:2018" role="doc-biblioref">2018</a>)</span>) which also supplies facilities for
 calibration via the function <code>calibrate</code>. Both the population dataset
 (<code>apipop</code>) and a simple random sample of <span class="math inline">\(m = 200\)</span> (<code>apisrs</code>) are
 provided. Suppose that we wish to reweight the observations in the
@@ -907,16 +907,30 @@ Yes
 </tr>
 </tbody>
 </table>
+<pre><code>## Testthat Results: No output is good</code></pre>
+<pre><code>## Error: `w_cvxr_h` not equal to sc_results$w_cvxr_h.
+## 200/200 mismatches (average diff: 3.19e-05)
+## [1] 29.0 - 29.0 ==  1.23e-04
+## [2] 31.4 - 31.4 ==  1.05e-05
+## [3] 29.0 - 29.0 ==  1.23e-04
+## [4] 31.4 - 31.4 ==  1.05e-05
+## [5] 31.4 - 31.4 ==  1.05e-05
+## [6] 31.4 - 31.4 ==  1.05e-05
+## [7] 29.1 - 29.1 == -3.11e-05
+## [8] 31.4 - 31.4 ==  1.05e-05
+## [9] 31.4 - 31.4 ==  1.05e-05
+## ...</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -926,25 +940,28 @@ Yes
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] survey_4.0       survival_3.1-12  Matrix_1.2-18    dplyr_1.0.0     
-## [5] kableExtra_1.1.0 CVXR_1.0-9      
+## [1] survey_4.1-1     survival_3.4-0   Matrix_1.5-1     dplyr_1.0.10    
+## [5] kableExtra_1.3.4 CVXR_1.0-11      testthat_3.1.5   here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.1.0  xfun_0.15         slam_0.1-47       purrr_0.3.4      
-##  [5] mitools_2.4       splines_4.0.2     lattice_0.20-41   Rmosek_9.2.3     
-##  [9] colorspace_1.4-1  vctrs_0.3.2       generics_0.0.2    htmltools_0.5.0  
-## [13] viridisLite_0.3.0 yaml_2.2.1        gmp_0.6-0         rlang_0.4.7      
-## [17] pillar_1.4.6      glue_1.4.1        Rmpfr_0.8-1       DBI_1.1.0        
-## [21] Rcplex_0.3-3      bit64_0.9-7       lifecycle_0.2.0   stringr_1.4.0    
-## [25] munsell_0.5.0     blogdown_0.19     gurobi_9.0.3.1    rvest_0.3.5      
-## [29] codetools_0.2-16  evaluate_0.14     knitr_1.28        cccp_0.2-4       
-## [33] highr_0.8         Rcpp_1.0.5        readr_1.3.1       scales_1.1.1     
-## [37] osqp_0.6.0.3      webshot_0.5.2     bit_1.1-15.2      hms_0.5.3        
-## [41] digest_0.6.25     stringi_1.4.6     bookdown_0.19     Rglpk_0.6-4      
-## [45] ECOSolveR_0.5.3   tools_4.0.2       magrittr_1.5      tibble_3.0.3     
-## [49] crayon_1.3.4      pkgconfig_2.0.3   ellipsis_0.3.1    MASS_7.3-51.6    
-## [53] rcbc_0.1.0.9001   xml2_1.3.2        assertthat_0.2.1  rmarkdown_2.3    
-## [57] httr_1.4.2        rstudioapi_0.11   R6_2.4.1          compiler_4.0.2</code></pre>
+##  [1] Rcpp_1.0.9        gurobi_9.5-2      svglite_2.1.0     lattice_0.20-45  
+##  [5] Rmosek_10.0.25    rcbc_0.1.0.9001   assertthat_0.2.1  rprojroot_2.0.3  
+##  [9] digest_0.6.30     utf8_1.2.2        gmp_0.6-6         slam_0.1-50      
+## [13] R6_2.5.1          evaluate_0.17     highr_0.9         httr_1.4.4       
+## [17] blogdown_1.13     pillar_1.8.1      rlang_1.0.6       rstudioapi_0.14  
+## [21] jquerylib_0.1.4   rmarkdown_2.17    desc_1.4.2        splines_4.2.1    
+## [25] osqp_0.6.0.5      webshot_0.5.4     stringr_1.4.1     bit_4.0.4        
+## [29] munsell_0.5.0     compiler_4.2.1    xfun_0.34         pkgconfig_2.0.3  
+## [33] systemfonts_1.0.4 Rglpk_0.6-4       htmltools_0.5.3   mitools_2.4      
+## [37] Rcplex_0.3-5      tidyselect_1.2.0  tibble_3.1.8      bookdown_0.29    
+## [41] codetools_0.2-18  fansi_1.0.3       viridisLite_0.4.1 MASS_7.3-58.1    
+## [45] brio_1.1.3        jsonlite_1.8.3    lifecycle_1.0.3   DBI_1.1.3        
+## [49] magrittr_2.0.3    scales_1.2.1      cli_3.4.1         stringi_1.7.8    
+## [53] cachem_1.0.6      Rmpfr_0.8-9       xml2_1.3.3        bslib_0.4.0      
+## [57] generics_0.1.3    vctrs_0.5.0       tools_4.2.1       bit64_4.0.5      
+## [61] glue_1.6.2        pkgload_1.3.0     fastmap_1.1.0     yaml_2.3.6       
+## [65] colorspace_2.0-3  cccp_0.2-9        rvest_1.0.3       ECOSolveR_0.5.4  
+## [69] knitr_1.40        sass_0.4.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -952,15 +969,15 @@ Yes
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-Davies:2016">
-<p>Davies, G., J. Gillard, and A. Zhigljavsky. 2016. “Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.” In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-29975-4_6">https://doi.org/10.1007/978-3-319-29975-4_6</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Davies:2016" class="csl-entry">
+Davies, G., J. Gillard, and A. Zhigljavsky. 2016. <span>“Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.”</span> In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-29975-4_6">https://doi.org/10.1007/978-3-319-29975-4_6</a>.
 </div>
-<div id="ref-lumley:2018">
-<p>Lumley, Thomas. 2018. “Survey: Analysis of Complex Survey Samples.”</p>
+<div id="ref-lumley:2018" class="csl-entry">
+Lumley, Thomas. 2018. <span>“Survey: Analysis of Complex Survey Samples.”</span>
 </div>
-<div id="ref-Lumley:2010">
-<p>Lumley, Thomas S. 2010. <em>Complex Surveys: A Guide to Analysis Using R</em>. Wiley Publishing.</p>
+<div id="ref-Lumley:2010" class="csl-entry">
+Lumley, Thomas S. 2010. <em>Complex Surveys: A Guide to Analysis Using r</em>. Wiley Publishing.
 </div>
 </div>
 </div>
@@ -975,8 +992,8 @@ Yes
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -1001,11 +1018,11 @@ Yes
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -1013,27 +1030,27 @@ Yes
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -1041,9 +1058,9 @@ Yes
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_integer-programming/" title="Integer Programming">Integer Programming</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_glmnet_equivalence/" title="Getting Equivalent Results from `glmnet` and `CVXR`">Getting Equivalent Results from `glmnet` and `CVXR`</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_integer-programming/" title="Integer Programming">Integer Programming</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_glmnet_equivalence/" title="Getting Equivalent Results from `glmnet` and `CVXR`">Getting Equivalent Results from `glmnet` and `CVXR`</a></li>
 </ul>
 
 	</div>
