@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Quantile Regression &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	<h1>Quantile Regression</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -64,7 +64,7 @@ for (i in seq_len(nf)[-1]) {
     p &lt;- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
 }
 p</code></pre>
-<p><img src="../../cvxr_examples/quantile-regression_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/quantile-regression_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>The above plot shows the quantile regression fits for <span class="math inline">\(\tau = (0.1, 0.25, 0.5, 0.75, 0.90, 0.95)\)</span>. The OLS fit is the thick black line.</p>
 <p>The following is a table of the estimates.</p>
 <pre class="r"><code>knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `quantreg`&quot;) %&gt;%
@@ -267,12 +267,13 @@ income
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -281,27 +282,29 @@ income
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] quantreg_5.61    SparseM_1.78     kableExtra_1.1.0 ggplot2_3.3.2   
-## [5] CVXR_1.0-9      
+## [1] quantreg_5.94    SparseM_1.81     kableExtra_1.3.4 ggplot2_3.3.6   
+## [5] CVXR_1.0-11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5         gurobi_9.0.3.1     lattice_0.20-41    rcbc_0.1.0.9001   
-##  [5] Rmosek_9.2.3       assertthat_0.2.1   digest_0.6.25      gmp_0.6-0         
-##  [9] slam_0.1-47        R6_2.4.1           MatrixModels_0.4-1 evaluate_0.14     
-## [13] httr_1.4.2         highr_0.8          blogdown_0.19      pillar_1.4.6      
-## [17] rlang_0.4.7        rstudioapi_0.11    Matrix_1.2-18      rmarkdown_2.3     
-## [21] labeling_0.3       webshot_0.5.2      readr_1.3.1        stringr_1.4.0     
-## [25] bit_1.1-15.2       munsell_0.5.0      compiler_4.0.2     xfun_0.15         
-## [29] pkgconfig_2.0.3    Rglpk_0.6-4        htmltools_0.5.0    Rcplex_0.3-3      
-## [33] tidyselect_1.1.0   tibble_3.0.3       bookdown_0.19      codetools_0.2-16  
-## [37] matrixStats_0.56.0 viridisLite_0.3.0  crayon_1.3.4       dplyr_1.0.0       
-## [41] conquer_1.0.2      withr_2.2.0        grid_4.0.2         gtable_0.3.0      
-## [45] lifecycle_0.2.0    magrittr_1.5       scales_1.1.1       stringi_1.4.6     
-## [49] farver_2.0.3       Rmpfr_0.8-1        xml2_1.3.2         ellipsis_0.3.1    
-## [53] generics_0.0.2     vctrs_0.3.2        tools_4.0.2        bit64_0.9-7       
-## [57] glue_1.4.1         purrr_0.3.4        hms_0.5.3          yaml_2.2.1        
-## [61] colorspace_1.4-1   cccp_0.2-4         rvest_0.3.5        ECOSolveR_0.5.3   
-## [65] knitr_1.28</code></pre>
+##  [1] Rcpp_1.0.9         gurobi_9.5-2       svglite_2.1.0      lattice_0.20-45   
+##  [5] Rmosek_10.0.25     rcbc_0.1.0.9001    assertthat_0.2.1   digest_0.6.30     
+##  [9] utf8_1.2.2         gmp_0.6-6          slam_0.1-50        R6_2.5.1          
+## [13] MatrixModels_0.5-1 evaluate_0.17      httr_1.4.4         highr_0.9         
+## [17] blogdown_1.13      pillar_1.8.1       rlang_1.0.6        rstudioapi_0.14   
+## [21] jquerylib_0.1.4    Matrix_1.5-1       rmarkdown_2.17     labeling_0.4.2    
+## [25] splines_4.2.1      webshot_0.5.4      stringr_1.4.1      bit_4.0.4         
+## [29] munsell_0.5.0      compiler_4.2.1     xfun_0.34          pkgconfig_2.0.3   
+## [33] systemfonts_1.0.4  Rglpk_0.6-4        htmltools_0.5.3    Rcplex_0.3-5      
+## [37] tidyselect_1.2.0   tibble_3.1.8       bookdown_0.29      codetools_0.2-18  
+## [41] fansi_1.0.3        viridisLite_0.4.1  dplyr_1.0.10       withr_2.5.0       
+## [45] MASS_7.3-58.1      grid_4.2.1         jsonlite_1.8.3     gtable_0.3.1      
+## [49] lifecycle_1.0.3    DBI_1.1.3          magrittr_2.0.3     scales_1.2.1      
+## [53] cli_3.4.1          stringi_1.7.8      cachem_1.0.6       farver_2.1.1      
+## [57] Rmpfr_0.8-9        xml2_1.3.3         bslib_0.4.0        generics_0.1.3    
+## [61] vctrs_0.5.0        tools_4.2.1        bit64_4.0.5        glue_1.6.2        
+## [65] fastmap_1.1.0      survival_3.4-0     yaml_2.3.6         colorspace_2.0-3  
+## [69] cccp_0.2-9         rvest_1.0.3        ECOSolveR_0.5.4    knitr_1.40        
+## [73] sass_0.4.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -321,8 +324,8 @@ income
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -347,11 +350,11 @@ income
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -359,27 +362,27 @@ income
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -387,9 +390,9 @@ income
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_saturating_hinges/" title="Saturating Hinges Fit">Saturating Hinges Fit</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_portfolio-optimization/" title="Portfolio Optimization">Portfolio Optimization</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_saturating_hinges/" title="Saturating Hinges Fit">Saturating Hinges Fit</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_portfolio-optimization/" title="Portfolio Optimization">Portfolio Optimization</a></li>
 </ul>
 
 	</div>

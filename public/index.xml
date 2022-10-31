@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>CVXR</title>
@@ -113,7 +113,8 @@ We will change the problem slightly to use a finer discretization from 101 point
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_censored-regression/</guid>
-      <description>Introduction Data collected from an experimental study is sometimes censored, so that only partial information is known about a subset of observations. For instance, when measuring the lifespan of mice, we may find a number of subjects live beyond the duration of the project. Thus, all we know is the lower bound on their lifespan. This right censoring can be incorporated into a regression model via convex optimization.</description>
+      <description>Introduction Data collected from an experimental study is sometimes censored, so that only partial information is known about a subset of observations. For instance, when measuring the lifespan of mice, we may find a number of subjects live beyond the duration of the project. Thus, all we know is the lower bound on their lifespan. This right censoring can be incorporated into a regression model via convex optimization.
+Suppose that only \(K\) of our observations \((x_i,y_i)\) are fully observed, and the remaining are censored such that we observe \(x_i\), but only know \(y_i \geq D\) for \(i = K+1,\ldots,m\) and some constant \(D \in {\mathbf R}\).</description>
     </item>
     
     <item>
@@ -122,7 +123,7 @@ We will change the problem slightly to use a finer discretization from 101 point
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_elastic-net/</guid>
-      <description>Introduction Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the \(l_1\)-norm and squared \(l_2\)-norm, combined in the elastic net regression model (H. Zou 2005, @glmnet),
+      <description>Introduction Often in applications, we encounter problems that require regularization to prevent overfitting, introduce sparsity, facilitate variable selection, or impose prior distributions on parameters. Two of the most common regularization functions are the \(l_1\)-norm and squared \(l_2\)-norm, combined in the elastic net regression model Friedman, Hastie, and Tibshirani (2010),
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2m}\|y - X\beta\|_2^2 + \lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). \end{array} \]
 Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0,1]\) controls the relative \(l_1\) versus squared \(l_2\) penalty.</description>
     </item>
@@ -206,7 +207,7 @@ a1 &amp;lt;- matrix(c(2,1)) a2 &amp;lt;- matrix(c(2,-1)) a3 &amp;lt;- matrix(c(-
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_logistic-regression/</guid>
-      <description>Introduction In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression (Cox 1958, @Freedman:2009).
+      <description>Introduction In classification problems, the goal is to predict the class membership based on predictors. Often there are two classes and one of the most popular methods for binary classification is logistic regression Freedman (2009).
 Suppose now that \(y_i \in \{0,1\}\) is a binary class indicator. The conditional response is modeled as \(y|x \sim \mbox{Bernoulli}(g_{\beta}(x))\), where \(g_{\beta}(x) = \frac{1}{1 + e^{-x^T\beta}}\) is the logistic function, and maximize the log-likelihood function, yielding the optimization problem</description>
     </item>
     
@@ -287,7 +288,7 @@ Note: Due to changes in the sample function for R version 3.6+, some results her
       <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_direct-standardization/</guid>
-      <description>Introduction Consider a set of observations \((x_i,y_i)\) drawn non-uniformly from an unknown distribution. We know the expected value of the columns of \(X\), denoted by \(b \in {\mathbf R}^n\), and want to estimate the true distribution of \(y\). This situation may arise, for instance, if we wish to analyze the health of a population based on a sample skewed toward young males, knowing the average population-level sex, age, etc.</description>
+      <description>Introduction Consider a set of observations \((x_i,y_i)\) drawn non-uniformly from an unknown distribution. We know the expected value of the columns of \(X\), denoted by \(b \in {\mathbf R}^n\), and want to estimate the true distribution of \(y\). This situation may arise, for instance, if we wish to analyze the health of a population based on a sample skewed toward young males, knowing the average population-level sex, age, etc. The empirical distribution that places equal probability \(1/m\) on each \(y_i\) is not a good estimate.</description>
     </item>
     
     <item>
@@ -301,15 +302,6 @@ Note: Due to changes in the sample function for R version 3.6+, some results her
     </item>
     
     <item>
-      <title>Convex Optimization in R</title>
-      <link>/cvxr/</link>
-      <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/cvxr/</guid>
-      <description>What is CVXR? CVXR is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
-    </item>
-    
-    <item>
       <title>CVXR Functions</title>
       <link>/cvxr_functions/</link>
       <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
@@ -317,6 +309,15 @@ Note: Due to changes in the sample function for R version 3.6+, some results her
       <guid>/cvxr_functions/</guid>
       <description>Functions Here we describe the functions that can be applied to CVXR expressions. CVXR uses the function information in this section and the Disciplined Convex Programming tools to mark expressions with a sign and curvature.
 Operators The infix operators +, -, *, %*%, / are treated as functions. + and - are affine functions. * and / are affine in CVXR because expr1*expr2 and expr1 %*% expr2 are allowed only when one of the expressions is constant and expr1/expr2 is allowed only when expr2 is a scalar constant.</description>
+    </item>
+    
+    <item>
+      <title>Convex Optimization in R</title>
+      <link>/cvxr/</link>
+      <pubDate>Mon, 30 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/cvxr/</guid>
+      <description>What is CVXR? CVXR is an R package that provides an object-oriented modeling language for convex optimization, similar to CVX, CVXPY, YALMIP, and Convex.jl. It allows the user to formulate convex optimization problems in a natural mathematical syntax rather than the restrictive standard form required by most solvers. The user specifies an objective and set of constraints by combining constants, variables, and parameters using a library of functions with known mathematical properties.</description>
     </item>
     
     <item>

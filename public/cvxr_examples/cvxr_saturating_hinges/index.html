@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Saturating Hinges Fit &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,7 +26,6 @@
 	<h1>Saturating Hinges Fit</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="introduction" class="section level2">
@@ -45,7 +44,7 @@ are given knots <span class="math inline">\(t_1 &lt; t_2 &lt; \cdots &lt; t_k\)<
 <span class="math inline">\(h_j(x) = \max(x-t_j,0)\)</span>, and define
 <span class="math inline">\(f(x) = w_0 + \sum_{j=1}^k w_jh_j(x)\)</span>. We want to solve</p>
 <p><span class="math display">\[
-\begin{array}{ll} 
+\begin{array}{ll}
 \underset{w_0,w}{\mbox{minimize}} &amp; \sum_{i=1}^m \ell(y_i, f(x_i)) + \lambda\|w\|_1 \\
 \mbox{subject to} &amp; \sum_{j=1}^k w_j = 0
 \end{array}
@@ -131,7 +130,7 @@ ggplot() +
                          labels = sprintf(&quot;%0.2f&quot;, lambdas)) +
     labs(x = &quot;Age&quot;, y = &quot;Change in Bone Density&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="../../cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>The squared error loss works well in this case, but the Huber loss is
 preferred when the dataset contains large outliers. To see this, we
 add 50 randomly generated
@@ -174,17 +173,18 @@ ggplot() +
                          labels = c(&quot;Huber&quot;, &quot;Squared&quot;)) +
     labs(x = &quot;Age&quot;, y = &quot;Change in Bone Density&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="../../cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/saturating-hinges_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -193,23 +193,25 @@ ggplot() +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.1.0   ggplot2_3.3.2 CVXR_1.0-9   
+## [1] tidyr_1.2.1   ggplot2_3.3.6 CVXR_1.0-11  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.6-0        Rcpp_1.0.5       compiler_4.0.2   pillar_1.4.6    
-##  [5] tools_4.0.2      digest_0.6.25    bit_1.1-15.2     evaluate_0.14   
-##  [9] lifecycle_0.2.0  tibble_3.0.3     gtable_0.3.0     lattice_0.20-41 
-## [13] pkgconfig_2.0.3  rlang_0.4.7      Matrix_1.2-18    gurobi_9.0.3.1  
-## [17] Rglpk_0.6-4      yaml_2.2.1       blogdown_0.19    xfun_0.15       
-## [21] osqp_0.6.0.3     cccp_0.2-4       withr_2.2.0      dplyr_1.0.0     
-## [25] Rmpfr_0.8-1      stringr_1.4.0    knitr_1.28       generics_0.0.2  
-## [29] vctrs_0.3.2      tidyselect_1.1.0 bit64_0.9-7      grid_4.0.2      
-## [33] glue_1.4.1       R6_2.4.1         rmarkdown_2.3    bookdown_0.19   
-## [37] farver_2.0.3     purrr_0.3.4      magrittr_1.5     codetools_0.2-16
-## [41] rcbc_0.1.0.9001  scales_1.1.1     htmltools_0.5.0  ellipsis_0.3.1  
-## [45] assertthat_0.2.1 colorspace_1.4-1 labeling_0.3     Rcplex_0.3-3    
-## [49] stringi_1.4.6    Rmosek_9.2.3     munsell_0.5.0    slam_0.1-47     
-## [53] crayon_1.3.4</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
+##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
+##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
+## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
+## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
+## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
+## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
+## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
+## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
+## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
+## [41] osqp_0.6.0.5     jsonlite_1.8.3   farver_2.1.1     bit_4.0.4       
+## [45] digest_0.6.30    stringi_1.7.8    bookdown_0.29    dplyr_1.0.10    
+## [49] Rglpk_0.6-4      grid_4.2.1       cli_3.4.1        tools_4.2.1     
+## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
+## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
+## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -217,12 +219,12 @@ ggplot() +
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-BoydHastie:2016">
-<p>Boyd, N., T. Hastie, S. Boyd, B. Recht, and M. Jordan. 2016. “Saturating Splines and Feature Selection.” <em>arXiv Preprint arXiv:1609.06764</em>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-BoydHastie:2016" class="csl-entry">
+Boyd, N., T. Hastie, S. Boyd, B. Recht, and M. Jordan. 2016. <span>“Saturating Splines and Feature Selection.”</span> <em>arXiv Preprint arXiv:1609.06764</em>.
 </div>
-<div id="ref-ESL">
-<p>Hastie, T., R. Tibshirani, and J. Friedman. 2001. <em>The Elements of Statistical Learning</em>. Springer.</p>
+<div id="ref-ESL" class="csl-entry">
+Hastie, T., R. Tibshirani, and J. Friedman. 2001. <em>The Elements of Statistical Learning</em>. Springer.
 </div>
 </div>
 </div>
@@ -237,8 +239,8 @@ ggplot() +
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -263,11 +265,11 @@ ggplot() +
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -275,27 +277,27 @@ ggplot() +
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -303,9 +305,9 @@ ggplot() +
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_sparse_inverse_covariance_estimation/" title="Sparse Inverse Covariance Estimation">Sparse Inverse Covariance Estimation</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_quantile-regression/" title="Quantile Regression">Quantile Regression</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_sparse_inverse_covariance_estimation/" title="Sparse Inverse Covariance Estimation">Sparse Inverse Covariance Estimation</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_quantile-regression/" title="Quantile Regression">Quantile Regression</a></li>
 </ul>
 
 	</div>

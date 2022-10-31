@@ -13,7 +13,6 @@ params:
   data_dir: solver-peculiarities
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p>The default solver in <code>CVXR</code> used to be <code>ECOS</code>. However, it is not always the
@@ -53,12 +52,13 @@ not completely solve the problem and in fact throws an error.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -67,18 +67,20 @@ not completely solve the problem and in fact throws an error.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] CVXR_1.0-9
+## [1] CVXR_1.0-11
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5       knitr_1.28       magrittr_1.5     bit_1.1-15.2    
-##  [5] lattice_0.20-41  R6_2.4.1         rlang_0.4.7      stringr_1.4.0   
-##  [9] tools_4.0.2      grid_4.0.2       xfun_0.15        htmltools_0.5.0 
-## [13] yaml_2.2.1       bit64_0.9-7      digest_0.6.25    assertthat_0.2.1
-## [17] bookdown_0.19    cccp_0.2-4       Matrix_1.2-18    gmp_0.6-0       
-## [21] ECOSolveR_0.5.3  Rglpk_0.6-4      codetools_0.2-16 slam_0.1-47     
-## [25] evaluate_0.14    rmarkdown_2.3    blogdown_0.19    Rcplex_0.3-3    
-## [29] gurobi_9.0.3.1   stringi_1.4.6    compiler_4.0.2   Rmpfr_0.8-1     
-## [33] Rmosek_9.2.3     rcbc_0.1.0.9001</code></pre>
+##  [1] gmp_0.6-6        Rcpp_1.0.9       bslib_0.4.0      compiler_4.2.1  
+##  [5] jquerylib_0.1.4  tools_4.2.1      digest_0.6.30    bit_4.0.4       
+##  [9] jsonlite_1.8.3   evaluate_0.17    lattice_0.20-45  rlang_1.0.6     
+## [13] Matrix_1.5-1     gurobi_9.5-2     cli_3.4.1        Rglpk_0.6-4     
+## [17] yaml_2.3.6       blogdown_1.13    xfun_0.34        cccp_0.2-9      
+## [21] fastmap_1.1.0    ECOSolveR_0.5.4  Rmpfr_0.8-9      stringr_1.4.1   
+## [25] knitr_1.40       sass_0.4.2       bit64_4.0.5      grid_4.2.1      
+## [29] R6_2.5.1         rmarkdown_2.17   bookdown_0.29    magrittr_2.0.3  
+## [33] rcbc_0.1.0.9001  codetools_0.2-18 htmltools_0.5.3  assertthat_0.2.1
+## [37] Rcplex_0.3-5     stringi_1.7.8    Rmosek_10.0.25   cachem_1.0.6    
+## [41] slam_0.1-50</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

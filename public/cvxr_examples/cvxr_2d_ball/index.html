@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Largest Ball in a Polyhedron in 2D &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,7 +26,6 @@
 	<h1>Largest Ball in a Polyhedron in 2D</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="problem" class="section level2">
@@ -35,7 +34,7 @@
 <p>Find the largest Euclidean ball (i.e. its center and radius) that lies
 in a polyhedron described by affine inequalites:</p>
 <p><span class="math display">\[
-P = {x : a_i&#39;*x &lt;= b_i, i=1,...,m} 
+P = {x : a_i&#39;*x &lt;= b_i, i=1,...,m}
 \]</span></p>
 <p>where x is in <span class="math inline">\({\mathbf R}^2\)</span>.</p>
 <p>We define variables that determine the polyhedron.</p>
@@ -77,17 +76,18 @@ cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * ra
     annotate(&quot;text&quot;, x = -0.2, y = 0.04, label = sprintf(&quot;r = %0.5f&quot;, radius)) +
     labs(x = &quot;x&quot;, y = &quot;y&quot;) +
     xlim(-1, 1) + ylim(-1, 1)</code></pre>
-<p><img src="../../cvxr_examples/2d_ball_files/figure-html/unnamed-chunk-6-1.png" width="576" /></p>
+<p><img src="/cvxr_examples/2d_ball_files/figure-html/unnamed-chunk-6-1.png" width="576" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -96,23 +96,25 @@ cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * ra
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggforce_0.3.2 ggplot2_3.3.2 CVXR_1.0-9   
+## [1] ggforce_0.4.1 ggplot2_3.3.6 CVXR_1.0-11  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.1.0 xfun_0.15        slam_0.1-47      purrr_0.3.4     
-##  [5] lattice_0.20-41  Rmosek_9.2.3     colorspace_1.4-1 vctrs_0.3.2     
-##  [9] generics_0.0.2   htmltools_0.5.0  yaml_2.2.1       gmp_0.6-0       
-## [13] rlang_0.4.7      pillar_1.4.6     glue_1.4.1       Rmpfr_0.8-1     
-## [17] withr_2.2.0      Rcplex_0.3-3     tweenr_1.0.1     bit64_0.9-7     
-## [21] lifecycle_0.2.0  stringr_1.4.0    munsell_0.5.0    blogdown_0.19   
-## [25] gtable_0.3.0     gurobi_9.0.3.1   codetools_0.2-16 evaluate_0.14   
-## [29] labeling_0.3     knitr_1.28       cccp_0.2-4       Rcpp_1.0.5      
-## [33] scales_1.1.1     osqp_0.6.0.3     farver_2.0.3     bit_1.1-15.2    
-## [37] digest_0.6.25    stringi_1.4.6    bookdown_0.19    dplyr_1.0.0     
-## [41] polyclip_1.10-0  grid_4.0.2       Rglpk_0.6-4      tools_4.0.2     
-## [45] magrittr_1.5     tibble_3.0.3     crayon_1.3.4     pkgconfig_2.0.3 
-## [49] ellipsis_0.3.1   MASS_7.3-51.6    rcbc_0.1.0.9001  Matrix_1.2-18   
-## [53] assertthat_0.2.1 rmarkdown_2.3    R6_2.4.1         compiler_4.0.2</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
+##  [5] lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3 vctrs_0.5.0     
+##  [9] generics_0.1.3   htmltools_0.5.3  yaml_2.3.6       gmp_0.6-6       
+## [13] utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4  pillar_1.8.1    
+## [17] glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0      DBI_1.1.3       
+## [21] Rcplex_0.3-5     tweenr_2.0.2     bit64_4.0.5      lifecycle_1.0.3 
+## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
+## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
+## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
+## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
+## [41] osqp_0.6.0.5     jsonlite_1.8.3   farver_2.1.1     bit_4.0.4       
+## [45] digest_0.6.30    stringi_1.7.8    bookdown_0.29    dplyr_1.0.10    
+## [49] Rglpk_0.6-4      polyclip_1.10-4  grid_4.2.1       cli_3.4.1       
+## [53] tools_4.2.1      magrittr_2.0.3   sass_0.4.2       tibble_3.1.8    
+## [57] pkgconfig_2.0.3  rcbc_0.1.0.9001  MASS_7.3-58.1    Matrix_1.5-1    
+## [61] assertthat_0.2.1 rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -120,9 +122,9 @@ cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * ra
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-BoydVandenberghe:2004">
-<p>Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge University Press.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-BoydVandenberghe:2004" class="csl-entry">
+Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge University Press.
 </div>
 </div>
 </div>
@@ -137,8 +139,8 @@ cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * ra
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -163,11 +165,11 @@ cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * ra
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -175,27 +177,27 @@ cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * ra
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -203,9 +205,9 @@ cat(sprintf(&quot;The radius is %0.5f for an area %0.5f\n&quot;, radius, pi * ra
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_log-concave/" title="Log-Concave Distribution Estimation">Log-Concave Distribution Estimation</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_l1-trend-filtering/" title="L1 Trend Filtering">L1 Trend Filtering</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_log-concave/" title="Log-Concave Distribution Estimation">Log-Concave Distribution Estimation</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_l1-trend-filtering/" title="L1 Trend Filtering">L1 Trend Filtering</a></li>
 </ul>
 
 	</div>

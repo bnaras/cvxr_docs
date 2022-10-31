@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on CVXR</title>
@@ -6,19 +6,9 @@
     <description>Recent content in Categories on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Version 1.0 features</title>
-      <link>/categories/version-1.0-features/</link>
-      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/version-1.0-features/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>Simple Least Squares</title>
@@ -26,6 +16,15 @@
       <pubDate>Sun, 29 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/categories/simple-least-squares/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Version 1.0 Features</title>
+      <link>/categories/version-1.0-features/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/version-1.0-features/</guid>
       <description></description>
     </item>
     

@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Elastic Net &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	<h1>Elastic Net</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -37,11 +37,11 @@ regularization to prevent overfitting, introduce sparsity, facilitate
 variable selection, or impose prior distributions on parameters. Two
 of the most common regularization functions are the <span class="math inline">\(l_1\)</span>-norm and
 squared <span class="math inline">\(l_2\)</span>-norm, combined in the elastic net regression model
-<span class="citation">(H. Zou <a href="#ref-elasticnet" role="doc-biblioref">2005</a>, <span class="citation">@glmnet</span>)</span>,</p>
+<span class="citation">Friedman, Hastie, and Tibshirani (<a href="#ref-glmnet" role="doc-biblioref">2010</a>)</span>,</p>
 <p><span class="math display">\[
-\begin{array}{ll} 
+\begin{array}{ll}
 \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2m}\|y - X\beta\|_2^2 +
-\lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). 
+\lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1).
 \end{array}
 \]</span></p>
 <p>Here <span class="math inline">\(\lambda \geq 0\)</span> is the overall regularization weight and
@@ -854,7 +854,7 @@ knitr::kable(d, format = &quot;html&quot;, caption = &quot;Elastic net fits from
      xlab = expression(lambda), ylab = expression(beta),
      ylim = c(-0.75, 1.25), xlim = c(0, 50))
 matlines(lambda_vals, t(beta_vals))</code></pre>
-<p><img src="../../cvxr_examples/elastic-net_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/elastic-net_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>We can also compare with the <code>glmnet</code> results.</p>
 <pre class="r"><code>model_net &lt;- glmnet(X, y, family = &quot;gaussian&quot;, alpha = alpha,
                     lambda = lambda_vals, standardize = FALSE,
@@ -1613,12 +1613,13 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -1627,26 +1628,28 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] glmnet_4.0-2     Matrix_1.2-18    kableExtra_1.1.0 ggplot2_3.3.2   
-## [5] CVXR_1.0-9      
+## [1] glmnet_4.1-4     Matrix_1.5-1     kableExtra_1.3.4 ggplot2_3.3.6   
+## [5] CVXR_1.0-11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] shape_1.4.4       tidyselect_1.1.0  xfun_0.15         slam_0.1-47      
-##  [5] purrr_0.3.4       splines_4.0.2     lattice_0.20-41   Rmosek_9.2.3     
-##  [9] colorspace_1.4-1  vctrs_0.3.2       generics_0.0.2    htmltools_0.5.0  
-## [13] viridisLite_0.3.0 yaml_2.2.1        gmp_0.6-0         survival_3.1-12  
-## [17] rlang_0.4.7       pillar_1.4.6      glue_1.4.1        Rmpfr_0.8-1      
-## [21] withr_2.2.0       Rcplex_0.3-3      bit64_0.9-7       foreach_1.5.0    
-## [25] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     blogdown_0.19    
-## [29] gtable_0.3.0      gurobi_9.0.3.1    rvest_0.3.5       codetools_0.2-16 
-## [33] evaluate_0.14     knitr_1.28        cccp_0.2-4        highr_0.8        
-## [37] Rcpp_1.0.5        readr_1.3.1       scales_1.1.1      osqp_0.6.0.3     
-## [41] webshot_0.5.2     bit_1.1-15.2      hms_0.5.3         digest_0.6.25    
-## [45] stringi_1.4.6     bookdown_0.19     dplyr_1.0.0       Rglpk_0.6-4      
-## [49] grid_4.0.2        tools_4.0.2       magrittr_1.5      tibble_3.0.3     
-## [53] crayon_1.3.4      pkgconfig_2.0.3   rcbc_0.1.0.9001   ellipsis_0.3.1   
-## [57] xml2_1.3.2        assertthat_0.2.1  rmarkdown_2.3     httr_1.4.2       
-## [61] rstudioapi_0.11   iterators_1.0.12  R6_2.4.1          compiler_4.0.2</code></pre>
+##  [1] Rcpp_1.0.9        gurobi_9.5-2      svglite_2.1.0     lattice_0.20-45  
+##  [5] Rmosek_10.0.25    rcbc_0.1.0.9001   assertthat_0.2.1  digest_0.6.30    
+##  [9] foreach_1.5.2     utf8_1.2.2        gmp_0.6-6         slam_0.1-50      
+## [13] R6_2.5.1          evaluate_0.17     highr_0.9         httr_1.4.4       
+## [17] blogdown_1.13     pillar_1.8.1      rlang_1.0.6       rstudioapi_0.14  
+## [21] jquerylib_0.1.4   rmarkdown_2.17    splines_4.2.1     osqp_0.6.0.5     
+## [25] webshot_0.5.4     stringr_1.4.1     bit_4.0.4         munsell_0.5.0    
+## [29] compiler_4.2.1    xfun_0.34         pkgconfig_2.0.3   systemfonts_1.0.4
+## [33] shape_1.4.6       Rglpk_0.6-4       htmltools_0.5.3   Rcplex_0.3-5     
+## [37] tidyselect_1.2.0  tibble_3.1.8      bookdown_0.29     codetools_0.2-18 
+## [41] fansi_1.0.3       viridisLite_0.4.1 dplyr_1.0.10      withr_2.5.0      
+## [45] grid_4.2.1        jsonlite_1.8.3    gtable_0.3.1      lifecycle_1.0.3  
+## [49] DBI_1.1.3         magrittr_2.0.3    scales_1.2.1      cli_3.4.1        
+## [53] stringi_1.7.8     cachem_1.0.6      Rmpfr_0.8-9       xml2_1.3.3       
+## [57] bslib_0.4.0       generics_0.1.3    vctrs_0.5.0       iterators_1.0.14 
+## [61] tools_4.2.1       bit64_4.0.5       glue_1.6.2        fastmap_1.1.0    
+## [65] survival_3.4-0    yaml_2.3.6        colorspace_2.0-3  cccp_0.2-9       
+## [69] rvest_1.0.3       knitr_1.40        sass_0.4.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -1654,12 +1657,12 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-glmnet">
-<p>Friedman, J., T. Hastie, and R. Tibshirani. 2010. “Regularization Paths for Generalized Linear Models via Coordinate Descent.” <em>Journal of Statistical Software</em> 33 (1): 1–22.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-glmnet" class="csl-entry">
+Friedman, J., T. Hastie, and R. Tibshirani. 2010. <span>“Regularization Paths for Generalized Linear Models via Coordinate Descent.”</span> <em>Journal of Statistical Software</em> 33 (1): 1–22.
 </div>
-<div id="ref-elasticnet">
-<p>H. Zou, T. Hastie. 2005. “Regularization and Variable Selection via the Elastic–Net.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 67 (2): 301–20.</p>
+<div id="ref-elasticnet" class="csl-entry">
+H. Zou, T. Hastie. 2005. <span>“Regularization and Variable Selection via the Elastic–Net.”</span> <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 67 (2): 301–20.
 </div>
 </div>
 </div>
@@ -1674,8 +1677,8 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -1700,11 +1703,11 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -1712,27 +1715,27 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -1740,9 +1743,9 @@ knitr::kable(coef_net, format = &quot;html&quot;, digits = 3, caption = &quot;Co
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_fast-mixing-mc/" title="Fastest Mixing Markov Chain">Fastest Mixing Markov Chain</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_censored-regression/" title="Censored Regression">Censored Regression</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_fast-mixing-mc/" title="Fastest Mixing Markov Chain">Fastest Mixing Markov Chain</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_censored-regression/" title="Censored Regression">Censored Regression</a></li>
 </ul>
 
 	</div>

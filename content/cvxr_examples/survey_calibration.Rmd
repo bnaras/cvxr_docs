@@ -256,7 +256,7 @@ if (params$mode == "save") {
     expect_equal(w_cvxr, sc_results$w_cvxr)
     expect_equal(w_cvxr_q, sc_results$w_cvxr_q)
     expect_equal(w_cvxr_l, sc_results$w_cvxr_l)
-    expect_equal(w_cvxr_h, sc_results$w_cvxr_h)
+    expect_equal(w_cvxr_h, sc_results$w_cvxr_h, tolerance = 1e-04)
     expect_equal(w_cvxr_s, sc_results$w_cvxr_s)    
 }
 ```

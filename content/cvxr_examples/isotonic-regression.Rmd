@@ -143,9 +143,9 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     iso_results <- readRDS(file = file.path(testdata_dir, "isotonic-regression.RDS"))
-    expect_identical(x_p, iso_results$x_p)
-    expect_identical(x_s, iso_results$x_s)
-    expect_identical(x_t, iso_results$x_t)
+    expect_equal(x_p, iso_results$x_p, tolerance = 1e-05)
+    expect_equal(x_s, iso_results$x_s, tolerance = 1e-05)
+    expect_equal(x_t, iso_results$x_t, tolerance = 1e-05)
 }
 ```
 

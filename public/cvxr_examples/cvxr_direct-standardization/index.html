@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Direct Standardization &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,7 +26,6 @@
 	<h1>Direct Standardization</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="introduction" class="section level2">
@@ -41,7 +40,7 @@ etc. The empirical distribution that places equal probability
 <span class="math inline">\(1/m\)</span> on each <span class="math inline">\(y_i\)</span> is not a good estimate.</p>
 <p>So, we must determine the weights <span class="math inline">\(w \in {\mathbf R}^m\)</span> of a weighted
 empirical distribution, <span class="math inline">\(y = y_i\)</span> with probability <span class="math inline">\(w_i\)</span>, which
-rectifies the skewness of the sample <span class="citation">(Fleiss, Levin, and Paik <a href="#ref-dirstd" role="doc-biblioref">2003</a>, 19.5)</span>. We can pose this
+rectifies the skewness of the sample <span class="citation">(<a href="#ref-dirstd" role="doc-biblioref">Fleiss, Levin, and Paik 2003, 19.5</a>)</span>. We can pose this
 problem as</p>
 <p><span class="math display">\[
     \begin{array}{ll} \underset{w}{\mbox{maximize}} &amp; \sum_{i=1}^m -w_i\log w_i \\
@@ -56,7 +55,7 @@ that implies our known expectations on <span class="math inline">\(X\)</span>.</
 <span class="math inline">\(y_i \sim N(5x_{i,1} + 0.1x_{i,2},1)\)</span>. Then we construct a skewed
 sample of <span class="math inline">\(m = 100\)</span> points that overrepresent small values of <span class="math inline">\(y_i\)</span>,
 thus biasing its distribution downwards. This can be seen in Figure
-, where the sample probability distribution peaks
+<span class="math inline">\(\ref{fig:direct-std}\)</span>, where the sample probability distribution peaks
 around <span class="math inline">\(y = 2.0\)</span>, and its cumulative distribution is shifted left from
 the population’s curve. Using direct standardization, we estimate
 <span class="math inline">\(w_i\)</span> and reweight our sample; the new empirical distribution cleaves
@@ -104,8 +103,8 @@ ggplot(plot.data) +
     geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
     theme(legend.position = &quot;top&quot;)</code></pre>
 <pre><code>## Warning: Removed 300 row(s) containing missing values (geom_path).</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-3"></span>
-<img src="../../cvxr_examples/direct-standardization_files/figure-html/unnamed-chunk-3-1.png" alt="Probability distribution functions population, skewed sample and reweighted sample" width="672" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
+<img src="/cvxr_examples/direct-standardization_files/figure-html/unnamed-chunk-3-1.png" alt="Probability distribution functions population, skewed sample and reweighted sample" width="672" />
 <p class="caption">
 Figure 1: Probability distribution functions population, skewed sample and reweighted sample
 </p>
@@ -132,17 +131,18 @@ plot.data &lt;- rbind(d1, d2, d3)
 ggplot(plot.data) +
     geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="../../cvxr_examples/direct-standardization_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/cvxr_examples/direct-standardization_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -151,23 +151,25 @@ ggplot(plot.data) +
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.1.0   ggplot2_3.3.2 CVXR_1.0-9   
+## [1] tidyr_1.2.1   ggplot2_3.3.6 CVXR_1.0-11  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.1.0 xfun_0.15        slam_0.1-47      purrr_0.3.4     
-##  [5] lattice_0.20-41  Rmosek_9.2.3     colorspace_1.4-1 vctrs_0.3.2     
-##  [9] generics_0.0.2   htmltools_0.5.0  yaml_2.2.1       gmp_0.6-0       
-## [13] rlang_0.4.7      pillar_1.4.6     glue_1.4.1       Rmpfr_0.8-1     
-## [17] withr_2.2.0      Rcplex_0.3-3     bit64_0.9-7      lifecycle_0.2.0 
-## [21] stringr_1.4.0    munsell_0.5.0    blogdown_0.19    gtable_0.3.0    
-## [25] gurobi_9.0.3.1   codetools_0.2-16 evaluate_0.14    labeling_0.3    
-## [29] knitr_1.28       cccp_0.2-4       highr_0.8        Rcpp_1.0.5      
-## [33] scales_1.1.1     farver_2.0.3     bit_1.1-15.2     digest_0.6.25   
-## [37] stringi_1.4.6    bookdown_0.19    dplyr_1.0.0      grid_4.0.2      
-## [41] Rglpk_0.6-4      ECOSolveR_0.5.3  tools_4.0.2      magrittr_1.5    
-## [45] tibble_3.0.3     crayon_1.3.4     pkgconfig_2.0.3  ellipsis_0.3.1  
-## [49] rcbc_0.1.0.9001  Matrix_1.2-18    assertthat_0.2.1 rmarkdown_2.3   
-## [53] R6_2.4.1         compiler_4.0.2</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
+##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
+##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
+## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
+## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
+## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
+## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
+## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
+## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
+## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
+## [41] jsonlite_1.8.3   farver_2.1.1     bit_4.0.4        digest_0.6.30   
+## [45] stringi_1.7.8    bookdown_0.29    dplyr_1.0.10     Rglpk_0.6-4     
+## [49] grid_4.2.1       ECOSolveR_0.5.4  cli_3.4.1        tools_4.2.1     
+## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
+## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
+## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -175,9 +177,9 @@ ggplot(plot.data) +
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-dirstd">
-<p>Fleiss, J. L., B. Levin, and M. C. Paik. 2003. <em>Statistical Methods for Rates and Proportions</em>. Wiley-Interscience.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-dirstd" class="csl-entry">
+Fleiss, J. L., B. Levin, and M. C. Paik. 2003. <em>Statistical Methods for Rates and Proportions</em>. Wiley-Interscience.
 </div>
 </div>
 </div>
@@ -192,8 +194,8 @@ ggplot(plot.data) +
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -218,11 +220,11 @@ ggplot(plot.data) +
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -230,27 +232,27 @@ ggplot(plot.data) +
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -258,9 +260,9 @@ ggplot(plot.data) +
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_isotonic-regression/" title="Isotonic Regression">Isotonic Regression</a></li>
-  <li>Next: <a href="../../cvxr_examples/cvxr_catenary/" title="The Catenary Problem">The Catenary Problem</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_isotonic-regression/" title="Isotonic Regression">Isotonic Regression</a></li>
+  <li>Next: <a href="/cvxr_examples/cvxr_catenary/" title="The Catenary Problem">The Catenary Problem</a></li>
 </ul>
 
 	</div>

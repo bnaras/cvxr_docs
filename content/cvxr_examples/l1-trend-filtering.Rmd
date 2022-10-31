@@ -116,7 +116,7 @@ if (params$mode == "save") {
     cat("Testthat Results: No output is good\n")
     l1_results <- readRDS(file = file.path(testdata_dir, "l1-trend-filtering1.RDS"))
     expect_equal(betaHat_50, l1_results$b50, tol = 1e-5)
-    expect_equal(betaHat_100, l1_results$b100, tol = 1e-5)
+    expect_equal(betaHat_100, l1_results$b100, tol = 1e-4)
 }
 ```
 

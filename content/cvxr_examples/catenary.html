@@ -13,7 +13,6 @@ params:
   data_dir: catenary
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="introduction" class="section level2">
@@ -34,10 +33,10 @@ its arc length and divide it into <span class="math inline">\(m\)</span> discret
 each link must be no more than <span class="math inline">\(h &gt; 0\)</span>. Since mass is uniform, the
 total potential energy is simply the sum of the
 <span class="math inline">\(y\)</span>-coordinates. Therefore, our (discretized) problem is</p>
-<p><span class="math display">\[ 
+<p><span class="math display">\[
 \begin{array}{ll} \underset{x,y}{\mbox{minimize}} &amp; \sum_{i=1}^m y_i \\ \mbox{subject to} &amp; x_1 = 0, \quad y_1 = 1, \quad x_m = 1,
 \quad y_m = 1 \\ &amp; (x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2 \leq h^2,
-\quad i = 1,\ldots,m-1 \end{array} 
+\quad i = 1,\ldots,m-1 \end{array}
 \]</span></p>
 <p>with variables <span class="math inline">\(x \in {\mathbf R}^m\)</span> and <span class="math inline">\(y \in {\mathbf R}^m\)</span>. This
 discretized version which has been studied by <span class="citation">Griva and Vanderbei (<a href="#ref-catenary" role="doc-biblioref">2005</a>)</span> was suggested
@@ -76,7 +75,7 @@ catenary &lt;- ggplot(data.frame(x = xs, y = ys)) +
 ideal &lt;- function(x) { 0.22964 *cosh((x -0.5) / 0.22964) - 0.02603 }
 
 catenary + stat_function(fun = ideal , colour = &quot;brown&quot;, alpha = 0.5, size = 3)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-3"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
 <img src="/cvxr_examples/catenary_files/figure-html/unnamed-chunk-3-1.png" alt="Analytic (red) and computed solution (blue) to the catenary problem" width="672" />
 <p class="caption">
 Figure 1: Analytic (red) and computed solution (blue) to the catenary problem
@@ -124,7 +123,7 @@ ggplot(data.frame(x = xs, y = ys)) +
                mapping = aes(x = x, y = y), color = &quot;red&quot;) +
     geom_line(data.frame(x = xs, y = ground),
               mapping = aes(x = x, y = y), color = &quot;brown&quot;)</code></pre>
-<div class="figure"><span id="fig:unnamed-chunk-7"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
 <img src="/cvxr_examples/catenary_files/figure-html/unnamed-chunk-7-1.png" alt="Asymmetric catenary problem with ground constraints." width="672" />
 <p class="caption">
 Figure 2: Asymmetric catenary problem with ground constraints.
@@ -134,12 +133,13 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -148,23 +148,25 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.3.2 CVXR_1.0-9   
+## [1] ggplot2_3.3.6 CVXR_1.0-11  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.6-0        Rcpp_1.0.5       highr_0.8        compiler_4.0.2  
-##  [5] pillar_1.4.6     tools_4.0.2      digest_0.6.25    bit_1.1-15.2    
-##  [9] evaluate_0.14    lifecycle_0.2.0  tibble_3.0.3     gtable_0.3.0    
-## [13] lattice_0.20-41  pkgconfig_2.0.3  rlang_0.4.7      Matrix_1.2-18   
-## [17] gurobi_9.0.3.1   Rglpk_0.6-4      yaml_2.2.1       blogdown_0.19   
-## [21] xfun_0.15        cccp_0.2-4       ECOSolveR_0.5.3  withr_2.2.0     
-## [25] dplyr_1.0.0      Rmpfr_0.8-1      stringr_1.4.0    knitr_1.28      
-## [29] generics_0.0.2   vctrs_0.3.2      tidyselect_1.1.0 bit64_0.9-7     
-## [33] grid_4.0.2       glue_1.4.1       R6_2.4.1         rmarkdown_2.3   
-## [37] bookdown_0.19    farver_2.0.3     purrr_0.3.4      magrittr_1.5    
-## [41] codetools_0.2-16 rcbc_0.1.0.9001  scales_1.1.1     htmltools_0.5.0 
-## [45] ellipsis_0.3.1   assertthat_0.2.1 colorspace_1.4-1 labeling_0.3    
-## [49] Rcplex_0.3-3     stringi_1.4.6    Rmosek_9.2.3     munsell_0.5.0   
-## [53] slam_0.1-47      crayon_1.3.4</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
+##  [5] lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3 vctrs_0.5.0     
+##  [9] generics_0.1.3   htmltools_0.5.3  yaml_2.3.6       gmp_0.6-6       
+## [13] utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4  pillar_1.8.1    
+## [17] glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0      DBI_1.1.3       
+## [21] Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3  stringr_1.4.1   
+## [25] munsell_0.5.0    blogdown_1.13    gtable_0.3.1     gurobi_9.5-2    
+## [29] codetools_0.2-18 evaluate_0.17    labeling_0.4.2   knitr_1.40      
+## [33] fastmap_1.1.0    fansi_1.0.3      cccp_0.2-9       highr_0.9       
+## [37] Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6     jsonlite_1.8.3  
+## [41] farver_2.1.1     bit_4.0.4        digest_0.6.30    stringi_1.7.8   
+## [45] bookdown_0.29    dplyr_1.0.10     Rglpk_0.6-4      grid_4.2.1      
+## [49] ECOSolveR_0.5.4  cli_3.4.1        tools_4.2.1      magrittr_2.0.3  
+## [53] sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3  rcbc_0.1.0.9001 
+## [57] Matrix_1.5-1     assertthat_0.2.1 rmarkdown_2.17   R6_2.5.1        
+## [61] compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -172,12 +174,12 @@ Figure 2: Asymmetric catenary problem with ground constraints.
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-GelfandFomin:1963">
-<p>Gelfand, I. M., and S. V. Fomin. 1963. <em>Calculus of Variations</em>. Prentice-Hall.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-GelfandFomin:1963" class="csl-entry">
+Gelfand, I. M., and S. V. Fomin. 1963. <em>Calculus of Variations</em>. Prentice-Hall.
 </div>
-<div id="ref-catenary">
-<p>Griva, I. A., and R. J. Vanderbei. 2005. “Case Studies in Optimization: Catenary Problem.” <em>Optimization and Engineering</em> 6 (4): 463–82.</p>
+<div id="ref-catenary" class="csl-entry">
+Griva, I. A., and R. J. Vanderbei. 2005. <span>“Case Studies in Optimization: Catenary Problem.”</span> <em>Optimization and Engineering</em> 6 (4): 463–82.
 </div>
 </div>
 </div>

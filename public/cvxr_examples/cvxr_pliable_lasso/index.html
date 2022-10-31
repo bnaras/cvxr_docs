@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.74.3" />
+	<meta name="generator" content="Hugo 0.50" />
 	
 	<title>Prototyping the pliable lasso &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	<h1>Prototyping the pliable lasso</h1>
 	
 	
-<script src="../../rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -49,7 +49,7 @@ variables respectively with <span class="math inline">\(W_j=X_j \circ Z\)</span>
 multiplication of Z by column <span class="math inline">\(X_j\)</span> of <span class="math inline">\(X\)</span>.</p>
 <p>The objective function used for pliable lasso is</p>
 <p><span class="math display">\[
-J(\beta_0, \theta_0, \beta, \Theta) = 
+J(\beta_0, \theta_0, \beta, \Theta) =
 \frac{1}{2N}\sum_{i=1}^N (y_i-\hat{y}_i)^2 +
 (1-\alpha)\lambda\sum_{j=1}^p\biggl(||(\beta_j,\theta_j)||_2 +
 ||\theta_j||_2\biggr) + \alpha\lambda\sum_{j,k}|\theta_{j,k}|_1.
@@ -435,12 +435,13 @@ similarly.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin19.5.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+<pre><code>## R version 4.2.1 (2022-06-23)
+## Platform: x86_64-apple-darwin21.6.0 (64-bit)
+## Running under: macOS Ventura 13.0
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/local/Cellar/openblas/0.3.10_1/lib/libopenblasp-r0.3.10.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
+## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -449,23 +450,23 @@ similarly.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.1.0 CVXR_1.0-9      
+## [1] kableExtra_1.3.4 CVXR_1.0-11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.6-0         Rcpp_1.0.5        highr_0.8         compiler_4.0.2   
-##  [5] pillar_1.4.6      tools_4.0.2       digest_0.6.25     bit_1.1-15.2     
-##  [9] viridisLite_0.3.0 evaluate_0.14     tibble_3.0.3      lifecycle_0.2.0  
-## [13] lattice_0.20-41   pkgconfig_2.0.3   rlang_0.4.7       Matrix_1.2-18    
-## [17] gurobi_9.0.3.1    rstudioapi_0.11   Rglpk_0.6-4       yaml_2.2.1       
-## [21] blogdown_0.19     xfun_0.15         cccp_0.2-4        ECOSolveR_0.5.3  
-## [25] xml2_1.3.2        httr_1.4.2        Rmpfr_0.8-1       stringr_1.4.0    
-## [29] knitr_1.28        vctrs_0.3.2       hms_0.5.3         webshot_0.5.2    
-## [33] bit64_0.9-7       grid_4.0.2        glue_1.4.1        R6_2.4.1         
-## [37] rmarkdown_2.3     bookdown_0.19     readr_1.3.1       magrittr_1.5     
-## [41] codetools_0.2-16  rcbc_0.1.0.9001   scales_1.1.1      htmltools_0.5.0  
-## [45] ellipsis_0.3.1    assertthat_0.2.1  rvest_0.3.5       colorspace_1.4-1 
-## [49] Rcplex_0.3-3      stringi_1.4.6     Rmosek_9.2.3      munsell_0.5.0    
-## [53] slam_0.1-47       crayon_1.3.4</code></pre>
+##  [1] xfun_0.34         bslib_0.4.0       slam_0.1-50       lattice_0.20-45  
+##  [5] Rmosek_10.0.25    colorspace_2.0-3  htmltools_0.5.3   viridisLite_0.4.1
+##  [9] yaml_2.3.6        gmp_0.6-6         rlang_1.0.6       jquerylib_0.1.4  
+## [13] glue_1.6.2        Rmpfr_0.8-9       Rcplex_0.3-5      bit64_4.0.5      
+## [17] lifecycle_1.0.3   stringr_1.4.1     munsell_0.5.0     blogdown_1.13    
+## [21] rvest_1.0.3       gurobi_9.5-2      codetools_0.2-18  evaluate_0.17    
+## [25] knitr_1.40        fastmap_1.1.0     cccp_0.2-9        highr_0.9        
+## [29] Rcpp_1.0.9        scales_1.2.1      cachem_1.0.6      webshot_0.5.4    
+## [33] jsonlite_1.8.3    systemfonts_1.0.4 bit_4.0.4         digest_0.6.30    
+## [37] stringi_1.7.8     bookdown_0.29     grid_4.2.1        Rglpk_0.6-4      
+## [41] ECOSolveR_0.5.4   cli_3.4.1         tools_4.2.1       magrittr_2.0.3   
+## [45] sass_0.4.2        rcbc_0.1.0.9001   Matrix_1.5-1      xml2_1.3.3       
+## [49] assertthat_0.2.1  rmarkdown_2.17    svglite_2.1.0     httr_1.4.4       
+## [53] rstudioapi_0.14   R6_2.5.1          compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -473,9 +474,9 @@ similarly.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-tibsjhf:2017">
-<p>Tibshirani, Robert J., and Jerome H. Friedman. 2017. “A Pliable Lasso.” <em>arXiv Preprint Arxiv:1712.00484</em>. <a href="https://arxiv.org/abs/1712.00484">https://arxiv.org/abs/1712.00484</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-tibsjhf:2017" class="csl-entry">
+Tibshirani, Robert J., and Jerome H. Friedman. 2017. <span>“A Pliable Lasso.”</span> <em>arXiv Preprint Arxiv:1712.00484</em>. <a href="https://arxiv.org/abs/1712.00484">https://arxiv.org/abs/1712.00484</a>.
 </div>
 </div>
 </div>
@@ -490,8 +491,8 @@ similarly.</p>
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="../../">
-				<img class="logo" src="../../favicon.ico" alt="Logo"/>
+			<a href="/">
+				<img class="logo" src="/favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -516,11 +517,11 @@ similarly.</p>
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../">Home</a>
+		<a class="reference internal" href="/">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -528,27 +529,27 @@ similarly.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../examples/">Tutorial examples</a>
+		<a class="reference internal" href="/examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -556,9 +557,9 @@ similarly.</p>
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="../../">Documentation overview</a><ul>
-  <li>Previous: <a href="../../cvxr_examples/cvxr_glmnet_equivalence/" title="Getting Equivalent Results from `glmnet` and `CVXR`">Getting Equivalent Results from `glmnet` and `CVXR`</a></li>
-  <li>Next: <a href="../../cvxr_examples/whats_new_1.0/" title="What&#39;s new in 1.0?">What&#39;s new in 1.0?</a></li>
+  <li><a href="/">Documentation overview</a><ul>
+  <li>Previous: <a href="/cvxr_examples/cvxr_glmnet_equivalence/" title="Getting Equivalent Results from `glmnet` and `CVXR`">Getting Equivalent Results from `glmnet` and `CVXR`</a></li>
+  <li>Next: <a href="/cvxr_examples/whats_new_1.0/" title="What&#39;s new in 1.0?">What&#39;s new in 1.0?</a></li>
 </ul>
 
 	</div>
