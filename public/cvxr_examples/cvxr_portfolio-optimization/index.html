@@ -121,12 +121,9 @@ ggplot(data = tidyW, mapping = aes(x = gamma, y = fraction)) +
     geom_bar(mapping = aes(fill = grp), stat = &quot;identity&quot;) +
     scale_x_discrete(labels = parse(text = levels(tidyW$gamma))) +
     scale_fill_manual(values = cbPalette) +
-    guides(fill = FALSE) +
+    guides(fill = &quot;none&quot;) +
     labs(x = &quot;Risk Aversion&quot;, y = &quot;Fraction of Budget&quot;)</code></pre>
-<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
-## &quot;none&quot;)` instead.</code></pre>
 <p><img src="/cvxr_examples/portfolio-optimization_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
@@ -161,26 +158,24 @@ to the code above.</p>
 ## 
 ## other attached packages:
 ## [1] tidyr_1.2.1        RColorBrewer_1.1-3 ggplot2_3.3.6      CVXR_1.0-11       
-## [5] testthat_3.1.5     here_1.0.1        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.9       gurobi_9.5-2     lattice_0.20-45  rcbc_0.1.0.9001 
-##  [5] Rmosek_10.0.25   assertthat_0.2.1 rprojroot_2.0.3  digest_0.6.30   
-##  [9] utf8_1.2.2       gmp_0.6-6        slam_0.1-50      R6_2.5.1        
-## [13] evaluate_0.17    highr_0.9        blogdown_1.13    pillar_1.8.1    
-## [17] rlang_1.0.6      jquerylib_0.1.4  Matrix_1.5-1     rmarkdown_2.17  
-## [21] desc_1.4.2       labeling_0.4.2   osqp_0.6.0.5     stringr_1.4.1   
-## [25] bit_4.0.4        munsell_0.5.0    compiler_4.2.1   xfun_0.34       
-## [29] pkgconfig_2.0.3  Rglpk_0.6-4      htmltools_0.5.3  Rcplex_0.3-5    
-## [33] tidyselect_1.2.0 tibble_3.1.8     bookdown_0.29    codetools_0.2-18
-## [37] fansi_1.0.3      dplyr_1.0.10     withr_2.5.0      brio_1.1.3      
-## [41] grid_4.2.1       jsonlite_1.8.3   gtable_0.3.1     lifecycle_1.0.3 
-## [45] DBI_1.1.3        magrittr_2.0.3   scales_1.2.1     cli_3.4.1       
-## [49] stringi_1.7.8    cachem_1.0.6     farver_2.1.1     Rmpfr_0.8-9     
-## [53] bslib_0.4.0      ellipsis_0.3.2   generics_0.1.3   vctrs_0.5.0     
-## [57] tools_4.2.1      bit64_4.0.5      glue_1.6.2       purrr_0.3.5     
-## [61] pkgload_1.3.0    fastmap_1.1.0    yaml_2.3.6       colorspace_2.0-3
-## [65] cccp_0.2-9       knitr_1.40       sass_0.4.2</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
+##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
+##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
+## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
+## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
+## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
+## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
+## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
+## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
+## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
+## [41] osqp_0.6.0.5     jsonlite_1.8.3   farver_2.1.1     bit_4.0.4       
+## [45] digest_0.6.30    stringi_1.7.8    bookdown_0.29    dplyr_1.0.10    
+## [49] Rglpk_0.6-4      grid_4.2.1       cli_3.4.1        tools_4.2.1     
+## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
+## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
+## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

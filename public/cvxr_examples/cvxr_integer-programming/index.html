@@ -206,13 +206,6 @@ CPLEX
 </tr>
 </tbody>
 </table>
-<pre><code>## Testthat Results: No output is good</code></pre>
-<pre><code>## Error: `ecos_solution` not identical to intprog$ecos.
-## 4/4 mismatches (average diff: 2e-05)
-## [1]  1.67e+00 -  1.67e+00 ==  3.61e-06
-## [2]  3.33e+00 -  3.33e+00 == -4.19e-06
-## [3]  2.00e+00 -  2.00e+00 ==  7.04e-05
-## [4] -1.79e-06 - -3.34e-11 == -1.79e-06</code></pre>
 </div>
 <div id="office-assignment-problem" class="section level2">
 <h2>Office Assignment Problem</h2>
@@ -304,7 +297,6 @@ office_occupants &lt;- names(office_assignment)[match(c(5:7, 1:4), office_assign
 office_occupants[is.na(office_occupants)] &lt;- &quot;Empty&quot;
 draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 <p><img src="/cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -324,29 +316,27 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.3.6    kableExtra_1.3.4 CVXR_1.0-11      testthat_3.1.5  
-## [5] here_1.0.1      
+## [1] ggplot2_3.3.6    kableExtra_1.3.4 CVXR_1.0-11     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.9        gurobi_9.5-2      svglite_2.1.0     lattice_0.20-45  
-##  [5] Rmosek_10.0.25    rcbc_0.1.0.9001   assertthat_0.2.1  rprojroot_2.0.3  
-##  [9] digest_0.6.30     utf8_1.2.2        gmp_0.6-6         slam_0.1-50      
-## [13] R6_2.5.1          evaluate_0.17     highr_0.9         httr_1.4.4       
-## [17] blogdown_1.13     pillar_1.8.1      rlang_1.0.6       rstudioapi_0.14  
-## [21] jquerylib_0.1.4   Matrix_1.5-1      rmarkdown_2.17    labeling_0.4.2   
-## [25] desc_1.4.2        webshot_0.5.4     stringr_1.4.1     bit_4.0.4        
-## [29] munsell_0.5.0     compiler_4.2.1    xfun_0.34         pkgconfig_2.0.3  
-## [33] systemfonts_1.0.4 Rglpk_0.6-4       htmltools_0.5.3   Rcplex_0.3-5     
-## [37] tidyselect_1.2.0  tibble_3.1.8      bookdown_0.29     codetools_0.2-18 
-## [41] fansi_1.0.3       viridisLite_0.4.1 dplyr_1.0.10      withr_2.5.0      
-## [45] brio_1.1.3        grid_4.2.1        jsonlite_1.8.3    gtable_0.3.1     
-## [49] lifecycle_1.0.3   DBI_1.1.3         magrittr_2.0.3    scales_1.2.1     
-## [53] cli_3.4.1         stringi_1.7.8     cachem_1.0.6      farver_2.1.1     
-## [57] Rmpfr_0.8-9       xml2_1.3.3        bslib_0.4.0       vctrs_0.5.0      
-## [61] generics_0.1.3    tools_4.2.1       bit64_4.0.5       glue_1.6.2       
-## [65] pkgload_1.3.0     fastmap_1.1.0     yaml_2.3.6        colorspace_2.0-3 
-## [69] cccp_0.2-9        rvest_1.0.3       ECOSolveR_0.5.4   knitr_1.40       
-## [73] sass_0.4.2</code></pre>
+##  [1] Rcpp_1.0.9        svglite_2.1.0     gurobi_9.5-2      lattice_0.20-45  
+##  [5] rcbc_0.1.0.9001   Rmosek_10.0.25    assertthat_0.2.1  digest_0.6.30    
+##  [9] utf8_1.2.2        gmp_0.6-6         slam_0.1-50       R6_2.5.1         
+## [13] evaluate_0.17     httr_1.4.4        highr_0.9         blogdown_1.13    
+## [17] pillar_1.8.1      rlang_1.0.6       rstudioapi_0.14   jquerylib_0.1.4  
+## [21] Matrix_1.5-1      rmarkdown_2.17    labeling_0.4.2    webshot_0.5.4    
+## [25] stringr_1.4.1     bit_4.0.4         munsell_0.5.0     compiler_4.2.1   
+## [29] xfun_0.34         pkgconfig_2.0.3   systemfonts_1.0.4 Rglpk_0.6-4      
+## [33] htmltools_0.5.3   Rcplex_0.3-5      tidyselect_1.2.0  tibble_3.1.8     
+## [37] bookdown_0.29     codetools_0.2-18  fansi_1.0.3       viridisLite_0.4.1
+## [41] dplyr_1.0.10      withr_2.5.0       grid_4.2.1        jsonlite_1.8.3   
+## [45] gtable_0.3.1      lifecycle_1.0.3   DBI_1.1.3         magrittr_2.0.3   
+## [49] scales_1.2.1      cli_3.4.1         stringi_1.7.8     cachem_1.0.6     
+## [53] farver_2.1.1      Rmpfr_0.8-9       xml2_1.3.3        bslib_0.4.0      
+## [57] generics_0.1.3    vctrs_0.5.0       tools_4.2.1       bit64_4.0.5      
+## [61] glue_1.6.2        fastmap_1.1.0     yaml_2.3.6        colorspace_2.0-3 
+## [65] cccp_0.2-9        rvest_1.0.3       ECOSolveR_0.5.4   knitr_1.40       
+## [69] sass_0.4.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

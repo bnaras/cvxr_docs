@@ -366,8 +366,11 @@ provides details.</p>
 a community edition. After installation, the
 <a href="https://cran.r-project.org/package=Rcplex"><code>Rcplex</code></a> package needs to
 be told where to find the libraries for linking. A sample session on
-macOS is shown below for reference.</p>
-<pre class="bash"><code>R CMD INSTALL Rcplex_0.3-3.tar.gz --configure-args=&quot;--with-cplex-include=/Applications/CPLEX_Studio_Community129/cplex/include --with-cplex-lib=&#39;-L/Applications/CPLEX_Studio_Community129/cplex/lib/x86-64_osx/static_pic -lilocplex -lcplex&#39;&quot;</code></pre>
+macOS is shown below for reference, where CPLEX version 22.1 was installed in the
+standard <code>Applications</code> folder.</p>
+<pre class="bash"><code>cplex_location &lt;- &quot;/Applications/CPLEX_Studio_Community221&quot;
+configure_args &lt;- c(Rcplex = sprintf(&quot;--with-cplex-include=&#39;%s/cplex/include&#39; --with-cplex-lib=&#39;-L%s/cplex/lib/x86-64_osx/static_pic -lilocplex -lcplex&#39;&quot;, cplex_location, cplex_location))
+install.packages(&quot;Rcplex&quot;, configure.args = configure_args)</code></pre>
 </div>
 <div id="example-session" class="section level3">
 <h3>Example session</h3>

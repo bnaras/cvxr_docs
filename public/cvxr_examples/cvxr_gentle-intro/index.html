@@ -150,7 +150,6 @@ solution2.1$status</code></pre>
 <pre class="r"><code>solution2.1$getValue(y)</code></pre>
 <pre><code>## [1] 0.2</code></pre>
 <pre class="r"><code># The world says &#39;hi&#39; back.</code></pre>
-<pre><code>## Testthat Results: No output is good</code></pre>
 <p>We now turn to a careful explanation of the code. The first lines
 create two Variable objects, <code>x</code> and <code>y</code>, both of length 1
 (i.e. scalar variables).</p>
@@ -253,7 +252,6 @@ solution2.2$status</code></pre>
 <pre><code>## [1] 0.3333333</code></pre>
 <pre class="r"><code>solution2.2$getValue(y)</code></pre>
 <pre><code>## [1] 0.3333333</code></pre>
-<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="an-invalid-problem" class="section level3">
 <h3>An Invalid Problem</h3>
@@ -316,9 +314,6 @@ lm_solution3.1 &lt;- lm(y ~ 0 + X)</code></pre>
 <p>Obviously, if all you want to do is least-squares linear regression,
 you should simply use <code>lm</code>. The chief advantage of <code>CVXR</code> is its
 flexibility, as we will demonstrate in the rest of this section.</p>
-<pre><code>## Testthat Results: No output is good</code></pre>
-<pre><code>## Error: `cvxrBeta` not identical to gentle_intro$beta.
-## Objects equal but not identical</code></pre>
 </div>
 <div id="non-negative-least-squares" class="section level3">
 <h3>Non-Negative Least Squares</h3>
@@ -331,9 +326,6 @@ be non-negative.</p>
 constraints(prob3.2) &lt;- list(beta &gt;= 0)
 solution3.2 &lt;- solve(prob3.2)</code></pre>
 <p><img src="/cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-19-1.png" width="700" /></p>
-<pre><code>## Testthat Results: No output is good</code></pre>
-<pre><code>## Error: `cvxrBetaNNLS` not identical to gentle_intro$beta.
-## Objects equal but not identical</code></pre>
 <p>As we can see in the figure above, adding that one constraint produced
 a massive improvement in the accuracy of the estimates. Not only are
 the non-negative least-squares estimates much closer to the true
@@ -384,7 +376,6 @@ constraints &lt;- list(y * (X %*% beta + beta0) &gt;= 1 - slack, slack &gt;= 0)
 prob3.3 &lt;- Problem(Minimize(objective), constraints)
 solution3.3 &lt;- solve(prob3.3)</code></pre>
 <p><img src="/cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
-<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 </div>
 <div id="disciplined-convex-programming-dcp" class="section level2">
@@ -421,27 +412,25 @@ described in <a href="/cvxr_functions/">Function Reference</a>.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] MASS_7.3-58.1  tidyr_1.2.1    ggplot2_3.3.6  CVXR_1.0-11    testthat_3.1.5
-## [6] here_1.0.1    
+## [1] MASS_7.3-58.1 tidyr_1.2.1   ggplot2_3.3.6 CVXR_1.0-11  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.9       gurobi_9.5-2     lattice_0.20-45  rcbc_0.1.0.9001 
-##  [5] Rmosek_10.0.25   assertthat_0.2.1 rprojroot_2.0.3  digest_0.6.30   
-##  [9] utf8_1.2.2       gmp_0.6-6        slam_0.1-50      R6_2.5.1        
-## [13] evaluate_0.17    highr_0.9        blogdown_1.13    pillar_1.8.1    
-## [17] rlang_1.0.6      jquerylib_0.1.4  Matrix_1.5-1     rmarkdown_2.17  
-## [21] labeling_0.4.2   desc_1.4.2       osqp_0.6.0.5     stringr_1.4.1   
-## [25] bit_4.0.4        munsell_0.5.0    compiler_4.2.1   xfun_0.34       
-## [29] pkgconfig_2.0.3  Rglpk_0.6-4      htmltools_0.5.3  Rcplex_0.3-5    
-## [33] tidyselect_1.2.0 tibble_3.1.8     bookdown_0.29    codetools_0.2-18
-## [37] fansi_1.0.3      dplyr_1.0.10     withr_2.5.0      brio_1.1.3      
-## [41] grid_4.2.1       jsonlite_1.8.3   gtable_0.3.1     lifecycle_1.0.3 
-## [45] DBI_1.1.3        magrittr_2.0.3   scales_1.2.1     cli_3.4.1       
-## [49] stringi_1.7.8    cachem_1.0.6     farver_2.1.1     Rmpfr_0.8-9     
-## [53] bslib_0.4.0      ellipsis_0.3.2   generics_0.1.3   vctrs_0.5.0     
-## [57] tools_4.2.1      bit64_4.0.5      glue_1.6.2       purrr_0.3.5     
-## [61] pkgload_1.3.0    fastmap_1.1.0    yaml_2.3.6       colorspace_2.0-3
-## [65] cccp_0.2-9       knitr_1.40       sass_0.4.2</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
+##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
+##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
+## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
+## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
+## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
+## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
+## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
+## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
+## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
+## [41] osqp_0.6.0.5     jsonlite_1.8.3   farver_2.1.1     bit_4.0.4       
+## [45] digest_0.6.30    stringi_1.7.8    bookdown_0.29    dplyr_1.0.10    
+## [49] Rglpk_0.6-4      grid_4.2.1       cli_3.4.1        tools_4.2.1     
+## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
+## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
+## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

@@ -90,19 +90,6 @@ p2 &lt;- Problem(objective_2)
 betaHat_100 &lt;- solve(p2)$getValue(beta)</code></pre>
 <p><em>NOTE</em> Of course, <code>CVXR</code> is much slower since it is not optimized just
 for one problem.</p>
-<pre><code>## Testthat Results: No output is good</code></pre>
-<pre><code>## Error: `betaHat_100` not equal to l1_results$b100.
-## 1352/2001 mismatches (average diff: 0.000203)
-## [1] 7.19 - 7.19 == -1.81e-05
-## [2] 7.19 - 7.19 == -1.80e-05
-## [3] 7.19 - 7.19 == -1.79e-05
-## [4] 7.19 - 7.19 == -1.78e-05
-## [5] 7.19 - 7.19 == -1.77e-05
-## [6] 7.19 - 7.19 == -1.77e-05
-## [7] 7.19 - 7.19 == -1.76e-05
-## [8] 7.19 - 7.19 == -1.75e-05
-## [9] 7.19 - 7.19 == -1.74e-05
-## ...</code></pre>
 </div>
 <div id="comparison-plots" class="section level2">
 <h2>Comparison Plots</h2>
@@ -160,27 +147,25 @@ on the right, it does not have as many knots as <code>l1tf</code>.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] l1tf_0.0.0.9000 ggplot2_3.3.6   CVXR_1.0-11     testthat_3.1.5 
-## [5] here_1.0.1     
+## [1] l1tf_0.0.0.9000 ggplot2_3.3.6   CVXR_1.0-11    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.9       gurobi_9.5-2     lattice_0.20-45  rcbc_0.1.0.9001 
-##  [5] Rmosek_10.0.25   assertthat_0.2.1 rprojroot_2.0.3  digest_0.6.30   
-##  [9] utf8_1.2.2       gmp_0.6-6        slam_0.1-50      R6_2.5.1        
-## [13] evaluate_0.17    highr_0.9        blogdown_1.13    pillar_1.8.1    
-## [17] rlang_1.0.6      jquerylib_0.1.4  Matrix_1.5-1     rmarkdown_2.17  
-## [21] desc_1.4.2       labeling_0.4.2   stringr_1.4.1    bit_4.0.4       
-## [25] munsell_0.5.0    compiler_4.2.1   xfun_0.34        pkgconfig_2.0.3 
-## [29] Rglpk_0.6-4      htmltools_0.5.3  Rcplex_0.3-5     tidyselect_1.2.0
-## [33] tibble_3.1.8     bookdown_0.29    codetools_0.2-18 fansi_1.0.3     
-## [37] dplyr_1.0.10     withr_2.5.0      brio_1.1.3       grid_4.2.1      
-## [41] jsonlite_1.8.3   gtable_0.3.1     lifecycle_1.0.3  DBI_1.1.3       
-## [45] magrittr_2.0.3   scales_1.2.1     cli_3.4.1        stringi_1.7.8   
-## [49] cachem_1.0.6     farver_2.1.1     Rmpfr_0.8-9      bslib_0.4.0     
-## [53] generics_0.1.3   vctrs_0.5.0      tools_4.2.1      bit64_4.0.5     
-## [57] glue_1.6.2       pkgload_1.3.0    fastmap_1.1.0    yaml_2.3.6      
-## [61] colorspace_2.0-3 cccp_0.2-9       ECOSolveR_0.5.4  knitr_1.40      
-## [65] sass_0.4.2</code></pre>
+##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
+##  [5] lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3 vctrs_0.5.0     
+##  [9] generics_0.1.3   htmltools_0.5.3  yaml_2.3.6       gmp_0.6-6       
+## [13] utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4  pillar_1.8.1    
+## [17] glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0      DBI_1.1.3       
+## [21] Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3  stringr_1.4.1   
+## [25] munsell_0.5.0    blogdown_1.13    gtable_0.3.1     gurobi_9.5-2    
+## [29] codetools_0.2-18 evaluate_0.17    labeling_0.4.2   knitr_1.40      
+## [33] fastmap_1.1.0    fansi_1.0.3      cccp_0.2-9       highr_0.9       
+## [37] Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6     jsonlite_1.8.3  
+## [41] farver_2.1.1     bit_4.0.4        digest_0.6.30    stringi_1.7.8   
+## [45] bookdown_0.29    dplyr_1.0.10     Rglpk_0.6-4      grid_4.2.1      
+## [49] ECOSolveR_0.5.4  cli_3.4.1        tools_4.2.1      magrittr_2.0.3  
+## [53] sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3  rcbc_0.1.0.9001 
+## [57] Matrix_1.5-1     assertthat_0.2.1 rmarkdown_2.17   R6_2.5.1        
+## [61] compiler_4.2.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
