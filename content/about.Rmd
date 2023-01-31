@@ -97,7 +97,7 @@ d  <- tibble::tibble(
                                   "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
                                   "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
                                   "[gurobi](https://www.gurobi.com/documentation/9.0/refman/ins_the_r_package.html)",
-                                  "[Rmosek](https://cran.r-project.org/package=Rglpk)",
+                                  "[Rmosek](https://cran.r-project.org/package=Rmosek)",
                                   "[scs](https://cran.r-project.org/package=scs)"),
                   LP = c(check, check, check, check, check, check, " " , check, check, check),
                   QP = c(" " , " " , " " , check, check, check, " " , check, check, check),
