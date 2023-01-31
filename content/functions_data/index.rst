@@ -278,7 +278,7 @@ and returns a scalar.
 
    * - quad_over_lin(X, y)
      - :math:`\left(\sum_{ij}X_{ij}^2\right)/y`
-     - :math:`x \in \mathbf{R}^n`
+     - :math:`X \in \mathbf{R}^{m \times n}`
 
        :math:`y > 0`
      - |positive| positive
