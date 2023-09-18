@@ -62,8 +62,8 @@ d  <- tibble::tibble(
                                   "[Rcplex](https://cran.r-project.org/package=Rcplex)",
                                   "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
                                   "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
-                                  "[gurobi](https://www.gurobi.com/documentation/9.0/refman/ins_the_r_package.html)",
-                                  "[Rmosek](https://cran.r-project.org/package=Rglpk)",
+                                  "[gurobi](https://www.gurobi.com/documentation/10.0/refman/r_ins_the_r_package.html)",
+                                  "[Rmosek](https://docs.mosek.com/latest/rmosek/index.html)",
                                   "[scs](https://cran.r-project.org/package=scs)"),
                   LP = c(check, check, check, check, check, check, " " , check, check, check),
                   QP = c(" " , " " , " " , check, check, check, " " , check, check, check),
@@ -92,7 +92,7 @@ Brief pointers on installation follow.
 [MOSEK](https://www.mosek.com) provides an academic version that is
 free of charge: one can obtain the free academic license after
 registering. Once the license for the product has been activates, the
-[Rmosek documentation](https://docs.mosek.com/9.1/rmosek/index.html)
+[Rmosek documentation](https://docs.mosek.com/latest/rmosek/index.html)
 provides all the details for installation. A quick check to ensure
 things are working is to run the example:
 
@@ -111,7 +111,7 @@ and repeat until success.
 that is free of charge. After registering, install the _Gurobi
 Optimizer_ software and activate your license as necessary. The
 [Gurobi
-documentation](https://www.gurobi.com/documentation/9.0/quickstart_mac/r_interface.html#section:R)
+documentation](https://www.gurobi.com/documentation/10.0/quickstart_windows/r_interface.html#section:R)
 provides details.
 
 Once activated, you can check that `CVXR::installed_solvers()` lists
