@@ -23,3 +23,5 @@ required_pkgs <- c(
     "dplyr",
     "survey")
 
+## l1tf is available via
+## devtools::install_github("hadley/l1tf")
