@@ -27,14 +27,15 @@ etc. The empirical distribution that places equal probability
 <span class="math inline">\(1/m\)</span> on each <span class="math inline">\(y_i\)</span> is not a good estimate.</p>
 <p>So, we must determine the weights <span class="math inline">\(w \in {\mathbf R}^m\)</span> of a weighted
 empirical distribution, <span class="math inline">\(y = y_i\)</span> with probability <span class="math inline">\(w_i\)</span>, which
-rectifies the skewness of the sample <span class="citation">(<a href="#ref-dirstd" role="doc-biblioref">Fleiss, Levin, and Paik 2003, 19.5</a>)</span>. We can pose this
+rectifies the skewness of the sample <span class="citation">(<a href="#ref-dirstd">Fleiss, Levin, and Paik 2003, 19.5</a>)</span>. We can pose this
 problem as</p>
 <p><span class="math display">\[
-    \begin{array}{ll} \underset{w}{\mbox{maximize}} &amp; \sum_{i=1}^m -w_i\log w_i \\
-    \mbox{subject to} &amp; w \geq 0, \quad \sum_{i=1}^m w_i = 1,\quad X^Tw = b.
-    \end{array}
+	\begin{array}{ll} \underset{w}{\mbox{maximize}} &amp; \sum_{i=1}^m -w_i\log w_i \\
+	\mbox{subject to} &amp; w \geq 0, \quad \sum_{i=1}^m w_i = 1,\quad X^Tw = b.
+	\end{array}
 \]</span></p>
-<p>Our objective is the total entropy, which is concave on <span class="math inline">\({\mathbf R}_+^m\)</span>, and our constraints ensure <span class="math inline">\(w\)</span> is a probability distribution
+<p>Our objective is the total entropy, which is concave on <span class="math inline">\({\mathbf
+R}_+^m\)</span>, and our constraints ensure <span class="math inline">\(w\)</span> is a probability distribution
 that implies our known expectations on <span class="math inline">\(X\)</span>.</p>
 <p>To illustrate this method, we generate <span class="math inline">\(m = 1000\)</span> data points
 <span class="math inline">\(x_{i,1} \sim \mbox{Bernoulli}(0.5)\)</span>,
@@ -78,8 +79,10 @@ range of <span class="math inline">\(y\)</span>.</p>
 <pre class="r"><code>## Plot probability density functions
 dens1 &lt;- density(ypop)
 dens2 &lt;- density(y)
-dens3 &lt;- density(y, weights = weights)
-yrange &lt;- seq(-3, 15, 0.01)
+dens3 &lt;- density(y, weights = weights)</code></pre>
+<pre><code>## Warning in density.default(y, weights = weights): Selecting bandwidth *not*
+## using &#39;weights&#39;</code></pre>
+<pre class="r"><code>yrange &lt;- seq(-3, 15, 0.01)
 d &lt;- data.frame(x = yrange,
                 True = approx(x = dens1$x, y = dens1$y, xout = yrange)$y,
                 Sample = approx(x = dens2$x, y = dens2$y, xout = yrange)$y,
@@ -89,7 +92,8 @@ plot.data &lt;- gather(data = d, key = &quot;Type&quot;, value = &quot;Estimate&
 ggplot(plot.data) +
     geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<pre><code>## Warning: Removed 300 row(s) containing missing values (geom_path).</code></pre>
+<pre><code>## Warning: Removed 300 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
 <img src="/cvxr_examples/direct-standardization_files/figure-html/unnamed-chunk-3-1.png" alt="Probability distribution functions population, skewed sample and reweighted sample" width="672" />
 <p class="caption">
@@ -123,40 +127,42 @@ ggplot(plot.data) +
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.2.1   ggplot2_3.3.6 CVXR_1.0-11  
+## [1] tidyr_1.3.1   ggplot2_3.5.1 CVXR_1.0-13  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
-##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
-##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
-## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
-## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
-## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
-## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
-## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
-## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
-## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
-## [41] jsonlite_1.8.3   farver_2.1.1     bit_4.0.4        digest_0.6.30   
-## [45] stringi_1.7.8    bookdown_0.29    dplyr_1.0.10     Rglpk_0.6-4     
-## [49] grid_4.2.1       ECOSolveR_0.5.4  cli_3.4.1        tools_4.2.1     
-## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
-## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
-## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] slam_0.1-50       blogdown_1.19     lattice_0.22-6    digest_0.6.35    
+##  [9] magrittr_2.0.3    evaluate_0.23     grid_4.4.0        bookdown_0.39    
+## [13] fastmap_1.2.0     jsonlite_1.8.8    Matrix_1.7-0      ECOSolveR_0.5.5  
+## [17] Rmosek_10.2.0     purrr_1.0.2       fansi_1.0.6       scales_1.3.0     
+## [21] codetools_0.2-20  jquerylib_0.1.4   cli_3.6.2         Rmpfr_0.9-5      
+## [25] rlang_1.1.3       Rglpk_0.6-5.1     bit64_4.0.5       munsell_0.5.1    
+## [29] withr_3.0.0       cachem_1.1.0      yaml_2.3.8        tools_4.4.0      
+## [33] Rcplex_0.3-6      rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-0 
+## [37] gurobi_11.0-0     assertthat_0.2.1  vctrs_0.6.5       R6_2.5.1         
+## [41] lifecycle_1.0.4   bit_4.0.5         cccp_0.3-1        pkgconfig_2.0.3  
+## [45] pillar_1.9.0      bslib_0.7.0       gtable_0.3.5      glue_1.7.0       
+## [49] Rcpp_1.0.12       highr_0.11        xfun_0.44         tibble_3.2.1     
+## [53] tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.47        farver_2.1.2     
+## [57] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27    compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -164,7 +170,7 @@ ggplot(plot.data) +
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-dirstd" class="csl-entry">
 Fleiss, J. L., B. Levin, and M. C. Paik. 2003. <em>Statistical Methods for Rates and Proportions</em>. Wiley-Interscience.
 </div>

@@ -40,8 +40,8 @@ required_pkgs <- c(
     "survey")
 missing_pkgs <- setdiff(required_pkgs, row.names(installed.packages()))
 if (length(missing_pkgs) > 0) {
-    print(missing_pkgs)
-    stop("Missing above packages; install them.")
+  print(missing_pkgs)
+  stop("Missing above packages; install them.")
 }
 ```
 

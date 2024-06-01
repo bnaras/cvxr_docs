@@ -141,7 +141,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     sat_splines <- readRDS(file = file.path(testdata_dir, "saturating_hinges.RDS"))
-    expect_equal(splines, sat_splines, tol = 1e-5)
+    expect_equal(splines, sat_splines, tolerance = 1e-5)
 }
 ```
 

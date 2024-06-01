@@ -18,7 +18,7 @@ params:
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>In this example, we solve the Markowitz portfolio problem under
-various constraints <span class="citation">(<a href="#ref-Markowitz:1952" role="doc-biblioref">Markowitz 1952</a>; <a href="#ref-Roy:1952" role="doc-biblioref">Roy 1952</a>; <a href="#ref-LoboFazelBoyd:2007" role="doc-biblioref">Lobo, Fazel, and Boyd 2007</a>)</span>.</p>
+various constraints <span class="citation">(<a href="#ref-Markowitz:1952">Markowitz 1952</a>; <a href="#ref-Roy:1952">Roy 1952</a>; <a href="#ref-LoboFazelBoyd:2007">Lobo, Fazel, and Boyd 2007</a>)</span>.</p>
 <p>We have <span class="math inline">\(n\)</span> assets or stocks in our portfolio and must determine the
 amount of money to invest in each. Let <span class="math inline">\(w_i\)</span> denote the fraction of
 our budget invested in asset <span class="math inline">\(i = 1,\ldots,m\)</span>, and let <span class="math inline">\(r_i\)</span> be the
@@ -122,47 +122,49 @@ leverage limit <span class="math inline">\(\|w\|_1 \leq L^{max}\)</span> by chan
 the risk. To account for transaction costs, we could add a term to the
 objective that penalizes deviations of <span class="math inline">\(w\)</span> from the previous
 portfolio. These extensions and more are described in
-<span class="citation">Boyd et al. (<a href="#ref-BoydBusseti:2017" role="doc-biblioref">2017</a>)</span>. The key takeaway is that all of these convex
+<span class="citation">Boyd et al. (<a href="#ref-BoydBusseti:2017">2017</a>)</span>. The key takeaway is that all of these convex
 problems can be easily solved in <code>CVXR</code> with just a few alterations
 to the code above.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.2.1        RColorBrewer_1.1-3 ggplot2_3.3.6      CVXR_1.0-11       
+## [1] tidyr_1.3.1        RColorBrewer_1.1-3 ggplot2_3.5.1      CVXR_1.0-13       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
-##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
-##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
-## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
-## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
-## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
-## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
-## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
-## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
-## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
-## [41] osqp_0.6.0.5     jsonlite_1.8.3   farver_2.1.1     bit_4.0.4       
-## [45] digest_0.6.30    stringi_1.7.8    bookdown_0.29    dplyr_1.0.10    
-## [49] Rglpk_0.6-4      grid_4.2.1       cli_3.4.1        tools_4.2.1     
-## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
-## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
-## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] slam_0.1-50       blogdown_1.19     lattice_0.22-6    digest_0.6.35    
+##  [9] magrittr_2.0.3    evaluate_0.23     grid_4.4.0        bookdown_0.39    
+## [13] fastmap_1.2.0     jsonlite_1.8.8    Matrix_1.7-0      Rmosek_10.2.0    
+## [17] purrr_1.0.2       fansi_1.0.6       scales_1.3.0      codetools_0.2-20 
+## [21] jquerylib_0.1.4   cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3      
+## [25] Rglpk_0.6-5.1     bit64_4.0.5       munsell_0.5.1     withr_3.0.0      
+## [29] cachem_1.1.0      yaml_2.3.8        tools_4.4.0       osqp_0.6.3.2     
+## [33] Rcplex_0.3-6      rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-0 
+## [37] gurobi_11.0-0     assertthat_0.2.1  vctrs_0.6.5       R6_2.5.1         
+## [41] lifecycle_1.0.4   bit_4.0.5         cccp_0.3-1        pkgconfig_2.0.3  
+## [45] pillar_1.9.0      bslib_0.7.0       gtable_0.3.5      glue_1.7.0       
+## [49] Rcpp_1.0.12       highr_0.11        xfun_0.44         tibble_3.2.1     
+## [53] tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.47        farver_2.1.2     
+## [57] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27    compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -170,7 +172,7 @@ to the code above.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-BoydBusseti:2017" class="csl-entry">
 Boyd, S., E. Busseti, S. Diamond, R. N. Kahn, K. Koh, P. Nystrup, and J. Speth. 2017. <span>“Multi-Period Trading via Convex Optimization.”</span> <em>Foundations and Trends in Optimization</em>.
 </div>

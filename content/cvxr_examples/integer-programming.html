@@ -24,10 +24,10 @@ params:
 \mbox{subject to} &amp; x_1, x_2, x_3, x_4 &gt;= 0\\
                   &amp; x_1 + x_2 &lt;= 5\\
                   &amp; 2x_1 - x_2 &gt;= 0\\
-                  &amp; -x_1 + 3x_2 &gt;= 0\\
-                  &amp; x_3 + x_4 &gt;= 0.5\\
-                  &amp; x_3 &gt;= 1.1\\
-                  &amp; x_3 \mbox{ is integer.}
+				  &amp; -x_1 + 3x_2 &gt;= 0\\
+				  &amp; x_3 + x_4 &gt;= 0.5\\
+				  &amp; x_3 &gt;= 1.1\\
+				  &amp; x_3 \mbox{ is integer.}
 \end{array}
 \]</span></p>
 <p><code>CVXR</code> provides constructors for the integer and boolean variables via
@@ -112,16 +112,16 @@ CPLEX
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(x_1\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1.6666703
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1.666667
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1.666667
 </td>
 <td style="text-align:right;">
@@ -132,16 +132,16 @@ CPLEX
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(x_2\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.3333291
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.333333
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.333333
 </td>
 <td style="text-align:right;">
@@ -152,16 +152,16 @@ CPLEX
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(x_3\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.0000704
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.000000
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.000000
 </td>
 <td style="text-align:right;">
@@ -172,16 +172,16 @@ CPLEX
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(x_4\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -0.0000018
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.000000
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.000000
 </td>
 <td style="text-align:right;">
@@ -288,42 +288,44 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.3.6    kableExtra_1.3.4 CVXR_1.0-11     
+## [1] ggplot2_3.5.1    kableExtra_1.4.0 CVXR_1.0-13     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.9        svglite_2.1.0     gurobi_9.5-2      lattice_0.20-45  
-##  [5] rcbc_0.1.0.9001   Rmosek_10.0.25    assertthat_0.2.1  digest_0.6.30    
-##  [9] utf8_1.2.2        gmp_0.6-6         slam_0.1-50       R6_2.5.1         
-## [13] evaluate_0.17     httr_1.4.4        highr_0.9         blogdown_1.13    
-## [17] pillar_1.8.1      rlang_1.0.6       rstudioapi_0.14   jquerylib_0.1.4  
-## [21] Matrix_1.5-1      rmarkdown_2.17    labeling_0.4.2    webshot_0.5.4    
-## [25] stringr_1.4.1     bit_4.0.4         munsell_0.5.0     compiler_4.2.1   
-## [29] xfun_0.34         pkgconfig_2.0.3   systemfonts_1.0.4 Rglpk_0.6-4      
-## [33] htmltools_0.5.3   Rcplex_0.3-5      tidyselect_1.2.0  tibble_3.1.8     
-## [37] bookdown_0.29     codetools_0.2-18  fansi_1.0.3       viridisLite_0.4.1
-## [41] dplyr_1.0.10      withr_2.5.0       grid_4.2.1        jsonlite_1.8.3   
-## [45] gtable_0.3.1      lifecycle_1.0.3   DBI_1.1.3         magrittr_2.0.3   
-## [49] scales_1.2.1      cli_3.4.1         stringi_1.7.8     cachem_1.0.6     
-## [53] farver_2.1.1      Rmpfr_0.8-9       xml2_1.3.3        bslib_0.4.0      
-## [57] generics_0.1.3    vctrs_0.5.0       tools_4.2.1       bit64_4.0.5      
-## [61] glue_1.6.2        fastmap_1.1.0     yaml_2.3.6        colorspace_2.0-3 
-## [65] cccp_0.2-9        rvest_1.0.3       ECOSolveR_0.5.4   knitr_1.40       
-## [69] sass_0.4.2</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] slam_0.1-50       xml2_1.3.6        blogdown_1.19     stringi_1.8.4    
+##  [9] lattice_0.22-6    digest_0.6.35     magrittr_2.0.3    evaluate_0.23    
+## [13] grid_4.4.0        bookdown_0.39     fastmap_1.2.0     jsonlite_1.8.8   
+## [17] Matrix_1.7-0      ECOSolveR_0.5.5   Rmosek_10.2.0     fansi_1.0.6      
+## [21] viridisLite_0.4.2 scales_1.3.0      codetools_0.2-20  jquerylib_0.1.4  
+## [25] cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3       Rglpk_0.6-5.1    
+## [29] bit64_4.0.5       munsell_0.5.1     withr_3.0.0       cachem_1.1.0     
+## [33] yaml_2.3.8        tools_4.4.0       Rcplex_0.3-6      rcbc_0.1.0.9001  
+## [37] dplyr_1.1.4       colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1 
+## [41] vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1    
+## [45] bit_4.0.5         cccp_0.3-1        pkgconfig_2.0.3   bslib_0.7.0      
+## [49] pillar_1.9.0      gtable_0.3.5      glue_1.7.0        Rcpp_1.0.12      
+## [53] systemfonts_1.1.0 highr_0.11        xfun_0.44         tibble_3.2.1     
+## [57] tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.47        farver_2.1.2     
+## [61] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27    svglite_2.1.3    
+## [65] compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

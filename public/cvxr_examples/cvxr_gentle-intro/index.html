@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.50" />
+	<meta name="generator" content="Hugo 0.80.0" />
 	
 	<title>A Gentle Introduction to `CVXR` &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -94,12 +94,13 @@ document and then refer to the tutorial examples.</p>
 <p>A convex optimization problem has the following form:</p>
 <p><span class="math display">\[
 \begin{array}{ll} \mbox{minimize} &amp; f_0(x)\\
-    \mbox{subject to} &amp; f_i(x) \leq 0, \quad i=1,\ldots,m\\
-    &amp; g_i(x) = 0, \quad i=1,\ldots,p
-    \end{array}
+	\mbox{subject to} &amp; f_i(x) \leq 0, \quad i=1,\ldots,m\\
+	&amp; g_i(x) = 0, \quad i=1,\ldots,p
+	\end{array}
 \]</span></p>
 <p>where <span class="math inline">\(x\)</span> is the variable, <span class="math inline">\(f_0\)</span> and <span class="math inline">\(f_1,...,f_m\)</span> are convex, and
-<span class="math inline">\(g_1,...,g_p\)</span> are affine. <span class="math inline">\(f_0\)</span> is called the objective function, <span class="math inline">\(f_i \leq 0\)</span> are called the inequality constraints, and <span class="math inline">\(g_i = 0\)</span> are
+<span class="math inline">\(g_1,...,g_p\)</span> are affine. <span class="math inline">\(f_0\)</span> is called the objective function, <span class="math inline">\(f_i
+\leq 0\)</span> are called the inequality constraints, and <span class="math inline">\(g_i = 0\)</span> are
 called the equality constraints.</p>
 <p>In <code>CVXR</code>, you will specify convex optimization problems in a more
 convenient format than the one above.</p>
@@ -110,7 +111,7 @@ and concave.</p>
 convex function (or maximize a concave function) over a convex set of
 input points.</p>
 <p>You can learn much more about convex optimization via
-<span class="citation">Boyd and Vandenberghe (<a href="#ref-BoydVandenberghe:2004" role="doc-biblioref">2004</a>)</span> as well as
+<span class="citation">Boyd and Vandenberghe (<a href="#ref-BoydVandenberghe:2004">2004</a>)</span> as well as
 the
 <a href="https://lagunita.stanford.edu/courses/Engineering/CVX101/Winter2014/about">CVX101 MOOC</a>.</p>
 </div>
@@ -121,7 +122,7 @@ three of these features:</p>
 <p><span class="math display">\[
 \begin{array}{ll}
   \mbox{minimize} &amp; x^2 + y^2 \\
-    \mbox{subject to} &amp; x \geq 0, \quad 2x + y = 1
+	\mbox{subject to} &amp; x \geq 0, \quad 2x + y = 1
 \end{array}
 \]</span></p>
 <p>with scalar variables <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. This is a convex optimization
@@ -150,6 +151,7 @@ solution2.1$status</code></pre>
 <pre class="r"><code>solution2.1$getValue(y)</code></pre>
 <pre><code>## [1] 0.2</code></pre>
 <pre class="r"><code># The world says &#39;hi&#39; back.</code></pre>
+<pre><code>## Testthat Results: No output is good</code></pre>
 <p>We now turn to a careful explanation of the code. The first lines
 create two Variable objects, <code>x</code> and <code>y</code>, both of length 1
 (i.e. scalar variables).</p>
@@ -252,6 +254,7 @@ solution2.2$status</code></pre>
 <pre><code>## [1] 0.3333333</code></pre>
 <pre class="r"><code>solution2.2$getValue(y)</code></pre>
 <pre><code>## [1] 0.3333333</code></pre>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="an-invalid-problem" class="section level3">
 <h3>An Invalid Problem</h3>
@@ -310,10 +313,22 @@ root-mean-squared error). As we can see below, <code>CVXR</code>’s solution
 matches the solution obtained by using <code>lm</code>.</p>
 <pre class="r"><code>CVXR_solution3.1 &lt;- solve(prob3.1)
 lm_solution3.1 &lt;- lm(y ~ 0 + X)</code></pre>
-<p><img src="/cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>Obviously, if all you want to do is least-squares linear regression,
 you should simply use <code>lm</code>. The chief advantage of <code>CVXR</code> is its
 flexibility, as we will demonstrate in the rest of this section.</p>
+<pre><code>## Testthat Results: No output is good</code></pre>
+<pre><code>## Error: `cvxrBeta` not identical to gentle_intro$beta.
+## 9/10 mismatches (average diff: 1.57)
+## [2]  -0.372 -  1.7400 == -2.112
+## [3]  -0.724 -  0.7522 == -1.477
+## [4]   2.290 - -0.4642 ==  2.754
+## [5]   0.749 - -0.2449 ==  0.993
+## [6]   0.504 - -0.5850 ==  1.089
+## [7]   1.092 - -0.2080 ==  1.300
+## [8]   2.628 - -0.6852 ==  3.313
+## [9]  -0.297 -  0.0725 == -0.369
+## [10]  0.331 -  1.0473 == -0.716</code></pre>
 </div>
 <div id="non-negative-least-squares" class="section level3">
 <h3>Non-Negative Least Squares</h3>
@@ -325,7 +340,17 @@ be non-negative.</p>
 <pre class="r"><code>prob3.2 &lt;- prob3.1
 constraints(prob3.2) &lt;- list(beta &gt;= 0)
 solution3.2 &lt;- solve(prob3.2)</code></pre>
-<p><img src="/cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-19-1.png" width="700" /></p>
+<p><img src="../../cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-19-1.png" width="700" /></p>
+<pre><code>## Testthat Results: No output is good</code></pre>
+<pre><code>## Error: `cvxrBetaNNLS` not identical to gentle_intro$beta.
+## 7/10 mismatches (average diff: 0.0583)
+## [1]  0.0679 - 0.0582 ==  0.00968
+## [2]  0.7856 - 0.6749 ==  0.11072
+## [4]  0.8665 - 0.9739 == -0.10732
+## [5]  0.2343 - 0.1577 ==  0.07657
+## [7]  0.4012 - 0.4178 == -0.01659
+## [8]  0.9597 - 1.0079 == -0.04815
+## [10] 0.7099 - 0.6711 ==  0.03872</code></pre>
 <p>As we can see in the figure above, adding that one constraint produced
 a massive improvement in the accuracy of the estimates. Not only are
 the non-negative least-squares estimates much closer to the true
@@ -348,7 +373,7 @@ the margin and the number of points that are misclassified.</p>
 <p><span class="math display">\[
 \begin{array}{ll}
   \mbox{minimize} &amp; \frac{1}{2}\Vert\beta\Vert^2 + C\sum_{i=1}^m \xi_i  \\
-    \mbox{subject to} &amp; \xi_i \geq 0, \quad y_i(x_i^T\beta + \beta_0) \geq 1 - \xi_i, \quad i = 1,\ldots,m
+	\mbox{subject to} &amp; \xi_i \geq 0, \quad y_i(x_i^T\beta + \beta_0) \geq 1 - \xi_i, \quad i = 1,\ldots,m
 \end{array}
 \]</span></p>
 <p>with variables <span class="math inline">\((\beta,\xi)\)</span>. Here, <span class="math inline">\(\xi\)</span> is the amount by which a
@@ -375,7 +400,8 @@ objective &lt;- (1/2) * sum_squares(vstack(beta, beta0)) + cost * sum(slack)
 constraints &lt;- list(y * (X %*% beta + beta0) &gt;= 1 - slack, slack &gt;= 0)
 prob3.3 &lt;- Problem(Minimize(objective), constraints)
 solution3.3 &lt;- solve(prob3.3)</code></pre>
-<p><img src="/cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/gentle_intro_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 </div>
 <div id="disciplined-convex-programming-dcp" class="section level2">
@@ -391,46 +417,50 @@ as
 <a href="http://cvxr.com/cvx/doc/dcp.html#">Matlab</a>,
 and <a href="http://convexjl.readthedocs.io/en/latest/types.html">Julia</a>.</p>
 <p><code>CVXR</code> implements the same rules, and a short introduction
-is <a href="/cvxr_dcp">available here</a>. The set of DCP functions are
-described in <a href="/cvxr_functions/">Function Reference</a>.</p>
+is <a href="../../cvxr_dcp">available here</a>. The set of DCP functions are
+described in <a href="../../cvxr_functions/">Function Reference</a>.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] MASS_7.3-58.1 tidyr_1.2.1   ggplot2_3.3.6 CVXR_1.0-11  
+## [1] MASS_7.3-60.2    tidyr_1.3.1      ggplot2_3.5.1    CVXR_1.0-13     
+## [5] testthat_3.2.1.1 here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
-##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
-##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
-## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
-## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
-## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
-## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
-## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
-## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
-## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
-## [41] osqp_0.6.0.5     jsonlite_1.8.3   farver_2.1.1     bit_4.0.4       
-## [45] digest_0.6.30    stringi_1.7.8    bookdown_0.29    dplyr_1.0.10    
-## [49] Rglpk_0.6-4      grid_4.2.1       cli_3.4.1        tools_4.2.1     
-## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
-## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
-## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] slam_0.1-50       blogdown_1.19     lattice_0.22-6    digest_0.6.35    
+##  [9] magrittr_2.0.3    evaluate_0.23     grid_4.4.0        bookdown_0.39    
+## [13] pkgload_1.3.4     fastmap_1.2.0     rprojroot_2.0.4   jsonlite_1.8.8   
+## [17] Matrix_1.7-0      brio_1.1.5        Rmosek_10.2.0     purrr_1.0.2      
+## [21] fansi_1.0.6       scales_1.3.0      codetools_0.2-20  jquerylib_0.1.4  
+## [25] cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3       Rglpk_0.6-5.1    
+## [29] bit64_4.0.5       munsell_0.5.1     withr_3.0.0       cachem_1.1.0     
+## [33] yaml_2.3.8        tools_4.4.0       osqp_0.6.3.2      Rcplex_0.3-6     
+## [37] rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-0  gurobi_11.0-0    
+## [41] assertthat_0.2.1  vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4  
+## [45] bit_4.0.5         desc_1.4.3        cccp_0.3-1        pkgconfig_2.0.3  
+## [49] bslib_0.7.0       pillar_1.9.0      gtable_0.3.5      glue_1.7.0       
+## [53] Rcpp_1.0.12       highr_0.11        xfun_0.44         tibble_3.2.1     
+## [57] tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.47        farver_2.1.2     
+## [61] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27    compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -438,7 +468,7 @@ described in <a href="/cvxr_functions/">Function Reference</a>.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-BoydVandenberghe:2004" class="csl-entry">
 Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge University Press.
 </div>
@@ -455,8 +485,8 @@ Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge Uni
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="/">
-				<img class="logo" src="/favicon.ico" alt="Logo"/>
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -481,11 +511,11 @@ Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge Uni
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/">Home</a>
+		<a class="reference internal" href="../../">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -493,27 +523,27 @@ Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge Uni
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/examples/">Tutorial examples</a>
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -521,9 +551,9 @@ Boyd, S., and L. Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge Uni
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="/">Documentation overview</a><ul>
-  <li>Previous: <a href="/cvxr_examples/cvxr_intro/" title="Introduction">Introduction</a></li>
-  <li>Next: <a href="/cvxr_examples/cvxr_isotonic-regression/" title="Isotonic Regression">Isotonic Regression</a></li>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_intro/" title="Introduction">Introduction</a></li>
+  <li>Next: <a href="../../cvxr_examples/cvxr_isotonic-regression/" title="Isotonic Regression">Isotonic Regression</a></li>
 </ul>
 
 	</div>

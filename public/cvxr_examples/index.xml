@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Cvxr_examples on CVXR</title>
@@ -6,11 +6,7 @@
     <description>Recent content in Cvxr_examples on CVXR</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/cvxr_examples/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="/cvxr_examples/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Warm Starts</title>
       <link>/cvxr_examples/warm_starts/</link>
@@ -134,7 +130,7 @@ Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0
       <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>/cvxr_examples/cvxr_fast-mixing-mc/</guid>
-      <description>Introduction This example is derived from the results in Boyd, Diaconis, and Xiao (2004), section 2. Let \(\mathcal{G} = (\mathcal{V}, \mathcal{E})\) be a connected graph with vertices \(\mathcal{V} = \{1,\ldots,n\}\) and edges \(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\). Assume that \((i,i) \in \mathcal{E}\) for all \(i = 1,\ldots,n\), and \((i,j) \in \mathcal{E}\) implies \((j,i) \in \mathcal{E}\). Under these conditions, a discrete-time Markov chain on \(\mathcal{V}\) will have the uniform distribution as one of its equilibrium distributions.</description>
+      <description>## Warning in desc$Date: partial match of &amp;#39;Date&amp;#39; to &amp;#39;Date/Publication&amp;#39; Introduction This example is derived from the results in Boyd, Diaconis, and Xiao (2004), section 2. Let \(\mathcal{G} = (\mathcal{V}, \mathcal{E})\) be a connected graph with vertices \(\mathcal{V} = \{1,\ldots,n\}\) and edges \(\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}\). Assume that \((i,i) \in \mathcal{E}\) for all \(i = 1,\ldots,n\), and \((i,j) \in \mathcal{E}\) implies \((j,i) \in \mathcal{E}\). Under these conditions, a discrete-time Markov chain on \(\mathcal{V}\) will have the uniform distribution as one of its equilibrium distributions.</description>
     </item>
     
     <item>
@@ -174,7 +170,7 @@ Here \(\lambda \geq 0\) is the overall regularization weight and \(\alpha \in [0
       <guid>/cvxr_examples/cvxr_l1-trend-filtering/</guid>
       <description>Introduction Kim et al. (2009) propose the \(l_1\) trend filtering method for trend estimation. The method solves an optimization problem of the form
 \[ \begin{array}{ll} \underset{\beta}{\mbox{minimize}} &amp;amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1 \end{array} \] where the variable to be estimated is \(\beta\) and we are given the problem data \(y\) and \(\lambda\). The matrix \(D\) is the second-order difference matrix,
-\[ D = \left[ \begin{matrix} 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; \ddots &amp;amp; \ddots &amp;amp; \ddots &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1\\ \end{matrix} \right].</description>
+\[ D = \left[ \begin{matrix} 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; \ddots &amp;amp; \ddots &amp;amp; \ddots &amp;amp; &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1 &amp;amp; \\ &amp;amp; &amp;amp; &amp;amp; &amp;amp; 1 &amp;amp; -2 &amp;amp; 1\\	\end{matrix} \right].</description>
     </item>
     
     <item>

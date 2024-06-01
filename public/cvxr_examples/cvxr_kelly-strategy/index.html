@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.50" />
+	<meta name="generator" content="Hugo 0.80.0" />
 	
 	<title>Kelly Gambling &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -30,13 +30,16 @@
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In Kelly gambling <span class="citation">(<a href="#ref-kelly" role="doc-biblioref">Kelly 1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span>
-possible outcomes, which yield a random non-negative return of <span class="math inline">\(r \in {\mathbf R}_+^n\)</span>. The return <span class="math inline">\(r\)</span> takes on exactly <span class="math inline">\(K\)</span> values
+<p>In Kelly gambling <span class="citation">(<a href="#ref-kelly">Kelly 1956</a>)</span>, we are given the opportunity to bet on <span class="math inline">\(n\)</span>
+possible outcomes, which yield a random non-negative return of <span class="math inline">\(r \in
+{\mathbf R}_+^n\)</span>. The return <span class="math inline">\(r\)</span> takes on exactly <span class="math inline">\(K\)</span> values
 <span class="math inline">\(r_1,\ldots,r_K\)</span> with known probabilities <span class="math inline">\(\pi_1,\ldots,\pi_K\)</span>. This
-gamble is repeated over <span class="math inline">\(T\)</span> periods. In a given period <span class="math inline">\(t\)</span>, let <span class="math inline">\(b_i \geq 0\)</span> denote the fraction of our wealth bet on outcome <span class="math inline">\(i\)</span>. Assuming
+gamble is repeated over <span class="math inline">\(T\)</span> periods. In a given period <span class="math inline">\(t\)</span>, let <span class="math inline">\(b_i
+\geq 0\)</span> denote the fraction of our wealth bet on outcome <span class="math inline">\(i\)</span>. Assuming
 the <span class="math inline">\(n\)</span>th outcome is equivalent to not wagering (it returns one with
 certainty), the fractions must satisfy <span class="math inline">\(\sum_{i=1}^n b_i = 1\)</span>. Thus,
-at the end of the period, our cumulative wealth is <span class="math inline">\(w_t = (r^Tb)w_{t-1}\)</span>. Our goal is to maximize the average growth rate with
+at the end of the period, our cumulative wealth is <span class="math inline">\(w_t =
+(r^Tb)w_{t-1}\)</span>. Our goal is to maximize the average growth rate with
 respect to <span class="math inline">\(b \in {\mathbf R}^n\)</span>:</p>
 <p><span class="math display">\[
 \begin{array}{ll}
@@ -102,6 +105,7 @@ for(i in seq_len(TRIALS)) {
     winnings_cmp &lt;- rets[sidx,] %*% bets_cmp
     wealth_cmp[,i] &lt;- cumprod(winnings_cmp)
 }</code></pre>
+<pre><code>## Testthat Results: No output is good</code></pre>
 <p>Growth curves for five independent trials are plotted in the figures
 below. Red lines represent the wealth each period from
 the Kelly bets, while cyan lines are the result of the naive
@@ -125,14 +129,14 @@ ggplot(data = plot.data) +
     scale_y_log10() +
     labs(x = &quot;Time&quot;, y = &quot;Wealth&quot;) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<p><img src="/cvxr_examples/kelly-strategy_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="../../cvxr_examples/kelly-strategy_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 <div id="extensions" class="section level2">
 <h2>Extensions</h2>
 <p>As observed in some trajectories above, wealth tends to drop by a
 significant amount before increasing eventually. One way to reduce
 this drawdown risk is to add a convex constraint as described in
-<span class="citation">Busseti, Ryu, and Boyd (<a href="#ref-RCK" role="doc-biblioref">2016, 5.3</a>)</span></p>
+<span class="citation">Busseti, Ryu, and Boyd (<a href="#ref-RCK">2016, 5.3</a>)</span></p>
 <p><span class="math display">\[
 \log\left(\sum_{j=1}^K \exp(\log\pi_j - \lambda
 \log(r_j^Tb))\right) \leq 0
@@ -145,40 +149,44 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] tidyr_1.2.1   ggplot2_3.3.6 CVXR_1.0-11  
+## [1] tidyr_1.3.1      ggplot2_3.5.1    CVXR_1.0-13      testthat_3.2.1.1
+## [5] here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
-##  [5] purrr_0.3.5      lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3
-##  [9] vctrs_0.5.0      generics_0.1.3   htmltools_0.5.3  yaml_2.3.6      
-## [13] gmp_0.6-6        utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4 
-## [17] pillar_1.8.1     glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0     
-## [21] DBI_1.1.3        Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3 
-## [25] stringr_1.4.1    munsell_0.5.0    blogdown_1.13    gtable_0.3.1    
-## [29] gurobi_9.5-2     codetools_0.2-18 evaluate_0.17    labeling_0.4.2  
-## [33] knitr_1.40       fastmap_1.1.0    cccp_0.2-9       fansi_1.0.3     
-## [37] highr_0.9        Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6    
-## [41] jsonlite_1.8.3   farver_2.1.1     bit_4.0.4        digest_0.6.30   
-## [45] stringi_1.7.8    bookdown_0.29    dplyr_1.0.10     Rglpk_0.6-4     
-## [49] grid_4.2.1       ECOSolveR_0.5.4  cli_3.4.1        tools_4.2.1     
-## [53] magrittr_2.0.3   sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3 
-## [57] ellipsis_0.3.2   rcbc_0.1.0.9001  Matrix_1.5-1     assertthat_0.2.1
-## [61] rmarkdown_2.17   R6_2.5.1         compiler_4.2.1</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] slam_0.1-50       blogdown_1.19     lattice_0.22-6    digest_0.6.35    
+##  [9] magrittr_2.0.3    evaluate_0.23     grid_4.4.0        bookdown_0.39    
+## [13] pkgload_1.3.4     fastmap_1.2.0     rprojroot_2.0.4   jsonlite_1.8.8   
+## [17] Matrix_1.7-0      ECOSolveR_0.5.5   brio_1.1.5        Rmosek_10.2.0    
+## [21] purrr_1.0.2       fansi_1.0.6       scales_1.3.0      codetools_0.2-20 
+## [25] jquerylib_0.1.4   cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3      
+## [29] Rglpk_0.6-5.1     bit64_4.0.5       munsell_0.5.1     withr_3.0.0      
+## [33] cachem_1.1.0      yaml_2.3.8        tools_4.4.0       Rcplex_0.3-6     
+## [37] rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-0  gurobi_11.0-0    
+## [41] assertthat_0.2.1  vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4  
+## [45] bit_4.0.5         desc_1.4.3        cccp_0.3-1        pkgconfig_2.0.3  
+## [49] bslib_0.7.0       pillar_1.9.0      gtable_0.3.5      glue_1.7.0       
+## [53] Rcpp_1.0.12       highr_0.11        xfun_0.44         tibble_3.2.1     
+## [57] tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.47        farver_2.1.2     
+## [61] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27    compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -186,7 +194,7 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-RCK" class="csl-entry">
 Busseti, E., E. K. Ryu, and S. Boyd. 2016. <span>“Risk–Constrained <span>K</span>elly Gambling.”</span> <em>Journal of Investing</em> 25 (3): 118–34.
 </div>
@@ -206,8 +214,8 @@ Kelly, J. L. 1956. <span>“A New Interpretation of Information Rate.”</span> 
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="/">
-				<img class="logo" src="/favicon.ico" alt="Logo"/>
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -232,11 +240,11 @@ Kelly, J. L. 1956. <span>“A New Interpretation of Information Rate.”</span> 
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/">Home</a>
+		<a class="reference internal" href="../../">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -244,27 +252,27 @@ Kelly, J. L. 1956. <span>“A New Interpretation of Information Rate.”</span> 
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/examples/">Tutorial examples</a>
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -272,9 +280,9 @@ Kelly, J. L. 1956. <span>“A New Interpretation of Information Rate.”</span> 
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="/">Documentation overview</a><ul>
-  <li>Previous: <a href="/cvxr_examples/cvxr_l1-trend-filtering/" title="L1 Trend Filtering">L1 Trend Filtering</a></li>
-  <li>Next: <a href="/cvxr_examples/cvxr_huber-regression/" title="Huber Regression">Huber Regression</a></li>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_l1-trend-filtering/" title="L1 Trend Filtering">L1 Trend Filtering</a></li>
+  <li>Next: <a href="../../cvxr_examples/cvxr_huber-regression/" title="Huber Regression">Huber Regression</a></li>
 </ul>
 
 	</div>

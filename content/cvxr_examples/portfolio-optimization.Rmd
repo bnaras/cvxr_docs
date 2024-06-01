@@ -151,8 +151,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     portfolio_results <- readRDS(file = file.path(testdata_dir, "portfolio.RDS"))
-    expect_equal(result$getValue(risk), portfolio_results$risk, tol = 1e-7)
-    expect_equal(result$getValue(ret), portfolio_results$ret, tol = 1e-7)
+    expect_equal(result$getValue(risk), portfolio_results$risk, tolerance = 1e-7)
+    expect_equal(result$getValue(ret), portfolio_results$ret, tolerance = 1e-7)
 }
 ```
 

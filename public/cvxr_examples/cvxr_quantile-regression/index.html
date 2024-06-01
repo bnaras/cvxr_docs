@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.50" />
+	<meta name="generator" content="Hugo 0.80.0" />
 	
 	<title>Quantile Regression &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	<h1>Quantile Regression</h1>
 	
 	
-<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
-<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="../../rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="introduction" class="section level2">
@@ -35,7 +35,7 @@
 <p>Quantile regression is another variation on least squares
 . The loss is the tilted <span class="math inline">\(l_1\)</span> function,</p>
 <p><span class="math display">\[
-    \phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
+	\phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
 \]</span></p>
 <p>where <span class="math inline">\(\tau \in (0,1)\)</span> specifies the quantile. The problem as before
 is to minimize the total residual loss. This model is commonly used in
@@ -59,13 +59,19 @@ names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))
 
 nf &lt;- ncol(fits)
 colors &lt;- colorRampPalette(colors = c(&quot;black&quot;, &quot;red&quot;))(nf)
-p &lt;- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)
-for (i in seq_len(nf)[-1]) {
+p &lt;- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code>for (i in seq_len(nf)[-1]) {
     p &lt;- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
 }
 p</code></pre>
-<p><img src="/cvxr_examples/quantile-regression_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<p>The above plot shows the quantile regression fits for <span class="math inline">\(\tau = (0.1, 0.25, 0.5, 0.75, 0.90, 0.95)\)</span>. The OLS fit is the thick black line.</p>
+<p><img src="../../cvxr_examples/quantile-regression_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The above plot shows the quantile regression fits for <span class="math inline">\(\tau = (0.1,
+0.25, 0.5, 0.75, 0.90, 0.95)\)</span>. The OLS fit is the thick black line.</p>
 <p>The following is a table of the estimates.</p>
 <pre class="r"><code>knitr::kable(fits, format = &quot;html&quot;, caption = &quot;Fits from OLS and `quantreg`&quot;) %&gt;%
     kable_styling(&quot;striped&quot;) %&gt;%
@@ -103,54 +109,54 @@ OLS
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 (Intercept)
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 147.4753885
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 110.1415742
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 95.4835396
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 81.4822474
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 62.3965855
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 67.3508721
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 64.1039632
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 income
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.4851784
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.4017658
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.4741032
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.5601806
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6440141
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6862995
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.7090685
 </td>
 </tr>
@@ -167,8 +173,22 @@ solutions &lt;- sapply(taus, function(tau) {
     prob &lt;- Problem(Minimize(obj))
     ## THE OSQP solver returns an error for tau = 0.5
     solve(prob, solver = &quot;ECOS&quot;)$getValue(beta)
-})
-fits &lt;- data.frame(coef(lm(foodexp ~ income, data = engel)),
+})</code></pre>
+<pre><code>## Warning in quant_loss(y - X %*% beta, t = tau): partial argument match of &#39;t&#39;
+## to &#39;tau&#39;</code></pre>
+<pre><code>## Warning in match.call(definition, call, expand.dots, envir): partial argument
+## match of &#39;t&#39; to &#39;tau&#39;</code></pre>
+<pre><code>## Warning in quant_loss(y - X %*% beta, t = tau): partial argument match of &#39;t&#39;
+## to &#39;tau&#39;
+## Warning in quant_loss(y - X %*% beta, t = tau): partial argument match of &#39;t&#39;
+## to &#39;tau&#39;
+## Warning in quant_loss(y - X %*% beta, t = tau): partial argument match of &#39;t&#39;
+## to &#39;tau&#39;
+## Warning in quant_loss(y - X %*% beta, t = tau): partial argument match of &#39;t&#39;
+## to &#39;tau&#39;
+## Warning in quant_loss(y - X %*% beta, t = tau): partial argument match of &#39;t&#39;
+## to &#39;tau&#39;</code></pre>
+<pre class="r"><code>fits &lt;- data.frame(coef(lm(foodexp ~ income, data = engel)),
                    solutions)
 names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))</code></pre>
 <p>Here is a table similar to the above with the OLS estimate added in
@@ -209,102 +229,106 @@ OLS
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 (Intercept)
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 147.4753885
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 110.1415744
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 95.4835373
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 81.4822486
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 62.3965854
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 67.3508709
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 64.1039682
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 income
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.4851784
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.4017658
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.4741032
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.5601805
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6440141
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6862995
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.7090685
 </td>
 </tr>
 </tbody>
 </table>
 <p>The results match.</p>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] quantreg_5.94    SparseM_1.81     kableExtra_1.3.4 ggplot2_3.3.6   
-## [5] CVXR_1.0-11     
+## [1] quantreg_5.98    SparseM_1.83     kableExtra_1.4.0 ggplot2_3.5.1   
+## [5] CVXR_1.0-13      testthat_3.2.1.1 here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.9         gurobi_9.5-2       svglite_2.1.0      lattice_0.20-45   
-##  [5] Rmosek_10.0.25     rcbc_0.1.0.9001    assertthat_0.2.1   digest_0.6.30     
-##  [9] utf8_1.2.2         gmp_0.6-6          slam_0.1-50        R6_2.5.1          
-## [13] MatrixModels_0.5-1 evaluate_0.17      httr_1.4.4         highr_0.9         
-## [17] blogdown_1.13      pillar_1.8.1       rlang_1.0.6        rstudioapi_0.14   
-## [21] jquerylib_0.1.4    Matrix_1.5-1       rmarkdown_2.17     labeling_0.4.2    
-## [25] splines_4.2.1      webshot_0.5.4      stringr_1.4.1      bit_4.0.4         
-## [29] munsell_0.5.0      compiler_4.2.1     xfun_0.34          pkgconfig_2.0.3   
-## [33] systemfonts_1.0.4  Rglpk_0.6-4        htmltools_0.5.3    Rcplex_0.3-5      
-## [37] tidyselect_1.2.0   tibble_3.1.8       bookdown_0.29      codetools_0.2-18  
-## [41] fansi_1.0.3        viridisLite_0.4.1  dplyr_1.0.10       withr_2.5.0       
-## [45] MASS_7.3-58.1      grid_4.2.1         jsonlite_1.8.3     gtable_0.3.1      
-## [49] lifecycle_1.0.3    DBI_1.1.3          magrittr_2.0.3     scales_1.2.1      
-## [53] cli_3.4.1          stringi_1.7.8      cachem_1.0.6       farver_2.1.1      
-## [57] Rmpfr_0.8-9        xml2_1.3.3         bslib_0.4.0        generics_0.1.3    
-## [61] vctrs_0.5.0        tools_4.2.1        bit64_4.0.5        glue_1.6.2        
-## [65] fastmap_1.1.0      survival_3.4-0     yaml_2.3.6         colorspace_2.0-3  
-## [69] cccp_0.2-9         rvest_1.0.3        ECOSolveR_0.5.4    knitr_1.40        
-## [73] sass_0.4.2</code></pre>
+##  [1] gtable_0.3.5       xfun_0.44          bslib_0.7.0        lattice_0.22-6    
+##  [5] Rmosek_10.2.0      vctrs_0.6.5        tools_4.4.0        generics_0.1.3    
+##  [9] tibble_3.2.1       fansi_1.0.6        highr_0.11         pkgconfig_2.0.3   
+## [13] Matrix_1.7-0       desc_1.4.3         assertthat_0.2.1   lifecycle_1.0.4   
+## [17] compiler_4.4.0     farver_2.1.2       stringr_1.5.1      MatrixModels_0.5-3
+## [21] brio_1.1.5         munsell_0.5.1      gurobi_11.0-0      codetools_0.2-20  
+## [25] ECOSolveR_0.5.5    htmltools_0.5.8.1  sass_0.4.9         cccp_0.3-1        
+## [29] yaml_2.3.8         gmp_0.7-4          pillar_1.9.0       crayon_1.5.2      
+## [33] jquerylib_0.1.4    MASS_7.3-60.2      rcbc_0.1.0.9001    Rcplex_0.3-6      
+## [37] cachem_1.1.0       tidyselect_1.2.1   digest_0.6.35      slam_0.1-50       
+## [41] stringi_1.8.4      dplyr_1.1.4        bookdown_0.39      labeling_0.4.3    
+## [45] splines_4.4.0      rprojroot_2.0.4    fastmap_1.2.0      grid_4.4.0        
+## [49] colorspace_2.1-0   cli_3.6.2          magrittr_2.0.3     survival_3.6-4    
+## [53] utf8_1.2.4         withr_3.0.0        Rmpfr_0.9-5        scales_1.3.0      
+## [57] bit64_4.0.5        rmarkdown_2.27     bit_4.0.5          blogdown_1.19     
+## [61] evaluate_0.23      knitr_1.47         Rglpk_0.6-5.1      viridisLite_0.4.2 
+## [65] rlang_1.1.3        Rcpp_1.0.12        glue_1.7.0         xml2_1.3.6        
+## [69] pkgload_1.3.4      svglite_2.1.3      rstudioapi_0.16.0  jsonlite_1.8.8    
+## [73] R6_2.5.1           systemfonts_1.1.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -324,8 +348,8 @@ income
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="/">
-				<img class="logo" src="/favicon.ico" alt="Logo"/>
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -350,11 +374,11 @@ income
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/">Home</a>
+		<a class="reference internal" href="../../">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -362,27 +386,27 @@ income
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/examples/">Tutorial examples</a>
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -390,9 +414,9 @@ income
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="/">Documentation overview</a><ul>
-  <li>Previous: <a href="/cvxr_examples/cvxr_saturating_hinges/" title="Saturating Hinges Fit">Saturating Hinges Fit</a></li>
-  <li>Next: <a href="/cvxr_examples/cvxr_portfolio-optimization/" title="Portfolio Optimization">Portfolio Optimization</a></li>
+  <li><a href="../../">Documentation overview</a><ul>
+  <li>Previous: <a href="../../cvxr_examples/cvxr_saturating_hinges/" title="Saturating Hinges Fit">Saturating Hinges Fit</a></li>
+  <li>Next: <a href="../../cvxr_examples/cvxr_portfolio-optimization/" title="Portfolio Optimization">Portfolio Optimization</a></li>
 </ul>
 
 	</div>
