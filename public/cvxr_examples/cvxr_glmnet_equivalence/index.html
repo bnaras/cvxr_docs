@@ -84,15 +84,15 @@ result &lt;- solve(prob, FEASTOL = thresh, RELTOL = thresh, ABSTOL = thresh, ver
 ##           warm start: on, polish: on, time_limit: off
 ## 
 ## iter   objective    pri res    dua res    rho        time
-##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   3.77e-04s
-##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.42e-03s
-## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.68e-03s
+##    1  -8.0000e+00   8.00e+00   3.95e+01   1.00e-01   3.97e-04s
+##  125   3.7110e-01   8.16e-06   2.07e-08   9.06e-01   1.51e-03s
+## plsh   3.7110e-01   3.72e-16   1.07e-16   --------   1.78e-03s
 ## 
 ## status:               solved
 ## solution polish:      successful
 ## number of iterations: 125
 ## optimal objective:    0.3711
-## run time:             1.68e-03s
+## run time:             1.78e-03s
 ## optimal rho estimate: 2.90e+00</code></pre>
 <p>We can print the coefficients side-by-side from <code>glmnet</code> and <code>CVXR</code> to
 compare. The results below should be close, and any differences are
@@ -349,7 +349,6 @@ GLMNET.est
 </tr>
 </tbody>
 </table>
-<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="a-penalized-logistic-example" class="section level2">
 <h2>A Penalized Logistic Example</h2>
@@ -622,7 +621,6 @@ GLMNET.est
 </tr>
 </tbody>
 </table>
-<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -646,26 +644,23 @@ GLMNET.est
 ## 
 ## other attached packages:
 ## [1] glmnet_4.1-8     Matrix_1.7-0     kableExtra_1.4.0 CVXR_1.0-13     
-## [5] testthat_3.2.1.1 here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] shape_1.4.6.1     xfun_0.44         bslib_0.7.0       lattice_0.22-6   
-##  [5] vctrs_0.6.5       tools_4.4.0       Rmosek_10.2.0     fansi_1.0.6      
-##  [9] highr_0.11        desc_1.4.3        assertthat_0.2.1  lifecycle_1.0.4  
-## [13] compiler_4.4.0    stringr_1.5.1     brio_1.1.5        munsell_0.5.1    
-## [17] gurobi_11.0-0     codetools_0.2-20  ECOSolveR_0.5.5   htmltools_0.5.8.1
-## [21] sass_0.4.9        cccp_0.3-1        yaml_2.3.8        gmp_0.7-4        
-## [25] pillar_1.9.0      jquerylib_0.1.4   rcbc_0.1.0.9001   Rcplex_0.3-6     
-## [29] cachem_1.1.0      iterators_1.0.14  foreach_1.5.2     digest_0.6.35    
-## [33] stringi_1.8.4     slam_0.1-50       bookdown_0.39     splines_4.4.0    
-## [37] rprojroot_2.0.4   fastmap_1.2.0     grid_4.4.0        colorspace_2.1-0 
-## [41] cli_3.6.2         magrittr_2.0.3    survival_3.6-4    utf8_1.2.4       
-## [45] Rmpfr_0.9-5       scales_1.3.0      bit64_4.0.5       rmarkdown_2.27   
-## [49] bit_4.0.5         blogdown_1.19     evaluate_0.23     knitr_1.47       
-## [53] Rglpk_0.6-5.1     viridisLite_0.4.2 rlang_1.1.3       Rcpp_1.0.12      
-## [57] glue_1.7.0        xml2_1.3.6        osqp_0.6.3.2      pkgload_1.3.4    
-## [61] svglite_2.1.3     rstudioapi_0.16.0 jsonlite_1.8.8    R6_2.5.1         
-## [65] systemfonts_1.1.0</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        xml2_1.3.6        slam_0.1-50      
+##  [5] shape_1.4.6.1     blogdown_1.19     stringi_1.8.4     lattice_0.22-6   
+##  [9] digest_0.6.35     magrittr_2.0.3    evaluate_0.23     grid_4.4.0       
+## [13] bookdown_0.39     iterators_1.0.14  fastmap_1.2.0     foreach_1.5.2    
+## [17] jsonlite_1.8.8    ECOSolveR_0.5.5   survival_3.6-4    Rmosek_10.2.0    
+## [21] viridisLite_0.4.2 scales_1.3.0      codetools_0.2-20  jquerylib_0.1.4  
+## [25] cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3       Rglpk_0.6-5.1    
+## [29] bit64_4.0.5       munsell_0.5.1     splines_4.4.0     cachem_1.1.0     
+## [33] yaml_2.3.8        tools_4.4.0       osqp_0.6.3.2      Rcplex_0.3-6     
+## [37] rcbc_0.1.0.9001   colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1 
+## [41] vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1    
+## [45] bit_4.0.5         cccp_0.3-1        bslib_0.7.0       glue_1.7.0       
+## [49] Rcpp_1.0.12       systemfonts_1.1.0 highr_0.11        xfun_0.44        
+## [53] rstudioapi_0.16.0 knitr_1.47        htmltools_0.5.8.1 rmarkdown_2.27   
+## [57] svglite_2.1.3     compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
