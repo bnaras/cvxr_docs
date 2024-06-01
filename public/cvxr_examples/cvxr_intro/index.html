@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.50" />
+	<meta name="generator" content="Hugo 0.80.0" />
 	
 	<title>Introduction &mdash; CVXR</title>
 	
-	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="../../css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	<h1>Introduction</h1>
 	
 	
-<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
-<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+<script src="../../rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="../../rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <p>Consider a simple linear regression problem where it is desired to
@@ -59,82 +59,82 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -3.9196886
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -3.0117048
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -2.1248242
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -0.8666048
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0914658
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.9490454
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.0764700
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.1272275
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.9609565
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 5.1348845
 </td>
 </tr>
@@ -202,117 +202,118 @@ lm est.
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -3.9196886
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -3.9196886
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -3.0117048
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -3.0117048
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -2.1248242
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -2.1248242
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -0.8666048
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -0.8666048
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0914658
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0914658
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.9490454
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.9490454
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.0764700
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.0764700
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.1272275
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.1272275
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.9609565
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 3.9609565
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 5.1348845
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 5.1348845
 </td>
 </tr>
 </tbody>
 </table>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="wait-a-minute-what-have-we-gained" class="section level2">
 <h2>Wait a minute! What have we gained?</h2>
@@ -336,82 +337,82 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1.2374488
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6234665
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.1230663
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.8035640
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 4.4448016
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 5.2073521
 </td>
 </tr>
@@ -443,117 +444,118 @@ nnls est.
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1.2374488
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1.2374488
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6234665
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6234665
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.1230663
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.1230663
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.8035640
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.8035640
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 4.4448016
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 4.4448016
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 5.2073521
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 5.2073521
 </td>
 </tr>
 </tbody>
 </table>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="okay-that-was-cool-but" class="section level2">
 <h2>Okay that was cool, but…</h2>
@@ -610,34 +612,34 @@ knitr::kable(A, format = &quot;html&quot;) %&gt;%
 </thead>
 <tbody>
 <tr>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
@@ -652,7 +654,8 @@ A\beta &lt;= 0
 <p><em>NOTE</em>: The above constraint can also be expressed simply as</p>
 <pre class="r"><code>constraint1 &lt;- betaHat[2] + betaHat[3] &lt;= 0</code></pre>
 <p>but it is easier working with matrices in general with <code>CVXR</code>.</p>
-<p>For the positivity for rest of the variables, we construct a <span class="math inline">\(10\times 10\)</span> matrix <span class="math inline">\(A\)</span> to have 1’s along the diagonal everywhere except rows 2
+<p>For the positivity for rest of the variables, we construct a <span class="math inline">\(10\times
+10\)</span> matrix <span class="math inline">\(A\)</span> to have 1’s along the diagonal everywhere except rows 2
 and 3 and zeros everywhere.</p>
 <pre class="r"><code>B &lt;- diag(c(1, 0, 0, rep(1, 7)))
 colnames(B) &lt;- rownames(B) &lt;- paste0(&quot;$\\beta_{&quot;, 1:p, &quot;}$&quot;)
@@ -698,352 +701,352 @@ knitr::kable(B, format = &quot;html&quot;) %&gt;%
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1
 </td>
 </tr>
@@ -1067,87 +1070,88 @@ knitr::kable(m, format = &quot;html&quot;) %&gt;%
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{1}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{2}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -2.8446952
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{3}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 -1.7109771
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{4}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.0000000
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{5}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 0.6641308
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{6}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 1.1781109
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{7}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.3286139
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{8}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 2.4144893
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{9}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 4.2119052
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <span class="math inline">\(\beta_{10}\)</span>
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 4.9483245
 </td>
 </tr>
 </tbody>
 </table>
+<pre><code>## Testthat Results: No output is good</code></pre>
 <p>This demonstrates the chief advantage of <code>CVXR</code>: <em>flexibility</em>. Users
 can quickly modify and re-solve a problem, making our package ideal
 for prototyping new statistical methods. Its syntax is simple and
@@ -1163,46 +1167,51 @@ variability.</p>
 <div id="further-reading" class="section level2">
 <h2>Further Reading</h2>
 <p>We hope we have whet your appetite. You may wish to
-read <a href="/cvxr_examples/cvxr_gentle-intro/">a longer introduction</a>
+read <a href="../../cvxr_examples/cvxr_gentle-intro/">a longer introduction</a>
 with more examples.</p>
-<p>We also have a number of <a href="/examples/">tutorial examples</a>
+<p>We also have a number of <a href="../../examples/">tutorial examples</a>
 available to study and mimic.</p>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] nnls_1.4         CVXR_1.0-11      kableExtra_1.3.4
+## [1] nnls_1.5         CVXR_1.0-13      kableExtra_1.4.0 testthat_3.2.1.1
+## [5] here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] xfun_0.34         bslib_0.4.0       slam_0.1-50       lattice_0.20-45  
-##  [5] Rmosek_10.0.25    colorspace_2.0-3  htmltools_0.5.3   viridisLite_0.4.1
-##  [9] yaml_2.3.6        gmp_0.6-6         rlang_1.0.6       jquerylib_0.1.4  
-## [13] glue_1.6.2        Rmpfr_0.8-9       Rcplex_0.3-5      bit64_4.0.5      
-## [17] lifecycle_1.0.3   stringr_1.4.1     munsell_0.5.0     blogdown_1.13    
-## [21] rvest_1.0.3       gurobi_9.5-2      codetools_0.2-18  evaluate_0.17    
-## [25] knitr_1.40        fastmap_1.1.0     cccp_0.2-9        highr_0.9        
-## [29] Rcpp_1.0.9        scales_1.2.1      cachem_1.0.6      osqp_0.6.0.5     
-## [33] webshot_0.5.4     jsonlite_1.8.3    systemfonts_1.0.4 bit_4.0.4        
-## [37] digest_0.6.30     stringi_1.7.8     bookdown_0.29     grid_4.2.1       
-## [41] Rglpk_0.6-4       cli_3.4.1         tools_4.2.1       magrittr_2.0.3   
-## [45] sass_0.4.2        rcbc_0.1.0.9001   Matrix_1.5-1      xml2_1.3.3       
-## [49] assertthat_0.2.1  rmarkdown_2.17    svglite_2.1.0     httr_1.4.4       
-## [53] rstudioapi_0.14   R6_2.5.1          compiler_4.2.1</code></pre>
+##  [1] gmp_0.7-4         utf8_1.2.4        sass_0.4.9        xml2_1.3.6       
+##  [5] slam_0.1-50       blogdown_1.19     stringi_1.8.4     lattice_0.22-6   
+##  [9] digest_0.6.35     magrittr_2.0.3    evaluate_0.23     grid_4.4.0       
+## [13] bookdown_0.39     pkgload_1.3.4     fastmap_1.2.0     rprojroot_2.0.4  
+## [17] jsonlite_1.8.8    Matrix_1.7-0      brio_1.1.5        fansi_1.0.6      
+## [21] Rmosek_10.2.0     viridisLite_0.4.2 scales_1.3.0      codetools_0.2-20 
+## [25] jquerylib_0.1.4   cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3      
+## [29] Rglpk_0.6-5.1     bit64_4.0.5       munsell_0.5.1     cachem_1.1.0     
+## [33] yaml_2.3.8        tools_4.4.0       osqp_0.6.3.2      Rcplex_0.3-6     
+## [37] rcbc_0.1.0.9001   colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1 
+## [41] vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1    
+## [45] bit_4.0.5         desc_1.4.3        cccp_0.3-1        pillar_1.9.0     
+## [49] bslib_0.7.0       glue_1.7.0        Rcpp_1.0.12       systemfonts_1.1.0
+## [53] xfun_0.44         highr_0.11        rstudioapi_0.16.0 knitr_1.47       
+## [57] htmltools_0.5.8.1 rmarkdown_2.27    svglite_2.1.3     compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -1222,8 +1231,8 @@ available to study and mimic.</p>
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="/">
-				<img class="logo" src="/favicon.ico" alt="Logo"/>
+			<a href="../../">
+				<img class="logo" src="../../favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -1248,11 +1257,11 @@ available to study and mimic.</p>
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/">Home</a>
+		<a class="reference internal" href="../../">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="../../cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -1260,27 +1269,27 @@ available to study and mimic.</p>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="../../cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/examples/">Tutorial examples</a>
+		<a class="reference internal" href="../../examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="../../cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="../../cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="../../cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>
@@ -1288,9 +1297,9 @@ available to study and mimic.</p>
 
 		<h3>Related Topics</h3>
 <ul>
-  <li><a href="/">Documentation overview</a><ul>
+  <li><a href="../../">Documentation overview</a><ul>
   
-  <li>Next: <a href="/cvxr_examples/cvxr_gentle-intro/" title="A Gentle Introduction to `CVXR`">A Gentle Introduction to `CVXR`</a></li>
+  <li>Next: <a href="../../cvxr_examples/cvxr_gentle-intro/" title="A Gentle Introduction to `CVXR`">A Gentle Introduction to `CVXR`</a></li>
 </ul>
 
 	</div>

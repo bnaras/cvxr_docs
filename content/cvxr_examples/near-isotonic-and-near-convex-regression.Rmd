@@ -190,8 +190,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     neariso_results <- readRDS(file = file.path(testdata_dir, "near-iso-regression.RDS"))
-    expect_equal(data.neariso, neariso_results$data.neariso, tol = 1e-4)
-    expect_equal(data.nearconvex, neariso_results$data.nearconvex, tol = 1e-4)
+    expect_equal(data.neariso, neariso_results$data.neariso, tolerance = 1e-4)
+    expect_equal(data.nearconvex, neariso_results$data.nearconvex, tolerance = 1e-4)
 }
 ```
 

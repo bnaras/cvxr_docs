@@ -5,16 +5,16 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 	<meta name="description" content="Disciplined Convex Programming in R">
-	<meta name="generator" content="Hugo 0.50" />
+	<meta name="generator" content="Hugo 0.80.0" />
 	
 	<title> CVXR</title>
 	
-	<link rel="stylesheet" href="/css/alabaster.css" type="text/css" />
-	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
+	<link rel="stylesheet" href="./css/alabaster.css" type="text/css" />
+	<link rel="stylesheet" href="./css/pygments.css" type="text/css" />
 
 	
 
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon"/>
 </head>
 
 	<body role="document">
@@ -26,8 +26,8 @@
 	
 		<h1>Convex Optimization in R</h1>
 		
-<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
-<link href="/rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
+<script src="./rmarkdown-libs/kePrint/kePrint.js"></script>
+<link href="./rmarkdown-libs/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="what-is-cvxr" class="section level2">
@@ -40,7 +40,7 @@ standard form required by most solvers. The user specifies an
 objective and set of constraints by combining constants, variables,
 and parameters using a library of functions with known mathematical
 properties. <code>CVXR</code> then applies
-signed <a href="/post/cvxr_dcp">disciplined convex programming (DCP)</a> to
+signed <a href="./post/cvxr_dcp">disciplined convex programming (DCP)</a> to
 verify the problem’s convexity. Once verified, the problem is
 converted into standard form using graph implementations and
 passed to a quadratic solver such as <a href="https://osqp.org/">OSQP</a>, or a cone solver such
@@ -50,7 +50,7 @@ if installed.</p>
 </div>
 <div id="citing-cvxr" class="section level2">
 <h2>Citing <code>CVXR</code></h2>
-<p><code>CVXR</code> is published in <span class="citation">Fu, Narasimhan, and Boyd (<a href="#ref-cvxr2020" role="doc-biblioref">2020</a>)</span>
+<p><code>CVXR</code> is published in <span class="citation">Fu, Narasimhan, and Boyd (<a href="#ref-cvxr2020">2020</a>)</span>
 &lt;<a href="https://dx.doi.org/10.18637/jss.v094.i14">doi:10.18637/jss.v094.i14</a>&gt;. A
 BibTeX citation entry using citation key <code>cvxr2020</code> is below.</p>
 <pre><code>@Article{cvxr2020,
@@ -97,238 +97,238 @@ MIP
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 CBC
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://github.com/dirkschumacher/rcbc">rcbc</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 GLPK
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 GLPK_MI
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 OSQP
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://www.osqp.org">osqp</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 CPLEX
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://cran.r-project.org/package=Rcplex">Rcplex</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ECOS
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ECOS_BB
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 GUROBI
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
-<a href="https://www.gurobi.com/documentation/9.0/refman/ins_the_r_package.html">gurobi</a>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+<a href="https://www.gurobi.com/documentation/10.0/refman/r_ins_the_r_package.html">gurobi</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 MOSEK
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
-<a href="https://cran.r-project.org/package=Rmosek">Rmosek</a>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+<a href="https://docs.mosek.com/latest/rmosek/index.html">Rmosek</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 SCS
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 <a href="https://cran.r-project.org/package=scs">scs</a>
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
 </td>
 </tr>
 </tbody>
 </table>
-<p>For more detail, see <a href="/cvxr_examples/cvxr_using-other-solvers/">Using other solvers</a>.</p>
+<p>For more detail, see <a href="./cvxr_examples/cvxr_using-other-solvers/">Using other solvers</a>.</p>
 </div>
 <div id="news" class="section level2">
 <h2>News</h2>
@@ -337,8 +337,8 @@ Documentation</a>.</p>
 <p><code>CVXR</code> continues to be developed on
 <a href="https://github.com/cvxgrp/CVXR">Github</a>. Version 1.0 was a major
 release implementing the reductions framework described in
-<span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018" role="doc-biblioref">2018</a>)</span>. More details of all the changes can be found in
-<a href="/cvxr_examples/whats_new_1.0/">What’s new in 1.0</a>.</p>
+<span class="citation">Agrawal et al. (<a href="#ref-rewriting:2018">2018</a>)</span>. More details of all the changes can be found in
+<a href="./cvxr_examples/whats_new_1.0/">What’s new in 1.0</a>.</p>
 </div>
 <div id="installing-cvxr" class="section level2">
 <h2>Installing <code>CVXR</code></h2>
@@ -363,7 +363,7 @@ instructions in the README.</p>
 <p>An introductory vignette is installed with the package and can be
 viewed using <code>vignette("cvxr_intro", package = "CVXR")</code>.</p>
 <p>A large set of examples, many ported from <code>CVXPY</code>, are available on
-this site in the <a href="/post/cvxr_examples/">Examples</a> section.</p>
+this site in the <a href="./post/cvxr_examples/">Examples</a> section.</p>
 </div>
 <div id="acknowledgements" class="section level2">
 <h2>Acknowledgements</h2>
@@ -390,7 +390,7 @@ the <a href="https://github.com/bnaras/cvxr_docs">CVXR docs</a> repository.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-rewriting:2018" class="csl-entry">
 Agrawal, Akshay, Robin Verschueren, Steven Diamond, and Stephen Boyd. 2018. <span>“A Rewriting System for Convex Optimization Problems.”</span> <em>Journal of Control and Decision</em> 5 (1): 42–60. <a href="https://doi.org/10.1080/23307706.2017.1397554">https://doi.org/10.1080/23307706.2017.1397554</a>.
 </div>
@@ -411,8 +411,8 @@ Fu, Anqi, Balasubramanian Narasimhan, and Stephen Boyd. 2020. <span>“<span>CVX
 			<div class="sphinxsidebar" role="navigation" aria-label="main navigation">
 	<div class="sphinxsidebarwrapper">
 		<p class="logo">
-			<a href="/">
-				<img class="logo" src="/favicon.ico" alt="Logo"/>
+			<a href="./">
+				<img class="logo" src="./favicon.ico" alt="Logo"/>
 				<h1 class="logo logo-name"></h1>
 			</a>
 		</p>
@@ -437,11 +437,11 @@ Fu, Anqi, Balasubramanian Narasimhan, and Stephen Boyd. 2020. <span>“<span>CVX
 <ul>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/">Home</a>
+		<a class="reference internal" href="./">Home</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
+		<a class="reference internal" href="./cvxr_examples/whats_new_1.0">What&#39;s new in 1.0</a>
 	</li>
 	
 	<li class="toctree-l1">
@@ -449,27 +449,27 @@ Fu, Anqi, Balasubramanian Narasimhan, and Stephen Boyd. 2020. <span>“<span>CVX
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_intro/">Quick intro</a>
+		<a class="reference internal" href="./cvxr_examples/cvxr_intro/">Quick intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
+		<a class="reference internal" href="./cvxr_examples/cvxr_gentle-intro/">Longer intro</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/examples/">Tutorial examples</a>
+		<a class="reference internal" href="./examples/">Tutorial examples</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_dcp/">DCP</a>
+		<a class="reference internal" href="./cvxr_dcp/">DCP</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_faq/">FAQ</a>
+		<a class="reference internal" href="./cvxr_faq/">FAQ</a>
 	</li>
 	
 	<li class="toctree-l1">
-		<a class="reference internal" href="/cvxr_functions/">Function reference</a>
+		<a class="reference internal" href="./cvxr_functions/">Function reference</a>
 	</li>
 	
 </ul>

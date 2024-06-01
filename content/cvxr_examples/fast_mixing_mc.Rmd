@@ -129,13 +129,13 @@ FMMC <- function(g, verbose = FALSE) {
     list(status = result$status, value = result$value, P = result$getValue(P))
 }
 
-disp_result <- function(states, P, tol = 1e-3) {
+disp_result <- function(states, P, tolerance = 1e-3) {
     if(!("markovchain" %in% rownames(installed.packages()))) {
         rownames(P) <- states
         colnames(P) <- states
         print(P)
     } else {
-        P[P < tol] <- 0
+        P[P < tolerance] <- 0
         P <- P/apply(P, 1, sum)   ## Normalize so rows sum to exactly 1
         mc <- new("markovchain", states = states, transitionMatrix = P)
         plot(mc)
@@ -185,10 +185,10 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     fmix <- readRDS(file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
-    expect_equal(result1, fmix$result1, tol = 1e-4) # small errors ok
-    expect_equal(result2, fmix$result2, tol = 1e-4)
-    expect_equal(result3, fmix$result3, tol = 1e-4)
-    expect_equal(result4, fmix$result4, tol = 1e-4)
+    expect_equal(result1, fmix$result1, tolerance = 1e-4) # small errors ok
+    expect_equal(result2, fmix$result2, tolerance = 1e-4)
+    expect_equal(result3, fmix$result3, tolerance = 1e-4)
+    expect_equal(result4, fmix$result4, tolerance = 1e-4)
 }
 ```
 
@@ -198,7 +198,7 @@ if (params$mode == "save") {
 It is easy to extend this example to other Markov chains. To change
 the number of vertices, we would simply modify `n`, and to add or
 remove edges, we need only alter the constraints in `constr2`. For
-instance, the bipartite chain in Figure Figure 3 is produced by
+instance, the bipartite chain in Figure 3 is produced by
 setting $n = 5$ and
 
 ```{r, eval = FALSE}

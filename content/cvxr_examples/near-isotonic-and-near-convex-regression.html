@@ -16,13 +16,15 @@ params:
 
 
 <p>Given a set of data points <span class="math inline">\(y \in {\mathbf R}^m\)</span>,
-<span class="citation">Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011" role="doc-biblioref">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta \in {\mathbf R}^m\)</span> by solving</p>
+<span class="citation">Tibshirani, Hoefling, and Tibshirani (<a href="#ref-TibshiraniHoefling:2011">2011</a>)</span> fit a nearly-isotonic approximation <span class="math inline">\(\beta
+\in {\mathbf R}^m\)</span> by solving</p>
 <p><span class="math display">\[
 \begin{array}{ll}
 \underset{\beta}{\mbox{minimize}} &amp; \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda \sum_{i=1}^{m-1}(\beta_i - \beta_{i+1})_+,
 \end{array}
 \]</span></p>
-<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+ =\max(x,0)\)</span>. This can be directly formulated in <code>CVXR</code>. As an
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a penalty parameter and <span class="math inline">\(x_+
+=\max(x,0)\)</span>. This can be directly formulated in <code>CVXR</code>. As an
 example, we use global warming data from
 the
 <a href="http://cdiac.ess-dive.lbl.gov/ftp/trends/temp/jonescru/">Carbon Dioxide Information Analysis Center (CDIAC)</a>. The
@@ -30,7 +32,7 @@ data points are the annual temperature anomalies relative to the
 1961–1990 mean.</p>
 <pre class="r"><code>data(cdiac)
 str(cdiac)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    166 obs. of  14 variables:
+<pre><code>## &#39;data.frame&#39;:	166 obs. of  14 variables:
 ##  $ year  : int  1850 1851 1852 1853 1854 1855 1856 1857 1858 1859 ...
 ##  $ jan   : num  -0.702 -0.303 -0.308 -0.177 -0.36 -0.176 -0.119 -0.512 -0.532 -0.307 ...
 ##  $ feb   : num  -0.284 -0.362 -0.477 -0.33 -0.28 -0.4 -0.373 -0.344 -0.707 -0.192 ...
@@ -157,40 +159,42 @@ as <code>diff(x, differences = 3)</code>.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] boot_1.3-28   ggplot2_3.3.6 CVXR_1.0-11  
+## [1] boot_1.3-30   ggplot2_3.5.1 CVXR_1.0-13  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.2.0 xfun_0.34        bslib_0.4.0      slam_0.1-50     
-##  [5] lattice_0.20-45  Rmosek_10.0.25   colorspace_2.0-3 vctrs_0.5.0     
-##  [9] generics_0.1.3   htmltools_0.5.3  yaml_2.3.6       gmp_0.6-6       
-## [13] utf8_1.2.2       rlang_1.0.6      jquerylib_0.1.4  pillar_1.8.1    
-## [17] glue_1.6.2       Rmpfr_0.8-9      withr_2.5.0      DBI_1.1.3       
-## [21] Rcplex_0.3-5     bit64_4.0.5      lifecycle_1.0.3  stringr_1.4.1   
-## [25] munsell_0.5.0    blogdown_1.13    gtable_0.3.1     gurobi_9.5-2    
-## [29] codetools_0.2-18 evaluate_0.17    labeling_0.4.2   knitr_1.40      
-## [33] fastmap_1.1.0    fansi_1.0.3      cccp_0.2-9       highr_0.9       
-## [37] Rcpp_1.0.9       scales_1.2.1     cachem_1.0.6     osqp_0.6.0.5    
-## [41] jsonlite_1.8.3   farver_2.1.1     bit_4.0.4        digest_0.6.30   
-## [45] stringi_1.7.8    bookdown_0.29    dplyr_1.0.10     Rglpk_0.6-4     
-## [49] grid_4.2.1       cli_3.4.1        tools_4.2.1      magrittr_2.0.3  
-## [53] sass_0.4.2       tibble_3.1.8     pkgconfig_2.0.3  rcbc_0.1.0.9001 
-## [57] Matrix_1.5-1     assertthat_0.2.1 rmarkdown_2.17   R6_2.5.1        
-## [61] compiler_4.2.1</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] slam_0.1-50       blogdown_1.19     lattice_0.22-6    digest_0.6.35    
+##  [9] magrittr_2.0.3    evaluate_0.23     grid_4.4.0        bookdown_0.39    
+## [13] fastmap_1.2.0     jsonlite_1.8.8    Matrix_1.7-0      Rmosek_10.2.0    
+## [17] fansi_1.0.6       scales_1.3.0      codetools_0.2-20  jquerylib_0.1.4  
+## [21] cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3       Rglpk_0.6-5.1    
+## [25] bit64_4.0.5       munsell_0.5.1     withr_3.0.0       cachem_1.1.0     
+## [29] yaml_2.3.8        tools_4.4.0       osqp_0.6.3.2      Rcplex_0.3-6     
+## [33] rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-0  gurobi_11.0-0    
+## [37] assertthat_0.2.1  vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4  
+## [41] bit_4.0.5         pkgconfig_2.0.3   cccp_0.3-1        pillar_1.9.0     
+## [45] bslib_0.7.0       gtable_0.3.5      glue_1.7.0        Rcpp_1.0.12      
+## [49] highr_0.11        xfun_0.44         tibble_3.2.1      tidyselect_1.2.1 
+## [53] rstudioapi_0.16.0 knitr_1.47        farver_2.1.2      htmltools_0.5.8.1
+## [57] labeling_0.4.3    rmarkdown_2.27    compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -198,7 +202,7 @@ as <code>diff(x, differences = 3)</code>.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-TibshiraniHoefling:2011" class="csl-entry">
 Tibshirani, R. J., H. Hoefling, and R. Tibshirani. 2011. <span>“Nearly-Isotonic Regression.”</span> <em>Technometrics</em> 53 (1): 54–61.
 </div>

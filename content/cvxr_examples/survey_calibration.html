@@ -27,18 +27,21 @@ improve the initial weights <span class="math inline">\(d_i\)</span> by finding 
 incorporate this auxiliary information while perturbing the initial
 weights as little as possible, , the ratio <span class="math inline">\(g_i = w_i/d_i\)</span> must
 be close to one. Such reweighting improves precision of estimates
-(Chapter 7, <span class="citation">T. S. Lumley (<a href="#ref-Lumley:2010" role="doc-biblioref">2010</a>)</span>).</p>
+(Chapter 7, <span class="citation">T. S. Lumley (<a href="#ref-Lumley:2010">2010</a>)</span>).</p>
 <p>Let <span class="math inline">\(X \in {\mathbf R}^{m \times n}\)</span> be the matrix of survey samples, with
 each column corresponding to an auxiliary variable. Reweighting can be
-expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016" role="doc-biblioref">2016</a>)</span>):</p>
+expressed as the optimization problem (see <span class="citation">Davies, Gillard, and Zhigljavsky (<a href="#ref-Davies:2016">2016</a>)</span>):</p>
 <p><span class="math display">\[
-    \begin{array}{ll}
-        \mbox{minimize} &amp; \sum_{i=1}^m d_i\phi(g_i) \\
-        \mbox{subject to} &amp; A^Tg = r
-    \end{array}
+	\begin{array}{ll}
+		\mbox{minimize} &amp; \sum_{i=1}^m d_i\phi(g_i) \\
+		\mbox{subject to} &amp; A^Tg = r
+	\end{array}
 \]</span></p>
-<p>with respect to <span class="math inline">\(g \in {\mathbf R}^m\)</span>, where <span class="math inline">\(\phi:{\mathbf R} \rightarrow {\mathbf R}\)</span> is a strictly convex function with <span class="math inline">\(\phi(1) = 0\)</span>, <span class="math inline">\(r \in {\mathbf R}^n\)</span> are the known population totals of the auxiliary variables,
-and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is related to <span class="math inline">\(X\)</span> by <span class="math inline">\(A_{ij} = d_iX_{ij}\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span> and <span class="math inline">\(j = 1,\ldots,n\)</span>.</p>
+<p>with respect to <span class="math inline">\(g \in {\mathbf R}^m\)</span>, where <span class="math inline">\(\phi:{\mathbf R} \rightarrow
+{\mathbf R}\)</span> is a strictly convex function with <span class="math inline">\(\phi(1) = 0\)</span>, <span class="math inline">\(r \in
+{\mathbf R}^n\)</span> are the known population totals of the auxiliary variables,
+and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is related to <span class="math inline">\(X\)</span> by <span class="math inline">\(A_{ij} =
+d_iX_{ij}\)</span> for <span class="math inline">\(i = 1,\ldots,m\)</span> and <span class="math inline">\(j = 1,\ldots,n\)</span>.</p>
 </div>
 <div id="raking" class="section level2">
 <h2>Raking</h2>
@@ -46,7 +49,7 @@ and <span class="math inline">\(A \in {\mathbf R}^{m \times n}\)</span> is relat
 function <span class="math inline">\(\phi(g_i) = g_i\log(g_i) - g_i + 1\)</span> as the calibration
 metric.</p>
 <p>We illustrate with the California Academic Performance Index data in
-the <code>survey</code> package (<span class="citation">T. Lumley (<a href="#ref-lumley:2018" role="doc-biblioref">2018</a>)</span>) which also supplies facilities for
+the <code>survey</code> package (<span class="citation">T. Lumley (<a href="#ref-lumley:2018">2018</a>)</span>) which also supplies facilities for
 calibration via the function <code>calibrate</code>. Both the population dataset
 (<code>apipop</code>) and a simple random sample of <span class="math inline">\(m = 200\)</span> (<code>apisrs</code>) are
 provided. Suppose that we wish to reweight the observations in the
@@ -56,8 +59,14 @@ whether the school met the yearly target or not. This reweighting
 would make the sample more representative of the general population.</p>
 <p>The code below estimates the weights using <code>survey::calibrate</code>.</p>
 <pre class="r"><code>data(api)
-design_api &lt;- svydesign(id = ~dnum, weights = ~pw, data = apisrs)
-formula &lt;- ~stype + sch.wide
+design_api &lt;- svydesign(id = ~dnum, weights = ~pw, data = apisrs)</code></pre>
+<pre><code>## Warning in svydesign(id = ~dnum, weights = ~pw, data = apisrs): partial
+## argument match of &#39;id&#39; to &#39;ids&#39;</code></pre>
+<pre><code>## Warning in svydesign.default(id = ~dnum, weights = ~pw, data = apisrs): partial
+## argument match of &#39;id&#39; to &#39;ids&#39;</code></pre>
+<pre><code>## Warning in match.call(definition, call, expand.dots, envir): partial argument
+## match of &#39;id&#39; to &#39;ids&#39;</code></pre>
+<pre class="r"><code>formula &lt;- ~stype + sch.wide
 T &lt;- apply(model.matrix(object = formula, data = apipop),
            2,
            sum)
@@ -110,122 +119,122 @@ Frequency
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.911
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.911
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.396
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.396
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.003
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.003
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.497
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.497
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.033
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.033
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.529
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.529
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
 </tr>
@@ -292,122 +301,122 @@ Frequency
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.907
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.907
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.397
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.397
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.005
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.005
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.495
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.495
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.037
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.037
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.528
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.528
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
 </tr>
@@ -454,122 +463,122 @@ Frequency
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.907
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.929
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.397
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.394
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.005
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.995
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.495
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.505
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.037
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.014
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.528
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.536
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
 </tr>
@@ -617,122 +626,122 @@ Frequency
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.913
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.890
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.396
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.399
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.002
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.011
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.498
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.488
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.031
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.056
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.530
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.521
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
 </tr>
@@ -773,122 +782,122 @@ Frequency
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.911
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 28.904
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 15
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 E
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.396
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.397
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 127
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.003
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.006
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 13
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 H
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.497
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.494
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 12
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 No
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.033
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 29.041
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 9
 </td>
 </tr>
 <tr>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 M
 </td>
-<td style="text-align:left;background-color: #ececec !important;">
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 Yes
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.529
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 31.526
 </td>
-<td style="text-align:right;background-color: #ececec !important;">
+<td style="text-align:right;background-color: rgba(236, 236, 236, 255) !important;">
 24
 </td>
 </tr>
@@ -898,43 +907,45 @@ Yes
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.1 (2022-06-23)
-## Platform: x86_64-apple-darwin21.6.0 (64-bit)
-## Running under: macOS Ventura 13.0
+<pre><code>## R version 4.4.0 (2024-04-24)
+## Platform: x86_64-apple-darwin23.4.0
+## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.21/lib/libopenblasp-r0.3.21.dylib
-## LAPACK: /usr/local/Cellar/r/4.2.1_4/lib/R/lib/libRlapack.dylib
+## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
+## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: America/Los_Angeles
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] grid      stats     graphics  grDevices datasets  utils     methods  
 ## [8] base     
 ## 
 ## other attached packages:
-## [1] survey_4.1-1     survival_3.4-0   Matrix_1.5-1     dplyr_1.0.10    
-## [5] kableExtra_1.3.4 CVXR_1.0-11     
+## [1] survey_4.4-2     survival_3.6-4   Matrix_1.7-0     dplyr_1.1.4     
+## [5] kableExtra_1.4.0 CVXR_1.0-13     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.9        svglite_2.1.0     gurobi_9.5-2      lattice_0.20-45  
-##  [5] rcbc_0.1.0.9001   Rmosek_10.0.25    assertthat_0.2.1  digest_0.6.30    
-##  [9] utf8_1.2.2        gmp_0.6-6         slam_0.1-50       R6_2.5.1         
-## [13] evaluate_0.17     highr_0.9         httr_1.4.4        blogdown_1.13    
-## [17] pillar_1.8.1      rlang_1.0.6       rstudioapi_0.14   jquerylib_0.1.4  
-## [21] rmarkdown_2.17    splines_4.2.1     osqp_0.6.0.5      webshot_0.5.4    
-## [25] stringr_1.4.1     bit_4.0.4         munsell_0.5.0     compiler_4.2.1   
-## [29] xfun_0.34         pkgconfig_2.0.3   systemfonts_1.0.4 Rglpk_0.6-4      
-## [33] htmltools_0.5.3   mitools_2.4       Rcplex_0.3-5      tidyselect_1.2.0 
-## [37] tibble_3.1.8      bookdown_0.29     codetools_0.2-18  fansi_1.0.3      
-## [41] viridisLite_0.4.1 MASS_7.3-58.1     jsonlite_1.8.3    lifecycle_1.0.3  
-## [45] DBI_1.1.3         magrittr_2.0.3    scales_1.2.1      cli_3.4.1        
-## [49] stringi_1.7.8     cachem_1.0.6      Rmpfr_0.8-9       xml2_1.3.3       
-## [53] bslib_0.4.0       generics_0.1.3    vctrs_0.5.0       tools_4.2.1      
-## [57] bit64_4.0.5       glue_1.6.2        fastmap_1.1.0     yaml_2.3.6       
-## [61] colorspace_2.0-3  cccp_0.2-9        rvest_1.0.3       ECOSolveR_0.5.4  
-## [65] knitr_1.40        sass_0.4.2</code></pre>
+##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] slam_0.1-50       xml2_1.3.6        blogdown_1.19     stringi_1.8.4    
+##  [9] lattice_0.22-6    digest_0.6.35     magrittr_2.0.3    evaluate_0.23    
+## [13] bookdown_0.39     fastmap_1.2.0     jsonlite_1.8.8    ECOSolveR_0.5.5  
+## [17] DBI_1.2.2         Rmosek_10.2.0     fansi_1.0.6       viridisLite_0.4.2
+## [21] scales_1.3.0      codetools_0.2-20  jquerylib_0.1.4   cli_3.6.2        
+## [25] Rmpfr_0.9-5       mitools_2.4       rlang_1.1.3       Rglpk_0.6-5.1    
+## [29] bit64_4.0.5       munsell_0.5.1     splines_4.4.0     cachem_1.1.0     
+## [33] yaml_2.3.8        tools_4.4.0       osqp_0.6.3.2      Rcplex_0.3-6     
+## [37] rcbc_0.1.0.9001   colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1 
+## [41] vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1    
+## [45] bit_4.0.5         MASS_7.3-60.2     cccp_0.3-1        pkgconfig_2.0.3  
+## [49] bslib_0.7.0       pillar_1.9.0      glue_1.7.0        Rcpp_1.0.12      
+## [53] systemfonts_1.1.0 highr_0.11        xfun_0.44         tibble_3.2.1     
+## [57] tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.47        htmltools_0.5.8.1
+## [61] rmarkdown_2.27    svglite_2.1.3     compiler_4.4.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
@@ -942,7 +953,7 @@ Yes
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Davies:2016" class="csl-entry">
 Davies, G., J. Gillard, and A. Zhigljavsky. 2016. <span>“Comparative Study of Different Penalty Functions and Algorithms in Survey Calibration.”</span> In <em>Advances in Stochastic and Deterministic Global Optimization</em>, 87–127. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-29975-4_6">https://doi.org/10.1007/978-3-319-29975-4_6</a>.
 </div>
