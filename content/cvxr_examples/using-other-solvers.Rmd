@@ -20,8 +20,12 @@ library(kableExtra)
 
 The default installation of `CVXR` comes with several (imported) open source solvers:
 
+- [Clarabel](https://Clarabel.org), a versatile solver written in
+ Rust.
 - [ECOS](https://github.com/embotech/ecos) and its mixed integer
-  cousin `ECOS_BB`
+  cousin `ECOS_BB`. _At some point, this solver will no longer be the
+  default since the underlying C library for this solver is no
+  longer actively maintained._
 - [OSQP](https://www.osqp.org)
 - [SCS](https://github.com/cvxgrp/scs)
   
@@ -54,8 +58,9 @@ of.
 ```{r, echo = FALSE}
 check <- "\U2713"
 d  <- tibble::tibble(
-                  Solver = c("CBC", "GLPK", "GLPK_MI", "OSQP", "CPLEX", "ECOS", "ECOS_BB", "GUROBI", "MOSEK", "SCS"),
+                  Solver = c("CBC", "CLARABEL", "GLPK", "GLPK_MI", "OSQP", "CPLEX", "ECOS", "ECOS_BB", "GUROBI", "MOSEK", "SCS"),
                   `R package` = c("[rcbc](https://github.com/dirkschumacher/rcbc)",
+                                  "[`clarabel`](https://cran.r-project.org/package=clarabel)",
                                   "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
                                   "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
                                   "[osqp](https://www.osqp.org)",
@@ -65,12 +70,12 @@ d  <- tibble::tibble(
                                   "[gurobi](https://www.gurobi.com/documentation/10.0/refman/r_ins_the_r_package.html)",
                                   "[Rmosek](https://docs.mosek.com/latest/rmosek/index.html)",
                                   "[scs](https://cran.r-project.org/package=scs)"),
-                  LP = c(check, check, check, check, check, check, " " , check, check, check),
-                  QP = c(" " , " " , " " , check, check, check, " " , check, check, check),
-                  SOCP = c(" " , " " , " " , " " , check, check, " " , check, check, check),
-                  SDP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
-                  EXP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
-                  MIP = c(check, " " , check, " " , " " , " " , check, check, check, check)
+                  LP = c(check, check, check, check, check, check, check, " " , check, check, check),
+                  QP = c(" " , check, " " , " " , check, check, check, " " , check, check, check),
+                  SOCP = c(" " , check, " " , " " , " " , check, check, " " , check, check, check),
+                  SDP = c(" " , check, " " , " " , " " , " " , " " , " " , " " , check, check),
+                  EXP = c(" " , check, " " , " " , " " , " " , " " , " " , " " , check, check),
+                  MIP = c(check, " ", " " , check, " " , " " , " " , check, check, check, check)
               )
 knitr::kable(d, format = "html", caption = "Solver Capabilities") %>%
     kable_styling("striped") %>%

@@ -88,8 +88,9 @@ BibTeX citation entry using citation key `cvxr2020` is below.
 `%>%`  <- magrittr::`%>%`
 check <- "\U2713"
 d  <- tibble::tibble(
-                  Solver = c("CBC", "GLPK", "GLPK_MI", "OSQP", "CPLEX", "ECOS", "ECOS_BB", "GUROBI", "MOSEK", "SCS"),
+                  Solver = c("CBC", "CLARABEL", "GLPK", "GLPK_MI", "OSQP", "CPLEX", "ECOS", "ECOS_BB", "GUROBI", "MOSEK", "SCS"),
                   `R package` = c("[rcbc](https://github.com/dirkschumacher/rcbc)",
+                                  "[clarabel](https://Clarabel.org)",
                                   "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
                                   "[`Rglpk`](https://cran.r-project.org/package=Rglpk)",
                                   "[osqp](https://www.osqp.org)",
@@ -99,12 +100,12 @@ d  <- tibble::tibble(
                                   "[gurobi](https://www.gurobi.com/documentation/10.0/refman/r_ins_the_r_package.html)",
                                   "[Rmosek](https://docs.mosek.com/latest/rmosek/index.html)",
                                   "[scs](https://cran.r-project.org/package=scs)"),
-                  LP = c(check, check, check, check, check, check, " " , check, check, check),
-                  QP = c(" " , " " , " " , check, check, check, " " , check, check, check),
-                  SOCP = c(" " , " " , " " , " " , check, check, " " , check, check, check),
-                  SDP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
-                  EXP = c(" " , " " , " " , " " , " " , " " , " " , " " , check, check),
-                  MIP = c(check, " " , check, " " , " " , " " , check, check, check, check)
+                  LP = c(check, check, check, check, check, check, check, " " , check, check, check),
+                  QP = c(" " , check, " " , " " , check, check, check, " " , check, check, check),
+                  SOCP = c(" " , check, " " , " " , " " , check, check, " " , check, check, check),
+                  SDP = c(" " , check, " " , " " , " " , " " , " " , " " , " " , check, check),
+                  EXP = c(" " , check, " " , " " , " " , " " , " " , " " , " " , check, check),
+                  MIP = c(check, " ", " " , check, " " , " " , " " , check, check, check, check)
               )
 knitr::kable(d, format = "html") %>%
     kableExtra::kable_styling("striped") %>%

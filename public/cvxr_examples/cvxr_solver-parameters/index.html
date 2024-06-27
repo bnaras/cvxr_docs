@@ -160,6 +160,97 @@ result &lt;- solve(prob, solver = &quot;OSQP&quot;, verbose = FALSE, more_params
 <p>In the second case that the <code>verbose</code> in the <code>more_params</code> list overrides
 the value of <code>verbose</code> listed earlier in the invocation.</p>
 </div>
+<div id="clarabel" class="section level3">
+<h3>CLARABEL</h3>
+<p>The parameters available for <code>CLARABEL</code> can be found in this
+<a href="https://oxfordcontrol.github.io/clarabel-r/reference/clarabel_control.html">link</a>.</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-4">Table 2: </span>Default CVXR-CLARABEL parameter mappings
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Standard
+</th>
+<th style="text-align:left;">
+CLARABEL
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+verbose
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reltol
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+tol_gap_rel
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+1e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abstol
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+tol_gap_abs
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+1e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feastol
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+tol_feas
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+1e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+num_iter
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+max_iter
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+200
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameters can be entered individually in the arguments of the
+solve function or can be passed through as a list. If the user enters
+in a parameter that is not specified or accepted by <code>CLARABEL</code>, then the
+solver will ignore the parameter and proceed to solve the
+problem. Example below.</p>
+<pre class="r"><code>x &lt;- Variable(1)
+obj &lt;- Minimize(x)
+prob &lt;- Problem(obj, list(x &gt;= 0))
+
+# Inside Function
+result  &lt;- solve(prob, solver = &quot;CLARABEL&quot;, feastol = 1e-2, verbose = TRUE)</code></pre>
+</div>
 <div id="scs" class="section level3">
 <h3>SCS</h3>
 <p>The parameters available for <code>SCS</code> can be found in this
@@ -167,7 +258,7 @@ the value of <code>verbose</code> listed earlier in the invocation.</p>
 <code>scs_control</code> function.</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-4">Table 2: </span>Default CVXR-SCS parameter mappings
+<span id="tab:unnamed-chunk-6">Table 3: </span>Default CVXR-SCS parameter mappings
 </caption>
 <thead>
 <tr>
@@ -270,7 +361,7 @@ support the feasible tolerance parameter, so the solver ignores it.</p>
 under the <code>ecos.control</code> function.</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-6">Table 3: </span>Default CVXR-ECOS parameter mappings
+<span id="tab:unnamed-chunk-8">Table 4: </span>Default CVXR-ECOS parameter mappings
 </caption>
 <thead>
 <tr>
@@ -400,7 +491,7 @@ under the details section for the function <code>Rcplex</code> function on
 page 3.</p>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-8">Table 4: </span>Default CVXR-CPLEX parameter mappings
+<span id="tab:unnamed-chunk-10">Table 5: </span>Default CVXR-CPLEX parameter mappings
 </caption>
 <thead>
 <tr>
@@ -491,7 +582,7 @@ parameters, so the solver threw a warning.</p>
 <h3>MOSEK</h3>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-10">Table 5: </span>Default CVXR-MOSEK parameter mappings
+<span id="tab:unnamed-chunk-12">Table 6: </span>Default CVXR-MOSEK parameter mappings
 </caption>
 <thead>
 <tr>
@@ -613,7 +704,7 @@ solver to not obtain the answer.</p>
 <h3>GUROBI</h3>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-12">Table 6: </span>Default CVXR-GUROBI parameter mappings
+<span id="tab:unnamed-chunk-14">Table 7: </span>Default CVXR-GUROBI parameter mappings
 </caption>
 <thead>
 <tr>
@@ -701,7 +792,7 @@ result  &lt;- solve(prob, solver = &quot;GUROBI&quot;, verbose = FALSE, BarIterL
 <h3>GLPK</h3>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-14">Table 7: </span>Default CVXR-GLPK parameter mappings
+<span id="tab:unnamed-chunk-16">Table 8: </span>Default CVXR-GLPK parameter mappings
 </caption>
 <thead>
 <tr>
@@ -788,7 +879,7 @@ result  &lt;- solve(prob, solver = &quot;GLPK&quot;, verbose = FALSE, presolve =
 <h3>CBC</h3>
 <table class="table table-striped" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-16">Table 8: </span>Default CVXR-CBC parameter mappings
+<span id="tab:unnamed-chunk-18">Table 9: </span>Default CVXR-CBC parameter mappings
 </caption>
 <thead>
 <tr>
@@ -875,13 +966,13 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.4.0 (2024-04-24)
-## Platform: x86_64-apple-darwin23.4.0
+<pre><code>## R version 4.4.1 (2024-06-14)
+## Platform: x86_64-apple-darwin20
 ## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
-## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRblas.0.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -893,24 +984,24 @@ result  &lt;- solve(prob, solver = &quot;CBC&quot;, verbose = FALSE, sec = 5, ma
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.4.0 tibble_3.2.1     CVXR_1.0-13     
+## [1] kableExtra_1.4.0 tibble_3.2.1     CVXR_1.0-14     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        slam_0.1-50      
-##  [5] xml2_1.3.6        blogdown_1.19     stringi_1.8.4     lattice_0.22-6   
-##  [9] digest_0.6.35     magrittr_2.0.3    evaluate_0.23     grid_4.4.0       
-## [13] bookdown_0.39     fastmap_1.2.0     jsonlite_1.8.8    Matrix_1.7-0     
-## [17] ECOSolveR_0.5.5   scs_3.2.4         Rmosek_10.2.0     fansi_1.0.6      
-## [21] viridisLite_0.4.2 scales_1.3.0      codetools_0.2-20  jquerylib_0.1.4  
-## [25] cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3       Rglpk_0.6-5.1    
-## [29] bit64_4.0.5       munsell_0.5.1     cachem_1.1.0      yaml_2.3.8       
-## [33] tools_4.4.0       osqp_0.6.3.2      Rcplex_0.3-6      rcbc_0.1.0.9001  
-## [37] colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1  vctrs_0.6.5      
-## [41] R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1     bit_4.0.5        
-## [45] cccp_0.3-1        pkgconfig_2.0.3   pillar_1.9.0      bslib_0.7.0      
-## [49] glue_1.7.0        Rcpp_1.0.12       systemfonts_1.1.0 xfun_0.44        
-## [53] highr_0.11        rstudioapi_0.16.0 knitr_1.47        htmltools_0.5.8.1
-## [57] rmarkdown_2.27    svglite_2.1.3     compiler_4.4.0</code></pre>
+##  [1] gmp_0.7-4         clarabel_0.9.0    sass_0.4.9        utf8_1.2.4       
+##  [5] slam_0.1-50       xml2_1.3.6        blogdown_1.19     stringi_1.8.4    
+##  [9] lattice_0.22-6    digest_0.6.35     magrittr_2.0.3    evaluate_0.24.0  
+## [13] grid_4.4.1        bookdown_0.39     fastmap_1.2.0     jsonlite_1.8.8   
+## [17] Matrix_1.7-0      ECOSolveR_0.5.5   scs_3.2.4         Rmosek_10.2.0    
+## [21] fansi_1.0.6       viridisLite_0.4.2 scales_1.3.0      codetools_0.2-20 
+## [25] jquerylib_0.1.4   cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.4      
+## [29] Rglpk_0.6-5.1     bit64_4.0.5       munsell_0.5.1     cachem_1.1.0     
+## [33] yaml_2.3.8        tools_4.4.1       osqp_0.6.3.3      Rcplex_0.3-6     
+## [37] rcbc_0.1.0.9001   colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1 
+## [41] vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1    
+## [45] bit_4.0.5         cccp_0.3-1        pkgconfig_2.0.3   pillar_1.9.0     
+## [49] bslib_0.7.0       glue_1.7.0        Rcpp_1.0.12       systemfonts_1.1.0
+## [53] xfun_0.45         highr_0.11        rstudioapi_0.16.0 knitr_1.47       
+## [57] htmltools_0.5.8.1 rmarkdown_2.27    svglite_2.1.3     compiler_4.4.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

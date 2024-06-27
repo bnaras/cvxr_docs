@@ -96,6 +96,39 @@ result <- solve(prob, solver = "OSQP", verbose = FALSE, more_params)
 In the second case that the `verbose` in the `more_params` list overrides
 the value of `verbose` listed earlier in the invocation.
 
+### CLARABEL
+
+The parameters available for `CLARABEL` can be found in this
+[link](https://oxfordcontrol.github.io/clarabel-r/reference/clarabel_control.html). 
+
+```{r, echo = FALSE}
+osqp <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    CLARABEL = c("verbose", "tol_gap_rel", "tol_gap_abs", "tol_feas", "max_iter"),
+                    Value = c("FALSE", "1e-08", "1e-08", "1e-08", "200")
+                )
+knitr::kable(osqp,
+             caption = "Default CVXR-CLARABEL parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+The parameters can be entered individually in the arguments of the
+solve function or can be passed through as a list. If the user enters
+in a parameter that is not specified or accepted by `CLARABEL`, then the
+solver will ignore the parameter and proceed to solve the
+problem. Example below.
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+
+# Inside Function
+result  <- solve(prob, solver = "CLARABEL", feastol = 1e-2, verbose = TRUE)
+```
+
 ### SCS
 
 The parameters available for `SCS` can be found in this

@@ -99,8 +99,8 @@ We will change the problem slightly to use a finer discretization from 101 point
       
       <guid>/cvxr_examples/cvxr_using-other-solvers/</guid>
       <description>Introduction The default installation of CVXR comes with several (imported) open source solvers:
- ECOS and its mixed integer cousin ECOS_BB OSQP SCS  CVXR can also make use of commercial solvers and other open-source solvers:
- The commercial solver MOSEK The commercial solver GUROBI The commercial solver CPLEX The open source linear and mixed integer programming package GLPK via the Rglpk package. The CBC solver via the R package rcbc.</description>
+ Clarabel, a versatile solver written in Rust. ECOS and its mixed integer cousin ECOS_BB. At some point, this solver will no longer be the default since the underlying C library for this solver is no longer actively maintained. OSQP SCS  CVXR can also make use of commercial solvers and other open-source solvers:
+ The commercial solver MOSEK The commercial solver GUROBI The commercial solver CPLEX The open source linear and mixed integer programming package GLPK via the Rglpk package.</description>
     </item>
     
     <item>

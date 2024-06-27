@@ -17,8 +17,12 @@ tags: []
 <h2>Introduction</h2>
 <p>The default installation of <code>CVXR</code> comes with several (imported) open source solvers:</p>
 <ul>
+<li><a href="https://Clarabel.org">Clarabel</a>, a versatile solver written in
+Rust.</li>
 <li><a href="https://github.com/embotech/ecos">ECOS</a> and its mixed integer
-cousin <code>ECOS_BB</code></li>
+cousin <code>ECOS_BB</code>. <em>At some point, this solver will no longer be the
+default since the underlying C library for this solver is no
+longer actively maintained.</em></li>
 <li><a href="https://www.osqp.org">OSQP</a></li>
 <li><a href="https://github.com/cvxgrp/scs">SCS</a></li>
 </ul>
@@ -98,6 +102,31 @@ CBC
 </td>
 <td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 ✓
+</td>
+</tr>
+<tr>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+CLARABEL
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+<a href="https://cran.r-project.org/package=clarabel"><code>clarabel</code></a>
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+✓
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+✓
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+✓
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+✓
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
+✓
+</td>
+<td style="text-align:left;background-color: rgba(236, 236, 236, 255) !important;">
 </td>
 </tr>
 <tr>
@@ -358,20 +387,20 @@ install.packages(&quot;Rcplex&quot;, configure.args = configure_args)</code></pr
 <div id="example-session" class="section level3">
 <h3>Example session</h3>
 <pre class="r"><code>CVXR::installed_solvers()</code></pre>
-<pre><code>##  [1] &quot;ECOS&quot;    &quot;ECOS_BB&quot; &quot;CBC&quot;     &quot;CPLEX&quot;   &quot;CVXOPT&quot;  &quot;GLPK_MI&quot; &quot;GLPK&quot;   
-##  [8] &quot;SCS&quot;     &quot;GUROBI&quot;  &quot;MOSEK&quot;   &quot;OSQP&quot;</code></pre>
+<pre><code>##  [1] &quot;ECOS&quot;     &quot;ECOS_BB&quot;  &quot;CBC&quot;      &quot;CPLEX&quot;    &quot;CVXOPT&quot;   &quot;GLPK_MI&quot; 
+##  [7] &quot;GLPK&quot;     &quot;SCS&quot;      &quot;GUROBI&quot;   &quot;MOSEK&quot;    &quot;CLARABEL&quot; &quot;OSQP&quot;</code></pre>
 </div>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.4.0 (2024-04-24)
-## Platform: x86_64-apple-darwin23.4.0
+<pre><code>## R version 4.4.1 (2024-06-14)
+## Platform: x86_64-apple-darwin20
 ## Running under: macOS Sonoma 14.5
 ## 
 ## Matrix products: default
-## BLAS:   /usr/local/Cellar/openblas/0.3.27/lib/libopenblasp-r0.3.27.dylib 
-## LAPACK: /usr/local/Cellar/r/4.4.0_1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.0
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRblas.0.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -383,23 +412,23 @@ install.packages(&quot;Rcplex&quot;, configure.args = configure_args)</code></pr
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.4.0 magrittr_2.0.3   CVXR_1.0-13     
+## [1] kableExtra_1.4.0 magrittr_2.0.3   CVXR_1.0-14     
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        xml2_1.3.6       
 ##  [5] slam_0.1-50       blogdown_1.19     stringi_1.8.4     lattice_0.22-6   
-##  [9] digest_0.6.35     evaluate_0.23     grid_4.4.0        bookdown_0.39    
+##  [9] digest_0.6.35     evaluate_0.24.0   grid_4.4.1        bookdown_0.39    
 ## [13] fastmap_1.2.0     jsonlite_1.8.8    Matrix_1.7-0      Rmosek_10.2.0    
 ## [17] fansi_1.0.6       viridisLite_0.4.2 scales_1.3.0      codetools_0.2-20 
-## [21] jquerylib_0.1.4   cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.3      
+## [21] jquerylib_0.1.4   cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.4      
 ## [25] Rglpk_0.6-5.1     bit64_4.0.5       munsell_0.5.1     cachem_1.1.0     
-## [29] yaml_2.3.8        tools_4.4.0       Rcplex_0.3-6      rcbc_0.1.0.9001  
+## [29] yaml_2.3.8        tools_4.4.1       Rcplex_0.3-6      rcbc_0.1.0.9001  
 ## [33] colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1  vctrs_0.6.5      
 ## [37] R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1     bit_4.0.5        
 ## [41] cccp_0.3-1        pkgconfig_2.0.3   bslib_0.7.0       pillar_1.9.0     
-## [45] glue_1.7.0        Rcpp_1.0.12       systemfonts_1.1.0 xfun_0.44        
+## [45] glue_1.7.0        Rcpp_1.0.12       systemfonts_1.1.0 xfun_0.45        
 ## [49] tibble_3.2.1      highr_0.11        rstudioapi_0.16.0 knitr_1.47       
-## [53] htmltools_0.5.8.1 rmarkdown_2.27    svglite_2.1.3     compiler_4.4.0</code></pre>
+## [53] htmltools_0.5.8.1 rmarkdown_2.27    svglite_2.1.3     compiler_4.4.1</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

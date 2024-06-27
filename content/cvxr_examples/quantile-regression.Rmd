@@ -94,7 +94,7 @@ y <- matrix(engel[, "foodexp"], ncol = 1)
 beta <- Variable(2)
 quant_loss <- function(u, tau) { 0.5 * abs(u) + (tau - 0.5) * u }
 solutions <- sapply(taus, function(tau) {
-    obj <- sum(quant_loss(y - X %*% beta, t = tau))
+    obj <- sum(quant_loss(y - X %*% beta, tau = tau))
     prob <- Problem(Minimize(obj))
     ## THE OSQP solver returns an error for tau = 0.5
     solve(prob, solver = "ECOS")$getValue(beta)
