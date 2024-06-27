@@ -157,12 +157,11 @@ this site in the [Examples](/post/cvxr_examples/) section.
 ## Acknowledgements
 
 We are grateful to [Steven
-Diamond](https://web.stanford.edu/~stevend2/), [John
-Miller](https://people.eecs.berkeley.edu/~miller_john/), and Paul
+Diamond](https://stevendiamond.me), [John Miller](https://millerjohnp.github.io/), and Paul
 Kunsberg Rosenfield for their contributions to the software’s
 development. In particular, we are indebted to Steven Diamond for his
-work on [CVXPY](http://www.cvxpy.org/en/latest/). Most of `CVXR`'s
-code, documentation, and examples were ported from his Python library.
+work on [CVXPY](http://www.cvxpy.org). Most of `CVXR`'s
+code, documentation, and examples were ported from the Python library.
 
 ## About this site
 
