@@ -41,12 +41,12 @@ prob &lt;- Problem(obj, constraint)
 value(gamma) &lt;- 1
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE) #warm_start = T is not necessary for the first time
 cat(sprintf(&quot;First solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## First solve time is 31.400140</code></pre>
+<pre><code>## First solve time is 31.467003</code></pre>
 <pre class="r"><code>#Solve second time
 value(gamma) &lt;- 2
 result &lt;- solve(prob, solver = &quot;OSQP&quot;, warm_start = TRUE)
 cat(sprintf(&quot;Second solve time is %f\n&quot;, result$solve_time))</code></pre>
-<pre><code>## Second solve time is 1.641100</code></pre>
+<pre><code>## Second solve time is 1.635745</code></pre>
 <p>As you can see, there is a very significant speed up with warm starts
 than without.</p>
 </div>
@@ -71,19 +71,19 @@ than without.</p>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] Matrix_1.7-0 CVXR_1.0-14 
+## [1] Matrix_1.7-0 CVXR_1.0-15 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] slam_0.1-50       cli_3.6.2         knitr_1.47        rlang_1.1.4      
-##  [5] xfun_0.45         gurobi_11.0-0     Rglpk_0.6-5.1     cccp_0.3-1       
-##  [9] assertthat_0.2.1  jsonlite_1.8.8    bit_4.0.5         Rcplex_0.3-6     
-## [13] Rmosek_10.2.0     htmltools_0.5.8.1 rcbc_0.1.0.9001   sass_0.4.9       
-## [17] gmp_0.7-4         rmarkdown_2.27    grid_4.4.1        evaluate_0.24.0  
-## [21] jquerylib_0.1.4   fastmap_1.2.0     yaml_2.3.8        lifecycle_1.0.4  
-## [25] bookdown_0.39     compiler_4.4.1    codetools_0.2-20  Rcpp_1.0.12      
-## [29] osqp_0.6.3.3      rstudioapi_0.16.0 blogdown_1.19     lattice_0.22-6   
-## [33] digest_0.6.35     R6_2.5.1          bslib_0.7.0       bit64_4.0.5      
-## [37] tools_4.4.1       Rmpfr_0.9-5       cachem_1.1.0</code></pre>
+##  [1] slam_0.1-50       cli_3.6.3         knitr_1.48        rlang_1.1.4      
+##  [5] xfun_0.45         clarabel_0.9.0    gurobi_11.0-0     Rglpk_0.6-5.1    
+##  [9] cccp_0.3-1        assertthat_0.2.1  jsonlite_1.8.8    bit_4.0.5        
+## [13] Rcplex_0.3-6      Rmosek_10.2.0     htmltools_0.5.8.1 rcbc_0.1.0.9001  
+## [17] sass_0.4.9        gmp_0.7-4         rmarkdown_2.27    grid_4.4.1       
+## [21] evaluate_0.24.0   jquerylib_0.1.4   fastmap_1.2.0     yaml_2.3.9       
+## [25] lifecycle_1.0.4   bookdown_0.40     compiler_4.4.1    codetools_0.2-20 
+## [29] Rcpp_1.0.12       osqp_0.6.3.3      rstudioapi_0.16.0 blogdown_1.19    
+## [33] lattice_0.22-6    digest_0.6.36     R6_2.5.1          bslib_0.7.0      
+## [37] bit64_4.0.5       tools_4.4.1       Rmpfr_0.9-5       cachem_1.1.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

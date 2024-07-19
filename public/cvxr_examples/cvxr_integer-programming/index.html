@@ -206,6 +206,13 @@ CPLEX
 </tr>
 </tbody>
 </table>
+<pre><code>## Testthat Results: No output is good</code></pre>
+<pre><code>## Error: `ecos_solution` not identical to intprog$ecos.
+## 4/4 mismatches (average diff: 2e-05)
+## [1]  1.67e+00 -  1.67e+00 ==  3.61e-06
+## [2]  3.33e+00 -  3.33e+00 == -4.19e-06
+## [3]  2.00e+00 -  2.00e+00 ==  7.04e-05
+## [4] -1.79e-06 - -3.34e-11 == -1.79e-06</code></pre>
 </div>
 <div id="office-assignment-problem" class="section level2">
 <h2>Office Assignment Problem</h2>
@@ -297,6 +304,7 @@ office_occupants &lt;- names(office_assignment)[match(c(5:7, 1:4), office_assign
 office_occupants[is.na(office_occupants)] &lt;- &quot;Empty&quot;
 draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 <p><img src="../../cvxr_examples/integer-programming_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<pre><code>## Testthat Results: No output is good</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
@@ -319,26 +327,28 @@ draw_office_layout(c(&quot;WC&quot;, office_occupants))</code></pre>
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.5.1    kableExtra_1.4.0 CVXR_1.0-14     
+## [1] ggplot2_3.5.1    kableExtra_1.4.0 CVXR_1.0-15      testthat_3.2.1.1
+## [5] here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.7-4         sass_0.4.9        utf8_1.2.4        generics_0.1.3   
-##  [5] slam_0.1-50       xml2_1.3.6        blogdown_1.19     stringi_1.8.4    
-##  [9] lattice_0.22-6    digest_0.6.35     magrittr_2.0.3    evaluate_0.24.0  
-## [13] grid_4.4.1        bookdown_0.39     fastmap_1.2.0     jsonlite_1.8.8   
-## [17] Matrix_1.7-0      ECOSolveR_0.5.5   Rmosek_10.2.0     fansi_1.0.6      
-## [21] viridisLite_0.4.2 scales_1.3.0      codetools_0.2-20  jquerylib_0.1.4  
-## [25] cli_3.6.2         Rmpfr_0.9-5       rlang_1.1.4       Rglpk_0.6-5.1    
-## [29] bit64_4.0.5       munsell_0.5.1     withr_3.0.0       cachem_1.1.0     
-## [33] yaml_2.3.8        tools_4.4.1       Rcplex_0.3-6      rcbc_0.1.0.9001  
-## [37] dplyr_1.1.4       colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1 
-## [41] vctrs_0.6.5       R6_2.5.1          lifecycle_1.0.4   stringr_1.5.1    
-## [45] bit_4.0.5         cccp_0.3-1        pkgconfig_2.0.3   bslib_0.7.0      
-## [49] pillar_1.9.0      gtable_0.3.5      glue_1.7.0        Rcpp_1.0.12      
-## [53] systemfonts_1.1.0 highr_0.11        xfun_0.45         tibble_3.2.1     
-## [57] tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.47        farver_2.1.2     
-## [61] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27    svglite_2.1.3    
-## [65] compiler_4.4.1</code></pre>
+##  [1] gtable_0.3.5      xfun_0.45         bslib_0.7.0       lattice_0.22-6   
+##  [5] vctrs_0.6.5       tools_4.4.1       Rmosek_10.2.0     generics_0.1.3   
+##  [9] tibble_3.2.1      fansi_1.0.6       highr_0.11        pkgconfig_2.0.3  
+## [13] Matrix_1.7-0      desc_1.4.3        assertthat_0.2.1  lifecycle_1.0.4  
+## [17] farver_2.1.2      compiler_4.4.1    stringr_1.5.1     brio_1.1.5       
+## [21] munsell_0.5.1     gurobi_11.0-0     codetools_0.2-20  ECOSolveR_0.5.5  
+## [25] htmltools_0.5.8.1 sass_0.4.9        cccp_0.3-1        yaml_2.3.9       
+## [29] gmp_0.7-4         pillar_1.9.0      jquerylib_0.1.4   rcbc_0.1.0.9001  
+## [33] Rcplex_0.3-6      clarabel_0.9.0    cachem_1.1.0      tidyselect_1.2.1 
+## [37] digest_0.6.36     stringi_1.8.4     slam_0.1-50       dplyr_1.1.4      
+## [41] bookdown_0.40     labeling_0.4.3    rprojroot_2.0.4   fastmap_1.2.0    
+## [45] grid_4.4.1        colorspace_2.1-0  cli_3.6.3         magrittr_2.0.3   
+## [49] utf8_1.2.4        withr_3.0.0       Rmpfr_0.9-5       scales_1.3.0     
+## [53] bit64_4.0.5       rmarkdown_2.27    bit_4.0.5         blogdown_1.19    
+## [57] evaluate_0.24.0   knitr_1.48        Rglpk_0.6-5.1     viridisLite_0.4.2
+## [61] rlang_1.1.4       Rcpp_1.0.12       glue_1.7.0        xml2_1.3.6       
+## [65] pkgload_1.4.0     svglite_2.1.3     rstudioapi_0.16.0 jsonlite_1.8.8   
+## [69] R6_2.5.1          systemfonts_1.1.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>
