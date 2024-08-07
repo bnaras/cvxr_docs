@@ -161,7 +161,7 @@ and returns a scalar.
 
    * - mixed_norm(X, p, q)
      - :math:`\left(\sum_k\left(\sum_l\lvert x_{k,l}\rvert^p\right)^{q/p}\right)^{1/q}`
-     - :math:`X \in\mathbf{R}^{n \times n}`
+     - :math:`X \in\mathbf{R}^{m \times n}`
      - |positive| positive
      - |convex| convex
      - None
