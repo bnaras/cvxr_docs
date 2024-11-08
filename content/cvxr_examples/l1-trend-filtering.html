@@ -85,13 +85,8 @@ using both approaches. First the <code>l1tf</code> plot.</p>
 <pre class="r"><code>ggplot(data = sp_data) +
     geom_line(mapping = aes(x = x, y = y), color = &#39;grey50&#39;) +
     labs(x = &quot;Date&quot;, y = &quot;SP500 log-price&quot;) +
-    geom_line(mapping = aes(x = x, y = l1_50), color = &#39;red&#39;, size = 1) +
-    geom_line(mapping = aes(x = x, y = l1_100), color = &#39;blue&#39;, size = 1)</code></pre>
-<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
+    geom_line(mapping = aes(x = x, y = l1_50), color = &#39;red&#39;, linewidth = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = &#39;blue&#39;, linewidth = 1)</code></pre>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
 <img src="/cvxr_examples/l1-trend-filtering_files/figure-html/unnamed-chunk-6-1.png" alt="$L_1$ trends for $\lambda = 50$ (red) and $\lambda = 100$ (blue)." width="672" />
 <p class="caption">
@@ -106,8 +101,8 @@ Figure 1: <span class="math inline">\(L_1\)</span> trends for <span class="math 
 ggplot(data = cvxr_data) +
     geom_line(mapping = aes(x = x, y = y), color = &#39;grey50&#39;) +
     labs(x = &quot;Date&quot;, y = &quot;SP500 log-price&quot;) +
-    geom_line(mapping = aes(x = x, y = l1_50), color = &#39;red&#39;, size = 1) +
-    geom_line(mapping = aes(x = x, y = l1_100), color = &#39;blue&#39;, size = 1)</code></pre>
+    geom_line(mapping = aes(x = x, y = l1_50), color = &#39;red&#39;, linewidth = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = &#39;blue&#39;, linewidth = 1)</code></pre>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
 <img src="/cvxr_examples/l1-trend-filtering_files/figure-html/unnamed-chunk-7-1.png" alt="`CVXR` estimated $L_1$ trends for $\lambda = 50$ (red) and $\lambda = 100$ (blue)." width="672" />
 <p class="caption">
@@ -124,9 +119,9 @@ on the right, it does not have as many knots as <code>l1tf</code>.</p>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.4.1 (2024-06-14)
+<pre><code>## R version 4.4.2 (2024-10-31)
 ## Platform: x86_64-apple-darwin20
-## Running under: macOS Sonoma 14.5
+## Running under: macOS Sequoia 15.1
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRblas.0.dylib 
@@ -145,22 +140,21 @@ on the right, it does not have as many knots as <code>l1tf</code>.</p>
 ## [1] l1tf_0.0.0.9000 ggplot2_3.5.1   CVXR_1.0-15    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.7-4         clarabel_0.9.0    sass_0.4.9        utf8_1.2.4       
-##  [5] generics_0.1.3    slam_0.1-50       blogdown_1.19     lattice_0.22-6   
-##  [9] digest_0.6.36     magrittr_2.0.3    evaluate_0.24.0   grid_4.4.1       
-## [13] bookdown_0.40     fastmap_1.2.0     jsonlite_1.8.8    Matrix_1.7-0     
+##  [1] gmp_0.7-5         clarabel_0.9.0.1  sass_0.4.9        utf8_1.2.4       
+##  [5] generics_0.1.3    slam_0.1-54       blogdown_1.19     lattice_0.22-6   
+##  [9] digest_0.6.37     magrittr_2.0.3    evaluate_1.0.1    grid_4.4.2       
+## [13] bookdown_0.41     fastmap_1.2.0     jsonlite_1.8.9    Matrix_1.7-1     
 ## [17] ECOSolveR_0.5.5   Rmosek_10.2.0     fansi_1.0.6       scales_1.3.0     
 ## [21] codetools_0.2-20  jquerylib_0.1.4   cli_3.6.3         Rmpfr_0.9-5      
-## [25] crayon_1.5.3      rlang_1.1.4       Rglpk_0.6-5.1     bit64_4.0.5      
-## [29] munsell_0.5.1     withr_3.0.0       cachem_1.1.0      yaml_2.3.9       
-## [33] tools_4.4.1       Rcplex_0.3-6      rcbc_0.1.0.9001   dplyr_1.1.4      
-## [37] colorspace_2.1-0  gurobi_11.0-0     assertthat_0.2.1  vctrs_0.6.5      
-## [41] R6_2.5.1          lifecycle_1.0.4   bit_4.0.5         pkgconfig_2.0.3  
-## [45] cccp_0.3-1        pillar_1.9.0      bslib_0.7.0       gtable_0.3.5     
-## [49] glue_1.7.0        Rcpp_1.0.12       highr_0.11        xfun_0.45        
-## [53] tibble_3.2.1      tidyselect_1.2.1  rstudioapi_0.16.0 knitr_1.48       
-## [57] farver_2.1.2      htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27   
-## [61] compiler_4.4.1</code></pre>
+## [25] rlang_1.1.4       Rglpk_0.6-5.1     bit64_4.5.2       munsell_0.5.1    
+## [29] withr_3.0.2       cachem_1.1.0      yaml_2.3.10       tools_4.4.2      
+## [33] Rcplex_0.3-6      rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-1 
+## [37] gurobi_11.0-0     assertthat_0.2.1  vctrs_0.6.5       R6_2.5.1         
+## [41] lifecycle_1.0.4   bit_4.5.0         pkgconfig_2.0.3   cccp_0.3-1       
+## [45] pillar_1.9.0      bslib_0.8.0       gtable_0.3.6      glue_1.8.0       
+## [49] Rcpp_1.0.13-1     highr_0.11        xfun_0.49         tibble_3.2.1     
+## [53] tidyselect_1.2.1  knitr_1.48        farver_2.1.2      htmltools_0.5.8.1
+## [57] labeling_0.4.3    rmarkdown_2.29    compiler_4.4.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

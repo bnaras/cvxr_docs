@@ -95,13 +95,13 @@ xs <- result$getValue(x)
 ys <- result$getValue(y)
 
 catenary <- ggplot(data.frame(x = xs, y = ys)) +
-    geom_line(mapping = aes(x = x, y = y), color = "blue", size = 1) +
+    geom_line(mapping = aes(x = x, y = y), color = "blue", linewidth = 1) +
     geom_point(data = data.frame(x = c(xs[1], ys[1]), y = c(xs[m], ys[m])),
                mapping = aes(x = x, y = y), color = "red") 
 
 ideal <- function(x) { 0.22964 *cosh((x -0.5) / 0.22964) - 0.02603 }
 
-catenary + stat_function(fun = ideal , colour = "brown", alpha = 0.5, size = 3)
+catenary + stat_function(fun = ideal , colour = "brown", alpha = 0.5, linewidth = 3)
 ```
 
 ```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), error = params$mode %in% c("test", "save")}

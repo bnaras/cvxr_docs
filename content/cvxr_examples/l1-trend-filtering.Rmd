@@ -129,8 +129,8 @@ using both approaches.  First the `l1tf` plot.
 ggplot(data = sp_data) +
     geom_line(mapping = aes(x = x, y = y), color = 'grey50') +
     labs(x = "Date", y = "SP500 log-price") +
-    geom_line(mapping = aes(x = x, y = l1_50), color = 'red', size = 1) +
-    geom_line(mapping = aes(x = x, y = l1_100), color = 'blue', size = 1)
+    geom_line(mapping = aes(x = x, y = l1_50), color = 'red', linewidth = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = 'blue', linewidth = 1)
 ```
 
 Next the corresponding `CVXR` plots. 
@@ -143,8 +143,8 @@ cvxr_data <- data.frame(x = sp500$date,
 ggplot(data = cvxr_data) +
     geom_line(mapping = aes(x = x, y = y), color = 'grey50') +
     labs(x = "Date", y = "SP500 log-price") +
-    geom_line(mapping = aes(x = x, y = l1_50), color = 'red', size = 1) +
-    geom_line(mapping = aes(x = x, y = l1_100), color = 'blue', size = 1)
+    geom_line(mapping = aes(x = x, y = l1_50), color = 'red', linewidth = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = 'blue', linewidth = 1)
 ```
 
 ## Notes

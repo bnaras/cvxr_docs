@@ -105,8 +105,8 @@ plot.data &lt;- gather(data = d, key = &quot;Type&quot;, value = &quot;Estimate&
 ggplot(plot.data) +
     geom_line(mapping = aes(x = x, y = Estimate, color = Type)) +
     theme(legend.position = &quot;top&quot;)</code></pre>
-<pre><code>## Warning: Removed 300 rows containing missing values or values outside the scale
-## range (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 300 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
 <div class="figure"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
 <img src="../../cvxr_examples/direct-standardization_files/figure-html/unnamed-chunk-3-1.png" alt="Probability distribution functions population, skewed sample and reweighted sample" width="672" />
 <p class="caption">
@@ -141,9 +141,9 @@ ggplot(plot.data) +
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.4.1 (2024-06-14)
+<pre><code>## R version 4.4.2 (2024-10-31)
 ## Platform: x86_64-apple-darwin20
-## Running under: macOS Sonoma 14.5
+## Running under: macOS Sequoia 15.1
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRblas.0.dylib 
@@ -163,22 +163,22 @@ ggplot(plot.data) +
 ## [5] here_1.0.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gmp_0.7-4         clarabel_0.9.0    sass_0.4.9        utf8_1.2.4       
-##  [5] generics_0.1.3    slam_0.1-50       blogdown_1.19     lattice_0.22-6   
-##  [9] digest_0.6.36     magrittr_2.0.3    evaluate_0.24.0   grid_4.4.1       
-## [13] bookdown_0.40     pkgload_1.4.0     fastmap_1.2.0     rprojroot_2.0.4  
-## [17] jsonlite_1.8.8    Matrix_1.7-0      ECOSolveR_0.5.5   brio_1.1.5       
+##  [1] gmp_0.7-5         clarabel_0.9.0.1  sass_0.4.9        utf8_1.2.4       
+##  [5] generics_0.1.3    slam_0.1-54       blogdown_1.19     lattice_0.22-6   
+##  [9] digest_0.6.37     magrittr_2.0.3    evaluate_1.0.1    grid_4.4.2       
+## [13] bookdown_0.41     pkgload_1.4.0     fastmap_1.2.0     rprojroot_2.0.4  
+## [17] jsonlite_1.8.9    Matrix_1.7-1      ECOSolveR_0.5.5   brio_1.1.5       
 ## [21] Rmosek_10.2.0     purrr_1.0.2       fansi_1.0.6       scales_1.3.0     
 ## [25] codetools_0.2-20  jquerylib_0.1.4   cli_3.6.3         Rmpfr_0.9-5      
-## [29] rlang_1.1.4       Rglpk_0.6-5.1     bit64_4.0.5       munsell_0.5.1    
-## [33] withr_3.0.0       cachem_1.1.0      yaml_2.3.9        tools_4.4.1      
-## [37] Rcplex_0.3-6      rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-0 
+## [29] rlang_1.1.4       Rglpk_0.6-5.1     bit64_4.5.2       munsell_0.5.1    
+## [33] withr_3.0.2       cachem_1.1.0      yaml_2.3.10       tools_4.4.2      
+## [37] Rcplex_0.3-6      rcbc_0.1.0.9001   dplyr_1.1.4       colorspace_2.1-1 
 ## [41] gurobi_11.0-0     assertthat_0.2.1  vctrs_0.6.5       R6_2.5.1         
-## [45] lifecycle_1.0.4   bit_4.0.5         desc_1.4.3        cccp_0.3-1       
-## [49] pkgconfig_2.0.3   bslib_0.7.0       pillar_1.9.0      gtable_0.3.5     
-## [53] glue_1.7.0        Rcpp_1.0.12       highr_0.11        xfun_0.45        
+## [45] lifecycle_1.0.4   bit_4.5.0         desc_1.4.3        cccp_0.3-1       
+## [49] pkgconfig_2.0.3   bslib_0.8.0       pillar_1.9.0      gtable_0.3.6     
+## [53] glue_1.8.0        Rcpp_1.0.13-1     highr_0.11        xfun_0.49        
 ## [57] tibble_3.2.1      tidyselect_1.2.1  knitr_1.48        farver_2.1.2     
-## [61] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.27    compiler_4.4.1</code></pre>
+## [61] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.29    compiler_4.4.2</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

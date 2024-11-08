@@ -41,7 +41,7 @@ set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test
 }
 
 ## For testing use set_mode("test")
-## set_params("test")
+##set_params("test")
 
 ## For saving use
 ## set_params("save")

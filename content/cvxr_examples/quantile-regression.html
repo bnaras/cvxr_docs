@@ -46,13 +46,8 @@ names(fits) &lt;- c(&quot;OLS&quot;, sprintf(&quot;$\\tau_{%0.2f}$&quot;, taus))
 
 nf &lt;- ncol(fits)
 colors &lt;- colorRampPalette(colors = c(&quot;black&quot;, &quot;red&quot;))(nf)
-p &lt;- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)</code></pre>
-<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
-<pre class="r"><code>for (i in seq_len(nf)[-1]) {
+p &lt;- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], linewidth = 1.5)
+for (i in seq_len(nf)[-1]) {
     p &lt;- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
 }
 p</code></pre>
@@ -260,9 +255,9 @@ income
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.4.1 (2024-06-14)
+<pre><code>## R version 4.4.2 (2024-10-31)
 ## Platform: x86_64-apple-darwin20
-## Running under: macOS Sonoma 14.5
+## Running under: macOS Sequoia 15.1
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRblas.0.dylib 
@@ -278,28 +273,28 @@ income
 ## [1] stats     graphics  grDevices datasets  utils     methods   base     
 ## 
 ## other attached packages:
-## [1] quantreg_5.98    SparseM_1.84     kableExtra_1.4.0 ggplot2_3.5.1   
+## [1] quantreg_5.99    SparseM_1.84-2   kableExtra_1.4.0 ggplot2_3.5.1   
 ## [5] CVXR_1.0-15     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gtable_0.3.5       xfun_0.45          bslib_0.7.0        lattice_0.22-6    
-##  [5] vctrs_0.6.5        tools_4.4.1        Rmosek_10.2.0      generics_0.1.3    
+##  [1] gtable_0.3.6       xfun_0.49          bslib_0.8.0        lattice_0.22-6    
+##  [5] vctrs_0.6.5        tools_4.4.2        Rmosek_10.2.0      generics_0.1.3    
 ##  [9] tibble_3.2.1       fansi_1.0.6        highr_0.11         pkgconfig_2.0.3   
-## [13] Matrix_1.7-0       assertthat_0.2.1   lifecycle_1.0.4    compiler_4.4.1    
+## [13] Matrix_1.7-1       assertthat_0.2.1   lifecycle_1.0.4    compiler_4.4.2    
 ## [17] farver_2.1.2       stringr_1.5.1      MatrixModels_0.5-3 munsell_0.5.1     
 ## [21] gurobi_11.0-0      codetools_0.2-20   ECOSolveR_0.5.5    htmltools_0.5.8.1 
-## [25] sass_0.4.9         cccp_0.3-1         yaml_2.3.9         gmp_0.7-4         
-## [29] pillar_1.9.0       crayon_1.5.3       jquerylib_0.1.4    MASS_7.3-61       
-## [33] rcbc_0.1.0.9001    clarabel_0.9.0     Rcplex_0.3-6       cachem_1.1.0      
-## [37] tidyselect_1.2.1   digest_0.6.36      stringi_1.8.4      slam_0.1-50       
-## [41] dplyr_1.1.4        bookdown_0.40      labeling_0.4.3     splines_4.4.1     
-## [45] fastmap_1.2.0      grid_4.4.1         colorspace_2.1-0   cli_3.6.3         
-## [49] magrittr_2.0.3     survival_3.7-0     utf8_1.2.4         withr_3.0.0       
-## [53] Rmpfr_0.9-5        scales_1.3.0       bit64_4.0.5        rmarkdown_2.27    
-## [57] bit_4.0.5          blogdown_1.19      evaluate_0.24.0    knitr_1.48        
-## [61] Rglpk_0.6-5.1      viridisLite_0.4.2  rlang_1.1.4        Rcpp_1.0.12       
-## [65] glue_1.7.0         xml2_1.3.6         svglite_2.1.3      rstudioapi_0.16.0 
-## [69] jsonlite_1.8.8     R6_2.5.1           systemfonts_1.1.0</code></pre>
+## [25] sass_0.4.9         cccp_0.3-1         yaml_2.3.10        gmp_0.7-5         
+## [29] pillar_1.9.0       jquerylib_0.1.4    MASS_7.3-61        rcbc_0.1.0.9001   
+## [33] Rcplex_0.3-6       clarabel_0.9.0.1   cachem_1.1.0       tidyselect_1.2.1  
+## [37] digest_0.6.37      stringi_1.8.4      slam_0.1-54        dplyr_1.1.4       
+## [41] bookdown_0.41      labeling_0.4.3     splines_4.4.2      fastmap_1.2.0     
+## [45] grid_4.4.2         colorspace_2.1-1   cli_3.6.3          magrittr_2.0.3    
+## [49] survival_3.7-0     utf8_1.2.4         withr_3.0.2        Rmpfr_0.9-5       
+## [53] scales_1.3.0       bit64_4.5.2        rmarkdown_2.29     bit_4.5.0         
+## [57] blogdown_1.19      evaluate_1.0.1     knitr_1.48         Rglpk_0.6-5.1     
+## [61] viridisLite_0.4.2  rlang_1.1.4        Rcpp_1.0.13-1      glue_1.8.0        
+## [65] xml2_1.3.6         svglite_2.1.3      rstudioapi_0.17.1  jsonlite_1.8.9    
+## [69] R6_2.5.1           systemfonts_1.1.0</code></pre>
 </div>
 <div id="source" class="section level2">
 <h2>Source</h2>

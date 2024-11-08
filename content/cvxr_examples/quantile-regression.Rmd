@@ -67,7 +67,7 @@ names(fits) <- c("OLS", sprintf("$\\tau_{%0.2f}$", taus))
 
 nf <- ncol(fits)
 colors <- colorRampPalette(colors = c("black", "red"))(nf)
-p <- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], size = 1.5)
+p <- p + geom_abline(intercept = fits[1, 1], slope = fits[2, 1], color = colors[1], linewidth = 1.5)
 for (i in seq_len(nf)[-1]) {
     p <- p + geom_abline(intercept = fits[1, i], slope = fits[2, i], color = colors[i])
 }

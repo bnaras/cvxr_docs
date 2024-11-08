@@ -184,7 +184,7 @@ if (params$mode == "save") {
 
 For a slightly more involved example, we consider the [office
 assignment
-problem](https://www.mathworks.com/help/optim/examples/office-assignments-by-binary-integer-programming.html).
+problem](https://www.mathworks.com/help/optim/ug/office-assignments-binary-integer-programming-solver-based.html).
 
 The goal is to assign six people, Marcelo, Rakesh, Peter, Tom,
 Marjorie, and Mary Ann, to seven offices. Each office can have no more
