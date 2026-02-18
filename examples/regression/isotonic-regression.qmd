@@ -24,6 +24,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(isotone)
 library(kableExtra)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -61,6 +62,7 @@ x_p <- with(pituitary, {
       constraint <- list(diff(x) >= 0)
       problem <- Problem(objective, constraint)
       psolve(problem)
+      check_solver_status(problem)
       value(x)
 })
 ```
@@ -97,6 +99,7 @@ x_s <- with(pituitary, {
                     secondary_constraints)
     problem <- Problem(objective, constraint)
     psolve(problem)
+    check_solver_status(problem)
     value(x)
 })
 ```
@@ -119,6 +122,7 @@ x_t <- with(pituitary, {
     constraint <- list(diff(block_mean_vector) >= 0)
     problem <- Problem(objective, constraint)
     psolve(problem)
+    check_solver_status(problem)
     value(x)
 })
 ```

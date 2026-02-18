@@ -25,6 +25,7 @@ library(CVXR)
 library(ggplot2)
 library(kableExtra)
 library(quantreg)
+source(here::here("_check_status.R"))
 ```
 
 
@@ -93,6 +94,7 @@ solutions <- sapply(taus, function(tau) {
     prob <- Problem(Minimize(obj))
     ## THE OSQP solver returns an error for tau = 0.5
     psolve(prob, solver = "CLARABEL")
+    check_solver_status(prob)
     value(beta)
 })
 fits <- data.frame(coef(lm(foodexp ~ income, data = engel)),

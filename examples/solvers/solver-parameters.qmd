@@ -11,6 +11,7 @@ params:
 suppressMessages(library(CVXR))
 library(tibble)
 library(kableExtra)
+source(here::here("_check_status.R"))
 ```
 
 ## Overview
@@ -76,9 +77,11 @@ prob <- Problem(obj, list(x >= 0))
 
 # Using standard parameter names
 result  <- psolve(prob, solver = "CLARABEL", feastol = 1e-2, verbose = TRUE)
+check_solver_status(prob)
 
 # Using solver-specific parameter names (equivalent)
 result  <- psolve(prob, solver = "CLARABEL", tol_feas = 1e-2, verbose = FALSE)
+check_solver_status(prob)
 ```
 
 ### OSQP
@@ -106,9 +109,11 @@ prob <- Problem(obj, list(x >= 0))
 
 # Using standard parameter name
 result  <- psolve(prob, solver = "OSQP", feastol = 1e-5, verbose = FALSE)
+check_solver_status(prob)
 
 # Using solver-specific parameter name (equivalent)
 result  <- psolve(prob, solver = "OSQP", eps_prim_inf = 1e-5, verbose = FALSE)
+check_solver_status(prob)
 ```
 
 ### SCS
@@ -151,6 +156,7 @@ for(i in 1:p){
 obj <- Minimize(matrix_trace(C %*% X))
 prob <- Problem(obj, constraints)
 result  <- psolve(prob, solver = "SCS", verbose = FALSE, num_iter = 5000)
+check_solver_status(prob)
 ```
 
 ### HiGHS
@@ -177,6 +183,7 @@ x <- Variable(1)
 obj <- Minimize(x)
 prob <- Problem(obj, list(x >= 0))
 result  <- psolve(prob, solver = "HIGHS", verbose = FALSE)
+check_solver_status(prob)
 ```
 
 ### MOSEK
@@ -285,6 +292,7 @@ x <- Variable(1)
 obj <- Minimize(x)
 prob <- Problem(obj, list(x >= 0))
 result  <- psolve(prob, solver = "CLARABEL", feastol = 1e-6, verbose = FALSE)
+check_solver_status(prob)
 ```
 
 ### ECOS_BB

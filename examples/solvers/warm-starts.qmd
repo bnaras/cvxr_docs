@@ -28,14 +28,8 @@ where $\gamma > 0$ is a regularization parameter.
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
 library(Matrix)
+source(here::here("_check_status.R"))
 ```
-
-::: {.callout-note}
-DPP re-solve with parameter updates is planned for a future release.
-The code below demonstrates solving the same problem structure for
-multiple parameter values by constructing a new problem for each
-value.
-:::
 
 ```{r}
 ## Problem data
@@ -45,26 +39,25 @@ n <- 1000
 A <- matrix(rnorm(m*n), nrow = m, ncol = n)
 b <- rnorm(m)
 
-## Solve for gamma = 1
+## Define the problem once using a Parameter
 x <- Variable(n)
-gamma_val <- 1
-obj <- Minimize(.5 * sum_squares(A %*% x - b) + gamma_val * norm1(x))
+gamma <- Parameter(nonneg = TRUE)
+obj <- Minimize(.5 * sum_squares(A %*% x - b) + gamma * norm1(x))
 constraint <- list(x >= 0)
 prob <- Problem(obj, constraint)
+
+## Solve for gamma = 1
+value(gamma) <- 1
 result1 <- psolve(prob, solver = "OSQP")
+check_solver_status(prob)
 cat(sprintf("gamma = 1, optimal value: %f\n", result1))
 
-## Re-solve for gamma = 2
-gamma_val <- 2
-obj2 <- Minimize(.5 * sum_squares(A %*% x - b) + gamma_val * norm1(x))
-prob2 <- Problem(obj2, constraint)
-result2 <- psolve(prob2, solver = "OSQP")
+## Re-solve for gamma = 2 (much faster — reuses cached compilation)
+value(gamma) <- 2
+result2 <- psolve(prob, solver = "OSQP")
+check_solver_status(prob)
 cat(sprintf("gamma = 2, optimal value: %f\n", result2))
 ```
-
-Once DPP re-solve is available, you will be able to define the
-problem once with a `Parameter` for `gamma` and re-solve for different
-parameter values without reconstructing the problem.
 
 ## Session Info
 

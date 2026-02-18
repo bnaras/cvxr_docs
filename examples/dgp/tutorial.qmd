@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -55,6 +56,7 @@ constraints <- list(
 )
 problem <- Problem(Maximize(objective_fn), constraints)
 result <- psolve(problem, gp = TRUE)
+check_solver_status(problem)
 cat("Optimal value:", result, "\n")
 cat("x:", value(x), "\n")
 cat("y:", value(y), "\n")
@@ -184,13 +186,14 @@ constraints <- list(
   z >= 1
 )
 problem <- Problem(Maximize(objective_fn), constraints)
-cat("Is problem DGP?", CVXR:::is_dgp(problem), "\n")
+cat("Is problem DGP?", is_dgp(problem), "\n")
 ```
 
 You can solve a DGP Problem by calling `psolve()` with `gp = TRUE`:
 
 ```{r}
 result <- psolve(problem, gp = TRUE)
+check_solver_status(problem)
 cat("Optimal value:", result, "\n")
 cat("x:", value(x), "\n")
 cat("y:", value(y), "\n")

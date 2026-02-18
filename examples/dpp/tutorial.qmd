@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -177,17 +178,13 @@ could precompute `b <- Parameter(value = a_val^2)` and write
 
 ## Repeatedly Solving a DPP Problem
 
-::: {.callout-note}
-DPP re-solve with parameter updates is planned for a future release.
-The code below illustrates the intended API but is not yet executable.
-:::
 
 The following example demonstrates how parameters can speed up
 repeated solves of a DPP-compliant DCP problem. We set up a
 regularized least-squares problem and solve it for a range of
 regularization values.
 
-```{r, eval = FALSE}
+```{r}
 n <- 15
 m <- 10
 set.seed(1)
@@ -203,7 +200,7 @@ problem <- Problem(obj)
 cat("Is DPP?", is_dpp(problem), "\n")
 ```
 
-```{r, eval = FALSE}
+```{r}
 gamma_vals <- 10^seq(-4, 1, length.out = 50)
 dpp_times <- numeric(length(gamma_vals))
 new_problem_times <- numeric(length(gamma_vals))
@@ -212,12 +209,14 @@ for (i in seq_along(gamma_vals)) {
     value(gamma) <- gamma_vals[i]
     t1 <- proc.time()
     result <- psolve(problem)
+    check_solver_status(problem)
     t2 <- proc.time()
     dpp_times[i] <- (t2 - t1)["elapsed"]
 
     new_problem <- Problem(obj)
     t3 <- proc.time()
     new_result <- psolve(new_problem)
+    check_solver_status(new_problem)
     t4 <- proc.time()
     new_problem_times[i] <- (t4 - t3)["elapsed"]
 }
@@ -225,7 +224,7 @@ for (i in seq_along(gamma_vals)) {
 
 We can visualize the timing comparison:
 
-```{r, eval = FALSE}
+```{r}
 plot(gamma_vals, dpp_times, type = "l", col = "blue", log = "x",
      xlab = expression(gamma), ylab = "Time (s)",
      main = "DPP Re-solve vs. New Problem")

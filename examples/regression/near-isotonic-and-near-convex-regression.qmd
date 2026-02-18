@@ -25,6 +25,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
 library(boot)
+source(here::here("_check_status.R"))
 ```
 
 Given a set of data points $y \in {\mathbf R}^m$,
@@ -63,6 +64,7 @@ neariso_fit <- function(y, lambda) {
     obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
     prob <- Problem(Minimize(obj))
     psolve(prob)
+    check_solver_status(prob)
     value(beta)
 }
 ```
@@ -130,6 +132,7 @@ nearconvex_fit <- function(y, lambda) {
     obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta, differences = 2)))
     prob <- Problem(Minimize(obj))
     psolve(prob)
+    check_solver_status(prob)
     value(beta)
 }
 

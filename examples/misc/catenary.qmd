@@ -23,6 +23,7 @@ if (params$mode == "test") {
 library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -79,6 +80,7 @@ constraints <- list(x[1] == 0, y[1] == 1,
 ## Solve the catenary problem
 prob <- Problem(objective, constraints)
 result <- psolve(prob)
+check_solver_status(prob)
 ```
 
 We can now plot it and compare it with the ideal solution. Below we
@@ -143,6 +145,7 @@ constraints <- c(constraints, y >= ground)
 constraints[[4]] <- (y[m] == 0.5)
 prob <- Problem(objective, constraints)
 result <- psolve(prob)
+check_solver_status(prob)
 ```
 to obtain the new result. 
 

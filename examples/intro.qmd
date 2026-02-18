@@ -21,6 +21,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, echo = FALSE}
 ## We restrict ourselves to solvers on CRAN
+source(here::here("_check_status.R"))
 ```
 
 Consider a simple linear regression problem where it is desired to
@@ -109,6 +110,7 @@ problem <- Problem(objective)
 ## psolve() returns the optimal value directly; value() extracts variable values
 ## (The deprecated solve()$getValue() pattern still works but warns.)
 result <- psolve(problem)
+check_solver_status(problem)
 ```
 
 - Step 5. Extract solution and objective value
@@ -159,6 +161,7 @@ problem definition.
 ```{r}
 problem <- Problem(objective, constraints = list(betaHat >= 0))
 result <- psolve(problem)
+check_solver_status(problem)
 m <- matrix(value(betaHat), ncol = 1)
 rownames(m) <- paste0("$\\beta_{", 1:p, "}$")
 knitr::kable(m, format = "html") |>
@@ -265,6 +268,7 @@ Now we are ready to solve the problem just as before.
 ```{r}
 problem <- Problem(objective, constraints = list(constraint1, constraint2))
 result <- psolve(problem)
+check_solver_status(problem)
 ```
 
 And we can get the estimates of $\beta$.

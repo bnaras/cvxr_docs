@@ -25,6 +25,7 @@ library(CVXR)
 library(ggplot2)
 library(RColorBrewer)
 library(tidyr)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -86,7 +87,8 @@ for(i in seq_along(gammas)) {
     objective <- ret - gamma * risk
     prob <- Problem(Maximize(objective), constraints)
     result <- psolve(prob)
-    
+    check_solver_status(prob)
+
     ## Evaluate risk/return for current solution
     risk_data[i] <- value(sqrt(risk))
     ret_data[i] <- value(ret)

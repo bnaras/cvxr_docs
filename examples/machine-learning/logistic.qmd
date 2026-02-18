@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -118,6 +119,7 @@ for (i in seq_len(trials)) {
     problem <- Problem(Maximize(log_likelihood / m -
                                 lambda_vals[i] * p_norm(beta, 1)))
     result <- psolve(problem)
+    check_solver_status(problem)
     beta_hat <- value(beta)
     train_error[i] <- calc_error(X %*% beta_hat, Y)
     test_error[i]  <- calc_error(X_test %*% beta_hat, Y_test)

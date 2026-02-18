@@ -24,6 +24,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
 library(tidyr)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -85,6 +86,7 @@ obj <- Maximize(t(ps) %*% log(rets %*% b))
 constraints <- list(sum(b) == 1, b >= 0)
 prob <- Problem(obj, constraints)
 result <- psolve(prob)
+check_solver_status(prob)
 bets <- value(b)
 
 ## Naive betting scheme: bet in proportion to expected return

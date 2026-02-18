@@ -24,6 +24,7 @@ if (params$mode == "test") {
 library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
+source(here::here("_check_status.R"))
 ```
 ## Introduction
 
@@ -88,6 +89,7 @@ rel_err <- cvxr_norm(beta - beta_true, "F") / norm(beta_true, "F")
 obj <- sum((y - X %*% beta)^2)
 prob <- Problem(Minimize(obj))
 result <- psolve(prob)
+check_solver_status(prob)
 beta_ols <- value(beta)
 err_ols <- value(rel_err)
 
@@ -95,6 +97,7 @@ err_ols <- value(rel_err)
 obj <- sum(CVXR::huber(y - X %*% beta, M))
 prob <- Problem(Minimize(obj))
 result <- psolve(prob)
+check_solver_status(prob)
 beta_hub <- value(beta)
 err_hub <- value(rel_err)
 ```
@@ -107,6 +110,7 @@ signs.
 obj <- sum((y - factor*(X %*% beta))^2)
 prob <- Problem(Minimize(obj))
 result <- psolve(prob)
+check_solver_status(prob)
 beta_prs <- value(beta)
 err_prs <- value(rel_err)
 ```

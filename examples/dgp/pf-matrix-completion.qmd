@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -85,6 +86,7 @@ constraints <- c(constraints, list(
 
 problem <- Problem(Minimize(objective_fn), constraints)
 result <- psolve(problem, gp = TRUE)
+check_solver_status(problem)
 cat("Optimal value (spectral radius):", result, "\n")
 cat("X:\n")
 print(value(X))

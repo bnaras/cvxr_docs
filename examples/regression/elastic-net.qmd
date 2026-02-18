@@ -25,6 +25,7 @@ library(CVXR)
 library(ggplot2)
 library(kableExtra)
 library(glmnet)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -114,6 +115,7 @@ beta_vals <- sapply(lambda_vals,
                         obj <- loss + elastic_reg(beta, lambda, alpha)
                         prob <- Problem(Minimize(obj))
                         psolve(prob)
+                        check_solver_status(prob)
                         value(beta)
                     })
 ```

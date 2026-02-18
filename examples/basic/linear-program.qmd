@@ -21,6 +21,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -76,6 +77,7 @@ x <- Variable(n)
 constraints <- list(A %*% x <= b)
 prob <- Problem(Minimize(t(c_vec) %*% x), constraints)
 result <- psolve(prob)
+check_solver_status(prob)
 ```
 
 ```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}

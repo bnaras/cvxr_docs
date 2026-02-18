@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -63,6 +64,7 @@ concave_fractional_fn <- sqrt(x) / exp(x)
 problem <- Problem(Maximize(concave_fractional_fn))
 cat("Is DQCP?", is_dqcp(problem), "\n")
 result <- psolve(problem, qcp = TRUE)
+check_solver_status(problem)
 cat("Optimal value:", result, "\n")
 cat("x:", value(x), "\n")
 ```

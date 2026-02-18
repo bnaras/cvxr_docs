@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -59,10 +60,10 @@ constructed with the option `pos = TRUE`:
 
 ```{r}
 v <- Variable(pos = TRUE)
-cat("Positive variable is log-log affine:", CVXR:::is_log_log_affine(v), "\n")
+cat("Positive variable is log-log affine:", is_log_log_affine(v), "\n")
 
 p <- Parameter(pos = TRUE)
-cat("Positive parameter is log-log affine:", CVXR:::is_log_log_affine(p), "\n")
+cat("Positive parameter is log-log affine:", is_log_log_affine(p), "\n")
 ```
 
 ### Functions from Geometric Programming
@@ -82,7 +83,7 @@ cc <- 2.0
 a <- c(0.5, 2.0, 1.8)
 
 monomial <- cc * power(x[1], a[1]) * power(x[2], a[2]) * power(x[3], a[3])
-cat("Monomial is log-log affine:", CVXR:::is_log_log_affine(monomial), "\n")
+cat("Monomial is log-log affine:", is_log_log_affine(monomial), "\n")
 ```
 
 A sum of monomial functions is log-log convex; in the context of
@@ -98,9 +99,9 @@ monomial <- constant * x * y
 posynomial <- monomial + power(x, 1.5) * power(y, -1)
 reciprocal <- power(posynomial, -1)
 
-cat("monomial is log-log affine:", CVXR:::is_log_log_affine(monomial), "\n")
-cat("posynomial is log-log convex:", CVXR:::is_log_log_convex(posynomial), "\n")
-cat("reciprocal is log-log concave:", CVXR:::is_log_log_concave(reciprocal), "\n")
+cat("monomial is log-log affine:", is_log_log_affine(monomial), "\n")
+cat("posynomial is log-log convex:", is_log_log_convex(posynomial), "\n")
+cat("reciprocal is log-log concave:", is_log_log_concave(reciprocal), "\n")
 ```
 
 ## 2. Log-Log Curvature Ruleset
@@ -122,9 +123,9 @@ expressions.
 
 If an Expression satisfies the composition rule, we colloquially say
 that the Expression "is DGP." You can check the log-log curvature of
-an expression using `CVXR:::is_log_log_convex()`, `CVXR:::is_log_log_concave()`, and
-`CVXR:::is_log_log_affine()`. You can check whether a Problem is DGP by
-calling `CVXR:::is_dgp()`.
+an expression using `is_log_log_convex()`, `is_log_log_concave()`, and
+`is_log_log_affine()`. You can check whether a Problem is DGP by
+calling `is_dgp()`.
 
 ```{r}
 x <- Variable(pos = TRUE)
@@ -133,8 +134,8 @@ y <- Variable(pos = TRUE)
 monomial <- 2.0 * x * y
 posynomial <- monomial + power(x, 1.5) * power(y, -1)
 
-cat("monomial is log-log affine:", CVXR:::is_log_log_affine(monomial), "\n")
-cat("posynomial is log-log convex:", CVXR:::is_log_log_convex(posynomial), "\n")
+cat("monomial is log-log affine:", is_log_log_affine(monomial), "\n")
+cat("posynomial is log-log convex:", is_log_log_convex(posynomial), "\n")
 ```
 
 ## 3. DGP Problems
@@ -154,7 +155,7 @@ log-log concave, and the functions $g_i$ and $\tilde{g_i}$ are
 log-log affine.
 
 A problem is DGP if additionally all the functions are DGP. You can
-check whether a `CVXR` Problem is DGP by calling `CVXR:::is_dgp()`
+check whether a `CVXR` Problem is DGP by calling `is_dgp()`
 on the problem object.
 
 ```{r}
@@ -170,7 +171,7 @@ constraints <- list(
   z >= 1
 )
 problem <- Problem(Maximize(objective_fn), constraints)
-cat("Is this problem DGP?", CVXR:::is_dgp(problem), "\n")
+cat("Is this problem DGP?", is_dgp(problem), "\n")
 ```
 
 ### Solving DGP Problems
@@ -179,6 +180,7 @@ You can solve a DGP Problem by calling `psolve()` with `gp = TRUE`.
 
 ```{r}
 result <- psolve(problem, gp = TRUE)
+check_solver_status(problem)
 cat("Optimal value:", result, "\n")
 cat("x:", value(x), "\n")
 cat("y:", value(y), "\n")

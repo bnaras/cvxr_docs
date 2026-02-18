@@ -213,7 +213,7 @@ cons <- c(list(x_slack == x_param),
           lapply(seq_len(m - 1), function(i) y[i] <= y[i + 1]))
 problem <- Problem(Minimize(obj_fn), cons)
 
-cat(sprintf("Is DGP: %s\n", CVXR:::is_dgp(problem)))
+cat(sprintf("Is DGP: %s\n", is_dgp(problem)))
 ```
 
 We run projected gradient descent. In each epoch, for every training

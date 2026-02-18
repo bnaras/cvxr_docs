@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -110,6 +111,7 @@ for (i in seq_along(lambd_values)) {
     problem <- Problem(Minimize(objective_fn(X_train, Y_train, beta,
                                              lambd_values[i])))
     result <- psolve(problem)
+    check_solver_status(problem)
     train_errors[i] <- mse(X_train, Y_train, beta)
     test_errors[i]  <- mse(X_test, Y_test, beta)
     beta_values[[i]] <- value(beta)

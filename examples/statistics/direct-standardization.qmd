@@ -24,6 +24,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
 library(tidyr)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -91,6 +92,7 @@ prob <- Problem(Maximize(objective), constraints)
 ## psolve() returns the optimal value directly; variable values via value()
 ## (The deprecated solve() pattern result$getValue(x) still works but warns.)
 result <- psolve(prob)
+check_solver_status(prob)
 weights <- value(w)
 cat(sprintf("Optimal value: %f\n", result))
 ```

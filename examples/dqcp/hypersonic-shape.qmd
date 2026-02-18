@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -134,6 +135,7 @@ constraint <- list(a * inv_pos(x) - (1 - b) * sqrt(1 - power(x, 2)) <= 0)
 ```{r}
 prob <- Problem(Minimize(obj), constraint)
 result <- psolve(prob, qcp = TRUE)
+check_solver_status(prob)
 ld_ratio <- 1 / result
 x_opt <- value(x)
 y_opt <- sqrt(1 - x_opt^2)

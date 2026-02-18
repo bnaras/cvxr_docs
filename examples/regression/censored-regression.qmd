@@ -23,6 +23,7 @@ if (params$mode == "test") {
 library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -88,12 +89,14 @@ beta <- Variable(n)
 obj <- sum((y_censored - X_ordered %*% beta)^2)
 prob <- Problem(Minimize(obj))
 result <- psolve(prob)
+check_solver_status(prob)
 beta_ols <- value(beta)
 
 ## OLS using uncensored data
 obj <- sum((y_censored[1:M] - X_ordered[1:M,] %*% beta)^2)
 prob <- Problem(Minimize(obj))
 result <- psolve(prob)
+check_solver_status(prob)
 beta_unc <- value(beta)
 
 ## Censored regression
@@ -101,6 +104,7 @@ obj <- sum((y_censored[1:M] - X_ordered[1:M,] %*% beta)^2)
 constr <- list(X_ordered[(M+1):K,] %*% beta >= D)
 prob <- Problem(Minimize(obj), constr)
 result <- psolve(prob)
+check_solver_status(prob)
 beta_cens <- value(beta)
 ```
 

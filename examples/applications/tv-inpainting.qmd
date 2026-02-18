@@ -20,6 +20,7 @@ if (params$mode == "test") {
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
 library(png)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -99,6 +100,7 @@ constraints <- list(multiply(known, U) == multiply(known, u_corr))
 prob <- Problem(obj, constraints)
 
 result <- psolve(prob, solver = "SCS", verbose = TRUE)
+check_solver_status(prob)
 cat("Optimal objective value:", result, "\n")
 ```
 
@@ -189,6 +191,7 @@ for (k in 1:colors) {
 prob_color <- Problem(Minimize(tv(variables[[1]], variables[[2]], variables[[3]])),
                       constraints_c)
 result_color <- psolve(prob_color, solver = "SCS", verbose = TRUE)
+check_solver_status(prob_color)
 cat("Optimal objective value:", result_color, "\n")
 ```
 

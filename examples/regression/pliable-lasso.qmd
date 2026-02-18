@@ -23,6 +23,7 @@ if (params$mode == "test") {
 library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(kableExtra)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -191,6 +192,7 @@ objective <- sum_squares(y - y_hat) / (2 * N) +
 ```{r Define_and_Solve_Problem, eval = FALSE}
 prob <- Problem(Minimize(objective))
 opt_val <- psolve(prob, verbose = TRUE)
+check_solver_status(prob)
 beta_hat <- value(beta)
 ```
 

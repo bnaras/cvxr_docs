@@ -24,6 +24,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
 library(ggforce)
+source(here::here("_check_status.R"))
 ```
 
 ## Problem
@@ -68,6 +69,7 @@ All that remains is to solve the problem and read off the solution.
 
 ```{r}
 result <- psolve(p)
+check_solver_status(p)
 radius <- value(r)
 center <- value(x_c)
 cat(sprintf("The radius is %0.5f for an area %0.5f\n", radius, pi * radius^2))    

@@ -23,6 +23,7 @@ if (params$mode == "test") {
 library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(kableExtra)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -85,6 +86,7 @@ beta <- Variable(n)
 obj <- -sum(logistic(-X[y <= 0, ] %*% beta)) - sum(logistic(X[y == 1, ] %*% beta))
 prob <- Problem(Maximize(obj))
 psolve(prob)
+check_solver_status(prob)
 
 log_odds <- value(X %*% beta)
 beta_res <- value(beta)
@@ -114,6 +116,7 @@ objective will have to be modified as below.
 obj <- -sum(X[y <= 0, ] %*% beta) - sum(logistic(-X %*% beta))
 prob <- Problem(Maximize(obj))
 psolve(prob)
+check_solver_status(prob)
 beta_log <- value(beta)
 est.table <- data.frame("CVXR.est" = beta_log, "GLM.est" = coef(glm))
 rownames(est.table) <- paste0("$\\beta_{", 1:n, "}$")

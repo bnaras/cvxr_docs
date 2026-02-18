@@ -26,6 +26,7 @@ library(ggplot2)
 library(grid)
 library(Matrix)
 library(expm)
+source(here::here("_check_status.R"))
 
 ## 
 ## Reference: http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
@@ -154,7 +155,8 @@ S.est <- lapply(alphas,
                     ## Form and solve optimization problem
                     prob <- Problem(obj, constraints)
                     result <- psolve(prob)
-                    
+                    check_solver_status(prob)
+
                     ## Create covariance matrix
                     R_hat <- base::solve(value(S))
                     Sres <- value(S)

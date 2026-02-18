@@ -24,6 +24,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(kableExtra)
 library(glmnet)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -76,6 +77,7 @@ beta <- Variable(p + 1)
 obj <- sum_squares(y - xDesign %*% beta) / (2 * n) + lambda * p_norm(beta[-1], 1)
 prob <- Problem(Minimize(obj))
 result <- psolve(prob, verbose = TRUE)
+check_solver_status(prob)
 ```
 
 We can print the coefficients side-by-side from `glmnet` and `CVXR` to
@@ -125,6 +127,7 @@ obj2 <- (sum(xDesign[y2 <= 0, ] %*% beta) + sum(logistic(-xDesign %*% beta))) / 
     lambda * p_norm(beta[-1], 1)
 prob <- Problem(Minimize(obj2))
 result <- psolve(prob)
+check_solver_status(prob)
 ```
 
 Once again, the results below should be close enough. 

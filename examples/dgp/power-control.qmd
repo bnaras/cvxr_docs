@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -122,13 +123,14 @@ for (i in 1:n) {
 }
 
 problem <- Problem(objective, constraints)
-cat("Is problem DGP?", CVXR:::is_dgp(problem), "\n")
+cat("Is problem DGP?", is_dgp(problem), "\n")
 ```
 
 ## Solution
 
 ```{r}
 result <- psolve(problem, gp = TRUE)
+check_solver_status(problem)
 cat("Optimal total power:", result, "\n")
 cat("Optimal power levels:", value(p), "\n")
 ```

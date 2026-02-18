@@ -77,7 +77,7 @@ problem <- Problem(objective, constraints)
 We verify that the problem is a DGP.
 
 ```{r}
-CVXR:::is_dgp(problem)
+is_dgp(problem)
 ```
 
 ## Solving the Problem

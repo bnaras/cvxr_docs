@@ -10,6 +10,7 @@ params:
 ---
 
 ```{r prereqs, echo = FALSE, message = FALSE}
+source(here::here("_check_status.R"))
 ```
 
 ## Warning
@@ -63,6 +64,7 @@ beta <- Variable(m)
 obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
 prob <- Problem(Minimize(obj))
 soln <- psolve(prob, solver = "CLARABEL")
+check_solver_status(prob)
 betaHat <- value(beta)
 ```
 
@@ -88,6 +90,7 @@ profvis({
     obj <- Minimize(0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta))))
     prob <- Problem(obj)
     soln <- psolve(prob, solver = "CLARABEL")
+    check_solver_status(prob)
     betaHat <- value(beta)
 })
 ```

@@ -23,6 +23,7 @@ if (params$mode == "test") {
 library(CVXR)
 library(kableExtra)
 library(ggplot2)
+source(here::here("_check_status.R"))
 draw_office_layout <- function(office_name = c("WC", paste("Office", 5:7), paste("Office", 1:4))) {
     ## layout is a vector laid out as a 2x4 matrix with lower row first
     d <- data.frame(
@@ -112,6 +113,7 @@ obtain the optimal value as well as the solution.
 ## psolve() returns the optimal value; value(x) extracts the solution
 ## (The deprecated solve()$getValue() pattern still works but warns.)
 result <- psolve(problem, solver = "HIGHS")
+check_solver_status(problem)
 cat(sprintf("Optimal value: %.3f\n", result))
 highs_solution <- value(x)
 ```
@@ -249,6 +251,7 @@ We are now ready to solve the problem.
 ```{r}
 problem <- Problem(objective, constraints)
 ecos_result <- psolve(problem, solver = "HIGHS")
+check_solver_status(problem)
 ecos_soln <- round(value(occupy), 0)
 rownames(ecos_soln) <- people
 colnames(ecos_soln) <- offices

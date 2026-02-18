@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -92,6 +93,7 @@ beta_vals   <- vector("list", TRIALS)
 for (i in seq_len(TRIALS)) {
     prob <- Problem(Minimize(loss / m + lambda_vals[i] * reg))
     result <- psolve(prob)
+    check_solver_status(prob)
     beta_hat <- drop(value(beta))
     v_hat    <- drop(value(v))
     train_error[i] <- sum(sign(X %*% beta_true + offset) !=

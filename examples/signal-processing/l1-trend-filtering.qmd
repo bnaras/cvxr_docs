@@ -24,6 +24,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
 library(l1tf)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -92,6 +93,7 @@ objective_1 <- Minimize(0.5 * p_norm(y - beta) +
                         lambda_1 * p_norm(diff(x = beta, differences = 2), 1))
 p1 <- Problem(objective_1)
 psolve(p1)
+check_solver_status(p1)
 betaHat_50 <- value(beta)
 
 ## lambda = 100
@@ -100,6 +102,7 @@ objective_2 <- Minimize(0.5 * p_norm(y - beta) +
                         lambda_2 * p_norm(diff(x = beta, differences = 2), 1))
 p2 <- Problem(objective_2)
 psolve(p2)
+check_solver_status(p2)
 betaHat_100 <- value(beta)
 ```
 

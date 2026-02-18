@@ -24,6 +24,7 @@ library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
 library(tidyr)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -124,6 +125,7 @@ for (i in seq_along(lambdas)) {
 
     ## Solve problem and save spline weights
     result <- psolve(prob)
+    check_solver_status(prob)
     w0s <- as.numeric(value(w0))
     ws <- as.numeric(value(w))
     splines[, i] <- f_est(xrange, knots, w0s, ws)
@@ -181,6 +183,7 @@ loss_obs <- function(y, f) { (y - f)^2 }
 loss <- sum(loss_obs(y_all, f_est(X_all, knots, w0, w)))
 prob <- Problem(Minimize(loss + reg), constr)
 result <- psolve(prob)
+check_solver_status(prob)
 spline_sq <- f_est(xrange, knots, as.numeric(value(w0)), as.numeric(value(w)))
 
 ## Solve with Huber loss
@@ -188,6 +191,7 @@ loss_obs <- function(y, f, M) { huber(y - f, M) }
 loss <- sum(loss_obs(y, f_est(X, knots, w0, w), 0.01))
 prob <- Problem(Minimize(loss + reg), constr)
 result <- psolve(prob)
+check_solver_status(prob)
 spline_hub <- f_est(xrange, knots, as.numeric(value(w0)), as.numeric(value(w)))
 ```
 

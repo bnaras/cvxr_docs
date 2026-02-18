@@ -27,6 +27,7 @@ library(kableExtra)
 library(dplyr)
 library(magrittr)
 library(survey)
+source(here::here("_check_status.R"))
 
 build_df <- function(api, method, wt_value) {
     d <- data.frame(stype = apisrs$stype, sch.wide = apisrs$sch.wide, weight = wt_value)
@@ -120,6 +121,7 @@ constraints <- list(t(A) %*% g == T)
 Phi_R <- Minimize(sum(di * (-entr(g) - g + 1)))
 p <- Problem(Phi_R, constraints)
 res <- psolve(p)
+check_solver_status(p)
 w_cvxr <- di * value(g)
 ```
 
@@ -158,6 +160,7 @@ The `survey` function for this calibration is invoked as `cal.linear`.
 Phi_Q  <- Minimize(sum_squares(g - 1) / 2)
 p <- Problem(Phi_Q, constraints)
 res <- psolve(p)
+check_solver_status(p)
 w_cvxr_q <- di * value(g)
 w_survey_q <- weights(calibrate(design_api, formula, population = T, calfun = cal.linear))
 ```
@@ -186,6 +189,7 @@ Phi_L <- Minimize(sum(-entr((g - l) / (u - l))  -
                       entr((u - g) / (u - l)))) 
 p <- Problem(Phi_L, c(constraints, list(l <= g, g <= u)))
 res <- psolve(p)
+check_solver_status(p)
 w_cvxr_l <- di * value(g)
 ```
 
@@ -209,6 +213,7 @@ w_survey_h <- weights(calibrate(design_api, formula, population = T, calfun = he
 Phi_h <- Minimize(sum((1 - g / 2)^(-2)))
 p <- Problem(Phi_h, constraints)
 res <- psolve(p)
+check_solver_status(p)
 w_cvxr_h <- di * value(g)
 ```
 
@@ -226,6 +231,7 @@ w_survey_s <- weights(calibrate(design_api, formula, population = T, calfun = ca
 Phi_s <- Minimize(sum( 0.5 * (exp(g) + exp(-g))))
 p <- Problem(Phi_s, c(constraints, list(l <= g, g <= u)))
 res <- psolve(p)
+check_solver_status(p)
 w_cvxr_s <- di * value(g)
 ```
 
