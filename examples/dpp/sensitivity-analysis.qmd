@@ -23,10 +23,11 @@ library(CVXR)
 
 ## Introduction
 
-::: {.callout-note}
+::: {.callout-warning}
 The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`, `requires_grad`) is planned for a future release of `CVXR`.
-The code below illustrates the intended API but is not yet executable.
+`delta`, `requires_grad`) is **not implemented** in `CVXR` at this
+time. The code below illustrates the intended API based on CVXPY but is
+not executable.
 :::
 
 An optimization problem can be viewed as a function mapping parameters

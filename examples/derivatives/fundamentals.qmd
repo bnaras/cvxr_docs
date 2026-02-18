@@ -23,10 +23,10 @@ library(CVXR)
 
 ## Introduction
 
-::: {.callout-note}
+::: {.callout-warning}
 The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`) is planned for a future release of `CVXR`. The code below
-illustrates the intended API but is not yet executable.
+`delta`) is **not implemented** in `CVXR` at this time. The code below
+illustrates the intended API based on CVXPY but is not executable.
 :::
 
 This example introduces the fundamentals of computing the derivative

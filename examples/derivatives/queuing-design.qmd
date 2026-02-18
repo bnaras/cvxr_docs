@@ -23,11 +23,11 @@ library(CVXR)
 
 ## Introduction
 
-::: {.callout-note}
+::: {.callout-warning}
 The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`) is planned for a future release of `CVXR`. The sensitivity
+`delta`) is **not implemented** in `CVXR` at this time. The sensitivity
 analysis and perturbation sections below illustrate the intended API
-but are not yet executable.
+based on CVXPY but are not executable.
 :::
 
 In this example, we consider the design of an $M/M/N$ queuing system,

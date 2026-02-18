@@ -121,6 +121,8 @@ CVXR:::is_log_log_concave(x)  #> TRUE
 
 ## Bug 4: Derivative/sensitivity API not implemented
 
+**Status:** Deferred — not implemented in CVXR at this time
+
 **Severity:** High — entire CVXPY derivatives tutorial cannot be ported
 
 The following functions do not exist in the CVXR namespace at all:
@@ -143,7 +145,7 @@ exists("gradient", envir = asNamespace("CVXR"))   #> FALSE
 exists("delta", envir = asNamespace("CVXR"))      #> FALSE
 ```
 
-**Impact on docs:** All derivative examples are marked `eval = FALSE` with callout notes:
+**Impact on docs:** All derivative examples are marked `eval = FALSE` with `callout-warning` notes stating the functionality is not implemented:
 
 - `examples/derivatives/fundamentals.qmd` — All derivative/gradient/backward code
 - `examples/derivatives/queuing-design.qmd` — Sensitivity analysis code

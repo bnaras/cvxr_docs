@@ -23,11 +23,11 @@ library(CVXR)
 
 ## Introduction
 
-::: {.callout-note}
+::: {.callout-warning}
 The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`) is planned for a future release of `CVXR`. The gradient
-descent training loop below illustrates the intended API but is not yet
-executable.
+`delta`) is **not implemented** in `CVXR` at this time. The gradient
+descent training loop below illustrates the intended API based on CVXPY
+but is not executable.
 :::
 
 In this example, we fit a regression model to structured data, using a
