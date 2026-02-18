@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+source(here::here("_check_status.R"))
 ```
 
 ## Introduction
@@ -59,22 +60,17 @@ epsilon <- 1e-2
 
 ## Solving the QCP
 
-::: {.callout-note}
-The `length_expr()` atom (which computes the index of the last nonzero
-element of a vector) is planned for a future release of `CVXR`. The
-code below illustrates the intended API but is not yet executable.
-:::
-
 Now we construct and solve the QCP using DQCP. The objective
 `length_expr(x)` computes the index of the last nonzero element in
 $x$, and the constraint requires the MSE to be at most $\epsilon$.
 
-```{r, eval = FALSE}
+```{r}
 x <- Variable(n)
 mse <- sum_squares(A %*% x - b) / n
 problem <- Problem(Minimize(length_expr(x)), list(mse <= epsilon))
 cat("Is problem DQCP?", is_dqcp(problem), "\n")
 result <- psolve(problem, qcp = TRUE)
+check_solver_status(problem)
 cat("Found a solution, with length:", result, "\n")
 ```
 
@@ -94,11 +90,11 @@ nonzero element is at a position less than $n$, meaning some trailing
 entries of $x$ are (approximately) zero. Let us inspect the MSE and
 the solution:
 
-```{r, eval = FALSE}
+```{r}
 cat("MSE:", value(mse), "\n")
 ```
 
-```{r, eval = FALSE}
+```{r}
 cat("x:", value(x), "\n")
 ```
 
