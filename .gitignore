@@ -3,3 +3,8 @@
 .RData
 .Ruserdata
 *.log
+/.quarto/
+/_site/
+**/*.quarto_ipynb
+#CLAUDE.md#
+.#CLAUDE.md

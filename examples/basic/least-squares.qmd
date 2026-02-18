@@ -1,0 +1,105 @@
+---
+title: Least Squares
+author: Anqi Fu and Balasubramanian Narasimhan
+categories: []
+tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: least-squares
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+In a least-squares, or linear regression, problem, we have
+measurements $A \in \mathcal{R}^{m \times n}$ and
+$b \in \mathcal{R}^m$ and seek a vector $x \in \mathcal{R}^{n}$ such
+that $Ax$ is close to $b$. Closeness is defined as the sum of the
+squared differences:
+
+$$
+\sum_{i=1}^m (a_i^Tx - b_i)^2,
+$$
+
+also known as the $\ell_2$-norm squared, $\|Ax - b\|_2^2$.
+
+For example, we might have a dataset of $m$ users, each represented
+by $n$ features. Each row $a_i^T$ of $A$ is the features for user
+$i$, while the corresponding entry $b_i$ of $b$ is the measurement we
+want to predict from $a_i^T$, such as ad spending. The prediction is
+given by $a_i^Tx$.
+
+We find the optimal $x$ by solving the optimization problem
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & \|Ax - b\|_2^2.
+\end{array}
+$$
+
+Let $x^\star$ denote the optimal $x$. The quantity
+$r = Ax^\star - b$ is known as the residual. If $\|r\|_2 = 0$, we
+have a perfect fit.
+
+## Example
+
+In the following code, we solve a least-squares problem with `CVXR`.
+
+```{r}
+## Generate data
+set.seed(1)
+m <- 20
+n <- 15
+A <- matrix(rnorm(m * n), nrow = m, ncol = n)
+b <- rnorm(m)
+
+## Define and solve the CVXR problem
+x <- Variable(n)
+cost <- sum_squares(A %*% x - b)
+prob <- Problem(Minimize(cost))
+result <- psolve(prob)
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(optimal_value = result, x_value = value(x)),
+            file = file.path(testdata_dir, "least-squares.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    ls_data <- readRDS(file = file.path(testdata_dir, "least-squares.RDS"))
+    expect_equal(result, ls_data$optimal_value, tolerance = 1e-5)
+    expect_equal(value(x), ls_data$x_value, tolerance = 1e-5)
+}
+```
+
+```{r}
+## Print result
+cat(sprintf("The optimal value is %f\n", result))
+cat("The optimal x is\n")
+print(value(x))
+cat(sprintf("The norm of the residual is %f\n",
+            value(norm2(A %*% x - b))))
+```
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

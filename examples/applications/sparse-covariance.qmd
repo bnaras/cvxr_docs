@@ -1,0 +1,190 @@
+---
+title: "Sparse Covariance Estimation"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_sparse_covariance
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(Matrix)
+library(expm)
+```
+
+## Introduction
+
+This example is adapted from the CVX example of the same name, by
+Joelle Skaf (4/24/2008) and the CVXPY adaptation by Judson Wilson
+(5/22/2014).
+
+**Topic reference:** Section 7.1.1, Boyd & Vandenberghe, *Convex
+Optimization*.
+
+Suppose $y \in \mathbb{R}^n$ is a Gaussian random variable with zero
+mean and covariance matrix $R = \mathbf{E}[yy^T]$, with sparse
+inverse $S = R^{-1}$ ($S_{ij} = 0$ means that $y_i$ and $y_j$ are
+conditionally independent). We want to estimate the covariance matrix
+$R$ based on $N$ independent samples $y_1, \ldots, y_N$ drawn from
+the distribution, using prior knowledge that $S$ is sparse.
+
+A good heuristic for estimating $R$ is to solve the problem
+
+$$
+\begin{array}{ll}
+\mbox{maximize}   & \log \det(S) - \mathrm{tr}(SY) \\
+\mbox{subject to} & \sum_{i=1}^n \sum_{j=1}^n |S_{ij}| \leq \alpha \\
+                   & S \succeq 0,
+\end{array}
+$$
+
+where $Y$ is the sample covariance of $y_1, \ldots, y_N$, and
+$\alpha$ is a sparsity parameter to be chosen or tuned.
+
+## Generate Problem Data
+
+```{r}
+set.seed(0)
+
+## Dimension of matrix
+n <- 10
+
+## Number of samples
+N <- 1000
+
+## Create sparse, symmetric PSD matrix S
+A <- matrix(rnorm(n * n), nrow = n, ncol = n)
+
+## Sparsen A: zero out ~85% of entries
+mask <- matrix(rbinom(n * n, 1, prob = 0.15), nrow = n, ncol = n)
+A <- A * mask
+
+Strue <- A %*% t(A) + 0.05 * diag(n)   # Force strict positive definiteness
+
+## Create the covariance matrix associated with S
+R <- solve(Strue)
+
+## Create samples y_i from the distribution with covariance R
+y_sample <- expm::sqrtm(R) %*% matrix(rnorm(n * N), nrow = n, ncol = N)
+
+## Calculate the sample covariance matrix
+Y <- cov(t(y_sample))
+```
+
+## Solve for Several $\alpha$ Values
+
+```{r}
+alphas <- c(10, 2, 1)
+S_results <- list()
+
+for (i in seq_along(alphas)) {
+    alpha <- alphas[i]
+
+    ## Create a variable constrained to the positive semidefinite cone
+    S <- Variable(c(n, n), PSD = TRUE)
+
+    ## Form the log_det(S) - tr(S %*% Y) objective
+    obj <- Maximize(log_det(S) - matrix_trace(S %*% Y))
+
+    ## Set constraint
+    constraints <- list(sum(abs(S)) <= alpha)
+
+    ## Form and solve optimization problem
+    prob <- Problem(obj, constraints)
+    result <- psolve(prob, solver = "SCS")
+
+    if (status(prob) != "optimal" && status(prob) != "optimal_inaccurate") {
+        warning(sprintf("Problem with alpha = %g did not solve optimally: %s",
+                        alpha, status(prob)))
+    }
+
+    ## Get the estimated inverse covariance
+    S_val <- value(S)
+
+    ## Threshold to enforce exact zeros
+    S_val[abs(S_val) <= 1e-4] <- 0
+
+    S_results[[i]] <- S_val
+
+    cat(sprintf("Completed optimization for alpha = %g, obj value = %.6f\n",
+                alpha, result))
+}
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(S_results = S_results),
+            file = file.path(testdata_dir, "sparse_covariance.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "sparse_covariance.RDS"))
+    for (i in seq_along(S_results)) {
+        expect_equal(S_results[[i]], saved$S_results[[i]], tolerance = 1e-3)
+    }
+}
+```
+
+## Result Plots
+
+We plot the sparsity pattern for the true inverse covariance matrix
+and the estimated inverse covariance matrices for each value of
+$\alpha$.
+
+```{r, fig.cap = "Sparsity patterns of true and estimated inverse covariance matrices", fig.width = 10, fig.height = 6}
+## Helper function to create a sparsity pattern data frame
+spy_df <- function(mat, title) {
+    n <- nrow(mat)
+    df <- expand.grid(j = 1:n, i = 1:n)
+    df$nonzero <- as.factor(as.numeric(mat[cbind(df$i, df$j)] != 0))
+    df$title <- title
+    df
+}
+
+df_all <- rbind(
+    spy_df(as.matrix(Strue), "True Inverse Cov."),
+    spy_df(S_results[[1]], sprintf("alpha = %g", alphas[1])),
+    spy_df(S_results[[2]], sprintf("alpha = %g", alphas[2])),
+    spy_df(S_results[[3]], sprintf("alpha = %g", alphas[3]))
+)
+df_all$title <- factor(df_all$title,
+                        levels = c("True Inverse Cov.",
+                                   sprintf("alpha = %g", alphas)))
+
+ggplot(df_all, aes(x = j, y = i, fill = nonzero)) +
+    geom_tile(color = "gray70") +
+    scale_fill_manual(values = c("0" = "white", "1" = "steelblue")) +
+    scale_y_reverse() +
+    facet_wrap(~ title, nrow = 1) +
+    coord_equal() +
+    labs(x = "", y = "") +
+    theme_minimal() +
+    theme(legend.position = "none",
+          axis.text = element_blank(),
+          panel.grid = element_blank())
+```
+
+As $\alpha$ decreases, the estimated inverse covariance matrix becomes
+sparser. At $\alpha = 10$, the estimate is relatively dense. At
+$\alpha = 1$, most off-diagonal entries are zero.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Boyd, S. and Vandenberghe, L. (2004). *Convex Optimization*. Cambridge University Press. Section 7.1.1.

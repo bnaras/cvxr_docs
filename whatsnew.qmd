@@ -1,0 +1,144 @@
+---
+title: "What's New in CVXR 1.8.x"
+author: Anqi Fu and Balasubramanian Narasimhan
+---
+
+## Complete Rewrite Using S7
+
+CVXR 1.8.x is a ground-up rewrite using R's S7 object system, designed
+to be isomorphic with CVXPY 1.8.1 for long-term maintainability. This
+page summarizes the key changes from CVXR 1.x that may affect users.
+
+## New Features
+
+- **S7 class system** replaces S4 for all expression, constraint, and
+  problem classes. Significantly faster construction and method dispatch.
+- **11 solvers**: CLARABEL (default), SCS, OSQP, HiGHS, MOSEK, Gurobi,
+  GLPK, GLPK_MI, ECOS, ECOS_BB, and CPLEX.
+- **Mixed-integer programming** via GLPK_MI, ECOS_BB, Gurobi, or HiGHS
+  (`boolean = TRUE` or `integer = TRUE` in `Variable()`).
+- **Parameter support** via `Parameter()` class and `EvalParams` reduction.
+- **50+ atom classes** covering LP, QP, SOCP, SDP, exponential cone, and
+  power cone problems.
+- **DPP** (Disciplined Parameterized Programming) for efficient
+  parameter re-solve with compilation caching.
+- **DGP** (Disciplined Geometric Programming) via `psolve(prob, gp = TRUE)`.
+- **DQCP** (Disciplined Quasiconvex Programming) via `psolve(prob, qcp = TRUE)`.
+- **Complex variable support** via `Variable(n, complex = TRUE)`.
+- **Warm-start support** for 6 solvers (OSQP, SCS, Gurobi, MOSEK, CLARABEL, HiGHS).
+
+## Breaking Changes from CVXR 1.x
+
+### New solve interface
+
+The primary solve function is now `psolve()`, which returns the optimal
+value directly:
+
+```{r, eval = FALSE}
+library(CVXR)
+x <- Variable(2)
+prob <- Problem(Minimize(sum_squares(x)), list(x >= 1))
+opt_val <- psolve(prob)       # returns optimal value directly
+x_val <- value(x)             # extract variable value
+prob_status <- status(prob)   # check status
+```
+
+The old `solve()` still works but returns a compatibility list:
+
+```{r, eval = FALSE}
+result <- solve(prob)
+result$value       # optimal value
+result$getValue(x) # variable value (deprecated)
+result$status      # problem status
+```
+
+### API changes
+
+| Old API | New API |
+|---------|---------|
+| `solve(problem)` | `psolve(problem)` |
+| `result$getValue(x)` | `value(x)` |
+| `result$value` | return value of `psolve()` |
+| `result$status` | `status(problem)` |
+| `result$getDualValue(con)` | `dual_value(con)` |
+| `problem_status(prob)` | `status(prob)` |
+| `problem_solution(prob)` | `solution(prob)` |
+| `get_problem_data(prob, solver)` | `problem_data(prob, solver)` |
+
+### Axis parameter changes
+
+The `axis` parameter now uses 0-based indexing (matching CVXPY/NumPy):
+
+| Old CVXR | New CVXR | Meaning |
+|----------|----------|---------|
+| `axis = 2` | `axis = 0` | Column-wise reduction |
+| `axis = 1` | `axis = 1` | Row-wise reduction (unchanged) |
+| `axis = NA` | `axis = NULL` | All entries |
+
+Passing `axis = 2` now produces an informative error with migration guidance.
+
+### PSD constraints
+
+PSD constraints use `PSD(A - B)` instead of `A %>>% B` (though `%>>%`
+and `%<<%` operators are still available for backward compatibility).
+
+### Solver changes
+
+- **Removed**: CBC
+- **Added**: HiGHS (LP, QP, MILP), Gurobi (LP, QP, SOCP, MIP)
+- **Default solver**: CLARABEL (replaces ECOS)
+
+## New Atoms and Functions
+
+### Convenience atoms
+
+| Function | Description |
+|----------|-------------|
+| `ptp(x, axis, keepdims)` | Peak-to-peak (range): `max(x) - min(x)` |
+| `cvxr_mean(x, axis, keepdims)` | Arithmetic mean along an axis |
+| `cvxr_std(x, axis, keepdims, ddof)` | Standard deviation |
+| `cvxr_var(x, axis, keepdims, ddof)` | Variance |
+| `vdot(x, y)` | Vector dot product (inner product) |
+| `cvxr_outer(x, y)` | Outer product of two vectors |
+| `inv_prod(x)` | Reciprocal of product of entries |
+| `loggamma(x)` | Elementwise log of gamma function |
+| `log_normcdf(x)` | Elementwise log of standard normal CDF |
+| `cummax_expr(x, axis)` | Cumulative maximum along an axis |
+| `dotsort(X, W)` | Weighted sorted dot product |
+
+### Boolean logic atoms
+
+For mixed-integer programming: `Not()`, `And()`, `Or()`, `Xor()`,
+`implies()`, `iff()`.
+
+### Other new atoms
+
+- `perspective(f, s)` for perspective functions
+- `FiniteSet(expr, values)` constraint for discrete optimization
+- `ceil_expr()`, `floor_expr()` for DQCP problems
+
+## Backward-Compatibility Aliases
+
+- `tv()` is an alias for `total_variation()`
+- `norm2(x)` is an alias for `p_norm(x, 2)`
+- `multiply(x, y)` is an alias for elementwise multiplication
+- `installed_solvers()` lists available solver packages
+- Old `solve()` still works and returns a compatibility list
+- Old function names (`problem_status`, `getValue`, etc.) still work
+  but emit once-per-session deprecation warnings
+
+## Migration Guide
+
+To migrate code from CVXR 1.x to 1.8.x:
+
+1. Replace `result <- solve(problem)` with `opt_val <- psolve(problem)`
+2. Replace `result$getValue(x)` with `value(x)`
+3. Replace `result$value` with the return value from `psolve()`
+4. Replace `result$status` with `status(problem)`
+5. Replace `result$getDualValue(con)` with `dual_value(con)`
+6. Replace `add_to_solver_blacklist()` calls (no longer needed)
+7. Update solver names: `"ECOS"` → `"CLARABEL"`, `"GLPK"` → `"HIGHS"`
+8. Update `axis` arguments: `axis = 2` → `axis = 0`, `axis = NA` → `axis = NULL`
+9. Replace `A %>>% B` with `PSD(A - B)` if desired
+
+## References

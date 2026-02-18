@@ -1,0 +1,431 @@
+---
+title: "Interdiction"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_interdiction
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(igraph)
+```
+
+## Introduction
+
+This example is adapted from the CVXPY interdiction notebook. We
+explore a game between a smuggler moving through a directed graph and
+a security team trying to catch him.
+
+**Topic references:**
+
+- Boyd, S. and Vandenberghe, L. *Convex Optimization*. Cambridge
+  University Press.
+- Additional Exercise 15.4: Allocation of interdiction effort.
+- Shortest path problem in graph theory.
+
+## Problem Setup
+
+The smuggler moves along a directed graph with $n$ nodes and $m$
+edges from a source node to a destination node. Edge $j$ has evasion
+probability $p_j$, which is the probability that the smuggler moves
+along that edge undetected. The probability that the smuggler makes
+it to the destination undetected is $\prod_{j \in \mathcal{P}} p_j$,
+where $\mathcal{P}$ is the set of edges on the smuggler's path.
+
+The security team can control the evasion probabilities through
+allocation of resources. Their goal is to choose evasion
+probabilities to minimize the chance that the smuggler gets through
+undetected.
+
+## Formulation
+
+Taking the logarithm of all probabilities, let $c_j = \log(p_j)$.
+The smuggler's path evasion probability in log-space is $\sum_{j \in
+\mathcal{P}} c_j$.
+
+We denote possible paths with a decision variable $x \in [0, 1]^m$,
+where $x_j = 1$ denotes that edge $j$ is on the path. The smuggler's
+problem (as an LP relaxation) is:
+
+$$
+\begin{array}{ll}
+\mbox{maximize}   & c^T x \\
+\mbox{subject to} & A_{\mathrm{inc}} x = b, \quad 0 \leq x \leq 1,
+\end{array}
+$$
+
+where $A_{\mathrm{inc}}$ is the node-edge incidence matrix and $b$
+encodes the source-to-sink flow constraint.
+
+Using LP duality, the security team's problem becomes:
+
+$$
+\begin{array}{ll}
+\mbox{minimize}   & \nu^T b \\
+\mbox{subject to} & A_{\mathrm{inc}}^T \nu \geq c, \quad c \in \mathcal{C},
+\end{array}
+$$
+
+where $\nu$ is the dual variable and $\mathcal{C}$ represents
+constraints on the edge evasion probabilities.
+
+## Helper Functions
+
+We define helper functions for generating random geometric graphs and
+for finding optimal paths using `igraph`.
+
+```{r}
+## Form an N x N grid of nodes, perturb positions, and connect nearby nodes
+form_graph <- function(N, mu, eta, seed = NULL) {
+    if (!is.null(seed)) set.seed(seed)
+    mu <- mu / (N - 1)
+    eta <- eta / (N - 1)
+
+    ## Generate perturbed grid positions
+    grid <- expand.grid(
+        x = seq(0, 1, length.out = N),
+        y = seq(1, 0, length.out = N)
+    )
+    pos <- data.frame(
+        x = grid$x + mu * rnorm(nrow(grid)),
+        y = grid$y + mu * rnorm(nrow(grid))
+    )
+    n <- nrow(pos)
+
+    ## Connect nodes within distance eta (random geometric graph)
+    edges <- c()
+    for (i in 1:(n-1)) {
+        for (j in (i+1):n) {
+            d <- sqrt((pos$x[i] - pos$x[j])^2 + (pos$y[i] - pos$y[j])^2)
+            if (d <= eta) {
+                ## Add both directions for a directed graph
+                edges <- c(edges, i, j, j, i)
+            }
+        }
+    }
+
+    G <- make_graph(edges, directed = TRUE, n = n)
+    list(G = G, pos = pos, n = n)
+}
+
+## Generate random evasion probabilities for edges
+## (same probability in both directions for symmetric pairs)
+get_edge_probs <- function(G, seed = NULL) {
+    if (!is.null(seed)) set.seed(seed)
+    el <- as_edgelist(G)
+    m <- nrow(el)
+    a <- numeric(m)
+    assigned <- list()
+
+    for (k in 1:m) {
+        e <- el[k, ]
+        key <- paste(min(e[1], e[2]), max(e[1], e[2]), sep = "-")
+        if (is.null(assigned[[key]])) {
+            assigned[[key]] <- runif(1)
+        }
+        a[k] <- assigned[[key]]
+    }
+    a
+}
+
+## Find optimal smuggler path using shortest path (Dijkstra)
+opt_path <- function(G, p) {
+    p <- pmin(p, 1)
+    w <- -log(p)
+    E(G)$weight <- w
+    sp <- shortest_paths(G, from = 1, to = vcount(G), output = "epath")
+    path_edges <- sp$epath[[1]]
+
+    x <- rep(0, ecount(G))
+    x[as.integer(path_edges)] <- 1
+    x
+}
+```
+
+## Smuggler's Path Example
+
+We create a $10 \times 10$ grid graph with small perturbations. The
+evasion probabilities are distributed as $p_j = e^{-a_j}$ where
+$a_j \sim \mathrm{Uniform}(0, 1)$.
+
+```{r}
+N <- 10
+graph_data <- form_graph(N, mu = 0.12, eta = 1.2, seed = 5)
+G <- graph_data$G
+pos <- graph_data$pos
+n <- graph_data$n
+
+a <- get_edge_probs(G, seed = 2)
+p <- exp(-a)
+```
+
+We solve the smuggler's relaxed LP to find the optimal path from node
+1 (upper-left) to node $n$ (lower-right).
+
+```{r}
+## Build the incidence matrix
+el <- as_edgelist(G)
+m <- nrow(el)
+A_inc <- matrix(0, nrow = n, ncol = m)
+for (k in 1:m) {
+    A_inc[el[k, 1], k] <- -1   # tail (outgoing)
+    A_inc[el[k, 2], k] <-  1   # head (incoming)
+}
+
+b <- rep(0, n)
+b[1] <- -1       # source
+b[n] <- 1        # sink
+
+c_log <- log(p)
+
+## Solve smuggler's LP
+x_var <- Variable(m)
+constraints <- list(A_inc %*% x_var == b, x_var >= 0, x_var <= 1)
+prob <- Problem(Maximize(t(c_log) %*% x_var), constraints)
+result_smuggler <- psolve(prob)
+
+x_smuggler <- as.numeric(value(x_var))
+
+cat(sprintf("Problem status: %s\n", status(prob)))
+evasion_prob_lp <- exp(sum(x_smuggler * c_log))
+cat(sprintf("Evasion probability of smuggler's optimal path: %e (%.3f%%)\n",
+            evasion_prob_lp, evasion_prob_lp * 100))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(objective = result_smuggler,
+                 evasion_prob = evasion_prob_lp),
+            file = file.path(testdata_dir, "smuggler_lp.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "smuggler_lp.RDS"))
+    expect_equal(result_smuggler, saved$objective, tolerance = 1e-3)
+}
+```
+
+We verify using Dijkstra's algorithm (via `igraph`) on the same
+graph.
+
+```{r}
+x_dijkstra <- opt_path(G, p)
+evasion_dijkstra <- exp(sum(x_dijkstra * c_log))
+cat(sprintf("Evasion probability via Dijkstra: %e (%.3f%%)\n",
+            evasion_dijkstra, evasion_dijkstra * 100))
+```
+
+The LP relaxation and the graph-theoretic shortest path give the same
+optimal evasion probability.
+
+## Visualization
+
+We plot the graph with edges colored by evasion probability, and
+highlight the smuggler's optimal path.
+
+```{r, fig.cap = "Graph with evasion probabilities and smuggler's optimal path", fig.width = 8, fig.height = 6}
+## Create a data frame for edges
+edge_df <- data.frame(
+    x1 = pos$x[el[, 1]],
+    y1 = pos$y[el[, 1]],
+    x2 = pos$x[el[, 2]],
+    y2 = pos$y[el[, 2]],
+    prob = p,
+    on_path = x_dijkstra > 0.1
+)
+
+ggplot() +
+    ## Draw all edges (faded)
+    geom_segment(data = edge_df,
+                 aes(x = x1, y = y1, xend = x2, yend = y2, color = prob),
+                 linewidth = 0.5, alpha = 0.3) +
+    ## Draw path edges (bold)
+    geom_segment(data = edge_df[edge_df$on_path, ],
+                 aes(x = x1, y = y1, xend = x2, yend = y2, color = prob),
+                 linewidth = 2) +
+    scale_color_gradient(low = "red", high = "green",
+                         name = "Evasion\nProbability") +
+    ## Draw nodes
+    geom_point(data = pos, aes(x = x, y = y), color = "white",
+               size = 2, shape = 21, fill = "white", stroke = 0.5) +
+    ## Highlight source and destination
+    geom_point(data = pos[1, ], aes(x = x, y = y),
+               color = "green", size = 5, alpha = 0.4) +
+    geom_point(data = pos[n, ], aes(x = x, y = y),
+               color = "red", size = 5, alpha = 0.4) +
+    coord_equal() +
+    theme_void() +
+    theme(legend.position = "right")
+```
+
+## Security's Objective
+
+The security team's goal is to allocate resources to minimize the
+smuggler's evasion probability. With evasion probabilities modeled as
+$p_j = e^{-a_j r_j}$, where $r_j \geq 0$ is the effort allocated to
+edge $j$, the security problem (using LP duality) is:
+
+$$
+\begin{array}{ll}
+\mbox{minimize}   & \nu^T b \\
+\mbox{subject to} & A_{\mathrm{inc}}^T \nu \geq -a \circ r \\
+                   & \sum_j r_j = m, \quad 0 \leq r_j \leq R \\
+                   & Br = 0,
+\end{array}
+$$
+
+where $B$ enforces that symmetric edges have equal evasion
+probabilities, and $R$ is the maximum per-edge budget.
+
+```{r}
+## Build B matrix for symmetry constraints
+## For each pair of edges (i,j) and (j,i), enforce equal allocation
+pairs <- list()
+count <- 0
+B_rows <- list()
+for (k in 1:m) {
+    i <- el[k, 1]; j <- el[k, 2]
+    if (i < j) {
+        ## Find the reverse edge
+        rev_idx <- which(el[, 1] == j & el[, 2] == i)
+        if (length(rev_idx) > 0) {
+            count <- count + 1
+            row <- rep(0, m)
+            row[k] <- 1
+            row[rev_idx[1]] <- -1
+            B_rows[[count]] <- row
+        }
+    }
+}
+
+if (count > 0) {
+    B <- do.call(rbind, B_rows)
+} else {
+    B <- matrix(0, nrow = 1, ncol = m)
+}
+
+## Solve security team's problem with R_max = 5
+R_max <- 5
+nu <- Variable(n)
+r <- Variable(m)
+constraints_sec <- list(
+    t(A_inc) %*% nu >= -multiply(a, r),
+    sum(r) == m,
+    r >= 0,
+    B %*% r == 0,
+    r <= R_max
+)
+prob_sec <- Problem(Minimize(t(b) %*% nu), constraints_sec)
+result_sec <- psolve(prob_sec)
+
+nu_val <- as.numeric(value(nu))
+r_val <- as.numeric(value(r))
+
+evasion_security <- exp(sum(nu_val * b))
+cat(sprintf("Evasion probability with optimal resource allocation: %e\n", evasion_security))
+cat(sprintf("Improvement factor over uniform allocation: %.2f\n",
+            evasion_prob_lp / evasion_security))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(objective_sec = result_sec,
+                 evasion_security = evasion_security),
+            file = file.path(testdata_dir, "security.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "security.RDS"))
+    expect_equal(result_sec, saved$objective_sec, tolerance = 1e-2)
+}
+```
+
+## Optimized Evasion Probabilities
+
+```{r, fig.cap = "Edge evasion probabilities after optimal resource allocation", fig.width = 8, fig.height = 6}
+p_opt <- exp(-a * r_val)
+
+edge_df_opt <- data.frame(
+    x1 = pos$x[el[, 1]],
+    y1 = pos$y[el[, 1]],
+    x2 = pos$x[el[, 2]],
+    y2 = pos$y[el[, 2]],
+    prob = p_opt
+)
+
+ggplot() +
+    geom_segment(data = edge_df_opt,
+                 aes(x = x1, y = y1, xend = x2, yend = y2, color = prob),
+                 linewidth = 1) +
+    scale_color_gradient(low = "red", high = "green",
+                         name = "Evasion\nProbability") +
+    geom_point(data = pos, aes(x = x, y = y), color = "white",
+               size = 2, shape = 21, fill = "white", stroke = 0.5) +
+    geom_point(data = pos[1, ], aes(x = x, y = y),
+               color = "green", size = 5, alpha = 0.4) +
+    geom_point(data = pos[n, ], aes(x = x, y = y),
+               color = "red", size = 5, alpha = 0.4) +
+    coord_equal() +
+    theme_void() +
+    theme(legend.position = "right")
+```
+
+## Smuggler's Optimal Path Under Optimized Security
+
+We use Dijkstra's algorithm to find the smuggler's optimal path under
+the optimized resource allocation.
+
+```{r}
+x_opt_path <- opt_path(G, p_opt)
+c_opt <- log(p_opt)
+evasion_opt_path <- exp(sum(x_opt_path * c_opt))
+cat(sprintf("Evasion probability of smuggler's optimal path: %e\n", evasion_opt_path))
+```
+
+```{r, fig.cap = "Smuggler's optimal path under optimized security allocation", fig.width = 8, fig.height = 6}
+edge_df_opt$on_path <- x_opt_path > 0.1
+
+ggplot() +
+    geom_segment(data = edge_df_opt,
+                 aes(x = x1, y = y1, xend = x2, yend = y2, color = prob),
+                 linewidth = 0.5, alpha = 0.3) +
+    geom_segment(data = edge_df_opt[edge_df_opt$on_path, ],
+                 aes(x = x1, y = y1, xend = x2, yend = y2, color = prob),
+                 linewidth = 2) +
+    scale_color_gradient(low = "red", high = "green",
+                         name = "Evasion\nProbability") +
+    geom_point(data = pos, aes(x = x, y = y), color = "white",
+               size = 2, shape = 21, fill = "white", stroke = 0.5) +
+    geom_point(data = pos[1, ], aes(x = x, y = y),
+               color = "green", size = 5, alpha = 0.4) +
+    geom_point(data = pos[n, ], aes(x = x, y = y),
+               color = "red", size = 5, alpha = 0.4) +
+    coord_equal() +
+    theme_void() +
+    theme(legend.position = "right")
+```
+
+The optimal resource allocation makes the smuggler's evasion
+probability dramatically smaller than the uniform allocation.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Boyd, S. and Vandenberghe, L. (2004). *Convex Optimization*. Cambridge University Press.
+- Boyd, S. and Vandenberghe, L. Additional Exercise 15.4: Allocation of interdiction effort.

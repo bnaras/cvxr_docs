@@ -1,0 +1,227 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "examples/**/*.qmd"
+    - "reference/**/*.qmd"
+
+website:
+  title: "CVXR"
+  description: "Disciplined Convex Programming in R"
+  site-url: "https://cvxr.rbind.io/"
+  repo-url: "https://github.com/cvxgrp/CVXR"
+  repo-actions: [issue]
+  search:
+    location: sidebar
+    type: textbox
+  page-navigation: true
+  navbar:
+    background: white
+    foreground: dark
+    left:
+      - text: Home
+        href: index.qmd
+      - text: "What's New"
+        href: whatsnew.qmd
+      - text: "Package Docs"
+        href: "https://www.cvxgrp.org/CVXR"
+    right:
+      - icon: github
+        href: "https://github.com/cvxgrp/CVXR"
+  sidebar:
+    style: floating
+    search: true
+    contents:
+      - text: "Home"
+        href: index.qmd
+      - text: "What's New in 1.8.x"
+        href: whatsnew.qmd
+      - section: "Getting Started"
+        contents:
+          - text: "Quick Introduction"
+            href: examples/intro.qmd
+          - text: "Longer Introduction"
+            href: examples/gentle-intro.qmd
+      - section: "Basic Examples"
+        contents:
+          - text: "Least Squares"
+            href: examples/basic/least-squares.qmd
+          - text: "Linear Program"
+            href: examples/basic/linear-program.qmd
+          - text: "Quadratic Program"
+            href: examples/basic/quadratic-program.qmd
+          - text: "SOCP"
+            href: examples/basic/socp.qmd
+          - text: "SDP"
+            href: examples/basic/sdp.qmd
+          - text: "Mixed-Integer QP"
+            href: examples/basic/miqp.qmd
+      - section: "Regression"
+        contents:
+          - text: "Huber Regression"
+            href: examples/regression/huber-regression.qmd
+          - text: "Logistic Regression"
+            href: examples/regression/logistic-regression.qmd
+          - text: "Quantile Regression"
+            href: examples/regression/quantile-regression.qmd
+          - text: "Censored Regression"
+            href: examples/regression/censored-regression.qmd
+          - text: "Isotonic Regression"
+            href: examples/regression/isotonic-regression.qmd
+          - text: "Near Isotonic & Near Convex"
+            href: examples/regression/near-isotonic-and-near-convex-regression.qmd
+          - text: "Elastic Net"
+            href: examples/regression/elastic-net.qmd
+          - text: "Pliable Lasso"
+            href: examples/regression/pliable-lasso.qmd
+          - text: "glmnet Equivalence"
+            href: examples/regression/glmnet-equivalence.qmd
+      - section: "Machine Learning"
+        contents:
+          - text: "Lasso Regression"
+            href: examples/machine-learning/lasso.qmd
+          - text: "Ridge Regression"
+            href: examples/machine-learning/ridge.qmd
+          - text: "SVM"
+            href: examples/machine-learning/svm.qmd
+          - text: "Logistic Regression (ML)"
+            href: examples/machine-learning/logistic.qmd
+      - section: "Finance"
+        contents:
+          - text: "Portfolio Optimization"
+            href: examples/finance/portfolio-optimization.qmd
+          - text: "Kelly Gambling"
+            href: examples/finance/kelly-strategy.qmd
+      - section: "Signal Processing"
+        contents:
+          - text: "L1 Trend Filtering"
+            href: examples/signal-processing/l1-trend-filtering.qmd
+          - text: "Saturating Hinges"
+            href: examples/signal-processing/saturating-hinges.qmd
+      - section: "Statistics"
+        contents:
+          - text: "Direct Standardization"
+            href: examples/statistics/direct-standardization.qmd
+          - text: "Log-Concave Density Estimation"
+            href: examples/statistics/log-concave.qmd
+          - text: "Sparse Inverse Covariance"
+            href: examples/statistics/sparse-inverse-covariance-estimation.qmd
+          - text: "Survey Calibration"
+            href: examples/statistics/survey-calibration.qmd
+      - section: "Applications"
+        contents:
+          - text: "Robust Kalman Filter"
+            href: examples/applications/robust-kalman.qmd
+          - text: "TV Inpainting"
+            href: examples/applications/tv-inpainting.qmd
+          - text: "Water Filling"
+            href: examples/applications/water-filling.qmd
+          - text: "Antenna Array Design"
+            href: examples/applications/antenna-array.qmd
+          - text: "Max Entropy"
+            href: examples/applications/max-entropy.qmd
+          - text: "Clock Mesh"
+            href: examples/applications/clock-mesh.qmd
+          - text: "Nonneg Matrix Factorization"
+            href: examples/applications/nonneg-matrix-fact.qmd
+          - text: "Channel Capacity"
+            href: examples/applications/channel-capacity.qmd
+          - text: "FIR Filter Design"
+            href: examples/applications/fir-filter.qmd
+          - text: "Fault Detection"
+            href: examples/applications/fault-detection.qmd
+          - text: "Sparse Solution"
+            href: examples/applications/sparse-solution.qmd
+          - text: "Sparse Covariance"
+            href: examples/applications/sparse-covariance.qmd
+          - text: "Consensus Optimization"
+            href: examples/applications/consensus-optimization.qmd
+          - text: "Interdiction"
+            href: examples/applications/interdiction.qmd
+      - section: "DGP"
+        contents:
+          - text: "DGP Tutorial"
+            href: examples/dgp/tutorial.qmd
+          - text: "DGP Fundamentals"
+            href: examples/dgp/fundamentals.qmd
+          - text: "Max Volume Box"
+            href: examples/dgp/max-volume-box.qmd
+          - text: "Power Control"
+            href: examples/dgp/power-control.qmd
+          - text: "PF Matrix Completion"
+            href: examples/dgp/pf-matrix-completion.qmd
+          - text: "Rank-One NMF"
+            href: examples/dgp/rank-one-nmf.qmd
+      - section: "DPP"
+        contents:
+          - text: "DPP Tutorial"
+            href: examples/dpp/tutorial.qmd
+          - text: "Sensitivity Analysis"
+            href: examples/dpp/sensitivity-analysis.qmd
+      - section: "DQCP"
+        contents:
+          - text: "DQCP Tutorial"
+            href: examples/dqcp/tutorial.qmd
+          - text: "Concave Fractional"
+            href: examples/dqcp/concave-fractional.qmd
+          - text: "Hypersonic Shape Design"
+            href: examples/dqcp/hypersonic-shape.qmd
+          - text: "Min-Length Least Squares"
+            href: examples/dqcp/min-length-ls.qmd
+      - section: "Derivatives"
+        contents:
+          - text: "Fundamentals"
+            href: examples/derivatives/fundamentals.qmd
+          - text: "Queuing Design"
+            href: examples/derivatives/queuing-design.qmd
+          - text: "Structured Prediction"
+            href: examples/derivatives/structured-prediction.qmd
+      - section: "Misc"
+        contents:
+          - text: "2D Ball"
+            href: examples/misc/2d-ball.qmd
+          - text: "Catenary"
+            href: examples/misc/catenary.qmd
+          - text: "Fast Mixing Markov Chain"
+            href: examples/misc/fast-mixing-mc.qmd
+          - text: "Integer Programming"
+            href: examples/misc/integer-programming.qmd
+      - section: "Solvers"
+        contents:
+          - text: "Solver Parameters"
+            href: examples/solvers/solver-parameters.qmd
+          - text: "Using Other Solvers"
+            href: examples/solvers/using-other-solvers.qmd
+          - text: "Warm Starts"
+            href: examples/solvers/warm-starts.qmd
+          - text: "Speed"
+            href: examples/solvers/speed.qmd
+          - text: "Solver Peculiarities"
+            href: examples/solvers/solver-peculiarities.qmd
+      - section: "Reference"
+        contents:
+          - text: "DCP Rules"
+            href: reference/dcp.qmd
+          - text: "Function Reference"
+            href: reference/functions.qmd
+          - text: "FAQ"
+            href: reference/faq.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - custom.scss
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: false
+    code-copy: true
+    highlight-style: github
+    mainfont: "Georgia, 'Times New Roman', serif"
+    monofont: "SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+    link-external-newwindow: true
+
+bibliography: references.bib

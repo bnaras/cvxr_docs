@@ -1,0 +1,159 @@
+---
+title: L1 Trend Filtering
+author: Anqi Fu and Balasubramanian Narasimhan
+categories: []
+tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: l1-trend-filtering
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+## We restrict ourselves to solvers on CRAN
+library(ggplot2)
+library(l1tf)
+```
+
+## Introduction
+
+@Kim:et_al:2009 propose the $l_1$ trend filtering method for trend
+ estimation. The method solves an optimization problem of the form
+
+$$
+\begin{array}{ll}
+\underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i - \beta_i)^2 + \lambda ||D\beta||_1
+\end{array}
+$$
+where the variable to be estimated is $\beta$ and we are given the
+problem data $y$ and $\lambda$. The matrix $D$ is the second-order
+difference matrix,
+
+$$
+D = 
+\left[
+\begin{matrix} 1 &  -2  &  1      &        &        &    &   \\ 
+                 &   1  & -2      &  1     &        &    &   \\
+                 &      &  \ddots & \ddots & \ddots &    &   \\
+				 &      &         & 1      & -2     &  1 &   \\
+				 &      &         &        & 1      & -2 &  1\\				 
+\end{matrix}
+\right].
+$$
+
+The implementation is in both C and Matlab. Hadley Wickham provides an
+R interface to the C code. This is
+on [GitHub](https://github.com/hadley/l1tf) and can be installed via:
+
+```{r, eval = FALSE}
+library(devtools)
+install_github("hadley/l1tf")
+```
+
+## Example
+
+We will use the example in `l1tf` to illustrate. The package provides
+the function `l1tf` which computes the trend estimate for a specified
+$\lambda$. 
+
+```{r}
+sp_data <- data.frame(x = sp500$date,
+                      y = sp500$log,
+                      l1_50 = l1tf(sp500$log, lambda = 50),
+                      l1_100 = l1tf(sp500$log, lambda = 100))
+```
+
+
+## The `CVXR` version
+
+`CVXR` provides all the atoms and functions necessary to formulat the
+problem in a few lines. For example, the $D$ matrix above is provided
+by the function `diff(..., differences = 2)`. Notice how the
+formulation tracks the mathematical construct above.
+
+
+```{r}
+## lambda = 50
+y <- sp500$log
+lambda_1 <- 50 
+beta <- Variable(length(y))
+objective_1 <- Minimize(0.5 * p_norm(y - beta) +
+                        lambda_1 * p_norm(diff(x = beta, differences = 2), 1))
+p1 <- Problem(objective_1)
+psolve(p1)
+betaHat_50 <- value(beta)
+
+## lambda = 100
+lambda_2 <- 100
+objective_2 <- Minimize(0.5 * p_norm(y - beta) +
+                        lambda_2 * p_norm(diff(x = beta, differences = 2), 1))
+p2 <- Problem(objective_2)
+psolve(p2)
+betaHat_100 <- value(beta)
+```
+
+_NOTE_ Of course, `CVXR` is much slower since it is not optimized just
+for one problem.
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), }
+if (params$mode == "save") {
+    saveRDS(list(b50 = betaHat_50, b100 = betaHat_100), file = file.path(testdata_dir, "l1-trend-filtering1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    l1_results <- readRDS(file = file.path(testdata_dir, "l1-trend-filtering1.RDS"))
+    expect_equal(betaHat_50, l1_results$b50, tolerance = 1e-5)
+    expect_equal(betaHat_100, l1_results$b100, tolerance = 1e-4)
+}
+```
+
+## Comparison Plots
+
+A plot of the estimates for two values of $\lambda$ is shown below
+using both approaches.  First the `l1tf` plot.
+
+```{r, fig.width=7, fig.height=5, fig.cap="$L_1$ trends for $\\lambda = 50$ (red) and $\\lambda = 100$ (blue)."}
+ggplot(data = sp_data) +
+    geom_line(mapping = aes(x = x, y = y), color = 'grey50') +
+    labs(x = "Date", y = "SP500 log-price") +
+    geom_line(mapping = aes(x = x, y = l1_50), color = 'red', linewidth = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = 'blue', linewidth = 1)
+```
+
+Next the corresponding `CVXR` plots. 
+
+```{r, fig.width=7, fig.height=5, fig.cap="`CVXR` estimated $L_1$ trends for $\\lambda = 50$ (red) and $\\lambda = 100$ (blue)."}
+cvxr_data <- data.frame(x = sp500$date,
+                        y = sp500$log,
+                        l1_50 = betaHat_50,
+                        l1_100 = betaHat_100)
+ggplot(data = cvxr_data) +
+    geom_line(mapping = aes(x = x, y = y), color = 'grey50') +
+    labs(x = "Date", y = "SP500 log-price") +
+    geom_line(mapping = aes(x = x, y = l1_50), color = 'red', linewidth = 1) +
+    geom_line(mapping = aes(x = x, y = l1_100), color = 'blue', linewidth = 1)
+```
+
+## Notes
+
+The `CVXR` solution is not quite exactly that of `l1tf`: on the left it shows a larger difference for the two
+$\lambda$ values; in the middle, it is less flatter than `l1tf`; and
+on the right, it does not have as many knots as `l1tf`. 
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

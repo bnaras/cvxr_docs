@@ -1,0 +1,213 @@
+---
+title: "Sensitivity Analysis and Gradients"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: dpp_sensitivity
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+::: {.callout-note}
+The derivative functionality (`backward`, `derivative`, `gradient`,
+`delta`, `requires_grad`) is planned for a future release of `CVXR`.
+The code below illustrates the intended API but is not yet executable.
+:::
+
+An optimization problem can be viewed as a function mapping parameters
+to solutions. This solution map is sometimes differentiable. `CVXR`
+has built-in support for computing the derivative of the optimal
+variable values of a problem with respect to small perturbations of
+the parameters (i.e., the `Parameter` instances appearing in a
+problem).
+
+The `Problem` class exposes two methods related to computing the
+derivative:
+
+- `derivative()` evaluates the derivative given perturbations to the
+  parameters. This lets you calculate how the solution to a problem
+  would change given small changes to the parameters, without
+  re-solving the problem.
+- `backward()` evaluates the adjoint of the derivative, computing
+  the gradient of the solution with respect to the parameters. This
+  can be useful when combined with automatic differentiation
+  software.
+
+The `derivative()` and `backward()` methods are only meaningful when
+the problem contains parameters. In order for a problem to be
+differentiable, it must be DPP-compliant. `CVXR` can compute the
+derivative of any DPP-compliant DCP or DGP problem. At
+non-differentiable points, `CVXR` computes a heuristic quantity.
+
+## Example: A Trivial Quadratic
+
+As a first example, we solve a trivial problem with an analytical
+solution, to illustrate the usage of `backward()` and `derivative()`.
+We construct a problem with a scalar variable `x` and a scalar
+parameter `p`. The problem is to minimize the quadratic
+$(x - 2p)^2$.
+
+```{r}
+x <- Variable()
+p <- Parameter()
+quadratic <- power(x - 2 * p, 2)
+problem <- Problem(Minimize(quadratic))
+```
+
+Next, we solve the problem for the particular value of $p = 3$. Note
+that when solving the problem, we supply the keyword argument
+`requires_grad = TRUE` to `psolve()`.
+
+```{r, eval = FALSE}
+value(p) <- 3.0
+result <- psolve(problem, requires_grad = TRUE)
+cat("Optimal value:", result, "\n")
+cat("x:", value(x), "\n")
+```
+
+### Using `backward()`
+
+Having solved the problem with `requires_grad = TRUE`, we can now use
+`backward()` to differentiate through the problem. We compute the
+gradient of the solution with respect to its parameter by calling
+`backward()`. As a side-effect, `backward()` populates the
+`gradient()` attribute on all parameters with the gradient of the
+solution with respect to that parameter.
+
+```{r, eval = FALSE}
+backward(problem)
+cat("The gradient is", gradient(p), "\n")
+```
+
+In this case, the problem has the trivial analytical solution $x^* =
+2p$, and the gradient $dx^*/dp$ is therefore just $2$. So, as
+expected, the gradient is 2.0.
+
+### Using `derivative()`
+
+Next, we use `derivative()` to see how a small change in `p` would
+affect the solution `x`. We perturb `p` by $10^{-5}$ by setting
+`delta(p) <- 1e-5`, and calling `derivative()` will populate the
+`delta()` attribute of `x` with the change in `x` predicted by a
+first-order approximation (which is $\frac{dx}{dp} \cdot \Delta p$).
+
+```{r, eval = FALSE}
+delta(p) <- 1e-5
+derivative(problem)
+cat("x delta is", delta(x), "\n")
+```
+
+In this case the solution is trivial and its derivative is just $2p$,
+so we know that the delta in $x$ should be $2 \times 10^{-5}$. As
+expected, the output confirms this.
+
+We emphasize that this example is trivial, because it has a trivial
+analytical solution with a trivial derivative. The `backward()` and
+`derivative()` methods are useful because the vast majority of convex
+optimization problems do not have analytical solutions: in these
+cases, `CVXR` can compute solutions and their derivatives, even though
+it would be impossible to derive them by hand.
+
+## When to Use `backward()` vs. `derivative()`
+
+- **`backward()`** should be used when you need the gradient of (a
+  scalar-valued function of) the solution with respect to the
+  parameters.
+- **`derivative()`** should be used for sensitivity analysis, i.e.,
+  when you want to know how the solution would change if one or more
+  parameters were changed.
+
+When there are multiple variables, it is much more efficient to
+compute sensitivities using `derivative()` than it would be to compute
+the entire Jacobian (which can be done by calling `backward()`
+multiple times, once for each standard basis vector).
+
+## A Note on `backward()` with Multiple Variables
+
+In this simple example, the variable `x` was a scalar, so `backward()`
+computed the gradient of `x` with respect to `p`. When there is more
+than one scalar variable, by default, `backward()` computes the
+gradient of the _sum_ of the optimal variable values with respect to
+the parameters.
+
+More generally, `backward()` can be used to compute the gradient of a
+scalar-valued function $f$ of the optimal variables, with respect to
+the parameters. If $x(p)$ denotes the optimal value of the variable
+(which might be a vector or a matrix) for a particular value of the
+parameter $p$ and $f(x(p))$ is a scalar, then `backward()` can be
+used to compute the gradient of $f$ with respect to $p$. Let $x^* =
+x(p)$, and say the derivative of $f$ with respect to $x^*$ is $dx$.
+To compute the derivative of $f$ with respect to $p$, before calling
+`backward(problem)`, just set `gradient(x) <- dx`.
+
+## Example: Least Squares with Regularization
+
+Here we demonstrate sensitivity analysis on a more practical problem:
+a regularized least-squares problem where we want to understand how
+the solution changes with respect to the regularization parameter.
+
+```{r, eval = FALSE}
+set.seed(42)
+n <- 5
+m <- 3
+A <- matrix(rnorm(n * m), n, m)
+b <- rnorm(n)
+
+x <- Variable(m)
+lam <- Parameter(nonneg = TRUE)
+
+objective <- sum_squares(A %*% x - b) + lam * sum_squares(x)
+problem <- Problem(Minimize(objective))
+
+value(lam) <- 1.0
+result <- psolve(problem, requires_grad = TRUE)
+cat("Optimal value:", result, "\n")
+cat("x:", value(x), "\n")
+```
+
+Now compute the gradient of the solution with respect to the
+regularization parameter:
+
+```{r, eval = FALSE}
+backward(problem)
+cat("Gradient of solution w.r.t. lambda:", gradient(lam), "\n")
+```
+
+And use `derivative()` to predict the effect of a small perturbation
+in $\lambda$:
+
+```{r, eval = FALSE}
+delta(lam) <- 0.01
+derivative(problem)
+cat("Predicted change in x:", delta(x), "\n")
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Agrawal, A., Barratt, S., Boyd, S., Busseti, E., Moursi, W. M.
+  (2019). Differentiating through a cone program.
+  _Journal of Applied and Numerical Optimization_, 1(2), 107--115.
+- Agrawal, A., Verschueren, R., Diamond, S., Boyd, S. (2018). A
+  rewriting system for convex optimization problems.
+  _Journal of Control and Decision_, 5(1), 42--60.

@@ -1,0 +1,220 @@
+---
+title: "Fault Detection"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_fault_detection
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+```
+
+## Introduction
+
+We consider a problem of identifying faults that have occurred in a
+system based on sensor measurements of system performance. This
+example is adapted from the CVXPY documentation.
+
+**Topic reference:** Samar, S., Gorinevsky, D. and Boyd, S.
+"Likelihood Bounds for Constrained Estimation with Uncertainty."
+*44th IEEE Conference on Decision and Control*, 2005.
+
+## Problem Statement
+
+Each of $n$ possible faults occurs independently with probability
+$p$. The vector $x \in \{0, 1\}^n$ encodes the fault occurrences,
+with $x_i = 1$ indicating that fault $i$ has occurred. System
+performance is measured by $m$ sensors. The sensor output is
+
+$$
+y = Ax + v = \sum_{i=1}^n a_i x_i + v,
+$$
+
+where $A \in \mathbb{R}^{m \times n}$ is the sensing matrix with
+column $a_i$ being the **fault signature** of fault $i$, and $v \in
+\mathbb{R}^m$ is a noise vector where $v_j$ is Gaussian with mean 0
+and variance $\sigma^2$.
+
+The objective is to guess $x$ (which faults have occurred) given $y$
+(sensor measurements).
+
+We are interested in the setting where $n > m$, that is, when we have
+more possible faults than measurements. In this setting, we can expect
+a good recovery when the vector $x$ is sparse. This is the subject of
+compressed sensing.
+
+## Solution Approach
+
+To identify the faults, one reasonable approach is to choose $x \in
+\{0, 1\}^n$ to minimize the negative log-likelihood function
+
+$$
+\ell(x) = \frac{1}{2\sigma^2} \|Ax - y\|_2^2 + \log(1/p - 1) \mathbf{1}^T x + c.
+$$
+
+However, this problem is nonconvex and NP-hard, due to the constraint
+that $x$ must be Boolean.
+
+To make this problem tractable, we relax the Boolean constraints and
+instead constrain $x_i \in [0, 1]$. The optimization problem
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & \|Ax - y\|_2^2 + 2\sigma^2 \log(1/p - 1) \mathbf{1}^T x \\
+\mbox{subject to} & 0 \leq x_i \leq 1, \quad i = 1, \ldots, n
+\end{array}
+$$
+
+is convex. We refer to the solution as the **relaxed ML** estimate.
+
+By rounding the relaxed ML estimate to the nearest of 0 or 1, we
+recover a Boolean estimate of the fault occurrences.
+
+## Example
+
+We generate an example with $n = 2000$ possible faults, $m = 200$
+measurements, and fault probability $p = 0.01$. We choose $\sigma^2$
+so that the signal-to-noise ratio is 5, i.e.,
+
+$$
+\sqrt{\frac{\mathbf{E}\|Ax\|_2^2}{\mathbf{E}\|v\|_2^2}} = 5.
+$$
+
+```{r}
+set.seed(1)
+
+n <- 2000
+m <- 200
+p <- 0.01
+snr <- 5
+
+sigma <- sqrt(p * n / (snr^2))
+A <- matrix(rnorm(m * n), nrow = m, ncol = n)
+
+x_true <- as.integer(runif(n) <= p)
+v <- sigma * rnorm(m)
+
+y <- A %*% x_true + v
+```
+
+Below, we show the true fault vector $x$, the signal $Ax$, and the
+noise $v$.
+
+```{r, fig.cap = "True fault vector x"}
+df_x <- data.frame(index = 1:n, value = x_true)
+ggplot(df_x, aes(x = index, y = value)) +
+    geom_line() +
+    labs(x = "Index", y = "x_true", title = "True Faults") +
+    theme_minimal()
+```
+
+```{r, fig.cap = "Signal Ax and noise v"}
+Ax <- as.vector(A %*% x_true)
+df_signal <- data.frame(
+    index = rep(1:m, 2),
+    value = c(Ax, v),
+    type = rep(c("Ax", "v"), each = m)
+)
+ggplot(df_signal, aes(x = index, y = value, color = type)) +
+    geom_line() +
+    labs(x = "Index", y = "Value", title = "Signal and Noise", color = "") +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+```
+
+## Recovery
+
+We solve the relaxed maximum likelihood problem with `CVXR` and then
+round the result to get a Boolean solution.
+
+```{r}
+x_var <- Variable(n)
+tau <- 2 * log(1/p - 1) * sigma^2
+obj <- Minimize(sum_squares(A %*% x_var - y) + tau * sum(x_var))
+constraints <- list(x_var >= 0, x_var <= 1)
+prob <- Problem(obj, constraints)
+result <- psolve(prob)
+
+cat(sprintf("Problem status: %s\n", status(prob)))
+cat(sprintf("Final objective value: %.4f\n", result))
+
+## Relaxed ML estimate
+x_rml <- as.numeric(value(x_var))
+
+## Rounded solution
+x_rnd <- as.integer(x_rml >= 0.5)
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(objective = result, x_rml = x_rml, x_rnd = x_rnd),
+            file = file.path(testdata_dir, "fault_detection.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "fault_detection.RDS"))
+    expect_equal(result, saved$objective, tolerance = 1e-5)
+    expect_equal(x_rml, saved$x_rml, tolerance = 1e-5)
+}
+```
+
+## Evaluation
+
+We compute the estimation errors and plot the true, relaxed ML, and
+rounded solutions.
+
+```{r}
+errors <- function(x_true, x_est, threshold = 0.5) {
+    k <- sum(x_true)
+    false_pos <- sum(x_true < threshold & x_est >= threshold)
+    false_neg <- sum(x_true >= threshold & x_est < threshold)
+    list(true_faults = k, false_positives = false_pos, false_negatives = false_neg)
+}
+
+err <- errors(x_true, x_rml)
+cat(sprintf("True faults: %d\n", err$true_faults))
+cat(sprintf("False positives: %d\n", err$false_positives))
+cat(sprintf("False negatives: %d\n", err$false_negatives))
+```
+
+```{r, fig.cap = "True, relaxed ML, and rounded fault estimates", fig.width = 10, fig.height = 4}
+df_plot <- data.frame(
+    index = rep(1:n, 3),
+    value = c(x_true, x_rml, x_rnd),
+    type = factor(rep(c("x_true", "x_rml (relaxed ML)", "x_rnd (rounded)"),
+                      each = n),
+                  levels = c("x_true", "x_rml (relaxed ML)", "x_rnd (rounded)"))
+)
+
+ggplot(df_plot, aes(x = index, y = value)) +
+    geom_line() +
+    facet_wrap(~ type, nrow = 1) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(x = "Index", y = "Value") +
+    theme_minimal()
+```
+
+The rounded solution gives perfect recovery with 0 false negatives
+and 0 false positives.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Samar, S., Gorinevsky, D. and Boyd, S. (2005). "Likelihood Bounds for Constrained Estimation with Uncertainty." *44th IEEE Conference on Decision and Control (CDC-ECC'05)*, IEEE.

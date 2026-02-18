@@ -1,0 +1,14 @@
+/* Additional custom styles for CVXR documentation */
+
+/* Ensure clean spacing */
+.quarto-title-meta {
+  margin-bottom: 1.5em;
+}
+
+/* Session info styling */
+.session-info {
+  font-size: 0.85rem;
+  background-color: #f8f8f8;
+  padding: 1em;
+  border-radius: 3px;
+}

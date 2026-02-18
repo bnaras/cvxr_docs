@@ -1,0 +1,152 @@
+---
+title: "Support Vector Machine with l1 Regularization"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: ml_svm
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+In this example we use `CVXR` to train an SVM classifier with
+$\ell_1$-regularization. We are given data $(x_i, y_i)$,
+$i = 1, \ldots, m$. The $x_i \in \mathbf{R}^n$ are feature vectors,
+while the $y_i \in \{\pm 1\}$ are associated boolean outcomes. Our
+goal is to construct a good linear classifier
+$\hat{y} = \text{sign}(\beta^T x - v)$. We find the parameters
+$\beta, v$ by minimizing the (convex) function
+
+$$
+f(\beta, v) = \frac{1}{m} \sum_i \left(1 - y_i (\beta^T x_i - v)\right)_+ + \lambda \|\beta\|_1.
+$$
+
+The first term is the average hinge loss. The second term shrinks the
+coefficients in $\beta$ and encourages sparsity. The scalar
+$\lambda \geq 0$ is a (regularization) parameter. Minimizing
+$f(\beta, v)$ simultaneously selects features and fits the classifier.
+
+## Example
+
+In the following code we generate data with $n = 20$ features by
+randomly choosing $x_i$ and a sparse
+$\beta_{\text{true}} \in \mathbf{R}^n$. We then set
+$y_i = \text{sign}(\beta_{\text{true}}^T x_i - v_{\text{true}} - z_i)$,
+where the $z_i$ are i.i.d. normal random variables. We divide the
+data into training and test sets with $m = 1000$ examples each.
+
+```{r}
+set.seed(1)
+n <- 20
+m <- 1000
+TEST <- m
+DENSITY <- 0.2
+
+beta_true <- rnorm(n)
+idxs <- sample.int(n, size = as.integer((1 - DENSITY) * n), replace = FALSE)
+beta_true[idxs] <- 0
+offset <- 0
+sigma <- 45
+
+X <- matrix(rnorm(m * n, sd = 5), nrow = m, ncol = n)
+Y <- as.vector(sign(X %*% beta_true + offset + rnorm(m, sd = sigma)))
+X_test <- matrix(rnorm(TEST * n, sd = 5), nrow = TEST, ncol = n)
+Y_test <- as.vector(sign(X_test %*% beta_true + offset + rnorm(TEST, sd = sigma)))
+```
+
+We next formulate the optimization problem using `CVXR`.
+
+```{r}
+beta  <- Variable(n)
+v     <- Variable()
+loss  <- sum_entries(pos(1 - multiply(Y, X %*% beta - v)))
+reg   <- p_norm(beta, 1)
+```
+
+We solve the optimization problem for a range of $\lambda$ to compute
+a trade-off curve. We then plot the train and test error over the
+trade-off curve. A reasonable choice of $\lambda$ is the value that
+minimizes the test error.
+
+```{r}
+TRIALS <- 100
+train_error <- numeric(TRIALS)
+test_error  <- numeric(TRIALS)
+lambda_vals <- 10^seq(-2, 0, length.out = TRIALS)
+beta_vals   <- vector("list", TRIALS)
+
+for (i in seq_len(TRIALS)) {
+    prob <- Problem(Minimize(loss / m + lambda_vals[i] * reg))
+    result <- psolve(prob)
+    beta_hat <- drop(value(beta))
+    v_hat    <- drop(value(v))
+    train_error[i] <- sum(sign(X %*% beta_true + offset) !=
+                          sign(X %*% beta_hat - v_hat)) / m
+    test_error[i]  <- sum(sign(X_test %*% beta_true + offset) !=
+                          sign(X_test %*% beta_hat - v_hat)) / TEST
+    beta_vals[[i]] <- beta_hat
+}
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(train_error = train_error,
+                 test_error = test_error,
+                 beta_vals = beta_vals),
+            file = file.path(testdata_dir, "result1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "result1.RDS"))
+    expect_equal(train_error, saved$train_error, tolerance = 1e-5)
+    expect_equal(test_error, saved$test_error, tolerance = 1e-5)
+}
+```
+
+```{r}
+plot(lambda_vals, train_error, type = "l", col = "blue",
+     log = "x", xlab = expression(lambda),
+     ylab = "Classification Error",
+     main = "Train vs. Test Error",
+     ylim = range(c(train_error, test_error)))
+lines(lambda_vals, test_error, col = "red")
+legend("topleft", legend = c("Train error", "Test error"),
+       col = c("blue", "red"), lty = 1)
+```
+
+## Regularization Path
+
+We also plot the regularization path, or the $\beta_i$ versus
+$\lambda$. Notice that the $\beta_i$ do not necessarily decrease
+monotonically as $\lambda$ increases. Four features remain non-zero
+longer for larger $\lambda$ than the rest, which suggests that these
+features are the most important. In fact $\beta_{\text{true}}$ had 4
+non-zero values.
+
+```{r}
+beta_mat <- do.call(cbind, lapply(beta_vals, as.vector))
+matplot(lambda_vals, t(beta_mat), type = "l", log = "x",
+        xlab = expression(lambda), ylab = expression(beta[i]),
+        main = "Regularization Path")
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

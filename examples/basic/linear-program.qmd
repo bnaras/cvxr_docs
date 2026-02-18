@@ -1,0 +1,110 @@
+---
+title: Linear Program
+author: Anqi Fu and Balasubramanian Narasimhan
+categories: []
+tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: linear-program
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+A linear program is an optimization problem with a linear objective
+and affine inequality constraints. A common standard form is the
+following:
+
+$$
+\begin{array}{ll}
+\mbox{minimize}   & c^Tx \\
+\mbox{subject to} & Ax \leq b.
+\end{array}
+$$
+
+Here $A \in \mathcal{R}^{m \times n}$, $b \in \mathcal{R}^m$, and
+$c \in \mathcal{R}^n$ are problem data and $x \in \mathcal{R}^{n}$ is
+the optimization variable. The inequality constraint $Ax \leq b$ is
+elementwise.
+
+For example, we might have $n$ different products, each constructed
+out of $m$ components. Each entry $A_{ij}$ is the amount of component
+$i$ required to build one unit of product $j$. Each entry $b_i$ is
+the total amount of component $i$ available. We lose $c_j$ for each
+unit of product $j$ ($c_j < 0$ indicates profit). Our goal then is to
+choose how many units of each product $j$ to make, $x_j$, in order to
+minimize loss without exceeding our budget for any component.
+
+In addition to a solution $x^\star$, we obtain a dual solution
+$\lambda^\star$. A positive entry $\lambda^\star_i$ indicates that the
+constraint $a_i^Tx \leq b_i$ holds with equality for $x^\star$ and
+suggests that changing $b_i$ would change the optimal value.
+
+## Example
+
+In the following code, we solve a linear program with `CVXR`.
+
+```{r}
+## Generate a random non-trivial linear program
+set.seed(1)
+m <- 15
+n <- 10
+s0 <- rnorm(m)
+lamb0 <- pmax(-s0, 0)
+s0 <- pmax(s0, 0)
+x0 <- rnorm(n)
+A <- matrix(rnorm(m * n), nrow = m, ncol = n)
+b <- A %*% x0 + s0
+c_vec <- -t(A) %*% lamb0
+
+## Define and solve the CVXR problem
+x <- Variable(n)
+constraints <- list(A %*% x <= b)
+prob <- Problem(Minimize(t(c_vec) %*% x), constraints)
+result <- psolve(prob)
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(optimal_value = result, x_value = value(x),
+                 dual_value = dual_value(constraints[[1]])),
+            file = file.path(testdata_dir, "linear-program.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    lp_data <- readRDS(file = file.path(testdata_dir, "linear-program.RDS"))
+    expect_equal(result, lp_data$optimal_value, tolerance = 1e-5)
+    expect_equal(value(x), lp_data$x_value, tolerance = 1e-5)
+}
+```
+
+```{r}
+## Print result
+cat(sprintf("The optimal value is %f\n", result))
+cat("A solution x is\n")
+print(value(x))
+cat("A dual solution is\n")
+print(dual_value(constraints[[1]]))
+```
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

@@ -1,0 +1,323 @@
+---
+title: "Minimize Beamwidth of an Antenna Array"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_antenna_array
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+```
+
+## Introduction
+
+Adapted from the CVX example of the same name, by Almir Mutapcic,
+2/2/2006 and Judson Wilson, 5/14/2014.
+
+**References:**
+
+- "Convex optimization examples" lecture notes (EE364) by S. Boyd
+- "Antenna array pattern synthesis via convex optimization" by H. Lebret and S. Boyd
+
+This algorithm designs an antenna array such that:
+
+- it has unit sensitivity at some target direction
+- it obeys a constraint on a minimum sidelobe level outside the beam
+- it minimizes the beamwidth of the pattern.
+
+This is a quasiconvex problem. Define the target direction as
+$\theta_{\mathrm{tar}}$, and a beamwidth of
+$\Delta \theta_{\mathrm{bw}}$. The beam occupies the angular interval
+
+$$
+\Theta_b = \left(\theta_{\mathrm{tar}}
+- \frac{1}{2}\Delta \theta_{\mathrm{bw}},\;
+\theta_{\mathrm{tar}}
++ \frac{1}{2}\Delta \theta_{\mathrm{bw}}\right).
+$$
+
+Solving for the minimum beamwidth $\Delta \theta_{\mathrm{bw}}$ is
+performed by bisection, where the interval which contains the optimal
+value is bisected according to the result of the following feasibility
+problem:
+
+$$
+\begin{array}{ll}
+\mbox{minimize}   &  0 \\
+\mbox{subject to} & y(\theta_{\mathrm{tar}}) = 1 \\
+                  &  |y(\theta)| \leq t_{\mathrm{sb}}
+                         \quad \forall \theta \notin \Theta_b.
+\end{array}
+$$
+
+Here $y$ is the antenna array gain pattern (a complex-valued
+function), $t_{\mathrm{sb}}$ is the maximum allowed sideband gain
+threshold, and the variables are $w$ (antenna array weights or shading
+coefficients). The gain pattern is a linear function of $w$:
+$y(\theta) = w^T a(\theta)$ for some $a(\theta)$ describing the
+antenna array configuration and specs.
+
+Once the optimal beamwidth is found, the solution $w$ is refined with:
+
+$$
+\begin{array}{ll}
+\mbox{minimize}   & \|w\| \\
+\mbox{subject to} & y(\theta_{\mathrm{tar}}) = 1 \\
+                  & |y(\theta)| \leq t_{\mathrm{sb}}
+                          \quad \forall \theta \notin \Theta_b.
+\end{array}
+$$
+
+The implementation below discretizes the angular quantities.
+
+## Problem Data
+
+We use a random 2D positioning of antennas.
+
+```{r}
+## Problem specs
+lambda_wl <- 1         # wavelength
+theta_tar <- 60        # target direction (degrees)
+min_sidelobe <- -20    # maximum sidelobe level in dB
+max_half_beam <- 50    # starting half beamwidth (must be feasible)
+
+## 2D random antenna locations
+set.seed(1)
+n <- 36
+L <- 5
+loc <- matrix(L * runif(n * 2), nrow = n, ncol = 2)
+```
+
+### Build Optimization Matrices
+
+We construct the matrix $A$ that relates the weights $w$ and the gain
+pattern $y(\theta)$, i.e., $y = Aw$.
+
+```{r}
+## Theta in degrees from 1 to 360
+theta <- matrix(1:360, ncol = 1)
+
+## Build matrix A: y = A * w (complex-valued)
+A <- exp(2i * pi / lambda_wl *
+         (cos(pi * theta / 180) %*% t(loc[, 1]) +
+          sin(pi * theta / 180) %*% t(loc[, 2])))
+
+## Target constraint
+ind_closest <- which.min(abs(theta - theta_tar))
+Atar <- A[ind_closest, , drop = FALSE]
+```
+
+## Solve Using Bisection
+
+Since CVXR works with real variables, we represent complex-valued
+quantities by separating real and imaginary parts. A complex vector
+$w = w_R + i w_I$ is stored as a real vector $(w_R, w_I)$.
+
+```{r}
+## Set up real/imaginary representation of Atar
+Atar_R <- Re(Atar)
+Atar_I <- Im(Atar)
+Atar_RI <- rbind(cbind(Atar_R, -Atar_I),
+                 cbind(Atar_I,  Atar_R))
+
+## Target vector: [1, 0] (unit gain, no imaginary component)
+realones_ri <- c(1.0, 0.0)
+
+## Bisection
+halfbeam_bot <- 1
+halfbeam_top <- max_half_beam
+
+cat("We are only considering integer values of the half beam-width\n")
+cat("(since we are sampling the angle with 1 degree resolution).\n\n")
+
+while (halfbeam_top - halfbeam_bot > 1) {
+    halfbeam_cur <- ceiling((halfbeam_top + halfbeam_bot) / 2)
+
+    ## Indices of the stopband (outside the beam)
+    ind <- which(theta <= (theta_tar - halfbeam_cur) |
+                 theta >= (theta_tar + halfbeam_cur))
+    As <- A[ind, , drop = FALSE]
+
+    ## Real/imaginary representation
+    As_R <- Re(As)
+    As_I <- Im(As)
+    As_RI_top <- cbind(As_R, -As_I)
+    As_RI_bot <- cbind(As_I,  As_R)
+
+    ## CVXR variables and constraints
+    w_ri <- Variable(2 * n)
+    constraints <- list(Atar_RI %*% w_ri == realones_ri)
+
+    ## Add sidelobe constraints row by row
+    sidelobe_thresh <- 10^(min_sidelobe / 20)
+    for (i in seq_len(nrow(As))) {
+        As_ri_row <- rbind(As_RI_top[i, , drop = FALSE],
+                           As_RI_bot[i, , drop = FALSE])
+        constraints <- c(constraints,
+                         list(p_norm(As_ri_row %*% w_ri, 2) <= sidelobe_thresh))
+    }
+
+    ## Solve feasibility problem
+    obj <- Minimize(0)
+    prob <- Problem(obj, constraints)
+    result <- psolve(prob, solver = "SCS")
+
+    ## Bisection logic
+    if (status(prob) == "optimal") {
+        cat(sprintf("Problem is feasible for half beam-width = %g degrees\n",
+                    halfbeam_cur))
+        halfbeam_top <- halfbeam_cur
+    } else {
+        cat(sprintf("Problem is not feasible for half beam-width = %g degrees\n",
+                    halfbeam_cur))
+        halfbeam_bot <- halfbeam_cur
+    }
+}
+
+halfbeam <- halfbeam_top
+cat(sprintf("\nOptimum half beam-width for given specs is %g degrees\n", halfbeam))
+```
+
+### Minimum Noise Design
+
+We now compute the minimum-norm weights for the optimal beamwidth.
+
+```{r}
+## Recompute stopband for optimal beamwidth
+ind <- which(theta <= (theta_tar - halfbeam) |
+             theta >= (theta_tar + halfbeam))
+As <- A[ind, , drop = FALSE]
+
+As_R <- Re(As)
+As_I <- Im(As)
+As_RI_top <- cbind(As_R, -As_I)
+As_RI_bot <- cbind(As_I,  As_R)
+
+w_ri <- Variable(2 * n)
+constraints <- list(Atar_RI %*% w_ri == realones_ri)
+
+sidelobe_thresh <- 10^(min_sidelobe / 20)
+for (i in seq_len(nrow(As))) {
+    As_ri_row <- rbind(As_RI_top[i, , drop = FALSE],
+                       As_RI_bot[i, , drop = FALSE])
+    constraints <- c(constraints,
+                     list(p_norm(As_ri_row %*% w_ri, 2) <= sidelobe_thresh))
+}
+
+## Minimize the weight norm
+obj <- Minimize(p_norm(w_ri, 2))
+prob <- Problem(obj, constraints)
+result_final <- psolve(prob, solver = "SCS")
+cat(sprintf("Final objective value: %f\n", result_final))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(halfbeam = halfbeam, obj_value = result_final),
+            file = file.path(testdata_dir, "antenna.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    ant_results <- readRDS(file = file.path(testdata_dir, "antenna.RDS"))
+    expect_equal(halfbeam, ant_results$halfbeam, tolerance = 1e-5)
+    expect_equal(result_final, ant_results$obj_value, tolerance = 1e-5)
+}
+```
+
+## Result Plots
+
+### Antenna Locations
+
+```{r, fig.cap = "Antenna locations in 2D plane"}
+ggplot(data.frame(x = loc[, 1], y = loc[, 2])) +
+    geom_point(aes(x = x, y = y), shape = 1, size = 3, color = "blue") +
+    labs(title = "Antenna Locations", x = "x", y = "y") +
+    coord_fixed() +
+    theme_minimal()
+```
+
+### Array Pattern
+
+```{r, fig.cap = "Array gain pattern in dB"}
+## Compute full gain pattern
+A_R <- Re(A)
+A_I <- Im(A)
+A_RI <- rbind(cbind(A_R, -A_I), cbind(A_I, A_R))
+
+w_ri_val <- value(w_ri)
+y_full <- A_RI %*% w_ri_val
+n_theta <- length(theta)
+y_complex <- y_full[1:n_theta] + 1i * y_full[(n_theta + 1):(2 * n_theta)]
+y_mag_db <- 20 * log10(abs(y_complex))
+
+df_pattern <- data.frame(
+    theta = as.vector(theta),
+    gain_db = as.vector(y_mag_db)
+)
+
+ggplot(df_pattern, aes(x = theta, y = gain_db)) +
+    geom_line() +
+    geom_vline(xintercept = theta_tar, linetype = "dashed", color = "green") +
+    geom_vline(xintercept = theta_tar + halfbeam, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = theta_tar - halfbeam, linetype = "dashed", color = "red") +
+    ylim(-40, 0) +
+    labs(x = "Look angle (degrees)", y = "Magnitude (dB)",
+         title = "Array Gain Pattern") +
+    theme_minimal()
+```
+
+### Polar Pattern
+
+```{r, fig.cap = "Polar radiation pattern"}
+zerodB <- 50
+dBY <- pmax(y_mag_db + zerodB, 0)
+theta_rad <- as.vector(theta) * pi / 180
+
+df_polar <- data.frame(
+    x = as.vector(dBY) * cos(theta_rad),
+    y = as.vector(dBY) * sin(theta_rad)
+)
+
+## 0 dB circle
+circle_0dB <- data.frame(
+    x = zerodB * cos(theta_rad),
+    y = zerodB * sin(theta_rad)
+)
+
+## Sidelobe circle
+m_sl <- min_sidelobe + zerodB
+circle_sl <- data.frame(
+    x = m_sl * cos(theta_rad),
+    y = m_sl * sin(theta_rad)
+)
+
+ggplot() +
+    geom_path(data = df_polar, aes(x = x, y = y), color = "blue") +
+    geom_path(data = circle_0dB, aes(x = x, y = y), linetype = "dotted") +
+    geom_path(data = circle_sl, aes(x = x, y = y), linetype = "dotted") +
+    coord_fixed(xlim = c(-zerodB, zerodB), ylim = c(-zerodB, zerodB)) +
+    annotate("text", x = -zerodB, y = 2, label = "0 dB") +
+    annotate("text", x = -m_sl, y = 2, label = paste0(min_sidelobe, " dB")) +
+    labs(title = "Polar Radiation Pattern") +
+    theme_void()
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

@@ -1,0 +1,265 @@
+---
+title: "Derivatives Fundamentals"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: deriv_fundamentals
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+::: {.callout-note}
+The derivative functionality (`backward`, `derivative`, `gradient`,
+`delta`) is planned for a future release of `CVXR`. The code below
+illustrates the intended API but is not yet executable.
+:::
+
+This example introduces the fundamentals of computing the derivative
+of the solution map to optimization problems. The derivative can be
+used for **sensitivity analysis**, to see how a solution would change
+given small changes to the parameters, and to compute **gradients** of
+scalar-valued functions of the solution.
+
+We will consider a simple disciplined geometric program (DGP). The
+geometric program under consideration is
+
+$$
+\begin{array}{ll}
+\text{minimize} & 1/(xyz) \\
+\text{subject to} & a(xy + xz + yz) \leq b \\
+& x \geq y^c,
+\end{array}
+$$
+
+where $x \in \mathbf{R}_{++}$, $y \in \mathbf{R}_{++}$, and
+$z \in \mathbf{R}_{++}$ are the variables, and
+$a \in \mathbf{R}_{++}$, $b \in \mathbf{R}_{++}$, and
+$c \in \mathbf{R}$ are the parameters. The vector
+
+$$
+\alpha = \begin{bmatrix} a \\ b \\ c \end{bmatrix}
+$$
+
+is the vector of parameters.
+
+## Setting Up the Problem
+
+```{r}
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+z <- Variable(pos = TRUE)
+
+a <- Parameter(pos = TRUE)
+b <- Parameter(pos = TRUE)
+cc <- Parameter()  # 'c' is reserved in R
+
+objective_fn <- 1 / (x * y * z)
+objective <- Minimize(objective_fn)
+constraints <- list(a * (x * y + x * z + y * z) <= b, x >= y^cc)
+problem <- Problem(objective, constraints)
+```
+
+We verify that the problem is a DGP.
+
+```{r}
+CVXR:::is_dgp(problem)
+```
+
+## Solving the Problem
+
+Next, we solve the problem, setting the parameters $a$, $b$, and $c$
+to $2$, $1$, and $0.5$.
+
+```{r, eval = FALSE}
+value(a) <- 2.0
+value(b) <- 1.0
+value(cc) <- 0.5
+result <- psolve(problem, gp = TRUE, requires_grad = TRUE)
+
+cat(sprintf("x = %f\n", value(x)))
+cat(sprintf("y = %f\n", value(y)))
+cat(sprintf("z = %f\n", value(z)))
+```
+
+Notice the keyword argument `requires_grad = TRUE`; this is necessary
+to subsequently compute derivatives.
+
+## Solution Map
+
+The **solution map** of the above problem is a function
+
+$$
+\mathcal{S} : \mathbf{R}^2_{++} \times \mathbf{R} \to \mathbf{R}^3_{++}
+$$
+
+which maps the parameter vector to the vector of optimal solutions
+
+$$
+\mathcal{S}(\alpha) = \begin{bmatrix} x(\alpha) \\ y(\alpha) \\ z(\alpha) \end{bmatrix}.
+$$
+
+Here, $x(\alpha)$, $y(\alpha)$, and $z(\alpha)$ are the optimal
+values of the variables corresponding to the parameter vector.
+
+As an example, we just saw that
+
+$$
+\mathcal{S}((2.0, 1.0, 0.5)) \approx \begin{bmatrix} 0.5612 \\ 0.3150 \\ 0.3690 \end{bmatrix}.
+$$
+
+## Sensitivity Analysis
+
+When the solution map is differentiable, we can use its derivative
+
+$$
+\mathsf{D}\mathcal{S}(\alpha) \in \mathbf{R}^{3 \times 3}
+$$
+
+to perform a **sensitivity analysis**, which studies how the solution
+would change given small changes to the parameters.
+
+Suppose we perturb the parameters by a vector of small magnitude
+$\mathsf{d}\alpha \in \mathbf{R}^3$. We can approximate the change
+$\Delta$ in the solution due to the perturbation using the derivative,
+as
+
+$$
+\Delta = \mathcal{S}(\alpha + \mathsf{d}\alpha) - \mathcal{S}(\alpha) \approx \mathsf{D}\mathcal{S}(\alpha) \mathsf{d}\alpha.
+$$
+
+We can compute this in `CVXR` as follows. Partition the perturbation
+as
+
+$$
+\mathsf{d}\alpha = \begin{bmatrix} \mathsf{d}a \\ \mathsf{d}b \\ \mathsf{d}c \end{bmatrix}.
+$$
+
+We set the `delta` attributes of the parameters to their
+perturbations, and then call the `derivative` method.
+
+```{r, eval = FALSE}
+da <- 1e-2
+db <- 1e-2
+dc <- 1e-2
+
+delta(a) <- da
+delta(b) <- db
+delta(cc) <- dc
+derivative(problem)
+```
+
+The `derivative` method populates the `delta` attributes of the
+variables as a side-effect, with the predicted change in the variable.
+We can compare the predictions to the actual solution of the perturbed
+problem.
+
+```{r, eval = FALSE}
+x_hat <- value(x) + delta(x)
+y_hat <- value(y) + delta(y)
+z_hat <- value(z) + delta(z)
+
+value(a) <- value(a) + da
+value(b) <- value(b) + db
+value(cc) <- value(cc) + dc
+
+psolve(problem, gp = TRUE)
+cat(sprintf("x: predicted %.5f  actual %.5f\n", x_hat, value(x)))
+cat(sprintf("y: predicted %.5f  actual %.5f\n", y_hat, value(y)))
+cat(sprintf("z: predicted %.5f  actual %.5f\n", z_hat, value(z)))
+
+## Restore original parameter values
+value(a) <- value(a) - da
+value(b) <- value(b) - db
+value(cc) <- value(cc) - dc
+```
+
+In this case, the predictions and the actual solutions are fairly
+close.
+
+## Gradient
+
+We can compute the gradient of a scalar-valued function of the
+solution with respect to the parameters. Let
+$f : \mathbf{R}^{3} \to \mathbf{R}$, and suppose we want to compute
+the gradient of the composition $f \circ \mathcal{S}$. By the chain
+rule,
+
+$$
+\nabla f(\mathcal{S}(\alpha)) = \mathsf{D}^T\mathcal{S}(\alpha) \begin{bmatrix} \mathsf{d}x \\ \mathsf{d}y \\ \mathsf{d}z \end{bmatrix},
+$$
+
+where $\mathsf{D}^T\mathcal{S}$ is the adjoint (or transpose) of the
+derivative operator, and $\mathsf{d}x$, $\mathsf{d}y$, and
+$\mathsf{d}z$ are the partial derivatives of $f$ with respect to its
+arguments.
+
+We can compute the gradient in `CVXR`, using the `backward` method.
+As an example, suppose
+
+$$
+f(x, y, z) = \frac{1}{2}(x^2 + y^2 + z^2),
+$$
+
+so that $\mathsf{d}x = x$, $\mathsf{d}y = y$, and
+$\mathsf{d}z = z$. Let
+$\mathsf{d}\alpha = \nabla f(\mathcal{S}(\alpha))$, and suppose we
+subtract $\eta \, \mathsf{d}\alpha$ from the parameter, where $\eta$
+is a positive constant. Using the following code, we can compare
+$f(\mathcal{S}(\alpha - \eta \, \mathsf{d}\alpha))$ with the value
+predicted by the gradient,
+
+$$
+f(\mathcal{S}(\alpha - \eta \, \mathsf{d}\alpha)) \approx f(\mathcal{S}(\alpha)) - \eta \, \mathsf{d}\alpha^T \mathsf{d}\alpha.
+$$
+
+```{r, eval = FALSE}
+result <- psolve(problem, gp = TRUE, requires_grad = TRUE)
+
+f_val <- function(xv, yv, zv) 0.5 * (xv^2 + yv^2 + zv^2)
+
+original <- f_val(value(x), value(y), value(z))
+
+gradient(x) <- value(x)
+gradient(y) <- value(y)
+gradient(z) <- value(z)
+backward(problem)
+
+eta <- 0.5
+da_grad <- gradient(a)
+db_grad <- gradient(b)
+dc_grad <- gradient(cc)
+dalpha <- c(da_grad, db_grad, dc_grad)
+predicted <- original - eta * sum(dalpha^2)
+
+value(a) <- value(a) - eta * da_grad
+value(b) <- value(b) - eta * db_grad
+value(cc) <- value(cc) - eta * dc_grad
+psolve(problem, gp = TRUE)
+actual <- f_val(value(x), value(y), value(z))
+
+cat(sprintf("original %.5f  predicted %.5f  actual %.5f\n",
+            original, predicted, actual))
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

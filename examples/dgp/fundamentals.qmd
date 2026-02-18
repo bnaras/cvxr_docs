@@ -1,0 +1,223 @@
+---
+title: DGP Fundamentals
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: dgp_fundamentals
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+This example will introduce you to the fundamentals of **disciplined
+geometric programming** (**DGP**), which lets you formulate and solve
+_log-log convex programs_ (LLCPs) in `CVXR`.
+
+LLCPs are problems that become convex after the variables, objective
+functions, and constraint functions are replaced with their logs, an
+operation that we refer to as a log-log transformation. LLCPs
+generalize geometric programming.
+
+## 1. Log-Log Curvature
+
+Just as every Expression in `CVXR` has a curvature (constant, affine,
+convex, concave, or unknown), every Expression also has a log-log
+curvature.
+
+A function $f : D \subseteq \mathbf{R}^{n}_{++} \to \mathbf{R}$ is
+said to be **log-log convex** if the function $F(u) = \log f(e^u)$,
+with domain $\{u \in \mathbf{R}^n : e^u \in D\}$, is convex; the
+function $F$ is called the log-log transformation of $f$. The function
+$f$ is **log-log concave** if $F$ is concave, and it is **log-log
+affine** if $F$ is affine.
+
+Notice that if a function has log-log curvature, then its domain and
+range can only include positive numbers.
+
+For an Expression to have known log-log curvature, all of the
+Constants, Variables, and Parameters it refers to must be elementwise
+positive.
+
+### Variables and Parameters
+
+Variables and parameters must be positive, i.e., they must be
+constructed with the option `pos = TRUE`:
+
+```{r}
+v <- Variable(pos = TRUE)
+cat("Positive variable is log-log affine:", CVXR:::is_log_log_affine(v), "\n")
+
+p <- Parameter(pos = TRUE)
+cat("Positive parameter is log-log affine:", CVXR:::is_log_log_affine(p), "\n")
+```
+
+### Functions from Geometric Programming
+
+A function $f(x)$ is log-log affine if and only if it is given by
+
+$$
+f(x) = cx_1^{a_1}x_2^{a_2} \ldots x_n^{a_n},
+$$
+
+where $c > 0$ and the $a_i$ are real numbers. In the context of
+geometric programming, such a function is called a monomial.
+
+```{r}
+x <- Variable(3, pos = TRUE)
+cc <- 2.0
+a <- c(0.5, 2.0, 1.8)
+
+monomial <- cc * power(x[1], a[1]) * power(x[2], a[2]) * power(x[3], a[3])
+cat("Monomial is log-log affine:", CVXR:::is_log_log_affine(monomial), "\n")
+```
+
+A sum of monomial functions is log-log convex; in the context of
+geometric programming, such a function is called a posynomial. There
+are functions that are not posynomials that are still log-log convex.
+
+```{r}
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+
+constant <- 2.0
+monomial <- constant * x * y
+posynomial <- monomial + power(x, 1.5) * power(y, -1)
+reciprocal <- power(posynomial, -1)
+
+cat("monomial is log-log affine:", CVXR:::is_log_log_affine(monomial), "\n")
+cat("posynomial is log-log convex:", CVXR:::is_log_log_convex(posynomial), "\n")
+cat("reciprocal is log-log concave:", CVXR:::is_log_log_concave(reciprocal), "\n")
+```
+
+## 2. Log-Log Curvature Ruleset
+
+`CVXR` has a library of atomic functions with known log-log curvature
+and monotonicity. It uses this information to tag every Expression
+with a log-log curvature. The composition rules are:
+
+A function $f(\text{expr}_1, \text{expr}_2, \ldots, \text{expr}_n)$
+is log-log convex if $f$ is a log-log convex function and for each
+$\text{expr}_i$ one of the following conditions holds:
+
+- $f$ is increasing in argument $i$ and $\text{expr}_i$ is log-log convex.
+- $f$ is decreasing in argument $i$ and $\text{expr}_i$ is log-log concave.
+- $\text{expr}_i$ is log-log affine.
+
+Similar rules apply for log-log concave and log-log affine
+expressions.
+
+If an Expression satisfies the composition rule, we colloquially say
+that the Expression "is DGP." You can check the log-log curvature of
+an expression using `CVXR:::is_log_log_convex()`, `CVXR:::is_log_log_concave()`, and
+`CVXR:::is_log_log_affine()`. You can check whether a Problem is DGP by
+calling `CVXR:::is_dgp()`.
+
+```{r}
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+
+monomial <- 2.0 * x * y
+posynomial <- monomial + power(x, 1.5) * power(y, -1)
+
+cat("monomial is log-log affine:", CVXR:::is_log_log_affine(monomial), "\n")
+cat("posynomial is log-log convex:", CVXR:::is_log_log_convex(posynomial), "\n")
+```
+
+## 3. DGP Problems
+
+An LLCP is an optimization problem of the form
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & f_0(x) \\
+\mbox{subject to} & f_i(x) \leq \tilde{f_i}, \quad i=1, \ldots, m\\
+& g_i(x) = \tilde{g_i}, \quad i=1, \ldots, p,
+\end{array}
+$$
+
+where the functions $f_i$ are log-log convex, $\tilde{f_i}$ are
+log-log concave, and the functions $g_i$ and $\tilde{g_i}$ are
+log-log affine.
+
+A problem is DGP if additionally all the functions are DGP. You can
+check whether a `CVXR` Problem is DGP by calling `CVXR:::is_dgp()`
+on the problem object.
+
+```{r}
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+z <- Variable(pos = TRUE)
+
+objective_fn <- x * y * z
+constraints <- list(
+  4 * x * y * z + 2 * x * z <= 10,
+  x <= 2 * y,
+  y <= 2 * x,
+  z >= 1
+)
+problem <- Problem(Maximize(objective_fn), constraints)
+cat("Is this problem DGP?", CVXR:::is_dgp(problem), "\n")
+```
+
+### Solving DGP Problems
+
+You can solve a DGP Problem by calling `psolve()` with `gp = TRUE`.
+
+```{r}
+result <- psolve(problem, gp = TRUE)
+cat("Optimal value:", result, "\n")
+cat("x:", value(x), "\n")
+cat("y:", value(y), "\n")
+cat("z:", value(z), "\n")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(result = result, x = value(x), y = value(y), z = value(z)),
+            file = file.path(testdata_dir, "dgp_fundamentals1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "dgp_fundamentals1.RDS"))
+    expect_identical(result, saved$result)
+    expect_identical(value(x), saved$x)
+    expect_identical(value(y), saved$y)
+    expect_identical(value(z), saved$z)
+}
+```
+
+If you forget to supply `gp = TRUE`, an error will be raised because
+the problem is not DCP-compliant.
+
+## 4. Next Steps
+
+### Atoms
+
+`CVXR` has a large library of log-log convex functions, including
+common functions like `exp()`, `log()`, and the difference between two
+numbers via `one_minus_pos()`. Check out the DGP tutorial page for the
+full list of atoms.
+
+### References
+
+For a reference on DGP, consult the following paper:
+<https://web.stanford.edu/~boyd/papers/dgp.html>
+
+## Session Info
+
+```{r}
+sessionInfo()
+```

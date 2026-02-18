@@ -1,0 +1,267 @@
+---
+title: Disciplined Geometric Programming
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: dgp_tutorial
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+Disciplined geometric programming (DGP) is an analog of DCP for
+_log-log convex_ functions, that is, functions of positive variables
+that are convex with respect to the geometric mean instead of the
+arithmetic mean.
+
+While DCP is a ruleset for constructing convex programs, DGP is a
+ruleset for log-log convex programs (LLCPs), which are problems that
+are convex after the variables, objective functions, and constraint
+functions are replaced with their logs, an operation that we refer to
+as a _log-log_ transformation. Every geometric program (GP) and
+generalized geometric program (GGP) is an LLCP, but there are LLCPs
+that are neither GPs nor GGPs.
+
+`CVXR` lets you form and solve DGP problems, just as it does for DCP
+problems. For example, the following code solves a simple geometric
+program:
+
+```{r}
+# DGP requires Variables to be declared positive via `pos=TRUE`.
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+z <- Variable(pos = TRUE)
+
+objective_fn <- x * y * z
+constraints <- list(
+  4 * x * y * z + 2 * x * z <= 10,
+  x <= 2 * y,
+  y <= 2 * x,
+  z >= 1
+)
+problem <- Problem(Maximize(objective_fn), constraints)
+result <- psolve(problem, gp = TRUE)
+cat("Optimal value:", result, "\n")
+cat("x:", value(x), "\n")
+cat("y:", value(y), "\n")
+cat("z:", value(z), "\n")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(result = result, x = value(x), y = value(y), z = value(z)),
+            file = file.path(testdata_dir, "dgp_tutorial1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "dgp_tutorial1.RDS"))
+    expect_identical(result, saved$result)
+    expect_identical(value(x), saved$x)
+    expect_identical(value(y), saved$y)
+    expect_identical(value(z), saved$z)
+}
+```
+
+Note that to solve DGP problems, you must pass the option `gp = TRUE`
+to `psolve()`.
+
+## Log-Log Curvature
+
+Just as every Expression in `CVXR` has a curvature (constant, affine,
+convex, concave, or unknown), every Expression also has a log-log
+curvature.
+
+A function $f : D \subseteq \mathbf{R}^n_{++} \to \mathbf{R}$ is
+said to be log-log convex if the function $F(u) = \log f(e^u)$, with
+domain $\{u \in \mathbf{R}^n : e^u \in D\}$, is convex (where
+$\mathbf{R}^n_{++}$ denotes the set of positive reals and the
+logarithm and exponential are meant elementwise); the function $F$ is
+called the log-log transformation of $f$. The function $f$ is log-log
+concave if $F$ is concave, and it is log-log affine if $F$ is affine.
+
+Every log-log affine function has the form
+
+$$
+f(x) = cx_1^{a_1}x_2^{a_2} \ldots x_n^{a_n}
+$$
+
+where $x$ is in $\mathbf{R}^n_{++}$, the $a_i$ are real numbers, and
+$c$ is a positive scalar. In the context of geometric programming,
+such a function is called a monomial function. A sum of monomials,
+known as a posynomial function in geometric programming, is a log-log
+convex function.
+
+| Log-Log Curvature | Meaning |
+|---|---|
+| log-log constant | $F$ is a constant (so $f$ is a positive constant) |
+| log-log affine | $F(\theta u + (1-\theta)v) = \theta F(u) + (1-\theta)F(v)$ for all $u, v, \theta \in [0,1]$ |
+| log-log convex | $F(\theta u + (1-\theta)v) \leq \theta F(u) + (1-\theta)F(v)$ for all $u, v, \theta \in [0,1]$ |
+| log-log concave | $F(\theta u + (1-\theta)v) \geq \theta F(u) + (1-\theta)F(v)$ for all $u, v, \theta \in [0,1]$ |
+| unknown | DGP analysis cannot determine the curvature |
+
+`CVXR`'s log-log curvature analysis can flag Expressions as unknown
+even when they are log-log convex or log-log concave. Note that any
+log-log constant expression is also log-log affine, and any log-log
+affine expression is log-log convex and log-log concave.
+
+## Log-Log Curvature Rules
+
+For an Expression to have known log-log curvature, all of the
+Constants, Variables, and Parameters it refers to must be elementwise
+positive. Variables and Parameters are positive only if the keyword
+argument `pos = TRUE` is supplied to their constructors (e.g.,
+`x <- Variable(pos = TRUE)`). To summarize, when formulating a DGP
+problem, _all Constants should be elementwise positive, and all
+Variables and Parameters must be constructed with the attribute
+`pos = TRUE`_.
+
+DGP analysis is exactly analogous to DCP analysis. It is based on a
+library of atoms (functions) with known monotonicity and log-log
+curvature and a single composition rule.
+
+A function $f(\text{expr}_1, \text{expr}_2, \ldots, \text{expr}_n)$
+is log-log convex if $f$ is a log-log convex function and for each
+$\text{expr}_i$ one of the following conditions holds:
+
+- $f$ is increasing in argument $i$ and $\text{expr}_i$ is log-log convex.
+- $f$ is decreasing in argument $i$ and $\text{expr}_i$ is log-log concave.
+- $\text{expr}_i$ is log-log affine.
+
+A function $f(\text{expr}_1, \text{expr}_2, \ldots, \text{expr}_n)$
+is log-log concave if $f$ is a log-log concave function and for each
+$\text{expr}_i$ one of the following conditions holds:
+
+- $f$ is increasing in argument $i$ and $\text{expr}_i$ is log-log concave.
+- $f$ is decreasing in argument $i$ and $\text{expr}_i$ is log-log convex.
+- $\text{expr}_i$ is log-log affine.
+
+A function $f(\text{expr}_1, \text{expr}_2, \ldots, \text{expr}_n)$
+is log-log affine if $f$ is a log-log affine function and each
+$\text{expr}_i$ is log-log affine.
+
+## DGP Problems
+
+A Problem is constructed from an objective and a list of constraints.
+If a problem follows the DGP rules, it is guaranteed to be an LLCP
+and solvable by `CVXR`. The DGP rules require that the problem
+objective have one of two forms:
+
+- `Minimize(log-log convex)`
+- `Maximize(log-log concave)`
+
+The only valid constraints under the DGP rules are:
+
+- log-log affine `==` log-log affine
+- log-log convex `<=` log-log concave
+- log-log concave `>=` log-log convex
+
+Here are some examples of DGP problems:
+
+```{r}
+# DGP requires Variables to be declared positive via `pos=TRUE`.
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+z <- Variable(pos = TRUE)
+
+objective_fn <- x * y * z
+constraints <- list(
+  4 * x * y * z + 2 * x * z <= 10,
+  x <= 2 * y,
+  y <= 2 * x,
+  z >= 1
+)
+problem <- Problem(Maximize(objective_fn), constraints)
+cat("Is problem DGP?", CVXR:::is_dgp(problem), "\n")
+```
+
+You can solve a DGP Problem by calling `psolve()` with `gp = TRUE`:
+
+```{r}
+result <- psolve(problem, gp = TRUE)
+cat("Optimal value:", result, "\n")
+cat("x:", value(x), "\n")
+cat("y:", value(y), "\n")
+cat("z:", value(z), "\n")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(result = result, x = value(x), y = value(y), z = value(z)),
+            file = file.path(testdata_dir, "dgp_tutorial2.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "dgp_tutorial2.RDS"))
+    expect_identical(result, saved$result)
+    expect_identical(value(x), saved$x)
+    expect_identical(value(y), saved$y)
+    expect_identical(value(z), saved$z)
+}
+```
+
+## DGP Atoms
+
+The DGP atom library includes atomic functions with known log-log
+curvature and monotonicity. `CVXR` uses the function information and
+the DGP rules to mark expressions with a log-log curvature. Note that
+every DGP expression is positive.
+
+### Infix Operators
+
+The infix operators `+`, `*`, `/` are treated as atoms. The operators
+`*` and `/` are log-log affine functions. The operator `+` is log-log
+convex in both its arguments.
+
+### Scalar Functions
+
+| Function | Log-Log Curvature | Monotonicity |
+|---|---|---|
+| `geo_mean(x)` | log-log affine | increasing |
+| `sum_entries(X)` | log-log convex | increasing |
+| `prod_entries(X)` | log-log affine | increasing |
+| `pf_eigenvalue(X)` | log-log convex | increasing |
+
+### Elementwise Functions
+
+| Function | Log-Log Curvature | Monotonicity |
+|---|---|---|
+| `exp(x)` | log-log convex | increasing |
+| `log(x)` (domain $x > 1$) | log-log concave | increasing |
+| `power(x, p)` | log-log affine | incr. for $p > 0$; decr. for $p < 0$ |
+| `sqrt(x)` | log-log affine | increasing |
+| `multiply(x, y)` | log-log affine | increasing |
+| `maximum(x, y)` | log-log convex | increasing |
+| `minimum(x, y)` | log-log concave | increasing |
+| `one_minus_pos(x)` | log-log concave | decreasing |
+
+### Matrix Functions
+
+| Function | Log-Log Curvature | Monotonicity |
+|---|---|---|
+| `eye_minus_inv(X)` | log-log convex | increasing |
+
+For a complete reference on DGP, see the paper at
+<https://web.stanford.edu/~boyd/papers/dgp.html>.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Agrawal, A., Diamond, S., Boyd, S. (2019). Disciplined Geometric
+  Programming. _Optimization Letters_, 13(5), 961--976.

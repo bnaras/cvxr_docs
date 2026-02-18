@@ -1,0 +1,112 @@
+---
+title: Semidefinite Program
+author: Anqi Fu and Balasubramanian Narasimhan
+categories: []
+tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: sdp
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+A semidefinite program (SDP) is an optimization problem of the form
+
+$$
+\begin{array}{ll}
+\mbox{minimize}   & \mathbf{tr}(CX) \\
+\mbox{subject to} & \mathbf{tr}(A_iX) = b_i, \quad i=1,\ldots,p \\
+                   & X \succeq 0,
+\end{array}
+$$
+
+where $\mathbf{tr}$ is the trace function,
+$X \in \mathcal{S}^{n}$ is the optimization variable and
+$C, A_1, \ldots, A_p \in \mathcal{S}^{n}$, and
+$b_1, \ldots, b_p \in \mathcal{R}$ are problem data, and
+$X \succeq 0$ is a matrix inequality. Here $\mathcal{S}^{n}$ denotes
+the set of $n$-by-$n$ symmetric matrices.
+
+An example of an SDP is to complete a covariance matrix
+$\tilde \Sigma \in \mathcal{S}^{n}_+$ with missing entries
+$M \subset \{1,\ldots,n\} \times \{1,\ldots,n\}$:
+
+$$
+\begin{array}{ll}
+\mbox{minimize}   & 0 \\
+\mbox{subject to} & \Sigma_{ij} = \tilde \Sigma_{ij}, \quad (i,j) \notin M \\
+                   & \Sigma \succeq 0,
+\end{array}
+$$
+
+## Example
+
+In the following code, we solve a SDP with `CVXR`.
+
+```{r}
+## Generate a random SDP
+set.seed(1)
+n <- 3
+p <- 3
+C <- matrix(rnorm(n * n), nrow = n, ncol = n)
+A <- list()
+b <- c()
+for (i in 1:p) {
+    A[[i]] <- matrix(rnorm(n * n), nrow = n, ncol = n)
+    b[i] <- rnorm(1)
+}
+
+## Define and solve the CVXR problem
+## Create a symmetric matrix variable
+X <- Variable(c(n, n), symmetric = TRUE)
+## The PSD() function enforces the positive semidefinite constraint X >> 0
+constraints <- list(PSD(X))
+for (i in 1:p) {
+    constraints <- c(constraints, list(matrix_trace(A[[i]] %*% X) == b[i]))
+}
+prob <- Problem(Minimize(matrix_trace(C %*% X)), constraints)
+result <- psolve(prob)
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(optimal_value = result, X_value = value(X)),
+            file = file.path(testdata_dir, "sdp.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    sdp_data <- readRDS(file = file.path(testdata_dir, "sdp.RDS"))
+    expect_equal(result, sdp_data$optimal_value, tolerance = 1e-5)
+    expect_equal(value(X), sdp_data$X_value, tolerance = 1e-5)
+}
+```
+
+```{r}
+## Print result
+cat(sprintf("The optimal value is %f\n", result))
+cat("A solution X is\n")
+print(value(X))
+```
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

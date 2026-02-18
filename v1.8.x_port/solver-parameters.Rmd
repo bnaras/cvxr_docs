@@ -1,0 +1,336 @@
+---
+title: "Dealing with Solver-Specific Parameters"
+author: Anqi Fu, David Kang and Balasubramanian Narasimhan
+date: "2020-01-15"
+slug: cvxr_solver-parameters
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+params:
+  mode: ignore
+  testdata_dir: test_data_1.0
+  data_dir: solver_specific
+---
+
+```{r, echo = FALSE}
+suppressMessages(library(CVXR))
+library(tibble)
+library(kableExtra)
+```
+
+## Overview
+
+`CVXR` features five standard parameters that can be passed to the
+`psolve` function. Here are the five parameters:
+
+* `verbose` : A parameter that deals with the verbosity of the
+  solver. It is a boolean variable for all solvers, but it can also
+  take integer values for the `MOSEK` solver, whose interface deals
+  with an integer verbosity parameter with the default of 10. The
+  default value of `verbose` for `CVXR` is set to `FALSE`.
+
+* `reltol` : Deals with the relative tolerance of the solver.
+
+* `abstol` : Deals with the absolute tolerance of the solver.
+
+* `feastol` : Deals with feasible tolerance of the solver.
+
+* `num_iter` : A parameter that specifies the maximum number of
+  iterations for the solver.
+
+These standard parameters are automatically translated to
+solver-specific parameter names by `psolve()`. You can also pass
+solver-specific parameters directly via `...`. If both a standard
+parameter and its solver-native equivalent are given, the
+solver-native name in `...` takes priority.
+
+The mapping table is available as `SOLVER_DEFAULT_PARAM`.
+
+## Solver-Specific Parameters
+
+We will go over some examples for each solver supported by `CVXR`,
+the available parameters for each solver, and where to find the
+documentation for each solver.
+
+### CLARABEL
+
+The parameters available for `CLARABEL` can be found in this
+[link](https://oxfordcontrol.github.io/clarabel-r/reference/clarabel_control.html).
+
+```{r, echo = FALSE}
+clarabel_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    CLARABEL = c("verbose", "tol_gap_rel", "tol_gap_abs", "tol_feas", "max_iter"),
+                    Value = c("FALSE", "1e-08", "1e-08", "1e-08", "200")
+                )
+knitr::kable(clarabel_params,
+             caption = "Default CVXR-CLARABEL parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+The parameters can be entered individually in the arguments of the
+`psolve` function. You can use either standard names or
+solver-specific names:
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+
+# Using standard parameter names
+result  <- psolve(prob, solver = "CLARABEL", feastol = 1e-2, verbose = TRUE)
+
+# Using solver-specific parameter names (equivalent)
+result  <- psolve(prob, solver = "CLARABEL", tol_feas = 1e-2, verbose = FALSE)
+```
+
+### OSQP
+
+The parameters available for `OSQP` can be found in this
+[link](https://osqp.org/docs/interfaces/solver_settings.html).
+
+```{r, echo = FALSE}
+osqp_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    OSQP = c("verbose", "eps_rel", "eps_abs", "eps_prim_inf", "max_iter"),
+                    Value = c("FALSE", "1e-05", "1e-05", "1e-04", "10000")
+                )
+knitr::kable(osqp_params,
+             caption = "Default CVXR-OSQP parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+
+# Using standard parameter name
+result  <- psolve(prob, solver = "OSQP", feastol = 1e-5, verbose = FALSE)
+
+# Using solver-specific parameter name (equivalent)
+result  <- psolve(prob, solver = "OSQP", eps_prim_inf = 1e-5, verbose = FALSE)
+```
+
+### SCS
+
+The parameters available for `SCS` can be found in this
+[link](https://cran.r-project.org/web/packages/scs/scs.pdf) under the
+`scs_control` function.
+
+```{r, echo = FALSE}
+scs_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    SCS = c("verbose", "eps_rel", "eps_abs", NA, "max_iters"),
+                    Value = c("FALSE", "1e-05", "1e-05", NA, "2500")
+                )
+knitr::kable(scs_params,
+             caption = "Default CVXR-SCS parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+Note that `SCS` does not support a `feastol` parameter --- only
+`verbose`, `reltol`, `abstol`, and `num_iter` map to standard names.
+Additional solver-specific parameters (like `scale`) can be passed
+directly.
+
+```{r}
+n<-3
+p<-3
+C <- matrix(rnorm(n^2), ncol = n)
+A <- list(matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n))
+b <- matrix(rnorm(p), nrow = p)
+
+X <- Variable(c(n, n), symmetric = TRUE)
+constraints <- list(X >= 0)
+for(i in 1:p){
+  constraints <- c(constraints, list(matrix_trace(A[[i]]%*%X) == b[i] ))
+}
+
+obj <- Minimize(matrix_trace(C %*% X))
+prob <- Problem(obj, constraints)
+result  <- psolve(prob, solver = "SCS", verbose = FALSE, num_iter = 5000)
+```
+
+### HiGHS
+
+The HiGHS solver is used for linear and mixed-integer programs.
+The parameters available for `HiGHS` can be found in this
+[link](https://cran.r-project.org/web/packages/highs/highs.pdf).
+
+```{r, echo = FALSE}
+highs_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    HIGHS = c("output_flag", NA, NA, NA, "simplex_iteration_limit"),
+                    Value = c("FALSE", NA, NA, NA, "2147483647")
+                )
+knitr::kable(highs_params,
+             caption = "Default CVXR-HiGHS parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- psolve(prob, solver = "HIGHS", verbose = FALSE)
+```
+
+### MOSEK
+
+```{r, echo = FALSE}
+mosek_params <- tibble::tibble(
+                     Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                     MOSEK = c("verbose", NA, NA, NA, "num_iter"),
+                     Value = c(0, NA, NA, NA, "10000")
+                )
+knitr::kable(mosek_params,
+             caption = "Default CVXR-MOSEK parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+The parameters available for `MOSEK` can be seen in this
+[link](https://docs.mosek.com/latest/rmosek/parameters.html). As
+you can see, the number of parameters is quite massive. They are also
+split between three types of parameters in `Double`, `Integer`, and
+`String` parameters. To pass these into the solver, they must be put
+in a list beforehand. Moreover, there are also general solver
+parameters. Here is an example:
+
+```{r, eval = FALSE}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+iparam <- list()
+iparam$AUTO_UPDATE_SOL_INFO <- "OFF"
+iparam$BI_IGNORE_NUM_ERROR <- "OFF"
+iparam$BI_MAX_ITERATIONS <- 100000
+
+dparam <- list()
+dparam$BASIS_REL_TOL_S <- 1.0e-12
+dparam$BASIS_TOL_S <- 1.0e-6
+
+result  <- psolve(prob, solver = "MOSEK", verbose = FALSE, dparam = dparam, iparam = iparam)
+```
+
+Note: MOSEK requires a license (free academic licenses are available).
+
+### Gurobi
+
+```{r, echo = FALSE}
+gurobi_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    GUROBI = c("verbose", NA, NA, "FeasibilityTol", "IterationLimit"),
+                    Value = c("FALSE", NA, NA, "1e-06", "10000")
+                )
+knitr::kable(gurobi_params,
+             caption = "Default CVXR-Gurobi parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+Gurobi parameters are documented at
+[https://www.gurobi.com/documentation/](https://www.gurobi.com/documentation/).
+
+```{r, eval = FALSE}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- psolve(prob, solver = "GUROBI", feastol = 1e-4, verbose = FALSE)
+```
+
+Note: Gurobi requires a license (free academic licenses are available).
+
+### GLPK / GLPK_MI
+
+```{r, echo = FALSE}
+glpk_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    GLPK = c("verbose", NA, NA, NA, NA),
+                    Value = c("FALSE", NA, NA, NA, NA)
+                )
+knitr::kable(glpk_params,
+             caption = "Default CVXR-GLPK parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+GLPK and GLPK_MI have no standard parameter mappings. Solver-specific
+parameters can be passed directly via `...`.
+
+### ECOS
+
+```{r, echo = FALSE}
+ecos_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    ECOS = c("verbose", "RELTOL", "ABSTOL", "FEASTOL", "MAXIT"),
+                    Value = c("FALSE", "1e-08", "1e-08", "1e-08", "100")
+                )
+knitr::kable(ecos_params,
+             caption = "Default CVXR-ECOS parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+```{r}
+x <- Variable(1)
+obj <- Minimize(x)
+prob <- Problem(obj, list(x >= 0))
+result  <- psolve(prob, solver = "ECOS", feastol = 1e-6, verbose = FALSE)
+```
+
+### ECOS_BB
+
+```{r, echo = FALSE}
+ecos_bb_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    ECOS_BB = c("verbose", "RELTOL", "ABSTOL", "FEASTOL", "MI_MAX_ITERS"),
+                    Value = c("FALSE", "1e-03", "1e-06", "1e-06", "1000")
+                )
+knitr::kable(ecos_bb_params,
+             caption = "Default CVXR-ECOS_BB parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+ECOS_BB is the mixed-integer extension of ECOS.
+
+### CPLEX
+
+```{r, echo = FALSE}
+cplex_params <- tibble::tibble(
+                    Standard = c("verbose", "reltol", "abstol", "feastol", "num_iter"),
+                    CPLEX = c("verbose", NA, NA, NA, "itlim"),
+                    Value = c("FALSE", NA, NA, NA, "10000")
+                )
+knitr::kable(cplex_params,
+             caption = "Default CVXR-CPLEX parameter mappings",
+             format = "html") %>%
+    kable_styling("striped") %>%
+    column_spec(2:3, background = "#ececec")
+```
+
+Note: CPLEX requires a license (free academic licenses are available).
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/solver-parameters.Rmd)

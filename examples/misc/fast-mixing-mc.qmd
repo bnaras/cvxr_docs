@@ -1,0 +1,209 @@
+---
+title: Fastest Mixing Markov Chain
+author: Anqi Fu and Balasubramanian Narasimhan
+categories: []
+tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: fast-mixing-mc
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+## We restrict ourselves to solvers on CRAN
+library(markovchain)
+```
+
+## Introduction
+
+This example is derived from the results in @FMMC, section 2. Let
+$\mathcal{G} = (\mathcal{V}, \mathcal{E})$ be a connected graph with
+vertices $\mathcal{V} = \{1,\ldots,n\}$ and edges
+$\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}$. Assume that
+$(i,i) \in \mathcal{E}$ for all $i = 1,\ldots,n$, and
+$(i,j) \in \mathcal{E}$ implies $(j,i) \in \mathcal{E}$. Under these
+conditions, a discrete-time Markov chain on $\mathcal{V}$ will have
+the uniform distribution as one of its equilibrium distributions. We
+are interested in finding the Markov chain, \ie constructing the
+transition probability matrix $P \in {\mathbf R}_+^{n \times n}$, that
+minimizes its asymptotic convergence rate to the uniform
+distribution. This is an important problem in Markov chain Monte Carlo
+(MCMC) simulations, as it directly affects the sampling efficiency of
+an algorithm.
+
+The asymptotic rate of convergence is determined by the second largest
+eigenvalue of $P$, which in our case is
+$\mu(P) := \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T)$ where
+$\lambda_{\max}(A)$ denotes the maximum eigenvalue of $A$. As $\mu(P)$
+decreases, the mixing rate increases and the Markov chain converges
+faster to equilibrium. Thus, our optimization problem is
+
+$$
+\begin{array}{ll}
+\underset{P}{\mbox{minimize}} & \lambda_{\max}(P - \frac{1}{n}{\mathbf 1}{\mathbf 1}^T) \\
+\mbox{subject to} & P \geq 0, \quad P{\mathbf 1} = {\mathbf 1}, \quad P = P^T \\
+& P_{ij} = 0, \quad (i,j) \notin \mathcal{E}.
+\end{array}
+$$
+
+The element $P_{ij}$ of our transition matrix is the probability of
+moving from state $i$ to state $j$. Our assumptions imply that $P$ is
+nonnegative, symmetric, and doubly stochastic. The last constraint
+ensures transitions do not occur between unconnected vertices.
+
+The function $\lambda_{\max}$ is convex, so this problem is solvable
+in `CVXR`. For instance, the code for the Markov chain in Figure 2
+below (the triangle plus one edge) is
+
+```{r, eval = FALSE}
+P <- Variable(c(n,n))
+ones <- matrix(1, nrow = n, ncol = 1)
+
+obj <- Minimize(lambda_max(P - 1/n))
+constr1 <- list(P >= 0, P %*% ones == ones, P == t(P))
+constr2 <- list(P[1,3] == 0, P[1,4] == 0)
+prob <- Problem(obj, c(constr1, constr2))
+result <- psolve(prob)
+```
+where we have set $n = 4$. We could also have specified $P{\mathbf 1} =
+{\mathbf 1}$ with `sum_entries(P,1) == 1`, which uses the
+`sum_entries` atom to represent the row sums.
+
+## Example
+
+In order to reproduce some of the examples from @FMMC, we create
+functions to build up the graph, solve the optimization problem and
+finally display the chain graphically. 
+
+```{r}
+## Boyd, Diaconis, and Xiao. SIAM Rev. 46 (2004) pgs. 667-689 at pg. 672
+## Form the complementary graph
+antiadjacency <- function(g) {
+    n <- max(as.numeric(names(g)))   ## Assumes names are integers starting from 1
+    a <- lapply(1:n, function(i) c())
+    names(a) <- 1:n
+    for(x in names(g)) {
+        for(y in 1:n) {
+            if(!(y %in% g[[x]]))
+                a[[x]] <- c(a[[x]], y)
+        }
+    }
+    a
+}
+
+## Fastest mixing Markov chain on graph g
+FMMC <- function(g, verbose = FALSE) {
+    a <- antiadjacency(g)
+    n <- length(names(a))
+    P <- Variable(c(n, n))
+    o <- rep(1, n)
+    objective <- Minimize(cvxr_norm(P - 1.0/n, "2"))
+    constraints <- list(P %*% o == o, t(P) == P, P >= 0)
+    for(i in names(a)) {
+        for(j in a[[i]]) {  ## (i-j) is a not-edge of g!
+            idx <- as.numeric(i)
+            if(idx != j)
+                constraints <- c(constraints, P[idx,j] == 0)
+        }
+    }
+    prob <- Problem(objective, constraints)
+    opt_val <- psolve(prob)
+    if(verbose)
+        cat("Status: ", problem_status(prob), ", Optimal Value = ", opt_val, "\n")
+    list(status = problem_status(prob), value = opt_val, P = value(P))
+}
+
+disp_result <- function(states, P, tolerance = 1e-3) {
+    if(!("markovchain" %in% rownames(installed.packages()))) {
+        rownames(P) <- states
+        colnames(P) <- states
+        print(P)
+    } else {
+        P[P < tolerance] <- 0
+        P <- P/apply(P, 1, sum)   ## Normalize so rows sum to exactly 1
+        mc <- new("markovchain", states = states, transitionMatrix = P)
+        plot(mc)
+    }
+}
+```
+
+
+### Results
+
+Table 1 from @FMMC is reproduced below. 
+
+![](../../../img/fmmc/table1.png)
+
+
+
+We reproduce the results for various rows of the table.
+
+```{r, fig.cap="Row 1, line graph", out.width="100%"}
+g <- list("1" = 2, "2" = c(1,3), "3" = c(2,4), "4" = 3)
+result1 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result1$P)
+```
+
+```{r, fig.cap="Row 2, triangle plus one edge", out.width="100%"}
+g <- list("1" = 2, "2" = c(1,3,4), "3" = c(2,4), "4" = c(2,3))
+result2 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result2$P)
+```
+
+```{r, fig.cap="Bipartite 2 plus 3", out.width="100%"}
+g <- list("1" = c(2,4,5), "2" = c(1,3), "3" = c(2,4,5), "4" = c(1,3), "5" = c(1,3))
+result3 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result3$P)
+```
+
+```{r, fig.cap="Square plus central point", out.width="100%"}
+g <- list("1" = c(2,3,5), "2" = c(1,4,5), "3" = c(1,4,5), "4" = c(2,3,5), "5" = c(1,2,3,4,5))
+result4 <- FMMC(g, verbose = TRUE)
+disp_result(names(g), result4$P)
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), }
+if (params$mode == "save") {
+    saveRDS(list(result1 = result1, result2 = result2, result3 = result3, result4 = result4),
+            file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    fmix <- readRDS(file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
+    expect_equal(result1, fmix$result1, tolerance = 1e-4) # small errors ok
+    expect_equal(result2, fmix$result2, tolerance = 1e-4)
+    expect_equal(result3, fmix$result3, tolerance = 1e-4)
+    expect_equal(result4, fmix$result4, tolerance = 1e-4)
+}
+```
+
+
+## Extensions
+
+It is easy to extend this example to other Markov chains. To change
+the number of vertices, we would simply modify `n`, and to add or
+remove edges, we need only alter the constraints in `constr2`. For
+instance, the bipartite chain in Figure 3 is produced by
+setting $n = 5$ and
+
+```{r, eval = FALSE}
+constr2 <- list(P[1,3] == 0, P[2,4] == 0, P[2,5] == 0, P[4,5] == 0)
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

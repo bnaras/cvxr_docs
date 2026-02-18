@@ -1,0 +1,214 @@
+---
+title: "Water Filling in Communications"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_water_filling
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+```
+
+## Introduction
+
+From Boyd and Vandenberghe, *Convex Optimization*, Example 5.2 (page
+145).
+
+Convex optimization can be used to solve the classic water filling
+problem. This problem is where a total amount of power $P$ has to be
+assigned to $n$ communication channels, with the objective of
+maximizing the total communication rate. The communication rate of the
+$i$th channel is given by
+
+$$
+\log(\alpha_i + x_i)
+$$
+
+where $x_i$ represents the power allocated to channel $i$ and
+$\alpha_i$ represents the floor above the baseline at which power can
+be added to the channel. Since $-\log(X)$ is convex, we can write the
+water-filling problem as a convex optimization problem:
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & \sum_{i=1}^{N} -\log(\alpha_i + x_i) \\
+\mbox{subject to} & x_i \geq 0, \quad \sum_{i=1}^{N} x_i = P
+\end{array}
+$$
+
+This form is straightforward to express in DCP format and thus can be
+simply solved using CVXR.
+
+## Water Filling Function
+
+We define a function that solves the water-filling problem for given
+channel parameters and total power budget.
+
+```{r}
+water_filling <- function(n, a, sum_x = 1) {
+    ## Boyd and Vandenberghe, Convex Optimization, example 5.2 page 145
+    ## Water-filling.
+    ##
+    ## This problem arises in information theory, in allocating power to a
+    ## set of n communication channels in order to maximize the total
+    ## channel capacity. The variable x_i represents the transmitter power
+    ## allocated to the ith channel, and log(alpha_i + x_i) gives the
+    ## capacity or maximum communication rate of the channel. The objective
+    ## is to maximize sum(log(alpha_i + x_i)) subject to sum(x_i) = sum_x.
+
+    ## Declare variables and parameters
+    x <- Variable(n)
+    alpha <- a
+
+    ## Objective: maximize the total communication rate
+    obj <- Maximize(sum(log(alpha + x)))
+
+    ## Constraints
+    constraints <- list(x >= 0, sum(x) == sum_x)
+
+    ## Solve
+    prob <- Problem(obj, constraints)
+    result <- psolve(prob)
+
+    prob_status <- status(prob)
+    if (prob_status == "optimal") {
+        list(status = prob_status,
+             value = result,
+             x = as.vector(value(x)))
+    } else {
+        list(status = prob_status,
+             value = NA,
+             x = NA)
+    }
+}
+```
+
+## Example
+
+As a simple example, we set $N = 3$, $P = 1$ and
+$\boldsymbol{\alpha} = (0.8, 1.0, 1.2)$.
+
+The function outputs the problem status, the maximum communication
+rate, and the power allocation required to achieve this maximum
+communication rate.
+
+```{r}
+buckets <- 3
+alpha <- c(0.8, 1.0, 1.2)
+
+sol <- water_filling(buckets, alpha)
+cat("Problem status:", sol$status, "\n")
+cat(sprintf("Optimal communication rate = %.4g\n", sol$value))
+cat("Transmitter powers:\n")
+print(round(sol$x, 3))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(value = sol$value, x = sol$x),
+            file = file.path(testdata_dir, "water_filling.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    wf_results <- readRDS(file = file.path(testdata_dir, "water_filling.RDS"))
+    expect_equal(sol$value, wf_results$value, tolerance = 1e-5)
+    expect_equal(sol$x, wf_results$x, tolerance = 1e-5)
+}
+```
+
+## Visualization
+
+To illustrate the water filling principle, we plot $\alpha_i + x_i$
+and check that this level is flat where power has been allocated.
+
+```{r, fig.cap = "Water filling solution showing power allocation across channels"}
+x_vals <- sol$x
+y_vals <- alpha + x_vals
+
+df <- data.frame(
+    bucket = seq_len(buckets),
+    alpha = alpha,
+    total = y_vals,
+    power = x_vals
+)
+
+ggplot(df) +
+    geom_col(aes(x = bucket, y = alpha), fill = "steelblue", width = 0.8) +
+    geom_col(aes(x = bucket, y = total), fill = "lightblue", alpha = 0.5, width = 0.8) +
+    geom_hline(yintercept = max(y_vals), linetype = "dashed", color = "red") +
+    scale_x_continuous(breaks = seq_len(buckets)) +
+    labs(x = "Bucket Number", y = "Power Level",
+         title = "Water Filling Solution") +
+    ylim(0, 1.5) +
+    theme_minimal()
+```
+
+## Larger Example
+
+We now solve a larger water filling problem with $N = 6$ channels and
+varying floor levels.
+
+```{r}
+n_large <- 6
+alpha_large <- c(0.2, 0.5, 0.8, 1.0, 1.2, 1.5)
+P_large <- 2
+
+sol_large <- water_filling(n_large, alpha_large, sum_x = P_large)
+cat("Problem status:", sol_large$status, "\n")
+cat(sprintf("Optimal communication rate = %.4g\n", sol_large$value))
+cat("Transmitter powers:\n")
+print(round(sol_large$x, 3))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(value = sol_large$value, x = sol_large$x),
+            file = file.path(testdata_dir, "water_filling_large.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    wf_large_results <- readRDS(file = file.path(testdata_dir, "water_filling_large.RDS"))
+    expect_equal(sol_large$value, wf_large_results$value, tolerance = 1e-5)
+    expect_equal(sol_large$x, wf_large_results$x, tolerance = 1e-5)
+}
+```
+
+```{r, fig.cap = "Water filling solution for 6 channels"}
+x_vals_l <- sol_large$x
+y_vals_l <- alpha_large + x_vals_l
+
+df_l <- data.frame(
+    bucket = seq_len(n_large),
+    alpha = alpha_large,
+    total = y_vals_l,
+    power = x_vals_l
+)
+
+ggplot(df_l) +
+    geom_col(aes(x = bucket, y = alpha), fill = "steelblue", width = 0.8) +
+    geom_col(aes(x = bucket, y = total), fill = "lightblue", alpha = 0.5, width = 0.8) +
+    geom_hline(yintercept = max(y_vals_l), linetype = "dashed", color = "red") +
+    scale_x_continuous(breaks = seq_len(n_large)) +
+    labs(x = "Bucket Number", y = "Power Level",
+         title = "Water Filling Solution (6 Channels)") +
+    theme_minimal()
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

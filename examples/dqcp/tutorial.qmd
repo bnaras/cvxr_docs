@@ -1,0 +1,275 @@
+---
+title: "Disciplined Quasiconvex Programming"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: dqcp_tutorial
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+Disciplined quasiconvex programming (DQCP) is a generalization of DCP
+for quasiconvex functions. Quasiconvexity generalizes convexity: a
+function $f$ is quasiconvex if and only if its domain is a convex set
+and its sublevel sets $\{x : f(x) \leq t\}$ are convex, for all $t$.
+
+While DCP is a ruleset for constructing convex programs, DQCP is a
+ruleset for quasiconvex programs (QCPs), which are optimization
+problems in which the objective is to minimize a quasiconvex function
+over a convex set. The convex set can be specified using equalities of
+affine functions and inequalities of convex and concave functions,
+just as in DCP; additionally, DQCP permits inequalities of the form
+$f(x) \leq t$, where $f(x)$ is a quasiconvex expression and $t$ is
+constant, and $f(x) \geq t$, where $f(x)$ is quasiconcave and $t$ is
+constant. Every disciplined convex program is a disciplined
+quasiconvex program, but the converse is not true.
+
+`CVXR` lets you form and solve DQCP problems, just as it does for DCP
+problems. For example, the following code solves a simple QCP:
+
+```{r}
+x <- Variable()
+y <- Variable(pos = TRUE)
+objective_fn <- -sqrt(x) / y
+problem <- Problem(Minimize(objective_fn), list(exp(x) <= y))
+result <- psolve(problem, qcp = TRUE)
+cat("Is DQCP?", is_dqcp(problem), "\n")
+cat("Optimal value:", result, "\n")
+cat("x:", value(x), "\n")
+cat("y:", value(y), "\n")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(result = result, x = value(x), y = value(y)),
+            file = file.path(testdata_dir, "dqcp_tutorial1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "dqcp_tutorial1.RDS"))
+    expect_equal(result, saved$result, tolerance = 1e-3)
+    expect_equal(value(x), saved$x, tolerance = 1e-3)
+    expect_equal(value(y), saved$y, tolerance = 1e-3)
+}
+```
+
+Note that to solve DQCP problems, you must pass the option
+`qcp = TRUE` to `psolve()`.
+
+## Curvature
+
+DQCP adds two new types of curvature to `CVXR`: _quasiconvex_ and
+_quasiconcave_. A function $f$ is quasiconvex if and only if its
+domain is a convex set and its sublevel sets
+$\{x : f(x) \leq t\}$ are convex, for all $t$; $f$ is quasiconcave
+if $-f$ is quasiconvex. Every convex function is also quasiconvex,
+and every concave function is also quasiconcave; the converses of
+these statements are not true. An expression that is both quasiconvex
+and quasiconcave is called _quasilinear_.
+
+`CVXR`'s curvature analysis can flag Expressions as unknown even when
+they are quasiconvex or quasiconcave, but it will never mistakenly
+flag an expression as quasiconvex or quasiconcave.
+
+The curvature of an Expression is stored in its `curvature()`
+attribute. For example:
+
+```{r}
+x <- Variable(3)
+w <- ceil_expr(x)
+cat("Curvature of ceil_expr(x):", curvature(w), "\n")
+
+y <- Variable(nonneg = TRUE)
+z <- Variable(nonneg = TRUE)
+product <- multiply(y, z)
+cat("Curvature of multiply(y, z) (nonneg):", curvature(product), "\n")
+```
+
+You can also check the curvature of an Expression by calling
+`is_quasiconvex()` and `is_quasiconcave()`. For example,
+`is_quasiconvex(y)` and `is_quasiconcave(z)` would evaluate to
+`TRUE`. You can check if an expression is quasilinear by calling
+`is_quasilinear()`.
+
+## Composition Rules
+
+DQCP analysis is based on applying a general composition theorem from
+convex analysis to each expression. An expression is verifiably
+quasiconvex under DQCP if it is one of the following:
+
+- convex (under DCP);
+- a quasiconvex atom, applied to a variable or constant;
+- the maximum of quasiconvex expressions;
+- an increasing function of a quasiconvex expression, or a decreasing
+  function of a quasiconcave expression;
+- an expression of the form $f(e_1, e_2, \ldots, e_n)$ such that
+  (1) $f$ is a quasiconvex atom, and (2) for each $i$, $f$ is
+  increasing in argument $i$ and $e_i$ is convex, $f$ is decreasing
+  in argument $i$ and $e_i$ is concave, or $e_i$ is affine.
+
+An expression is quasiconcave under DQCP if it is one of the
+following:
+
+- concave (under DCP);
+- a quasiconcave atom, applied to a variable or constant;
+- the minimum of quasiconcave expressions;
+- an increasing function of a quasiconcave expression, or a
+  decreasing function of a quasiconvex expression;
+- an expression of the form $f(e_1, e_2, \ldots, e_n)$ such that
+  (1) $f$ is a quasiconcave atom, and (2) for each $i$, $f$ is
+  increasing in argument $i$ and $e_i$ is concave, $f$ is decreasing
+  in argument $i$ and $e_i$ is convex, or $e_i$ is affine.
+
+Whether an atom is quasiconvex or quasiconcave may depend on the signs
+of its arguments. For example, the scalar product $xy$ is
+quasiconcave when $x$ and $y$ are either both nonnegative or both
+nonpositive, and quasiconvex when one of the arguments is nonnegative
+and the other is nonpositive.
+
+If an Expression satisfies the above rules, we say that the Expression
+"is DQCP." You can check whether an Expression is DQCP by calling
+`is_dqcp()`. For example:
+
+```{r}
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+
+product <- multiply(x, y)
+
+cat("Is quasiconcave?", is_quasiconcave(product), "\n")
+cat("Is DQCP?", is_dqcp(product), "\n")
+```
+
+An Expression is DQCP precisely when it has known curvature, which
+means at least one of `is_constant()`, `is_affine()`, `is_convex()`,
+`is_concave()`, `is_quasiconvex()`, or `is_quasiconcave()` returns
+`TRUE`.
+
+## DQCP Problems
+
+A Problem is constructed from an objective and a list of constraints.
+If a problem follows the DQCP rules, it is guaranteed to be a QCP and
+solvable by `CVXR` (if a solution to the problem exists). The DQCP
+rules require that the problem objective have one of two forms:
+
+- `Minimize(quasiconvex)`
+- `Maximize(quasiconcave)`
+
+The only valid constraints under the DQCP rules are:
+
+- affine `==` affine
+- convex `<=` concave
+- concave `>=` convex
+- quasiconvex `<=` constant
+- quasiconcave `>=` constant
+
+You can check that a problem, constraint, or objective satisfies the
+DQCP rules by calling `is_dqcp()`. Here are some examples of DQCP and
+non-DQCP problems:
+
+```{r}
+## The sign of variables affects curvature analysis.
+x <- Variable(nonneg = TRUE)
+concave_fractional_fn <- x * sqrt(x)
+constraint <- list(ceil_expr(x) <= 10)
+problem <- Problem(Maximize(concave_fractional_fn), constraint)
+cat("Is concave_fractional_fn quasiconcave?",
+    is_quasiconcave(concave_fractional_fn), "\n")
+cat("Is constraint DQCP?", is_dqcp(constraint[[1]]), "\n")
+cat("Is problem DQCP?", is_dqcp(problem), "\n")
+```
+
+```{r}
+w <- Variable()
+fn <- w * sqrt(w)
+problem2 <- Problem(Maximize(fn))
+cat("Is fn DQCP?", is_dqcp(fn), "\n")
+cat("Is problem DQCP?", is_dqcp(problem2), "\n")
+```
+
+`CVXR` will raise an error if you call `psolve(problem, qcp = TRUE)`
+on a non-DQCP problem.
+
+## DQCP Atoms
+
+Quasiconvex and quasiconcave expressions can be constructed using
+convex and concave atoms, using the curvature rules given above. This
+section describes new semantics for some existing atoms under DQCP and
+introduces new atoms that are quasiconvex or quasiconcave (but not
+convex or concave). Many of these new atoms are integer-valued.
+
+### Ratio
+
+The infix operator `/` is an atom, denoting ratio. This atom is both
+quasiconvex and quasiconcave when the denominator is known to be
+either nonnegative or nonpositive. The ratio `x/y` is increasing in
+`x` when `y` is nonnegative, increasing in `y` when `x` is
+nonpositive, decreasing in `x` when `y` is nonpositive, and
+decreasing in `y` when `x` is nonnegative.
+
+The ratio atom can be used with the composition rule to construct
+interesting quasiconvex and quasiconcave expressions. For example, the
+ratio of a nonnegative concave function and a positive convex function
+is quasiconcave, and the ratio of a nonnegative convex function and a
+positive concave function is quasiconvex. Similarly, the ratio of two
+affine functions is quasilinear when the denominator is positive.
+
+### Scalar Product
+
+The scalar product `*` is quasiconvex when one of its arguments is
+nonnegative and the other is nonpositive, and it is quasiconcave when
+its arguments are both nonnegative or both nonpositive. Hence, by the
+composition rule, the product of two nonnegative concave functions is
+quasiconcave, and the product of a nonnegative concave function and a
+nonpositive convex function is quasiconvex.
+
+### Ceiling and Floor
+
+The atoms `ceil_expr(x)` and `floor_expr(x)` are quasilinear and
+increasing in their arguments.
+
+## Solving DQCP Problems
+
+A DQCP problem can be solved by calling `psolve(problem, qcp = TRUE)`.
+`CVXR` uses a bisection method on the optimal value of the problem to
+solve QCPs, and it will automatically find an upper and lower bound
+for the bisection. You can optionally provide your own upper and lower
+bound when solving a QCP, which can sometimes be helpful. You can
+provide these bounds via the keyword arguments `low` and `high`; for
+example, `psolve(problem, qcp = TRUE, low = 12, high = 17)` would
+limit the bisection to objective values between 12 and 17.
+
+Bisection involves solving a sequence of optimization problems. If
+your problem is ill-conditioned, or if you are unlucky, a solver might
+fail to solve one of these subproblems, which will result in an error.
+If this happens, you can try using a different solver via the `solver`
+keyword argument. For example,
+`psolve(problem, qcp = TRUE, solver = "SCS")`. To obtain verbose
+output describing the bisection, supply the keyword argument
+`verbose = TRUE` to the solve method:
+`psolve(problem, qcp = TRUE, verbose = TRUE)`.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Agrawal, A., Boyd, S. (2020). Disciplined Quasiconvex Programming.
+  _Optimization Letters_, 14, 1643--1657.

@@ -1,0 +1,300 @@
+---
+title: "Sizing of Clock Meshes"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_clock_mesh
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+library(Matrix)
+```
+
+## Introduction
+
+Original by Lieven Vandenberghe. Adapted to CVX by Argyris Zymnis,
+12/4/2005. Modified by Michael Grant, 3/8/2006. Adapted to CVXPY by
+Judson Wilson, 5/26/2014.
+
+**Reference:**
+
+- Section 4, L. Vandenberghe, S. Boyd, and A. El Gamal, "Optimal Wire
+  and Transistor Sizing for Circuits with Non-Tree Topology"
+
+We consider the problem of sizing a clock mesh, so as to minimize the
+total dissipated power under a constraint on the dominant time
+constant. The number of nodes in the mesh is $N$ per row or column
+(thus $n = (N+1)^2$ in total). We divide the wire into $m$ segments
+of width $x_i$, $i = 1,\ldots,m$ which is constrained as
+$0 \le x_i \le W_{\mathrm{max}}$. We use a pi-model of each wire
+segment, with capacitance $\beta_i x_i$ and conductance
+$\alpha_i x_i$. Defining
+$C(x) = C_0 + x_1 C_1 + x_2 C_2 + \cdots + x_m C_m$ we have that
+the dissipated power is equal to $\mathbf{1}^T C(x) \mathbf{1}$.
+Thus, to minimize the dissipated power subject to constraints on the
+widths and the dominant time constant, we solve the SDP
+
+$$
+\begin{array}{ll}
+    \mbox{minimize}   & \mathbf{1}^T C(x) \mathbf{1} \\
+    \mbox{subject to} & T_{\mathrm{max}} G(x) - C(x) \succeq 0 \\
+                      & 0 \le x_i \le W_{\mathrm{max}}.
+\end{array}
+$$
+
+## Helper Functions
+
+```{r}
+## Computes the step response of a linear system.
+simple_step <- function(Amat, Bvec, DT, N_steps) {
+    n_dim <- nrow(Amat)
+    Ad <- as.matrix(Matrix::expm(Amat * DT))
+    Bd <- solve(Amat, (Ad - diag(n_dim)) %*% Bvec)
+    X <- matrix(0, nrow = n_dim, ncol = N_steps)
+    for (k in 2:N_steps) {
+        X[, k] <- Ad %*% X[, k - 1] + Bd
+    }
+    X
+}
+```
+
+## Generate Problem Data
+
+```{r}
+## Circuit parameters
+dim_grid <- 4              # Grid is dim_grid x dim_grid (assume even)
+n <- (dim_grid + 1)^2      # Number of nodes
+m <- 2 * dim_grid * (dim_grid + 1)  # Number of wires
+beta <- 0.5     # Capacitance per segment is twice beta times xi
+alpha <- 1      # Conductance per segment is alpha times xi
+G0 <- 1         # Source conductance
+
+C0 <- matrix(c(10, 2, 7, 5, 3,
+                8, 3, 9, 5, 5,
+                1, 8, 4, 9, 3,
+                7, 3, 6, 8, 2,
+                5, 2, 1, 9, 10),
+             nrow = 5, ncol = 5, byrow = TRUE)
+wmax <- 1       # Upper bound on x
+
+## Build capacitance and conductance matrices
+## We use a flattened representation for CC and GG
+## CC[, k] and GG[, k] are the vectorized n x n matrices
+## for the k-th component (k = 1 is constant, k = 2..m+1 are segments)
+CC <- matrix(0, nrow = n * n, ncol = m + 1)
+GG <- matrix(0, nrow = n * n, ncol = m + 1)
+
+## Constant term: diagonal capacitance from C0
+## The ordering matches column-major (Fortran) order for the grid
+CC[, 1] <- as.vector(diag(as.vector(C0)))
+
+## Helper: function to set elements in vectorized n x n matrix
+## Grid indexing: node at position (row i, col j) has 0-based index i + j*(dim_grid+1)
+## In R, 1-based: node = (i) + (j-1)*(dim_grid+1) where i=1..dim_grid+1, j=1..dim_grid+1
+node_idx <- function(i, j) {
+    ## i, j are 1-based grid coordinates
+    (j - 1) * (dim_grid + 1) + i
+}
+
+## Function to set (a,b) element of n x n matrix stored as vector (column-major)
+mat_idx <- function(a, b) {
+    (b - 1) * n + a
+}
+
+for (j in 1:(dim_grid + 1)) {
+    ## Source conductance in the middle of row
+    mid <- as.integer(dim_grid / 2) + 1
+    node_s <- node_idx(mid, j)
+    GG[mat_idx(node_s, node_s), 1] <- G0
+
+    for (i in 1:dim_grid) {
+        ## Horizontal segment number (1-based, numbered row-wise)
+        seg_h <- (j - 1) * dim_grid + i
+
+        ## Nodes connected by horizontal segment
+        n1 <- node_idx(i, j)
+        n2 <- node_idx(i + 1, j)
+
+        ## Capacitance: beta * [1,0;0,1] on the two nodes
+        CC[mat_idx(n1, n1), seg_h + 1] <- CC[mat_idx(n1, n1), seg_h + 1] + beta
+        CC[mat_idx(n2, n2), seg_h + 1] <- CC[mat_idx(n2, n2), seg_h + 1] + beta
+
+        ## Conductance: alpha * [1,-1;-1,1] on the two nodes
+        GG[mat_idx(n1, n1), seg_h + 1] <- GG[mat_idx(n1, n1), seg_h + 1] + alpha
+        GG[mat_idx(n2, n2), seg_h + 1] <- GG[mat_idx(n2, n2), seg_h + 1] + alpha
+        GG[mat_idx(n1, n2), seg_h + 1] <- GG[mat_idx(n1, n2), seg_h + 1] - alpha
+        GG[mat_idx(n2, n1), seg_h + 1] <- GG[mat_idx(n2, n1), seg_h + 1] - alpha
+
+        ## Vertical segment number
+        seg_v <- dim_grid * (dim_grid + 1) + (i - 1) * dim_grid + j
+        if (j <= dim_grid) {
+            ## Nodes connected by vertical segment
+            nv1 <- node_idx(i, j)
+            nv2 <- node_idx(i, j + 1)
+
+            CC[mat_idx(nv1, nv1), seg_v + 1] <- CC[mat_idx(nv1, nv1), seg_v + 1] + beta
+            CC[mat_idx(nv2, nv2), seg_v + 1] <- CC[mat_idx(nv2, nv2), seg_v + 1] + beta
+
+            GG[mat_idx(nv1, nv1), seg_v + 1] <- GG[mat_idx(nv1, nv1), seg_v + 1] + alpha
+            GG[mat_idx(nv2, nv2), seg_v + 1] <- GG[mat_idx(nv2, nv2), seg_v + 1] + alpha
+            GG[mat_idx(nv1, nv2), seg_v + 1] <- GG[mat_idx(nv1, nv2), seg_v + 1] - alpha
+            GG[mat_idx(nv2, nv1), seg_v + 1] <- GG[mat_idx(nv2, nv1), seg_v + 1] - alpha
+        }
+    }
+}
+```
+
+### Tradeoff Curve
+
+We compute the area-delay tradeoff curve by solving for different
+values of the maximum delay $T_{\mathrm{max}}$.
+
+```{r}
+npts <- 50
+delays <- seq(50, 150, length.out = npts)
+xdelays <- c(50, 100)
+xnpts <- length(xdelays)
+areas <- rep(NA, npts)
+xareas <- list()
+```
+
+## Solve and Display Results
+
+```{r, results = "hold"}
+## Iterate over all points on the tradeoff curve plus specific points
+for (idx in seq_len(npts + xnpts)) {
+    if (idx <= npts) {
+        delay <- delays[idx]
+        cat(sprintf("Point %d of %d on the tradeoff curve (Tmax = %.2f)\n",
+                    idx, npts, delay))
+    } else {
+        xi <- idx - npts
+        delay <- xdelays[xi]
+        cat(sprintf("Particular solution %d of %d (Tmax = %d)\n",
+                    xi, xnpts, delay))
+    }
+
+    ## CVXR variables
+    xt <- Variable(m + 1)
+    G_var <- Variable(c(n, n), symmetric = TRUE)
+    C_var <- Variable(c(n, n), symmetric = TRUE)
+
+    ## Objective: minimize total capacitance (power)
+    obj <- Minimize(sum_entries(C_var))
+
+    ## Constraints
+    constraints <- list(
+        xt[1] == 1,
+        G_var == reshape_expr(GG %*% xt, c(n, n)),
+        C_var == reshape_expr(CC %*% xt, c(n, n)),
+        (delay * G_var - C_var) %>>% 0,   # SDP constraint (PSD)
+        xt[2:(m + 1)] >= 0,
+        xt[2:(m + 1)] <= wmax
+    )
+
+    prob <- Problem(obj, constraints)
+    result <- tryCatch(
+        psolve(prob, solver = "SCS"),
+        error = function(e) {
+            cat("SCS failed, trying with different settings\n")
+            psolve(prob, solver = "SCS", max_iters = 10000L)
+        }
+    )
+
+    if (!(status(prob) %in% c("optimal", "optimal_inaccurate"))) {
+        cat(sprintf("  Solver status: %s -- skipping\n", status(prob)))
+        next
+    }
+
+    x_val <- value(xt)[2:(m + 1)]
+
+    if (idx <= npts) {
+        areas[idx] <- sum(x_val)
+    } else {
+        xi <- idx - npts
+        xareas[[xi]] <- sum(x_val)
+
+        cat(sprintf("Solution %d: total wire area = %.4f\n", xi, sum(x_val)))
+
+        ## Compute and plot step responses
+        C_val <- matrix(value(C_var), n, n)
+        G_val <- matrix(value(G_var), n, n)
+        Amat <- -solve(C_val, G_val)
+        Bvec <- -Amat %*% rep(1, n)
+        T_vec <- seq(0, 500, length.out = 2000)
+        Y <- simple_step(Amat, Bvec, T_vec[2], length(T_vec))
+
+        ## Find fastest and slowest step responses
+        indmax <- -Inf
+        indmin <- Inf
+        jmax <- 1
+        jmin <- 1
+        for (j in 1:nrow(Y)) {
+            first_above <- min(which(Y[j, ] >= 0.5))
+            if (first_above > indmax) {
+                indmax <- first_above
+                jmax <- j
+            }
+            if (first_above < indmin) {
+                indmin <- first_above
+                jmin <- j
+            }
+        }
+
+        cat(sprintf("  Slowest node: v%d, Fastest node: v%d\n", jmax, jmin))
+    }
+}
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(areas = areas, xareas = xareas),
+            file = file.path(testdata_dir, "clock_mesh.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    cm_results <- readRDS(file = file.path(testdata_dir, "clock_mesh.RDS"))
+    expect_equal(areas[is.finite(areas)], cm_results$areas[is.finite(cm_results$areas)],
+                 tolerance = 1e-5)
+}
+```
+
+### Area-Delay Tradeoff Curve
+
+```{r, fig.cap = "Area-delay tradeoff curve for clock mesh sizing"}
+ind <- which(is.finite(areas))
+df_tradeoff <- data.frame(area = areas[ind], delay = delays[ind])
+
+p <- ggplot(df_tradeoff, aes(x = area, y = delay)) +
+    geom_line() +
+    labs(x = "Area", y = "Tdom",
+         title = "Area-Delay Tradeoff Curve") +
+    theme_minimal()
+
+## Label specific cases
+for (k in seq_along(xareas)) {
+    p <- p + annotate("text", x = xareas[[k]], y = xdelays[k],
+                      label = sprintf("(%d)", k))
+}
+print(p)
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

@@ -1,0 +1,243 @@
+---
+title: Sparse Inverse Covariance Estimation
+author: Anqi Fu and Balasubramanian Narasimhan
+date: '2017-11-02'
+slug: cvxr_sparse_inverse_covariance_estimation
+bibliography: ../bibtex/cvxr_refs.bib
+link-citations: true
+categories: []
+tags: []
+params:
+  mode: ignore
+  testdata_dir: test_data_1.0
+  data_dir: sparse_inverse_covariance_estimation
+---
+
+```{r, echo = FALSE, message = FALSE, eval = FALSE}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir) 
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+## We restrict ourselves to solvers on CRAN
+library(ggplot2)
+library(grid)
+library(Matrix)
+library(expm)
+
+## 
+## Reference: http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+theme_bare <- theme(
+    axis.line = element_blank(), 
+    axis.text.x = element_blank(), 
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title.y = element_blank(), 
+    legend.position = "none", 
+    panel.background = element_rect(fill = "white"), 
+    panel.border = element_blank(), 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(), 
+    )
+```
+
+## Introduction
+
+Assume we are given i.i.d. observations $x_i \sim N(0,\Sigma)$ for $i
+= 1,\ldots,m$, and the covariance matrix $\Sigma \in {\mathbf S}_+^n$, the
+set of symmetric positive semidefinite matrices, has a sparse inverse
+$S = \Sigma^{-1}$. Let $Q = \frac{1}{m-1}\sum_{i=1}^m (x_i - \bar
+x)(x_i - \bar x)^T$ be our sample covariance. One way to estimate
+$\Sigma$ is to maximize the log-likelihood with the prior knowledge
+that $S$ is sparse [@spinvcov], which amounts to the optimization
+problem:
+
+$$
+\begin{array}{ll} \underset{S}{\mbox{maximize}} & \log\det(S) - \mbox{tr}(SQ) \\
+\mbox{subject to} & S \in {\mathbf S}_+^n, \quad \sum_{i=1}^n \sum_{j=1}^n |S_{ij}| \leq \alpha.
+\end{array}
+$$
+
+The parameter $\alpha \geq 0$ controls the degree of sparsity. The problem
+is convex, so we can solve it using `CVXR`.
+
+## Example
+
+We'll create a sparse positive semi-definite matrix $S$ using
+synthetic data
+
+```{r}
+set.seed(1)
+n <- 10      ## Dimension of matrix
+m <- 1000    ## Number of samples
+
+## Create sparse, symmetric PSD matrix S
+A <- rsparsematrix(n, n, 0.15, rand.x = stats::rnorm)
+Strue <- A %*% t(A) + 0.05 * diag(rep(1, n))    ## Force matrix to be strictly positive definite
+```
+
+We can now create the covariance matrix $R$ as the inverse of $S$.
+
+```{r}
+R <- base::solve(Strue)
+```
+
+As test data, we sample from a multivariate normal with the fact that
+if $Y \sim N(0, I)$, then $R^{1/2}Y \sim N(0, R)$ since $R$ is
+symmetric.
+
+```{r}
+x_sample <- matrix(stats::rnorm(n * m), nrow = m, ncol = n) %*% t(expm::sqrtm(R))
+Q <- cov(x_sample)    ## Sample covariance matrix
+```
+
+Finally, we solve our convex program for a set of $\alpha$ values. 
+
+Positive semi-definite variables are designated using `PSD = TRUE`.
+
+```{r}
+alphas <- c(10, 8, 6, 4, 1)
+S <- Variable(c(n, n), PSD = TRUE)
+
+obj <- Maximize(log_det(S) - matrix_trace(S %*% Q))
+
+S.est <- lapply(alphas,
+                function(alpha) {
+                    constraints <- list(sum(abs(S)) <= alpha)
+                    ## Form and solve optimization problem
+                    prob <- Problem(obj, constraints)
+                    result <- psolve(prob)
+                    
+                    ## Create covariance matrix
+                    R_hat <- base::solve(value(S))
+                    Sres <- value(S)
+                    Sres[abs(Sres) <= 1e-4] <- 0
+                    Sres
+                })
+```
+
+In the code above, the `PSD = TRUE` attribute restricts `S` to the
+positive semidefinite cone. In our objective, we use `CVXR` functions
+for the log-determinant and trace. The expression `matrix_trace(S %*%
+Q)` is equivalent to `sum(diag(S %*% Q))}, but the former is preferred
+because it is more efficient than making nested function calls.
+
+However, a standalone atom does not exist for the determinant, so we
+cannot replace `log_det(S)` with `log(det(S))` since `det` is
+undefined for a PSD variable object.
+
+```{r, echo = FALSE, eval = FALSE, }
+if (params$mode == "save") {
+    saveRDS(S.est, , file = file.path(testdata_dir, "sparse_inverse_covariance.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    sice_result <- readRDS(file = file.path(testdata_dir, "sparse_inverse_covariance.RDS"))
+    sice_result  <- lapply(sice_result, as.matrix)
+    sice_result  <- lapply(sice_result, function(x) {dimnames(x)  <- NULL; x })
+    expect_equal(S.est[[1]], sice_result[[1]], 1e-3)
+    expect_equal(S.est[[2]], sice_result[[2]], 1e-3)
+    expect_equal(S.est[[3]], sice_result[[3]], 1e-3)
+    expect_equal(S.est[[4]], sice_result[[4]], 1e-3)
+    expect_equal(S.est[[5]], sice_result[[5]], 1e-3)
+}
+```
+
+## Results
+
+The figures below depict the solutions for the above dataset with $m =
+1000, n = 10$, and $S$ containing 26% non-zero entries, represented by
+the dark squares in the images below. The sparsity of our inverse
+covariance estimate decreases for higher $\alpha$, so that when
+$\alpha = 1$, most of the off-diagonal entries are zero, while if
+$\alpha = 10$, over half the matrix is dense. At $\alpha = 4$, we
+achieve the true percentage of non-zeros.
+
+```{r, echo = FALSE, fig.width=6, fig.height=6}
+## Plotting function
+plotSpMat <- function(S, alpha) {
+    n <- nrow(S)
+    df <- expand.grid(j = seq_len(n), i = seq_len(n))
+    df$z = as.character(as.numeric(S) != 0)
+    p <- ggplot(data = df, mapping = aes(x = i, y = j, fill = z)) +
+        geom_tile(color = "black") +
+        scale_fill_brewer(type = "qual", palette = "Paired") +
+        scale_y_reverse()
+    if (missing(alpha)) {
+        p <- p + xlab("Truth")
+    } else {
+        p <- p + xlab(parse(text=(paste0("alpha == ", alpha))))
+    }
+    p + theme_bare
+}
+```
+
+```{r, fig.width=6, fig.height=4}
+do.call(multiplot, args = c(list(plotSpMat(Strue)),
+                            mapply(plotSpMat, S.est, alphas, SIMPLIFY = FALSE),
+                            list(layout = matrix(1:6, nrow = 2, byrow = TRUE))))
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Source
+
+[R Markdown](https://github.com/bnaras/cvxr_docs/blob/master/content/cvxr_examples/sparse-inverse-covariance-estimation.Rmd)
+
+## References
+
+

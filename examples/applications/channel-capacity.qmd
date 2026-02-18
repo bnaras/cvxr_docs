@@ -1,0 +1,195 @@
+---
+title: "Channel Capacity"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_channel_capacity
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+This example is adapted from Boyd and Vandenberghe, *Convex
+Optimization*, exercise 4.57, pages 207--208.
+
+Convex optimization can be used to find the channel capacity $C$ of a
+discrete memoryless channel. Consider a communication channel with
+input $X(t) \in \{1, 2, \ldots, n\}$ and output $Y(t) \in \{1, 2,
+\ldots, m\}$. The random variables $X$ and $Y$ can take $n$ and $m$
+different values, respectively.
+
+In a discrete memoryless channel, the relation between the input and
+the output is given by the transition probability:
+
+$$
+p_{ij} = \mathbb{P}(Y(t) = i \mid X(t) = j).
+$$
+
+These transition probabilities form the channel transition matrix $P
+\in \mathbb{R}^{m \times n}$. The columns of $P$ must sum to 1 and
+all elements of $P$ must be non-negative.
+
+Assume that $X$ has a probability distribution denoted by $x \in
+\mathbb{R}^n$, meaning that $x_j = \mathbb{P}(X(t) = j)$ for $j \in
+\{1, \ldots, n\}$.
+
+From Shannon's theory, the channel capacity is given by the maximum
+possible mutual information $I$ between $X$ and $Y$:
+
+$$
+C = \sup_x I(X; Y),
+$$
+
+where
+
+$$
+I(X;Y) = -\sum_{i=1}^{m} y_i \log_2 y_i + \sum_{j=1}^{n} \sum_{i=1}^{m} x_j p_{ij} \log_2 p_{ij},
+$$
+
+and $y = Px$ is the output distribution.
+
+Given that $x \log x$ is convex for $x \geq 0$, we can formulate this
+as a convex optimization problem:
+
+$$
+\begin{array}{ll}
+\mbox{maximize} & I(X; Y) \\
+\mbox{subject to} & \sum_{i=1}^{n} x_i = 1, \quad x \succeq 0.
+\end{array}
+$$
+
+Due to the entropy function in `CVXR`, this can be written quite
+easily in DCP form.
+
+## Channel Capacity Function
+
+We write a function that computes the channel capacity for a given
+transition matrix $P$ with $n$ input and $m$ output symbols.
+
+```{r}
+channel_capacity <- function(n, m, P, sum_x = 1) {
+    ## x is probability distribution of the input signal X(t)
+    x <- Variable(n)
+
+    ## y is the probability distribution of the output signal Y(t)
+    y <- P %*% x
+
+    ## Compute c_j = sum_i p_{ij} log2(p_{ij})
+    ## Use the convention 0*log(0) = 0 by handling zeros
+    P_log <- ifelse(P > 0, log2(P), 0)
+    c_vec <- colSums(P * P_log)
+
+    ## Mutual information: I = c'x + sum(entr(y)) / log(2)
+    I <- t(c_vec) %*% x + sum_entries(entr(y)) / log(2)
+
+    ## Channel capacity is maximized by maximising the mutual information
+    obj <- Maximize(I)
+    constraints <- list(sum(x) == sum_x, x >= 0)
+
+    ## Form and solve problem
+    prob <- Problem(obj, constraints)
+    result <- psolve(prob)
+
+    list(status = status(prob),
+         capacity = result,
+         x = value(x))
+}
+```
+
+## Example
+
+In this example we consider a communication channel with two possible
+inputs and outputs, so $n = m = 2$. The channel transition matrix we
+use is:
+
+$$
+P = \begin{pmatrix} 0.75 & 0.25 \\ 0.25 & 0.75 \end{pmatrix}.
+$$
+
+Note that the columns of $P$ must sum to 1 and all elements of $P$
+must be positive.
+
+```{r}
+n <- 2
+m <- 2
+P <- matrix(c(0.75, 0.25,
+              0.25, 0.75), nrow = m, ncol = n, byrow = TRUE)
+
+result <- channel_capacity(n, m, P)
+cat("Problem status:", result$status, "\n")
+cat(sprintf("Optimal value of C = %.4g\n", result$capacity))
+cat("Optimal variable x =\n")
+print(round(result$x, 4))
+```
+
+The optimal input distribution is uniform ($x = [0.5, 0.5]$) and the
+channel capacity is approximately $C \approx 0.1887$ bits.
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(capacity = result$capacity, x = result$x),
+            file = file.path(testdata_dir, "channel_capacity.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "channel_capacity.RDS"))
+    expect_equal(result$capacity, saved$capacity, tolerance = 1e-5)
+    expect_equal(result$x, saved$x, tolerance = 1e-5)
+}
+```
+
+## A Larger Example
+
+We can also consider a non-symmetric channel with $n = 4$ inputs and
+$m = 3$ outputs.
+
+```{r}
+n2 <- 4
+m2 <- 3
+set.seed(42)
+## Generate a random transition matrix (columns sum to 1)
+P2 <- matrix(runif(m2 * n2), nrow = m2, ncol = n2)
+P2 <- sweep(P2, 2, colSums(P2), "/")
+
+result2 <- channel_capacity(n2, m2, P2)
+cat("Problem status:", result2$status, "\n")
+cat(sprintf("Optimal value of C = %.4g\n", result2$capacity))
+cat("Optimal variable x =\n")
+print(round(result2$x, 4))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(capacity = result2$capacity, x = result2$x),
+            file = file.path(testdata_dir, "channel_capacity2.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved2 <- readRDS(file = file.path(testdata_dir, "channel_capacity2.RDS"))
+    expect_equal(result2$capacity, saved2$capacity, tolerance = 1e-5)
+    expect_equal(result2$x, saved2$x, tolerance = 1e-5)
+}
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Boyd, S. and Vandenberghe, L. (2004). *Convex Optimization*. Cambridge University Press. Exercise 4.57, pages 207--208.
+- Shannon, C.E. (1948). A Mathematical Theory of Communication. *Bell System Technical Journal*, 27, 379--423, 623--656.

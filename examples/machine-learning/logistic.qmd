@@ -1,0 +1,192 @@
+---
+title: "Logistic Regression with l1 Regularization"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: ml_logistic
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+In this example, we use `CVXR` to train a logistic regression
+classifier with $\ell_1$ regularization. We are given data
+$(x_i, y_i)$, $i = 1, \ldots, m$. The $x_i \in \mathbf{R}^n$ are
+feature vectors, while the $y_i \in \{0, 1\}$ are associated boolean
+classes.
+
+Our goal is to construct a linear classifier
+$\hat{y} = \mathbb{1}[\beta^T x > 0]$, which is $1$ when
+$\beta^T x$ is positive and $0$ otherwise. We model the posterior
+probabilities of the classes given the data linearly, with
+
+$$
+\log \frac{\Pr(Y = 1 \mid X = x)}{\Pr(Y = 0 \mid X = x)} = \beta^T x.
+$$
+
+This implies that
+
+$$
+\Pr(Y = 1 \mid X = x) = \frac{\exp(\beta^T x)}{1 + \exp(\beta^T x)}, \quad
+\Pr(Y = 0 \mid X = x) = \frac{1}{1 + \exp(\beta^T x)}.
+$$
+
+We fit $\beta$ by maximizing the log-likelihood of the data, plus a
+regularization term $\lambda \|\beta\|_1$ with $\lambda > 0$:
+
+$$
+\ell(\beta) = \sum_{i=1}^{m} y_i \beta^T x_i - \log(1 + \exp(\beta^T x_i)) - \lambda \|\beta\|_1.
+$$
+
+Because $\ell$ is a concave function of $\beta$, this is a convex
+optimization problem.
+
+## Generating Data
+
+In the following code we generate data with $n = 50$ features by
+randomly choosing $x_i$ and supplying a sparse
+$\beta_{\text{true}} \in \mathbf{R}^n$. We then set
+$y_i = \mathbb{1}[\beta_{\text{true}}^T x_i + z_i > 0]$, where the
+$z_i$ are i.i.d. normal random variables. We divide the data into
+training and test sets with $m = 50$ examples each.
+
+```{r}
+set.seed(1)
+n <- 50
+m <- 50
+
+sigmoid <- function(z) 1 / (1 + exp(-z))
+
+beta_true <- c(1, 0.5, -0.5, rep(0, n - 3))
+X <- (matrix(runif(m * n), nrow = m, ncol = n) - 0.5) * 10
+Y <- round(sigmoid(X %*% beta_true + rnorm(m, sd = 0.5)))
+
+X_test <- (matrix(runif(2 * m * n), nrow = 2 * m, ncol = n) - 0.5) * 10
+Y_test <- round(sigmoid(X_test %*% beta_true + rnorm(2 * m, sd = 0.5)))
+```
+
+## Formulating the Problem
+
+We next formulate the optimization problem using `CVXR`. The
+`logistic` atom in `CVXR` computes $f(z) = \log(1 + e^z)$, which we
+use to express the log-likelihood.
+
+```{r}
+beta <- Variable(n)
+log_likelihood <- sum_entries(
+    multiply(Y, X %*% beta) - logistic(X %*% beta)
+)
+```
+
+## Fitting the Model
+
+We solve the optimization problem for a range of $\lambda$ to compute
+a trade-off curve. We then plot the train and test error over the
+trade-off curve. A reasonable choice of $\lambda$ is the value that
+minimizes the test error.
+
+```{r}
+## Classification error function
+calc_error <- function(scores, labels) {
+    preds <- ifelse(scores > 0, 1, 0)
+    sum(abs(preds - labels)) / length(labels)
+}
+```
+
+```{r}
+trials <- 100
+train_error <- numeric(trials)
+test_error  <- numeric(trials)
+lambda_vals <- 10^seq(-2, 0, length.out = trials)
+beta_vals   <- vector("list", trials)
+
+for (i in seq_len(trials)) {
+    problem <- Problem(Maximize(log_likelihood / m -
+                                lambda_vals[i] * p_norm(beta, 1)))
+    result <- psolve(problem)
+    beta_hat <- value(beta)
+    train_error[i] <- calc_error(X %*% beta_hat, Y)
+    test_error[i]  <- calc_error(X_test %*% beta_hat, Y_test)
+    beta_vals[[i]] <- beta_hat
+}
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(train_error = train_error,
+                 test_error = test_error,
+                 beta_vals = beta_vals),
+            file = file.path(testdata_dir, "result1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "result1.RDS"))
+    expect_equal(train_error, saved$train_error, tolerance = 1e-5)
+    expect_equal(test_error, saved$test_error, tolerance = 1e-5)
+}
+```
+
+```{r}
+plot(lambda_vals, train_error, type = "l", col = "blue",
+     log = "x", xlab = expression(lambda),
+     ylab = "Classification Error",
+     main = "Train vs. Test Error",
+     ylim = range(c(train_error, test_error)))
+lines(lambda_vals, test_error, col = "red")
+legend("topleft", legend = c("Train error", "Test error"),
+       col = c("blue", "red"), lty = 1)
+```
+
+## Regularization Path
+
+We also plot the regularization path, or the $\beta_i$ versus
+$\lambda$. Notice that a few features remain non-zero longer for
+larger $\lambda$ than the rest, which suggests that these features
+are the most important.
+
+```{r}
+beta_mat <- do.call(cbind, beta_vals)
+matplot(lambda_vals, t(beta_mat), type = "l", log = "x",
+        xlab = expression(lambda), ylab = expression(beta[i]),
+        main = "Regularization Path")
+```
+
+## Comparing True and Reconstructed Coefficients
+
+We plot the true $\beta$ versus the reconstructed $\beta$, as chosen
+to minimize error on the test set. The non-zero coefficients are
+reconstructed with good accuracy. There are a few values in the
+reconstructed $\beta$ that are non-zero but should be zero.
+
+```{r}
+idx <- which.min(test_error)
+plot(beta_true, type = "l", col = "blue",
+     xlab = "i", ylab = expression(beta[i]),
+     main = "True vs. Reconstructed Coefficients",
+     ylim = range(c(beta_true, beta_vals[[idx]])))
+lines(beta_vals[[idx]], col = "red")
+legend("topright", legend = c(expression("True " * beta),
+                              expression("Reconstructed " * beta)),
+       col = c("blue", "red"), lty = 1)
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

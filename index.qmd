@@ -1,0 +1,132 @@
+---
+title: "Convex Optimization in R"
+author: "Anqi Fu and Balasubramanian Narasimhan"
+bibliography: references.bib
+---
+
+## What is `CVXR`?
+
+`CVXR` is an R package that provides an object-oriented modeling
+language for convex optimization, similar to `CVX`, `CVXPY`, `YALMIP`,
+and `Convex.jl`. It allows the user to formulate convex optimization
+problems in a natural mathematical syntax rather than the restrictive
+standard form required by most solvers. The user specifies an
+objective and set of constraints by combining constants, variables,
+and parameters using a library of functions with known mathematical
+properties. `CVXR` then applies
+signed [disciplined convex programming (DCP)](reference/dcp.qmd) to
+verify the problem's convexity. Once verified, the problem is
+converted into standard form using graph implementations and
+passed to a cone solver such as [CLARABEL](https://clarabel.org),
+[SCS](https://github.com/cvxgrp/scs), or
+[OSQP](https://osqp.org/), or even commercial solvers,
+if installed.
+
+::: {.callout-note}
+## Version 1.8.x — Complete Rewrite
+
+CVXR 1.8.x is a ground-up rewrite using R's S7 class system, making
+the R implementation isomorphic with CVXPY 1.8.1. See [What's New in
+1.8.x](whatsnew.qmd) for details on the new API and migration guide.
+:::
+
+## Citing `CVXR`
+
+`CVXR` is published in @cvxr2020
+<[doi:10.18637/jss.v094.i14](https://dx.doi.org/10.18637/jss.v094.i14)>.
+
+```bibtex
+@Article{cvxr2020,
+    title = {{CVXR}: An {R} Package for Disciplined Convex Optimization},
+    author = {Anqi Fu and Balasubramanian Narasimhan and Stephen Boyd},
+    journal = {Journal of Statistical Software},
+    year = {2020},
+    volume = {94},
+    number = {14},
+    pages = {1--34},
+    doi = {10.18637/jss.v094.i14},
+  }
+```
+
+## Supported Solvers
+
+```{r, echo = FALSE}
+library(kableExtra)
+check <- "\U2713"
+d  <- tibble::tibble(
+                  Solver = c("CLARABEL", "SCS", "OSQP", "HIGHS", "ECOS", "ECOS_BB", "GLPK", "GLPK_MI", "CPLEX", "GUROBI", "MOSEK"),
+                  `R package` = c("[clarabel](https://clarabel.org)",
+                                  "[scs](https://cran.r-project.org/package=scs)",
+                                  "[osqp](https://www.osqp.org)",
+                                  "[highs](https://cran.r-project.org/package=highs)",
+                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
+                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
+                                  "[Rglpk](https://cran.r-project.org/package=Rglpk)",
+                                  "[Rglpk](https://cran.r-project.org/package=Rglpk)",
+                                  "[Rcplex](https://cran.r-project.org/package=Rcplex)",
+                                  "[gurobi](https://www.gurobi.com)",
+                                  "[Rmosek](https://docs.mosek.com/latest/rmosek/index.html)"),
+                  LP = c(check, check, check, check, check, " ", check, check, check, check, check),
+                  QP = c(check, check, check, check, check, " ", " ", " ", check, check, check),
+                  SOCP = c(check, check, " ", " ", check, " ", " ", " ", check, check, check),
+                  SDP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check),
+                  EXP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check),
+                  MIP = c(" ", check, " ", check, " ", check, " ", check, " ", check, check)
+              )
+knitr::kable(d, format = "html") |>
+    kableExtra::kable_styling("striped") |>
+    kableExtra::column_spec(1:8, background = "#ececec")
+```
+
+For more detail, see [Using Other Solvers](examples/solvers/using-other-solvers.qmd).
+
+## News
+
+For the latest news, please see the [Package
+Documentation](https://www.cvxgrp.org/CVXR).
+
+`CVXR` continues to be developed on
+[Github](https://github.com/cvxgrp/CVXR). Version 1.8.x is a major
+release implementing a complete rewrite using R's S7 class system,
+making `CVXR` isomorphic with CVXPY 1.8.1 and adding support for DGP,
+DPP, and DQCP. More details can be found in [What's New in
+1.8.x](whatsnew.qmd).
+
+## Installing `CVXR`
+
+`CVXR` is installed like any other R package from
+[CRAN](https://cloud.r-project.org).
+
+```r
+install.packages("CVXR")
+```
+
+## Documentation
+
+An introductory vignette is installed with the package and can be
+viewed using `vignette("cvxr_intro", package = "CVXR")`.
+
+A large set of examples, many ported from `CVXPY`, are available on
+this site:
+
+- [Quick Introduction](examples/intro.qmd) — a five-minute overview
+- [Longer Introduction](examples/gentle-intro.qmd) — more detailed walkthrough
+- Tutorial examples organized by topic in the sidebar
+
+## Acknowledgements
+
+We are grateful to [Steven
+Diamond](https://stevendiamond.me), [John Miller](https://millerjohnp.github.io/), and Paul
+Kunsberg Rosenfield for their contributions to the software's
+development. In particular, we are indebted to Steven Diamond for his
+work on [CVXPY](http://www.cvxpy.org). Most of `CVXR`'s
+code, documentation, and examples were ported from the Python library.
+
+## About this site
+
+Much of the documentation on this site was modified
+from [`CVXPY`](https://cvxpy.org) in a semi-automated way.
+
+This site was built with [Quarto](https://quarto.org).
+
+## References

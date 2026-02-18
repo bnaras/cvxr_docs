@@ -1,0 +1,101 @@
+---
+title: "Fractional Optimization"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: dqcp_concave_fractional
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+This example shows how to solve a simple _concave fractional problem_,
+in which the objective is to maximize the ratio of a nonnegative
+concave function and a positive convex function. Concave fractional
+problems are quasiconvex programs (QCPs). They can be specified using
+disciplined quasiconvex programming (DQCP), and hence can be solved
+using `CVXR`.
+
+## Problem Formulation
+
+Our goal is to maximize the function
+
+$$
+\frac{\sqrt{x}}{\exp(x)}.
+$$
+
+This function is not concave, but it is quasiconcave, as can be seen
+by inspecting its graph.
+
+```{r}
+x_vals <- seq(0, 10, length.out = 200)
+y_vals <- sqrt(x_vals) / exp(x_vals)
+plot(x_vals, y_vals, type = "l", col = "blue",
+     xlab = "x", ylab = expression(sqrt(x) / exp(x)),
+     main = "Concave Fractional Function")
+```
+
+## Solving with DQCP
+
+The below code specifies and solves the QCP using DQCP. The concave
+fractional function is DQCP-compliant because the ratio atom is
+quasiconcave (actually quasilinear), increasing in the numerator when
+the denominator is positive, and decreasing in the denominator when
+the numerator is nonnegative.
+
+```{r}
+x <- Variable()
+concave_fractional_fn <- sqrt(x) / exp(x)
+problem <- Problem(Maximize(concave_fractional_fn))
+cat("Is DQCP?", is_dqcp(problem), "\n")
+result <- psolve(problem, qcp = TRUE)
+cat("Optimal value:", result, "\n")
+cat("x:", value(x), "\n")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(result = result, x = value(x)),
+            file = file.path(testdata_dir, "concave_fractional1.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "concave_fractional1.RDS"))
+    expect_equal(result, saved$result, tolerance = 1e-3)
+    expect_equal(value(x), saved$x, tolerance = 1e-3)
+}
+```
+
+The optimal value of $x$ is approximately $0.5$, which corresponds to
+the peak of the function $\sqrt{x}/\exp(x)$. We can verify this
+analytically: setting the derivative to zero,
+
+$$
+\frac{d}{dx} \left(\frac{\sqrt{x}}{\exp(x)}\right) = \frac{1}{2\sqrt{x}\exp(x)} - \frac{\sqrt{x}}{\exp(x)} \cdot 1 = \frac{1 - 2x}{2\sqrt{x}\exp(x)} = 0,
+$$
+
+gives $x = 1/2$.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Agrawal, A., Boyd, S. (2020). Disciplined Quasiconvex Programming.
+  _Optimization Letters_, 14, 1643--1657.

@@ -1,0 +1,233 @@
+---
+title: "Consensus Optimization"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_consensus_opt
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+```
+
+## Introduction
+
+This example is adapted from the CVXPY documentation on consensus
+optimization.
+
+Suppose we have a convex optimization problem with $N$ terms in the
+objective:
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & \sum_{i=1}^N f_i(x).
+\end{array}
+$$
+
+For example, we might be fitting a model to data and $f_i$ is the
+loss function for the $i$th block of training data.
+
+We can convert this problem into **consensus form**:
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & \sum_{i=1}^N f_i(x_i) \\
+\mbox{subject to} & x_i = z,
+\end{array}
+$$
+
+where we interpret the $x_i$ as local variables (particular to a
+given $f_i$) and $z$ as the global variable. The constraints $x_i =
+z$ enforce consistency, or consensus.
+
+## ADMM Algorithm
+
+We can solve a problem in consensus form using the Alternating
+Direction Method of Multipliers (ADMM). Each iteration of ADMM
+reduces to the following updates:
+
+$$
+\begin{array}{lll}
+x^{k+1}_i & := & \arg\min_{x_i} \left( f_i(x_i) + \frac{\rho}{2} \left\| x_i - \bar{x}^k + u^k_i \right\|^2_2 \right) \\
+u^{k+1}_i & := & u^{k}_i + x^{k+1}_i - \bar{x}^{k+1}
+\end{array}
+$$
+
+where $\bar{x}^k = \frac{1}{N} \sum_{i=1}^N x^k_i$.
+
+## Example: Consensus Least Squares
+
+We illustrate the consensus ADMM approach on a simple least-squares
+problem where the data is split across $N$ blocks. The original
+problem is:
+
+$$
+\mbox{minimize} \quad \|A x - b\|_2^2,
+$$
+
+where $A \in \mathbb{R}^{m \times n}$ and $b \in \mathbb{R}^m$.
+
+We split $A$ and $b$ into $N$ blocks row-wise, so $f_i(x) = \|A_i x
+- b_i\|_2^2$.
+
+```{r}
+set.seed(1)
+
+## Problem dimensions
+n <- 10        # variable dimension
+m <- 400       # total measurements
+N <- 4         # number of blocks
+block_size <- m / N
+
+## Generate problem data
+A_full <- matrix(rnorm(m * n), nrow = m, ncol = n)
+x_true <- rnorm(n)
+b_full <- A_full %*% x_true + 0.1 * rnorm(m)
+
+## Split data into N blocks
+A_blocks <- lapply(1:N, function(i) {
+    rows <- ((i-1) * block_size + 1):(i * block_size)
+    A_full[rows, ]
+})
+b_blocks <- lapply(1:N, function(i) {
+    rows <- ((i-1) * block_size + 1):(i * block_size)
+    b_full[rows]
+})
+```
+
+## Centralized Solution
+
+First, we solve the problem in the standard (non-distributed) way for
+comparison.
+
+```{r}
+x_central <- Variable(n)
+obj_central <- Minimize(sum_squares(A_full %*% x_central - b_full))
+prob_central <- Problem(obj_central)
+result_central <- psolve(prob_central)
+
+x_central_val <- as.numeric(value(x_central))
+cat(sprintf("Centralized solution status: %s\n", status(prob_central)))
+cat(sprintf("Centralized objective: %.6f\n", result_central))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(x_central = x_central_val, obj_central = result_central),
+            file = file.path(testdata_dir, "consensus_central.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "consensus_central.RDS"))
+    expect_equal(x_central_val, saved$x_central, tolerance = 1e-5)
+    expect_equal(result_central, saved$obj_central, tolerance = 1e-5)
+}
+```
+
+## ADMM Consensus Solution
+
+Now we implement the consensus ADMM algorithm. In each iteration, we
+solve $N$ local subproblems using `CVXR` and then average to get the
+global update.
+
+```{r}
+rho <- 1.0
+MAX_ITER <- 50
+
+## Initialize
+x_vars <- matrix(0, nrow = n, ncol = N)   # local variables
+u_vars <- matrix(0, nrow = n, ncol = N)   # dual variables
+xbar <- rep(0, n)                          # global average
+
+## Track convergence
+obj_history <- numeric(MAX_ITER)
+
+for (iter in seq_len(MAX_ITER)) {
+    ## x-update: solve each local subproblem
+    for (i in 1:N) {
+        x_i <- Variable(n)
+        f_i <- sum_squares(A_blocks[[i]] %*% x_i - b_blocks[[i]])
+        augmented <- f_i + (rho / 2) * sum_squares(x_i - xbar + u_vars[, i])
+        prob_i <- Problem(Minimize(augmented))
+        result_i <- psolve(prob_i)
+        x_vars[, i] <- as.numeric(value(x_i))
+    }
+
+    ## z-update: average the x_i
+    xbar <- rowMeans(x_vars)
+
+    ## u-update: update dual variables
+    for (i in 1:N) {
+        u_vars[, i] <- u_vars[, i] + x_vars[, i] - xbar
+    }
+
+    ## Compute objective at current average
+    obj_history[iter] <- sum((A_full %*% xbar - b_full)^2)
+}
+
+cat(sprintf("ADMM objective after %d iterations: %.6f\n", MAX_ITER, obj_history[MAX_ITER]))
+cat(sprintf("Centralized objective: %.6f\n", result_central))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(xbar = xbar, obj_final = obj_history[MAX_ITER]),
+            file = file.path(testdata_dir, "consensus_admm.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    saved <- readRDS(file = file.path(testdata_dir, "consensus_admm.RDS"))
+    expect_equal(xbar, saved$xbar, tolerance = 1e-3)
+    expect_equal(obj_history[MAX_ITER], saved$obj_final, tolerance = 1e-3)
+}
+```
+
+## Convergence Plot
+
+```{r, fig.cap = "ADMM convergence: objective value over iterations"}
+df_conv <- data.frame(
+    iteration = 1:MAX_ITER,
+    objective = obj_history
+)
+
+ggplot(df_conv, aes(x = iteration, y = objective)) +
+    geom_line(color = "steelblue") +
+    geom_hline(yintercept = result_central, linetype = "dashed",
+               color = "red") +
+    annotate("text", x = MAX_ITER * 0.7, y = result_central * 1.05,
+             label = "Centralized optimum", color = "red") +
+    labs(x = "Iteration", y = "Objective Value",
+         title = "ADMM Consensus Convergence") +
+    theme_minimal()
+```
+
+The ADMM consensus solution converges to match the centralized
+optimal solution.
+
+## Comparison of Solutions
+
+```{r}
+cat("Max absolute difference between ADMM and centralized solution:\n")
+cat(sprintf("  %.6e\n", max(abs(xbar - x_central_val))))
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+- Boyd, S., Parikh, N., Chu, E., Peleato, B. and Eckstein, J. (2011). "Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers." *Foundations and Trends in Machine Learning*, 3(1), 1--122.
+- Boyd, S. and Vandenberghe, L. (2004). *Convex Optimization*. Cambridge University Press.

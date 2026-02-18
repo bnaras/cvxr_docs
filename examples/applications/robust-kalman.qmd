@@ -1,0 +1,341 @@
+---
+title: "Robust Kalman Filtering for Vehicle Tracking"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_robust_kalman
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+library(ggplot2)
+```
+
+## Introduction
+
+We will try to pinpoint the location of a moving vehicle with high
+accuracy from noisy sensor data. We do this by modeling the vehicle
+state as a discrete-time linear dynamical system. Standard **Kalman
+filtering** can be used to approach this problem when the sensor noise
+is assumed to be Gaussian. We use **robust Kalman filtering** to get
+a more accurate estimate of the vehicle state for a non-Gaussian case
+with outliers.
+
+## Problem Statement
+
+A discrete-time linear dynamical system consists of a sequence of state
+vectors $x_t \in \mathbf{R}^n$, indexed by time
+$t \in \{0, \ldots, N-1\}$ and dynamics equations
+
+$$
+\begin{align}
+x_{t+1} &= Ax_t + Bw_t\\
+y_t &= Cx_t + v_t,
+\end{align}
+$$
+
+where $w_t \in \mathbf{R}^m$ is an input to the dynamical system
+(say, a drive force on the vehicle), $y_t \in \mathbf{R}^r$ is a
+state measurement, $v_t \in \mathbf{R}^r$ is noise, $A$ is
+the drift matrix, $B$ is the input matrix, and $C$ is the
+observation matrix.
+
+Given $A$, $B$, $C$, and $y_t$ for $t = 0, \ldots, N-1$, the goal is
+to estimate $x_t$ for $t = 0, \ldots, N-1$.
+
+## Kalman Filtering
+
+A Kalman filter estimates $x_t$ by solving the optimization problem
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & \sum_{t=0}^{N-1} \left(
+\|w_t\|_2^2 + \tau \|v_t\|_2^2\right)\\
+\mbox{subject to} & x_{t+1} = Ax_t + Bw_t,\quad t=0,\ldots, N-1\\
+& y_t = Cx_t+v_t,\quad t = 0, \ldots, N-1,
+\end{array}
+$$
+
+where $\tau$ is a tuning parameter. This problem is actually a least
+squares problem, and can be solved via linear algebra, without the
+need for more general convex optimization.
+
+This model performs well when $w_t$ and $v_t$ are Gaussian. However,
+the quadratic objective can be influenced by large outliers, which
+degrades the accuracy of the recovery. To improve estimation in the
+presence of outliers, we can use **robust Kalman filtering**.
+
+## Robust Kalman Filtering
+
+To handle outliers in $v_t$, robust Kalman filtering replaces the
+quadratic cost with a Huber cost, which results in the convex
+optimization problem
+
+$$
+\begin{array}{ll}
+\mbox{minimize} & \sum_{t=0}^{N-1} \left( \|w_t\|^2_2 + \tau \phi_\rho(v_t) \right)\\
+\mbox{subject to} & x_{t+1} = Ax_t + Bw_t,\quad t=0,\ldots, N-1\\
+& y_t = Cx_t+v_t,\quad t=0,\ldots, N-1,
+\end{array}
+$$
+
+where $\phi_\rho$ is the Huber function
+
+$$
+\phi_\rho(a) = \begin{cases} \|a\|_2^2 & \|a\|_2 \leq \rho\\
+2\rho \|a\|_2 - \rho^2 & \|a\|_2 > \rho.
+\end{cases}
+$$
+
+The Huber penalty function penalizes estimation error linearly outside
+of a ball of radius $\rho$, whereas in standard Kalman filtering,
+all errors are penalized quadratically. Thus, large errors are penalized
+less harshly, making this model more robust to outliers.
+
+## Vehicle Tracking Example
+
+We apply standard and robust Kalman filtering to a vehicle tracking
+problem with state $x_t \in \mathbf{R}^4$, where $(x_{t,1}, x_{t,2})$
+is the position of the vehicle in two dimensions, and $(x_{t,3}, x_{t,4})$
+is the vehicle velocity. The vehicle has unknown drive force $w_t$, and
+we observe noisy measurements of the vehicle's position,
+$y_t \in \mathbf{R}^2$.
+
+The matrices for the dynamics are
+
+$$
+A = \begin{bmatrix}
+1 & 0 & \left(1-\frac{\gamma}{2}\Delta t\right) \Delta t & 0 \\
+0 & 1 & 0 & \left(1-\frac{\gamma}{2} \Delta t\right) \Delta t\\
+0 & 0 & 1-\gamma \Delta t & 0 \\
+0 & 0 & 0 & 1-\gamma \Delta t
+\end{bmatrix},
+$$
+
+$$
+B = \begin{bmatrix}
+\frac{1}{2}\Delta t^2 & 0 \\
+0 & \frac{1}{2}\Delta t^2 \\
+\Delta t & 0 \\
+0 & \Delta t \\
+\end{bmatrix},
+\qquad
+C = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0
+\end{bmatrix},
+$$
+
+where $\gamma$ is a velocity damping parameter.
+
+### Problem Data
+
+We generate the data for the vehicle tracking problem. We have
+$N = 1000$, $w_t$ a standard Gaussian, and $v_t$ a standard Gaussian,
+except $20\%$ of the points will be outliers with $\sigma = 20$.
+
+```{r}
+N <- 1000  # number of timesteps
+T_end <- 50  # time will vary from 0 to T_end
+ts <- seq(0, T_end, length.out = N)
+delt <- ts[2] - ts[1]
+gamma_damp <- 0.05  # damping, 0 is no damping
+
+A <- matrix(0, 4, 4)
+B <- matrix(0, 4, 2)
+C <- matrix(0, 2, 4)
+
+A[1,1] <- 1
+A[2,2] <- 1
+A[1,3] <- (1 - gamma_damp * delt / 2) * delt
+A[2,4] <- (1 - gamma_damp * delt / 2) * delt
+A[3,3] <- 1 - gamma_damp * delt
+A[4,4] <- 1 - gamma_damp * delt
+
+B[1,1] <- delt^2 / 2
+B[2,2] <- delt^2 / 2
+B[3,1] <- delt
+B[4,2] <- delt
+
+C[1,1] <- 1
+C[2,2] <- 1
+```
+
+### Simulation
+
+We seed $x_0 = 0$ (starting at the origin with zero velocity) and
+simulate the system forward in time. The results are the true vehicle
+positions `x_true` and the observed positions `y`.
+
+```{r}
+sigma <- 20
+p <- 0.20
+set.seed(6)
+
+x_sim <- matrix(0, nrow = 4, ncol = N + 1)
+y <- matrix(0, nrow = 2, ncol = N)
+
+## Generate random input and noise vectors
+w_sim <- matrix(rnorm(2 * N), nrow = 2, ncol = N)
+v_sim <- matrix(rnorm(2 * N), nrow = 2, ncol = N)
+
+## Add outliers to v
+set.seed(0)
+inds <- runif(N) <= p
+v_sim[, inds] <- sigma * matrix(rnorm(2 * N), nrow = 2, ncol = N)[, inds]
+
+## Simulate the system forward in time
+for (t in 1:N) {
+    y[, t] <- C %*% x_sim[, t] + v_sim[, t]
+    x_sim[, t + 1] <- A %*% x_sim[, t] + B %*% w_sim[, t]
+}
+
+x_true <- x_sim
+w_true <- w_sim
+```
+
+```{r, fig.cap="True and observed vehicle positions"}
+df_true <- data.frame(x = x_true[1, 1:N], y = x_true[2, 1:N])
+df_obs <- data.frame(x = y[1, ], y = y[2, ])
+
+ggplot() +
+    geom_point(data = df_true, aes(x = x, y = y), color = "blue", alpha = 0.3, size = 0.5) +
+    geom_point(data = df_obs, aes(x = x, y = y), color = "red", alpha = 0.1, size = 0.5) +
+    labs(title = "True (blue) and Observed (red) positions") +
+    theme_minimal()
+```
+
+## Kalman Filtering Recovery
+
+The code below solves the standard Kalman filtering problem using
+CVXR. Note that the recovery is distorted by outliers in the
+measurements.
+
+```{r}
+x <- Variable(c(4, N + 1))
+w <- Variable(c(2, N))
+v <- Variable(c(2, N))
+
+tau <- 0.08
+
+obj_kf <- sum_squares(w) + tau * sum_squares(v)
+obj_kf <- Minimize(obj_kf)
+
+constr <- list()
+for (t in 1:N) {
+    constr <- c(constr,
+                list(x[, t + 1] == A %*% x[, t] + B %*% w[, t]),
+                list(y[, t] == C %*% x[, t] + v[, t]))
+}
+
+prob_kf <- Problem(obj_kf, constr)
+result_kf <- psolve(prob_kf, verbose = TRUE)
+cat("Optimal objective value:", result_kf, "\n")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(value = result_kf), file = file.path(testdata_dir, "kf.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    kf_results <- readRDS(file = file.path(testdata_dir, "kf.RDS"))
+    expect_equal(result_kf, kf_results$value, tolerance = 1e-5)
+}
+```
+
+```{r, fig.cap = "True (blue) and Kalman filter recovered (red) positions"}
+x_kf <- value(x)
+df_kf <- data.frame(x = x_kf[1, 1:N], y = x_kf[2, 1:N])
+
+ggplot() +
+    geom_point(data = df_true, aes(x = x, y = y), color = "blue", alpha = 0.3, size = 0.5) +
+    geom_point(data = df_kf, aes(x = x, y = y), color = "red", alpha = 0.3, size = 0.5) +
+    labs(title = "True (blue) vs KF Recovery (red)") +
+    theme_minimal()
+```
+
+## Robust Kalman Filtering Recovery
+
+Here we implement robust Kalman filtering with CVXR, replacing the
+quadratic penalty on the noise with a Huber penalty. We get a better
+recovery than the standard Kalman filtering, as shown in the plots
+below.
+
+```{r}
+x <- Variable(c(4, N + 1))
+w <- Variable(c(2, N))
+v <- Variable(c(2, N))
+
+tau <- 2
+rho <- 2
+
+obj_rkf <- sum_squares(w)
+huber_cost <- 0
+for (t in 1:N) {
+    huber_cost <- huber_cost + tau * huber(p_norm(v[, t], 2), rho)
+}
+obj_rkf <- Minimize(obj_rkf + huber_cost)
+
+constr <- list()
+for (t in 1:N) {
+    constr <- c(constr,
+                list(x[, t + 1] == A %*% x[, t] + B %*% w[, t]),
+                list(y[, t] == C %*% x[, t] + v[, t]))
+}
+
+prob_rkf <- Problem(obj_rkf, constr)
+result_rkf <- psolve(prob_rkf, verbose = TRUE)
+cat("Optimal objective value:", result_rkf, "\n")
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(value = result_rkf), file = file.path(testdata_dir, "rkf.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    rkf_results <- readRDS(file = file.path(testdata_dir, "rkf.RDS"))
+    expect_equal(result_rkf, rkf_results$value, tolerance = 1e-5)
+}
+```
+
+```{r, fig.cap = "True (blue) and robust Kalman filter recovered (red) positions"}
+x_rkf <- value(x)
+df_rkf <- data.frame(x = x_rkf[1, 1:N], y = x_rkf[2, 1:N])
+
+ggplot() +
+    geom_point(data = df_true, aes(x = x, y = y), color = "blue", alpha = 0.3, size = 0.5) +
+    geom_point(data = df_rkf, aes(x = x, y = y), color = "red", alpha = 0.3, size = 0.5) +
+    labs(title = "True (blue) vs Robust KF Recovery (red)") +
+    theme_minimal()
+```
+
+```{r, fig.cap = "Comparison of all three position estimates"}
+ggplot() +
+    geom_point(data = df_obs, aes(x = x, y = y, color = "Observed"), alpha = 0.1, size = 0.5) +
+    geom_point(data = df_kf, aes(x = x, y = y, color = "KF Recovery"), alpha = 0.3, size = 0.5) +
+    geom_point(data = df_rkf, aes(x = x, y = y, color = "Robust KF Recovery"), alpha = 0.3, size = 0.5) +
+    geom_point(data = df_true, aes(x = x, y = y, color = "True"), alpha = 0.3, size = 0.5) +
+    scale_color_manual(values = c("Observed" = "grey", "KF Recovery" = "orange",
+                                  "Robust KF Recovery" = "red", "True" = "blue")) +
+    labs(title = "Position estimates comparison", color = "Method") +
+    theme_minimal()
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References

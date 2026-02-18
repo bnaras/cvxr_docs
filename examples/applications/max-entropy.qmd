@@ -1,0 +1,101 @@
+---
+title: "Entropy Maximization"
+author: "Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: app_max_entropy
+---
+
+```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+Adapted from the CVX example of the same name, by Joelle Skaf,
+4/24/2008.
+
+Consider the linear inequality constrained entropy maximization
+problem:
+
+$$
+\begin{array}{ll}
+    \mbox{maximize}   & -\sum_{i=1}^n x_i \log(x_i) \\
+    \mbox{subject to} & \sum_{i=1}^n x_i = 1 \\
+                      & Fx \preceq g,
+\end{array}
+$$
+
+where the variable is $x \in \mathbf{R}^n$.
+
+This problem can be formulated in CVXR using the `entr` atom, which
+computes the elementwise entropy $-x_i \log(x_i)$.
+
+## Generate Problem Data
+
+```{r}
+## Make random input repeatable
+set.seed(0)
+
+## Matrix size parameters
+n <- 20
+m <- 10
+p <- 5
+
+## Generate random problem data
+tmp <- runif(n)
+A_mat <- matrix(rnorm(m * n), nrow = m, ncol = n)
+b_vec <- A_mat %*% tmp
+F_mat <- matrix(rnorm(p * n), nrow = p, ncol = n)
+g_vec <- F_mat %*% tmp + runif(p)
+```
+
+## Formulate and Solve
+
+```{r}
+## Entropy maximization
+x <- Variable(n)
+obj <- Maximize(sum(entr(x)))
+constraints <- list(
+    A_mat %*% x == b_vec,
+    F_mat %*% x <= g_vec
+)
+prob <- Problem(obj, constraints)
+result <- psolve(prob, verbose = TRUE)
+
+## Print result
+cat("\nThe optimal value is:", result, "\n")
+cat("\nThe optimal solution is:\n")
+print(round(value(x), 6))
+```
+
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(value = result, x = as.vector(value(x))),
+            file = file.path(testdata_dir, "max_entropy.RDS"))
+} else {
+    cat("Testthat Results: No output is good\n")
+    me_results <- readRDS(file = file.path(testdata_dir, "max_entropy.RDS"))
+    expect_equal(result, me_results$value, tolerance = 1e-5)
+    expect_equal(as.vector(value(x)), me_results$x, tolerance = 1e-5)
+}
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## References
