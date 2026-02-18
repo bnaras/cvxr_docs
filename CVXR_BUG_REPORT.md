@@ -9,6 +9,8 @@
 
 ## Bug 1: DPP re-solve crashes in `apply_parameters`
 
+**Status:** Fixed
+
 **Severity:** High — this is the core DPP feature (parametric re-solve)
 
 **Reproduction:**
@@ -44,19 +46,21 @@ Error in param_prog@c_tensor %*% pv :
 
 **Expected:** The second `psolve()` should reuse the cached compilation and solve with the updated parameter value, returning a different optimal value.
 
-**Impact on docs:** The following files had to be worked around:
+**Impact on docs:** The following files were updated after the fix:
 
-- `examples/dpp/tutorial.qmd` — The repeated-solve timing demo (the main selling point of DPP) is marked `eval = FALSE`
-- `examples/solvers/warm-starts.qmd` — Reformulated to create a new Problem per solve instead of re-solving
-- `examples/machine-learning/lasso.qmd` — Reformulated (new Problem per lambda)
-- `examples/machine-learning/ridge.qmd` — Reformulated (new Problem per lambda)
-- `examples/machine-learning/svm.qmd` — Reformulated (new Problem per lambda)
-- `examples/machine-learning/logistic.qmd` — Reformulated (new Problem per lambda)
-- `examples/derivatives/structured-prediction.qmd` — `generate_data()` re-solves an LLCP with different parameter values; marked `eval = FALSE`
+- `examples/dpp/tutorial.qmd` — Re-solve timing demo now fully executable
+- `examples/solvers/warm-starts.qmd` — Now uses Parameter + re-solve (not problem reconstruction)
+- `examples/machine-learning/lasso.qmd` — Uses DPP re-solve
+- `examples/machine-learning/ridge.qmd` — Uses DPP re-solve
+- `examples/machine-learning/svm.qmd` — Uses DPP re-solve
+- `examples/machine-learning/logistic.qmd` — Uses DPP re-solve
+- `examples/derivatives/structured-prediction.qmd` — `generate_data()` re-solves work; still `eval = FALSE` due to Bug 4 (derivatives)
 
 ---
 
 ## Bug 2: `is_dgp()` not exported and limited to Problem objects
+
+**Status:** Fixed — `is_dgp()` now exported and works on expressions
 
 **Severity:** Medium
 
@@ -88,34 +92,29 @@ CVXR:::is_dgp(x * y)
 
 **Expected:** `is_dgp()` should work on expressions, variables, and parameters — not just Problem/Constraint/Objective objects. CVXPY's `expr.is_dgp()` works on any expression.
 
-**Workaround used in docs:** For expression-level checks, the unexported functions `CVXR:::is_log_log_affine()`, `CVXR:::is_log_log_convex()`, and `CVXR:::is_log_log_concave()` work correctly.
+**Impact on docs:** All DGP examples now use the exported `is_dgp()` directly:
 
-**Impact on docs:**
-
-- `examples/dgp/fundamentals.qmd` — Replaced `is_dgp(expr)` with `CVXR:::is_log_log_affine(expr)` etc.
-- `examples/dgp/tutorial.qmd` — Uses `CVXR:::is_dgp(problem)`
-- `examples/dgp/max-volume-box.qmd` — Uses `CVXR:::is_dgp(problem)`
-- `examples/dgp/power-control.qmd` — Uses `CVXR:::is_dgp(problem)`
+- `examples/dgp/fundamentals.qmd` — Uses `is_dgp()` on expressions
+- `examples/dgp/tutorial.qmd` — Uses `is_dgp(problem)`
+- `examples/dgp/max-volume-box.qmd` — Uses `is_dgp(problem)`
+- `examples/dgp/power-control.qmd` — Uses `is_dgp(problem)`
 
 ---
 
 ## Bug 3: `is_log_log_affine()`, `is_log_log_convex()`, `is_log_log_concave()` not exported
 
+**Status:** Fixed — all three functions now exported
+
 **Severity:** Low (if `is_dgp()` on expressions is fixed, these become less important)
 
 ```r
 library(CVXR)
-is_log_log_affine
-#> Error: object 'is_log_log_affine' not found
-
-# All three exist but require triple-colon:
+# All three now exported and work directly:
 x <- Variable(pos = TRUE)
-CVXR:::is_log_log_affine(x)   #> TRUE
-CVXR:::is_log_log_convex(x)   #> TRUE
-CVXR:::is_log_log_concave(x)  #> TRUE
+is_log_log_affine(x)   #> TRUE
+is_log_log_convex(x)   #> TRUE
+is_log_log_concave(x)  #> TRUE
 ```
-
-**Expected:** These should be exported for users writing DGP programs who need to check expression curvature.
 
 ---
 
@@ -156,19 +155,22 @@ exists("delta", envir = asNamespace("CVXR"))      #> FALSE
 
 ## Bug 5: `length_expr()` not implemented
 
+**Status:** Fixed — `length_expr()` now implemented and exported
+
 **Severity:** Low (only affects one DQCP example)
 
 ```r
 library(CVXR)
-"length_expr" %in% ls("package:CVXR")              #> FALSE
-exists("length_expr", envir = asNamespace("CVXR"))  #> FALSE
+# Now works:
+x <- Variable(5)
+length_expr(x)
 ```
 
 In CVXPY, `cp.length(x)` computes the index of the last nonzero element of a vector — a quasiconvex atom used in DQCP problems.
 
 **Impact on docs:**
 
-- `examples/dqcp/min-length-ls.qmd` — All code marked `eval = FALSE`
+- `examples/dqcp/min-length-ls.qmd` — Now fully executable
 
 ---
 
