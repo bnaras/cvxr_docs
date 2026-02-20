@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+library(ggplot2)
 source(here::here("_check_status.R"))
 ```
 
@@ -45,9 +46,11 @@ by inspecting its graph.
 ```{r}
 x_vals <- seq(0, 10, length.out = 200)
 y_vals <- sqrt(x_vals) / exp(x_vals)
-plot(x_vals, y_vals, type = "l", col = "blue",
-     xlab = "x", ylab = expression(sqrt(x) / exp(x)),
-     main = "Concave Fractional Function")
+ggplot(data.frame(x = x_vals, y = y_vals), aes(x, y)) +
+    geom_line(color = "blue") +
+    labs(x = "x", y = expression(sqrt(x) / exp(x)),
+         title = "Concave Fractional Function") +
+    theme_minimal()
 ```
 
 ## Solving with DQCP

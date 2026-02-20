@@ -3,48 +3,6 @@ title: CVXR Functions
 author: Anqi Fu and Balasubramanian Narasimhan
 ---
 
-```{r, echo = FALSE, message = FALSE}
-## knitr::knit_hooks$set(inline = function(x) {
-##   return(gsub(pattern = "&",
-##               replacement = "\\\\&",
-##               x = x,
-##               fixed = TRUE))
-## })
-library(stringr)
-emitRow <- function(lines, start, end) {
-    ## Remove "* " from beginning of row
-    content <- gsub("^\\* ", "", lines[start:(end-1)])
-    colStart <- which(grepl("^-", content))
-    colEnd <- c(colStart[-1] - 1, length(content))
-    d <- data.frame(colStart = colStart, colEnd = colEnd)
-    sapply(seq_len(nrow(d)),
-           function(j) emitCol(content, colStart[j], colEnd[j]))
-}
-
-emitCol <- function(lines, start, end) {
-    ## Remove "- " from beginning of column
-    lines <- gsub("^\\- ", "", lines[start:end])
-    ## Strip ref and math and backticks
-    lines <- gsub("^\\:ref\\:", "", lines)
-    lines <- gsub("\\:math\\:", "", lines)
-    lines <- gsub("\\|_\\|", "", lines)
-    lines <- gsub("\\|incr\\|", "![](/static/img/cvxr_functions_img/increasing.png)", lines)
-    lines <- gsub("\\|decr\\|", "![](/static/img/cvxr_functions_img/decreasing.png)", lines)
-    lines <- gsub("\\|positive\\|", "![](/static/img/cvxr_functions_img/positive.png)", lines)
-    lines <- gsub("\\|negative\\|", "![](/static/img/cvxr_functions_img/negative.png)", lines)
-    lines <- gsub("\\|unknown\\|", "![](/static/img/cvxr_functions_img/unknown.png)", lines)
-    lines <- gsub("\\|concave\\|", "![](/static/img/cvxr_functions_img/concave.png)", lines)
-    lines <- gsub("\\|convex\\|", "![](/static/img/cvxr_functions_img/convex.png)", lines)
-    lines <- gsub("\\|affine\\|", "![](/static/img/cvxr_functions_img/affine.png)", lines)
-    lines <- gsub("\\`", "$", lines)
-    ## Fix up pnorm
-    lines <- gsub("p == 'inf'", "\\`p = Inf\\`", lines)
-    paste(lines[nchar(lines) > 0], collapse = " ")
-}
-
-inFile <- "functions_data/index.rst"
-```
-
 ## Functions
 
 Here we describe the functions that can be applied to `CVXR`
@@ -58,6 +16,59 @@ The infix operators `+`, `-`, `*`, `%*%`, `/` are treated as functions. `+`
 and `-` are affine functions. `*` and `/` are affine in `CVXR` because
 `expr1*expr2` and `expr1 %*% expr2` are allowed only when one of the expressions is constant
 and `expr1/expr2` is allowed only when `expr2` is a scalar constant.
+
+#### Comparison operators
+
+The comparison operators `==`, `<=`, and `>=` are overloaded to create
+constraint objects:
+
+```{r, eval = FALSE}
+x == y   # Equality constraint
+x <= y   # Inequality constraint (convex <= concave)
+x >= y   # Inequality constraint (concave >= convex)
+```
+
+Note that strict inequalities `<` and `>` are **not** supported, nor
+is `!=`.
+
+#### Semidefinite operators
+
+The operators `%>>%` and `%<<%` create positive semidefinite (PSD) and
+negative semidefinite (NSD) constraints, respectively:
+
+```{r, eval = FALSE}
+X %>>% 0   # X is PSD
+X %<<% 0   # X is NSD
+```
+
+::: {.callout-warning}
+Beware of operator precedence: `A - B %>>% 0` is parsed as
+`A - (B %>>% 0)`.  Use `(A - B) %>>% 0` instead.
+:::
+
+#### Boolean operators
+
+The operators `&`, `|`, and `!` are overloaded for boolean variables
+to create logical constraints:
+
+```{r, eval = FALSE}
+x & y    # equivalent to And(x, y)
+x | y    # equivalent to Or(x, y)
+!x       # equivalent to Not(x)
+```
+
+#### R math and summary functions
+
+`CVXR` overloads many standard R functions so they can be applied
+directly to expressions:
+
+- **Math**: `abs()`, `exp()`, `log()`, `sqrt()`, `cumsum()`,
+  `ceiling()`, `floor()`, `log2()`, `log10()`, `log1p()`
+- **Summary**: `sum()`, `max()`, `min()`, `prod()`
+- **Complex**: `Re()`, `Im()`, `Conj()`
+
+These dispatch to the corresponding `CVXR` atoms (e.g., `abs(x)`
+calls `Abs`, `sum(x)` calls `SumEntries`).
 
 #### Indexing and slicing
 
@@ -91,56 +102,172 @@ A scalar function takes one or more scalars, vectors, or matrices as arguments
 and returns a scalar.
 
 ```{r, echo = FALSE, message = FALSE}
-lines <- readLines(inFile)
-## Narrow to region of file that we will process.
-start <- grep("CVXR_START_PROCESSING_MARKER_1", lines) + 1
-end <- grep("CVXR_END_PROCESSING_MARKER_1", lines) - 1
-lines <- lines[start:end]
-
-lines <- stringr::str_trim(lines)
-
-## Fix for pnorm since it uses :ref:
-lines <- gsub("^\\* - \\:ref\\:\\`pnorm\\(X, p\\) <pnorm>\\`", "* - p_norm(X, p)", lines)
-lines <- gsub("\\`\\`p = 'inf'\\`\\`", "p == 'inf'", lines)
-## End of fix
-
-## Fix for norm(..) since it has been replaced by cvxr_norm
-#lines <- gsub("^norm", "cvxr_norm", lines)
-lines <- gsub("^\\* - norm", "\\* - cvxr_norm", lines)
-lines <- gsub("^norm", "cvxr_norm", lines)
-## End of fix
-
-## Fix for trace since it is matrix_trace
-lines <- gsub("trace", "matrix_trace", lines)
-## Fix for geo_mean since it uses :ref:
-lines <- gsub("\\:ref\\:\\`geo_mean\\(x, p\\) <geo_mean>\\`", "geo_mean(x, p)", lines)
-lines <- gsub("^\\* - \\:ref\\:\\`geo_mean\\(x\\) <geo_mean>\\`", "* - geo_mean(x)", lines)
-## End of fix
-
-## Fix for y > 0 since that gets escaped as html
-lines <- gsub("y > 0", "y \\\\gt 0", lines)
-## Fix for p < 0 since that gets escaped too
-lines <- gsub("p < 1", "p \\\\lt 1", lines)
-
-start <- which(grepl("^\\*", lines))
-end <- c(start[-1] - 1, length(lines))
-coords <- data.frame(start = start, end = end)
-rows <- lapply(seq_len(nrow(coords)),
-               function(i) emitRow(lines, coords$start[i], coords$end[i]))
-table <- do.call(rbind, rows)
-colnames(table) <- table[1, ]
-colnames(table)[5] <- "Curvature"
-table <- table[-1, ]
-## Fix up two rows manually
-table[5, 2] <- "\\(\\text{sum of } k \\text{ largest } \\text{eigenvalues of }X\\)"
-table[6, 2] <- "\\(\\text{sum of } k \\text{ smallest} \\text{eigenvalues of }X\\)"
+library(kableExtra)
 ```
 
-```{r, echo = FALSE, message = FALSE}
-library(kableExtra)
-knitr::kable(table, "html", escape = FALSE) |>
-  kable_styling("striped") |>
-  column_spec(1:6, background = "#ececec")
+#### Norms
+
+```{r, echo = FALSE}
+d <- data.frame(
+    Function = c(
+        "<code>norm1(x)</code>",
+        "<code>norm2(x)</code>",
+        "<code>norm_inf(x)</code>",
+        "<code>p_norm(x, p)</code>, \\(p \\geq 1\\)",
+        "<code>p_norm(x, p)</code>, \\(0 < p < 1\\)",
+        "<code>cvxr_norm(X, &quot;fro&quot;)</code>",
+        "<code>cvxr_norm(X, &quot;nuc&quot;)</code>",
+        "<code>norm_nuc(X)</code>",
+        "<code>cvxr_norm(X, 2)</code>",
+        "<code>sigma_max(X)</code>",
+        "<code>mixed_norm(X, p, q)</code>"
+    ),
+    Meaning = c(
+        "\\(\\sum_i |x_i|\\)",
+        "\\(\\sqrt{\\sum_i x_i^2}\\)",
+        "\\(\\max_i |x_i|\\)",
+        "\\(\\left(\\sum_i |x_i|^p\\right)^{1/p}\\)",
+        "\\(\\left(\\sum_i |x_i|^p\\right)^{1/p}\\)",
+        "\\(\\sqrt{\\sum_{ij} X_{ij}^2}\\)",
+        "\\(\\sum_i \\sigma_i(X)\\)",
+        "\\(\\sum_i \\sigma_i(X)\\)",
+        "\\(\\sigma_{\\max}(X)\\)",
+        "\\(\\sigma_{\\max}(X)\\)",
+        "\\(\\left(\\sum_k \\left(\\sum_j |X_{jk}|^p\\right)^{q/p}\\right)^{1/q}\\)"
+    ),
+    Curvature = c("convex", "convex", "convex", "convex", "concave",
+                  "convex", "convex", "convex", "convex", "convex", "convex"),
+    Sign = c(rep("\\(\\geq 0\\)", 11)),
+    Domain = c(rep("", 4), "\\(x \\geq 0\\)", "", "", "", "", "", ""),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Curvature", "Sign", "Domain")) |>
+    kable_styling("striped") |>
+    column_spec(1:5, background = "#ececec")
+```
+
+#### Aggregation and reduction
+
+```{r, echo = FALSE}
+d <- data.frame(
+    Function = c(
+        "<code>sum_entries(X)</code>",
+        "<code>sum_squares(x)</code>",
+        "<code>sum_largest(x, k)</code>",
+        "<code>sum_smallest(x, k)</code>",
+        "<code>max_entries(x)</code>",
+        "<code>min_entries(x)</code>",
+        "<code>prod_entries(x)</code>",
+        "<code>cvxr_mean(x)</code>",
+        "<code>cvxr_var(x)</code>",
+        "<code>cvxr_std(x)</code>",
+        "<code>ptp(x)</code>",
+        "<code>cvar(x, &beta;)</code>",
+        "<code>dotsort(x, w)</code>"
+    ),
+    Meaning = c(
+        "\\(\\sum_{ij} X_{ij}\\)",
+        "\\(\\sum_i x_i^2\\)",
+        "sum of \\(k\\) largest \\(x_i\\)",
+        "sum of \\(k\\) smallest \\(x_i\\)",
+        "\\(\\max_i x_i\\)",
+        "\\(\\min_i x_i\\)",
+        "\\(\\prod_i x_i\\)",
+        "\\(\\frac{1}{n}\\sum_i x_i\\)",
+        "\\(\\frac{1}{n}\\sum_i (x_i - \\bar{x})^2\\)",
+        "\\(\\sqrt{\\frac{1}{n}\\sum_i (x_i - \\bar{x})^2}\\)",
+        "\\(\\max(x) - \\min(x)\\)",
+        "conditional value-at-risk at level \\(\\beta\\)",
+        "\\(w_{[1]}^T x_{[1]} + \\cdots + w_{[n]}^T x_{[n]}\\) (sorted)"
+    ),
+    Curvature = c("affine", "convex", "convex", "concave", "convex",
+                  "concave", "log-log concave", "affine", "convex", "convex",
+                  "convex", "convex", "convex"),
+    Sign = c("unknown", "\\(\\geq 0\\)", "unknown", "unknown", "unknown",
+             "unknown", "\\(\\geq 0\\)", "unknown", "\\(\\geq 0\\)",
+             "\\(\\geq 0\\)", "\\(\\geq 0\\)", "unknown", "unknown"),
+    Domain = c("", "", "\\(k \\in \\{1,\\ldots,n\\}\\)", "\\(k \\in \\{1,\\ldots,n\\}\\)",
+               "", "", "\\(x > 0\\)", "", "", "", "",
+               "\\(\\beta \\in (0, 1]\\)", "\\(w\\) constant"),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Curvature", "Sign", "Domain")) |>
+    kable_styling("striped") |>
+    column_spec(1:5, background = "#ececec")
+```
+
+#### Matrix and quadratic functions
+
+```{r, echo = FALSE}
+d <- data.frame(
+    Function = c(
+        "<code>matrix_trace(X)</code>",
+        "<code>log_det(X)</code>",
+        "<code>lambda_max(X)</code>",
+        "<code>lambda_min(X)</code>",
+        "<code>lambda_sum_largest(X, k)</code>",
+        "<code>lambda_sum_smallest(X, k)</code>",
+        "<code>matrix_frac(x, P)</code>",
+        "<code>quad_form(x, P)</code>",
+        "<code>quad_over_lin(x, y)</code>",
+        "<code>tr_inv(X)</code>",
+        "<code>geo_mean(x)</code>",
+        "<code>harmonic_mean(x)</code>",
+        "<code>log_sum_exp(x)</code>",
+        "<code>scalar_product(x, c)</code>",
+        "<code>vdot(x, y)</code>",
+        "<code>tv(x)</code> / <code>total_variation(x)</code>",
+        "<code>inv_prod(x)</code>",
+        "<code>perspective(f, s)</code>"
+    ),
+    Meaning = c(
+        "\\(\\mathrm{tr}(X)\\)",
+        "\\(\\log \\det(X)\\)",
+        "\\(\\lambda_{\\max}(X)\\)",
+        "\\(\\lambda_{\\min}(X)\\)",
+        "sum of \\(k\\) largest eigenvalues of \\(X\\)",
+        "sum of \\(k\\) smallest eigenvalues of \\(X\\)",
+        "\\(x^T P^{-1} x\\)",
+        "\\(x^T P x\\)",
+        "\\(\\|x\\|_2^2 / y\\)",
+        "\\(\\mathrm{tr}(X^{-1})\\)",
+        "\\(\\left(\\prod_i x_i\\right)^{1/n}\\)",
+        "\\(\\frac{n}{\\sum_i 1/x_i}\\)",
+        "\\(\\log\\left(\\sum_i e^{x_i}\\right)\\)",
+        "\\(c^T x\\) where \\(c\\) is constant",
+        "\\(x^T y\\)",
+        "\\(\\sum_i |x_{i+1} - x_i|\\)",
+        "\\(1 / \\prod_i x_i\\)",
+        "\\(s \\cdot f(x/s)\\)"
+    ),
+    Curvature = c("affine", "concave", "convex", "concave",
+                  "convex", "concave", "convex",
+                  "convex (\\(P \\succeq 0\\))", "convex",
+                  "convex", "concave", "concave",
+                  "convex", "affine", "affine",
+                  "convex", "convex", "convex"),
+    Sign = c("unknown", "unknown", "unknown", "unknown",
+             "unknown", "unknown", "\\(\\geq 0\\)",
+             "\\(\\geq 0\\)", "\\(\\geq 0\\)",
+             "\\(\\geq 0\\)", "\\(\\geq 0\\)", "\\(\\geq 0\\)",
+             "unknown", "unknown", "unknown",
+             "\\(\\geq 0\\)", "\\(\\geq 0\\)", "varies"),
+    Domain = c("", "\\(X \\in \\mathbf{S}^n_{++}\\)", "\\(X \\in \\mathbf{S}^n\\)",
+               "\\(X \\in \\mathbf{S}^n\\)", "\\(X \\in \\mathbf{S}^n\\)",
+               "\\(X \\in \\mathbf{S}^n\\)",
+               "\\(P \\succ 0\\)", "\\(P \\succeq 0\\) or \\(P \\preceq 0\\)",
+               "\\(y > 0\\)", "\\(X \\succ 0\\)",
+               "\\(x \\geq 0\\)", "\\(x > 0\\)",
+               "", "", "", "", "\\(x > 0\\)",
+               "\\(s > 0\\)"),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Curvature", "Sign", "Domain")) |>
+    kable_styling("striped") |>
+    column_spec(1:5, background = "#ececec")
 ```
 
 #### Clarifications
@@ -152,14 +279,14 @@ respectively. Similarly, $\mathbf{S}^n_{++}$ and $\mathbf{S}^n_{--}$
 refer to the set of positive definite and negative definite matrices,
 respectively.
 
-For a vector expression `x`, `cvxr_norm(x)` and `cvxr_norm(x, 2)` give the
-Euclidean norm. For a matrix expression `X`, however, `cvxr_norm(X)` and
-`cvxr_norm(X, 2)` give the spectral norm.
+For a vector expression `x`, `norm2(x)` gives the
+Euclidean norm. For a matrix expression `X`, `cvxr_norm(X, 2)` and
+`sigma_max(X)` give the spectral norm (largest singular value).
 
 The function `cvxr_norm(X, "fro")` is called
 the
-[Frobenius norm](https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm>) and
-`cvxr_norm(X, "nuc")`
+[Frobenius norm](https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm) and
+`cvxr_norm(X, "nuc")` (or `norm_nuc(X)`)
 the
 [nuclear norm](https://en.wikipedia.org/wiki/Matrix_norm#Schatten_norms). The
 nuclear norm can also be defined as the sum of `X`'s singular values.
@@ -167,8 +294,9 @@ nuclear norm can also be defined as the sum of `X`'s singular values.
 The functions `max_entries` and `min_entries` give the largest and
 smallest entry, respectively, in a single expression. These functions
 should not be confused with `max_elemwise` and `min_elemwise` (see
-`elementwise`). Use `max_elemwise` and `min_elemwise` to find the
-maximum or minimum of a list of scalar expressions.
+[Elementwise functions](#elementwise-functions)). Use `max_elemwise`
+and `min_elemwise` to find the maximum or minimum of a list of scalar
+expressions.
 
 The function `sum_entries` sums all the entries in a single
 expression. The built-in R `sum` should be used to add together a
@@ -190,7 +318,7 @@ example, the following code sums along the columns and rows of a
 matrix variable:
 
 ```{r, eval = FALSE}
-X <- Variable(5, 4)
+X <- Variable(c(5, 4))
 row_sums <- sum_entries(X, axis=1) # Has size (5, 1)
 col_sums <- sum_entries(X, axis=2) # Has size (1, 4)
 ```
@@ -202,7 +330,7 @@ NA`, which treats a matrix as one long vector, basically the same as
 apply with `c(1,2)`. The exception is `cumsum_axis` (see below), which cannot take
 `axis = NA`; it will throw an error.
 
-### Elementwise functions
+### Elementwise functions {#elementwise-functions}
 
 These functions operate on each element of their arguments. For
 example, if `X` is a 5 by 4 matrix variable, then `abs(X)` is a 5 by 4
@@ -217,55 +345,123 @@ expression. `max_elemwise(X, Y)[2, 1]` is equivalent to
 the same dimensions or be scalars, which are promoted.
 
 ```{r, echo = FALSE}
-lines <- readLines(inFile)
-## Narrow to region of file that we will process.
-start <- grep("CVXR_START_PROCESSING_MARKER_2", lines) + 1
-end <- grep("CVXR_END_PROCESSING_MARKER_2", lines) - 1
-lines <- lines[start:end]
-
-lines <- stringr::str_trim(lines)
-## Fix for power since it uses :ref:
-lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 0\\) <power>\\`", "* - power(x, 0)", lines)
-lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 1\\) <power>\\`", "* - power(x, 1)", lines)
-lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, p\\) <power>\\`", "* - power(x, p)", lines)
-## End of fix
-
-## Fix for geo_mean since it uses :ref:
-lines <- gsub("\\:ref\\:\\`geo_mean\\(x, p\\) <geo_mean>\\`", "geo_mean(x, p)", lines)
-lines <- gsub("^\\* - \\:ref\\:\\`geo_mean\\(x\\) <geo_mean>\\`", "* - geo_mean(x)", lines)
-## End of fix
-
-## Fix for x > 0 since that gets escaped as html
-lines <- gsub("x > 0", "x \\\\gt 0", lines)
-lines <- gsub("y > 0", "y \\\\gt 0", lines)
-lines <- gsub("x > -1", "x \\\\gt -1", lines)
-lines <- gsub("0 < p < 1", "0 \\\\lt p \\\\lt 1", lines)
-lines <- gsub("p < 0", "p \\\\lt 0", lines)
-lines <- gsub("p > 1", "p \\\\gt 1", lines)
-
-## Fix the cases for huber
-lines <- gsub(" >M", " \\\\gt M", lines)
-##lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
-##lines <- gsub("\\|x\\| >M", "\\|x\\| \\\\gt M", lines)
-lines <- gsub("2M\\|x\\|", " 2M\\|x\\|", lines)
-
-start <- which(grepl("^\\*", lines))
-end <- c(start[-1] - 1, length(lines))
-coords <- data.frame(start = start, end = end)
-rows <- lapply(seq_len(nrow(coords)),
-               function(i) emitRow(lines, coords$start[i], coords$end[i]))
-table <- do.call(rbind, rows)
-colnames(table) <- table[1, ]
-colnames(table)[5] <- "Curvature"
-table <- table[-1, ]
+d <- data.frame(
+    Function = c(
+        "<code>abs(x)</code>",
+        "<code>entr(x)</code>",
+        "<code>exp(x)</code>",
+        "<code>huber(x, M)</code>",
+        "<code>inv_pos(x)</code>",
+        "<code>kl_div(x, y)</code>",
+        "<code>log(x)</code>",
+        "<code>log1p_atom(x)</code>",
+        "<code>log_normcdf(x)</code>",
+        "<code>logistic(x)</code>",
+        "<code>loggamma(x)</code>",
+        "<code>max_elemwise(x, y, ...)</code>",
+        "<code>min_elemwise(x, y, ...)</code>",
+        "<code>multiply(c, x)</code>",
+        "<code>neg(x)</code>",
+        "<code>pos(x)</code>",
+        "<code>diff_pos(x, y)</code>",
+        "<code>one_minus_pos(x)</code>",
+        "<code>power(x, 0)</code>",
+        "<code>power(x, 1)</code>",
+        "<code>power(x, p)</code>, \\(p \\geq 1\\)",
+        "<code>power(x, p)</code>, \\(0 < p < 1\\)",
+        "<code>power(x, p)</code>, \\(p < 0\\)",
+        "<code>rel_entr(x, y)</code>",
+        "<code>scalene(x, &alpha;, &beta;)</code>",
+        "<code>sqrt(x)</code>",
+        "<code>square(x)</code>",
+        "<code>xexp(x)</code>"
+    ),
+    Meaning = c(
+        "\\(|x|\\)",
+        "\\(-x \\log x\\)",
+        "\\(e^x\\)",
+        "\\(2(\\sqrt{1+(x/M)^2}-1)M^2\\)",
+        "\\(1/x\\)",
+        "\\(x \\log(x/y) - x + y\\)",
+        "\\(\\log x\\)",
+        "\\(\\log(1 + x)\\)",
+        "\\(\\log \\Phi(x)\\) (\\(\\Phi\\) = standard normal CDF)",
+        "\\(\\log(1 + e^x)\\)",
+        "\\(\\log \\Gamma(x)\\)",
+        "\\(\\max(x, y, \\ldots)\\)",
+        "\\(\\min(x, y, \\ldots)\\)",
+        "\\(c \\cdot x\\) (\\(c\\) constant)",
+        "\\(\\max(-x, 0)\\)",
+        "\\(\\max(x, 0)\\)",
+        "\\(\\max(x - y, 0)\\)",
+        "\\(\\max(1 - x, 0)\\)",
+        "\\(1\\)",
+        "\\(x\\)",
+        "\\(x^p\\)",
+        "\\(x^p\\)",
+        "\\(x^p\\)",
+        "\\(x \\log(x/y)\\)",
+        "\\(\\alpha \\cdot \\text{pos}(x) + \\beta \\cdot \\text{neg}(x)\\)",
+        "\\(\\sqrt{x}\\)",
+        "\\(x^2\\)",
+        "\\(x e^x\\)"
+    ),
+    Curvature = c(
+        "convex", "concave", "convex", "convex", "convex",
+        "convex", "concave", "concave", "concave", "convex",
+        "convex", "convex", "concave", "affine", "convex",
+        "convex", "convex", "convex",
+        "constant", "affine", "convex", "concave", "convex",
+        "convex",
+        "convex",
+        "concave", "convex", "convex"
+    ),
+    Sign = c(
+        "\\(\\geq 0\\)", "unknown", "\\(\\geq 0\\)", "\\(\\geq 0\\)", "\\(\\geq 0\\)",
+        "\\(\\geq 0\\)", "unknown", "unknown", "\\(\\leq 0\\)", "\\(\\geq 0\\)",
+        "unknown", "unknown", "unknown", "unknown", "\\(\\geq 0\\)",
+        "\\(\\geq 0\\)", "\\(\\geq 0\\)", "\\(\\geq 0\\)",
+        "\\(\\geq 0\\)", "unknown", "\\(\\geq 0\\)", "\\(\\geq 0\\)", "\\(\\geq 0\\)",
+        "unknown",
+        "\\(\\geq 0\\)",
+        "\\(\\geq 0\\)", "\\(\\geq 0\\)", "unknown"
+    ),
+    Domain = c(
+        "", "\\(x > 0\\)", "", "\\(M > 0\\)", "\\(x > 0\\)",
+        "\\(x > 0, y > 0\\)", "\\(x > 0\\)", "\\(x > -1\\)", "", "",
+        "\\(x > 0\\)", "", "", "", "",
+        "", "", "",
+        "", "", "\\(x \\geq 0\\)", "\\(x \\geq 0\\)", "\\(x > 0\\)",
+        "\\(x > 0, y > 0\\)",
+        "\\(\\alpha, \\beta \\geq 0\\)",
+        "\\(x \\geq 0\\)", "", ""
+    ),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Curvature", "Sign", "Domain")) |>
+    kable_styling("striped") |>
+    column_spec(1:5, background = "#ececec")
 ```
 
+#### DQCP elementwise functions
+
+The following functions are quasiconvex or quasiconcave. They can be
+used in DQCP problems (pass `qcp = TRUE` to `psolve()`).
+
 ```{r, echo = FALSE}
-s <- knitr::kable(table, "html", escape = FALSE) |>
-  kable_styling("striped") |>
-  column_spec(1:6, background = "#ececec")
-## Unescape that bloody ampersand.
-gsub("amp;", "", s)
+d <- data.frame(
+    Function = c("<code>ceil_expr(x)</code>", "<code>floor_expr(x)</code>"),
+    Meaning = c("\\(\\lceil x \\rceil\\)", "\\(\\lfloor x \\rfloor\\)"),
+    Curvature = c("quasiconvex", "quasiconcave"),
+    Sign = c("unknown", "unknown"),
+    Domain = c("", ""),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Curvature", "Sign", "Domain")) |>
+    kable_styling("striped") |>
+    column_spec(1:5, background = "#ececec")
 ```
 
 ### Vector/matrix functions
@@ -274,91 +470,132 @@ A vector/matrix function takes one or more scalars, vectors, or matrices as argu
 and returns a vector or matrix.
 
 ```{r, echo = FALSE}
-lines <- readLines(inFile)
-## Narrow to region of file that we will process.
-start <- grep("CVXR_START_PROCESSING_MARKER_3", lines) + 1
-end <- grep("CVXR_END_PROCESSING_MARKER_3", lines) - 1
-lines <- lines[start:end]
-
-lines <- stringr::str_trim(lines)
-## Fix for power since it uses :ref:
-lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 0\\) <power>\\`", "* - power(x, 0)", lines)
-lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, 1\\) <power>\\`", "* - power(x, 1)", lines)
-lines <- gsub("^\\* - \\:ref\\:\\`power\\(x, p\\) <power>\\`", "* - power(x, p)", lines)
-## End of fix
-
-## Fix for geo_mean since it uses :ref:
-lines <- gsub("\\:ref\\:\\`geo_mean\\(x, p\\) <geo_mean>\\`", "geo_mean(x, p)", lines)
-lines <- gsub("^\\* - \\:ref\\:\\`geo_mean\\(x\\) <geo_mean>\\`", "* - geo_mean(x)", lines)
-## End of fix
-
-## Fix for x > 0 since that gets escaped as html
-lines <- gsub("x > 0", "x \\\\gt 0", lines)
-lines <- gsub("y > 0", "y \\\\gt 0", lines)
-lines <- gsub("x > -1", "x \\\\gt -1", lines)
-lines <- gsub("0 < p < 1", "0 \\\\lt p \\\\lt 1", lines)
-lines <- gsub("p < 0", "p \\\\lt 0", lines)
-lines <- gsub("p > 1", "p \\\\gt 1", lines)
-
-## Fix the cases for huber
-lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
-
-lines <- gsub("2&\\|x\\| >M", "2&\\|x\\| \\\\gt M", lines)
-##lines <- gsub("\\|x\\| >M", "\\|x\\| \\\\gt M", lines)
-lines <- gsub("&\\|x\\|", "\\\\&\\|x\\|", lines)
-
-## Fix cumsum which is now cumsum_axis
-lines <- gsub("cumsum", "cumsum_axis", lines)
-## End of fix
-
-## Fix diff
-lines <- gsub("axis=0", "axis=1", lines)
-lines <- gsub("kth order differences", "$k$th order differences (argument $k$ is actually named `differences` and `lag` can also be used)", lines)
-## End of fix
-
-## Fix Reshape
-lines <- gsub("reshape", "reshape_expr", lines)
-## End of fix
-
-## Fix kron
-lines <- gsub("kron", "kronecker", lines)
-## End of fix
-
-
-start <- which(grepl("^\\*", lines))
-end <- c(start[-1] - 1, length(lines))
-coords <- data.frame(start = start, end = end)
-rows <- lapply(seq_len(nrow(coords)),
-               function(i) emitRow(lines, coords$start[i], coords$end[i]))
-
-table <- do.call(rbind, rows)
-colnames(table) <- table[1, ]
-colnames(table)[5] <- "Curvature"
-table <- table[-1, ]
-
+d <- data.frame(
+    Function = c(
+        "<code>bmat(list(list(X, Y), ...))</code>",
+        "<code>conv(c, x)</code>",
+        "<code>cumsum_axis(x, axis)</code>",
+        "<code>cummax_expr(x, axis)</code>",
+        "<code>cvxr_diff(x)</code>",
+        "<code>cvxr_outer(x, y)</code>",
+        "<code>diag(x)</code> / <code>diag(X)</code>",
+        "<code>hstack(x, y, ...)</code>",
+        "<code>kronecker(X, Y)</code>",
+        "<code>reshape_expr(x, c(m, n))</code>",
+        "<code>upper_tri(X)</code>",
+        "<code>vec(X)</code>",
+        "<code>vec_to_upper_tri(x)</code>",
+        "<code>vstack(x, y, ...)</code>"
+    ),
+    Meaning = c(
+        "block matrix from list of lists",
+        "\\(c * x\\) (discrete convolution)",
+        "cumulative sum along axis",
+        "cumulative max along axis",
+        "\\(k\\)th order differences",
+        "\\(x y^T\\) (outer product)",
+        "diagonal vector \\(\\leftrightarrow\\) diagonal matrix",
+        "horizontal stack",
+        "\\(X \\otimes Y\\) (Kronecker product)",
+        "reshape to \\(m \\times n\\)",
+        "upper triangular elements as vector",
+        "vectorize (column-major)",
+        "vector to upper triangular matrix",
+        "vertical stack"
+    ),
+    Curvature = c(
+        "affine", "affine", "affine", "convex", "affine",
+        "affine (one arg constant)", "affine", "affine", "affine",
+        "affine", "affine", "affine", "affine", "affine"
+    ),
+    Sign = rep("unknown", 14),
+    Domain = c("", "\\(c\\) constant", "axis required", "axis required",
+               "", "one arg must be constant", "", "", "one arg must be constant",
+               "", "\\(X\\) square", "", "", ""),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Curvature", "Sign", "Domain")) |>
+    kable_styling("striped") |>
+    column_spec(1:5, background = "#ececec")
 ```
+
+#### DGP-specific functions
+
+The following functions are for use in Disciplined Geometric
+Programming (DGP) problems. They are log-log convex or log-log
+concave.
 
 ```{r, echo = FALSE}
-s <- knitr::kable(table, "html", escape = FALSE) |>
+d <- data.frame(
+    Function = c(
+        "<code>pf_eigenvalue(X)</code>",
+        "<code>eye_minus_inv(X)</code>",
+        "<code>resolvent(X, s)</code>",
+        "<code>gmatmul(A, x)</code>"
+    ),
+    Meaning = c(
+        "Perron-Frobenius eigenvalue",
+        "\\((I - X)^{-1}\\)",
+        "\\((sI - X)^{-1}\\)",
+        "generalized matrix multiply (DGP)"
+    ),
+    Curvature = c("log-log convex", "log-log convex", "log-log convex", "log-log affine"),
+    Domain = c("\\(X \\geq 0\\)", "spectral radius \\(< 1\\)",
+               "spectral radius \\(< s\\)", "\\(A\\) constant, \\(x > 0\\)"),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Curvature", "Domain")) |>
     kable_styling("striped") |>
-    column_spec(1:6, background = "#ececec")
-## Unescape that bloody ampersand.
-gsub("amp;", "", s)
+    column_spec(1:4, background = "#ececec")
 ```
 
-#### Clarifications
+### Boolean logic atoms
 
-The input to `bmat` is a list of lists of `CVXR` expressions. It
-constructs a block matrix. The elements of each inner list are
-stacked horizontally, and then the resulting block matrices are stacked
-vertically.
+The following atoms are used for boolean constraints in mixed-integer
+problems. They operate on boolean variables.
 
-The output $y$ of `conv(c, x)` has size $n+m-1$ and is defined as
-$y[k]=\sum_{j=0}^k c[j]x[k-j].$
+```{r, echo = FALSE}
+d <- data.frame(
+    Function = c("<code>And(x, y)</code>", "<code>Or(x, y)</code>", "<code>Not(x)</code>",
+                 "<code>Xor(x, y)</code>", "<code>implies(x, y)</code>", "<code>iff(x, y)</code>"),
+    Meaning = c("\\(x \\wedge y\\)", "\\(x \\vee y\\)", "\\(\\neg x\\)",
+                "\\(x \\oplus y\\)", "\\(x \\Rightarrow y\\)", "\\(x \\Leftrightarrow y\\)"),
+    Domain = c(rep("boolean variables", 6)),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning", "Domain")) |>
+    kable_styling("striped") |>
+    column_spec(1:3, background = "#ececec")
+```
 
-The output $x$ of `vec(X)` is the matrix $X$ flattened in column-major order into a vector.
-Formally, $x'_i = X_{i \bmod{m}, \left \lfloor{i/m}\right \rfloor }$.
+### Constraint constructors
 
-The output $X$ of `reshape_expr(X, c(m', n'))` is the matrix $X$ cast into an $m' \times n'$ matrix.
-The entries are taken from $X$ in column-major order and stored in $X'$ in column-major order.
-Formally, $X'_{ij} = \mathbf{vec}(X)_{m'j + i}$.
+These create constraint objects directly.
+
+```{r, echo = FALSE}
+d <- data.frame(
+    Function = c("<code>SOC(t, x)</code>", "<code>PSD(X)</code>", "<code>ExpCone(x, y, z)</code>",
+                 "<code>PowCone3D(x, y, z, alpha)</code>", "<code>FiniteSet(x, S)</code>"),
+    Meaning = c(
+        "\\(\\|x\\|_2 \\leq t\\) (second-order cone)",
+        "\\(X \\succeq 0\\) (positive semidefinite)",
+        "\\(y e^{x/y} \\leq z,\\; y > 0\\) (exponential cone)",
+        "\\(\\|z\\| \\leq x^\\alpha y^{1-\\alpha}\\) (power cone)",
+        "\\(x \\in S\\) (finite set membership)"
+    ),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning")) |>
+    kable_styling("striped") |>
+    column_spec(1:2, background = "#ececec")
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```

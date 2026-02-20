@@ -17,51 +17,87 @@ library(kableExtra)
 
 ## Introduction
 
-`CVXR` comes with several open source solvers:
+`CVXR` supports 13 solvers, including several bundled open source
+solvers and optional commercial ones.
+
+### Open Source Solvers (on CRAN)
 
 - [Clarabel](https://oxfordcontrol.github.io/clarabel-r/), a versatile
-  conic solver written in Rust (default solver).
+  conic solver written in Rust (**default solver**).
+- [SCS](https://github.com/cvxgrp/scs), a conic solver using operator
+  splitting, effective for large-scale problems.
 - [OSQP](https://www.osqp.org), for quadratic and linear programs.
-- [SCS](https://github.com/cvxgrp/scs), a conic solver using operator splitting.
-- [HiGHS](https://highs.dev/), for linear and mixed-integer programs.
+- [HiGHS](https://highs.dev/), for linear, quadratic, and
+  mixed-integer programs.
+- [ECOS / ECOS_BB](https://github.com/embotech/ecos), an interior-point
+  solver for second-order cone programs (ECOS_BB adds
+  mixed-integer support).
+- [GLPK / GLPK_MI](https://www.gnu.org/software/glpk/), for linear
+  programs and mixed-integer linear programs.
+- [CVXOPT](https://cvxopt.org/), for linear and second-order cone programs.
+- [PIQP](https://predict-epfl.github.io/piqp/), a proximal
+  interior-point solver for quadratic programs.
 
-`CVXR` can also make use of the commercial solver:
+### Commercial Solvers
 
 - [MOSEK](https://www.mosek.com/), supporting LP, QP, SOCP, SDP, and
-  exponential/power cone programs.
+  exponential/power cone programs. Free academic licenses available.
+- [Gurobi](https://www.gurobi.com/), supporting LP, QP, SOCP, and
+  mixed-integer programs. Free academic licenses available.
+- [CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio),
+  supporting LP, QP, and mixed-integer programs.
 
-__NOTE__: `MOSEK` requires a license to use but free academic licenses
-are available.
+## Solver Capabilities
 
-## Solver capabilities
-
-Table 1 below shows the capabilities of various solvers.
+The table below shows each solver, its R package dependency, and the
+problem classes it supports.
 
 ```{r, echo = FALSE}
 check <- "\U2713"
-d  <- tibble::tibble(
-                  Solver = c("CLARABEL", "OSQP", "SCS", "HIGHS", "MOSEK"),
-                  `R package` = c("[`clarabel`](https://cran.r-project.org/package=clarabel)",
-                                  "[`osqp`](https://www.osqp.org)",
-                                  "[`scs`](https://cran.r-project.org/package=scs)",
-                                  "[`highs`](https://cran.r-project.org/package=highs)",
-                                  "[`Rmosek`](https://docs.mosek.com/latest/rmosek/index.html)"),
-                  LP = c(check, check, check, check, check),
-                  QP = c(check, check, check, check, check),
-                  SOCP = c(check, " " , check, " " , check),
-                  SDP = c(check, " " , check, " " , check),
-                  EXP = c(check, " " , check, " " , check),
-                  MIP = c(" " , " " , " " , check, " ")
-              )
-knitr::kable(d, format = "html", caption = "Solver Capabilities") |>
+d <- tibble::tibble(
+    Solver = c("CLARABEL", "SCS", "MOSEK", "ECOS", "ECOS_BB",
+               "GUROBI", "GLPK", "GLPK_MI", "HIGHS",
+               "CVXOPT", "OSQP", "CPLEX", "PIQP"),
+    `R Package` = c(
+        '<a href="https://cran.r-project.org/package=clarabel"><code>clarabel</code></a>',
+        '<a href="https://cran.r-project.org/package=scs"><code>scs</code></a>',
+        '<a href="https://docs.mosek.com/latest/rmosek/index.html"><code>Rmosek</code></a>',
+        '<a href="https://cran.r-project.org/package=ECOSolveR"><code>ECOSolveR</code></a>',
+        '<a href="https://cran.r-project.org/package=ECOSolveR"><code>ECOSolveR</code></a>',
+        '<a href="https://www.gurobi.com/"><code>gurobi</code></a>',
+        '<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>',
+        '<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>',
+        '<a href="https://cran.r-project.org/package=highs"><code>highs</code></a>',
+        '<a href="https://cran.r-project.org/package=cccp"><code>cccp</code></a>',
+        '<a href="https://cran.r-project.org/package=osqp"><code>osqp</code></a>',
+        '<a href="https://cran.r-project.org/package=Rcplex"><code>Rcplex</code></a>',
+        '<a href="https://cran.r-project.org/package=piqp"><code>piqp</code></a>'),
+    LP   = rep(check, 13),
+    QP   = c(check, check, check, " ", " ",
+             check, " ", " ", check,
+             " ", check, check, check),
+    SOCP = c(check, check, check, check, check,
+             check, " ", " ", " ",
+             check, " ", " ", " "),
+    SDP  = c(check, check, check, " ", " ",
+             " ", " ", " ", " ",
+             " ", " ", " ", " "),
+    EXP  = c(check, check, check, check, check,
+             " ", " ", " ", " ",
+             " ", " ", " ", " "),
+    MIP  = c(" ", " ", " ", " ", check,
+             check, " ", check, check,
+             " ", " ", check, " ")
+)
+knitr::kable(d, format = "html", escape = FALSE,
+             caption = "Solver Capabilities") |>
     kable_styling("striped") |>
     column_spec(1:8, background = "#ececec")
-
 ```
 
-## Commercial Solvers
+## Installing Commercial Solvers
 
-### Installing `MOSEK`
+### MOSEK
 
 [MOSEK](https://www.mosek.com) provides an academic version that is
 free of charge: one can obtain the free academic license after
@@ -75,8 +111,28 @@ library(Rmosek)
 example(mosek)
 ```
 
-Once everything is working, you can check that `CVXR` recognizes the
-solver by trying to solve a problem with `solver = "MOSEK"`.
+### Gurobi
+
+[Gurobi](https://www.gurobi.com/) offers free academic licenses. After
+installing Gurobi and the `gurobi` R package (bundled with the Gurobi
+installation), verify with:
+
+```{r, eval = FALSE}
+library(gurobi)
+model <- list(A = matrix(c(1, 1), nrow = 1),
+              obj = c(1, 1), sense = "<=", rhs = 1)
+gurobi(model)
+```
+
+### CPLEX
+
+[IBM CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio)
+is available through IBM's academic initiative. Install the `Rcplex`
+package from CRAN after installing the CPLEX library.
+
+Once a commercial solver is installed, you can use it by passing
+`solver = "MOSEK"`, `solver = "GUROBI"`, or `solver = "CPLEX"` to
+`psolve()`.
 
 ## Session Info
 

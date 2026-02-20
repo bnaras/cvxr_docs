@@ -13,19 +13,10 @@ params:
 source(here::here("_check_status.R"))
 ```
 
-## Warning
-
-1. The solution described below is useful when you mathematically know
-   a problem is DCP-compliant and none of your data inputs will change
-   the nature of the problem. We recommend that users check the
-   DCP-compliance of a problem (via a call to `is_dcp(prob)` for
-   example) at least once to ensure this is the case.  _Not verifying
-   DCP-compliance may result in garbage!_
-
 ## Introduction
 
 As was remarked in the [introduction to
-`CVXR`](/cvxr_examples/intro/), its chief advantage is
+`CVXR`](../../examples/intro.qmd), its chief advantage is
 _flexibility_: you can specify a problem in close to mathematical form
 and `CVXR` solves it for you, if it can. Behind the scenes, `CVXR`
 compiles the domain specific language and verifies the convexity of
@@ -35,6 +26,34 @@ rejected.
 
 Therefore, it is generally slower than tailor-made solutions to a
 given problem.
+
+## Recommended: Use DPP for Repeated Solves
+
+If you need to solve the same problem structure repeatedly with
+different data (e.g., tuning a regularization parameter, computing
+bootstrap confidence intervals), the recommended approach is
+**Disciplined Parametrized Programming (DPP)**. By using `Parameter`
+objects, `CVXR` compiles the problem once and caches the mapping from
+parameters to problem data. Subsequent solves skip re-compilation and
+can be significantly faster.
+
+See the [DPP tutorial](../dpp/tutorial.qmd) for a detailed example
+showing roughly a 2x speed-up on a regularized least-squares problem.
+
+## Advanced: Directly Calling the Solver
+
+If DPP is not sufficient for your performance needs, you can bypass
+the DSL entirely and call the solver directly. This avoids all
+overhead from `CVXR`'s compilation and DCP verification on each
+solve, but requires working with low-level solver data structures.
+
+::: {.callout-warning}
+The approach below uses internal functions and solver-specific data
+formats that may change between `CVXR` versions. We recommend
+checking DCP-compliance at least once (via `is_dcp(prob)`) before
+bypassing verification. _Not verifying DCP-compliance may result in
+garbage!_
+:::
 
 ## An Example
 

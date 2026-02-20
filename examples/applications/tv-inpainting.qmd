@@ -20,6 +20,9 @@ if (params$mode == "test") {
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
 library(png)
+library(ggplot2)
+library(grid)
+library(gridExtra)
 source(here::here("_check_status.R"))
 ```
 
@@ -53,41 +56,59 @@ Note that the norm of the discretized gradient is *not* squared.
 
 ## Grayscale In-Painting
 
-We demonstrate total variation in-painting on a small grayscale image.
-Since loading specific image files may not be available, we create a
-synthetic $32 \times 32$ test image and corrupt it by removing $50\%$
-of the pixels randomly.
+We load a $128 \times 128$ grayscale image and a corrupted version
+where text has been overlaid on the original. The corrupted image has
+white text obscuring parts of the image. We construct the *known*
+matrix by comparing the two images: a pixel is known if it was not
+affected by the text overlay.
 
 ```{r}
-set.seed(123)
+## Load the images
+u_orig <- readPNG(here::here("images", "loki128.png"))
+u_corr <- readPNG(here::here("images", "loki128_corrupted.png"))
 
-## Create a synthetic grayscale test image (32 x 32)
-rows <- 32
-cols <- 32
-u_orig <- matrix(0, rows, cols)
+## If images are RGB, convert to grayscale by averaging channels
+if (length(dim(u_orig)) == 3) {
+    u_orig <- (u_orig[, , 1] + u_orig[, , 2] + u_orig[, , 3]) / 3
+}
+if (length(dim(u_corr)) == 3) {
+    u_corr <- (u_corr[, , 1] + u_corr[, , 2] + u_corr[, , 3]) / 3
+}
 
-## Create a pattern: horizontal and vertical bars with gradients
-for (i in 1:rows) {
-    for (j in 1:cols) {
-        u_orig[i, j] <- 0.5 * sin(2 * pi * i / rows) + 0.5 * cos(2 * pi * j / cols)
+rows <- nrow(u_orig)
+cols <- ncol(u_orig)
+
+## known is 1 if the pixel is known, 0 if corrupted
+known <- matrix(0, rows, cols)
+for (i in seq_len(rows)) {
+    for (j in seq_len(cols)) {
+        if (u_orig[i, j] == u_corr[i, j]) {
+            known[i, j] <- 1
+        }
     }
 }
-## Rescale to [0, 1]
-u_orig <- (u_orig - min(u_orig)) / (max(u_orig) - min(u_orig))
-
-## Create known matrix: keep 50% of pixels
-known <- matrix(rbinom(rows * cols, 1, 0.5), rows, cols)
-
-## Corrupted image (unknown pixels set to 0)
-u_corr <- known * u_orig
+cat("Image size:", rows, "x", cols, "\n")
+cat("Known pixels:", sum(known), "out of", rows * cols,
+    sprintf("(%.0f%%)\n", 100 * sum(known) / (rows * cols)))
 ```
 
-```{r, fig.cap = "Original (left) and corrupted (right) images"}
-par(mfrow = c(1, 2))
-image(t(u_orig[nrow(u_orig):1, ]), col = grey.colors(256),
-      main = "Original Image", axes = FALSE)
-image(t(u_corr[nrow(u_corr):1, ]), col = grey.colors(256),
-      main = "Corrupted Image", axes = FALSE)
+```{r}
+#| fig-cap: "Original (left) and corrupted (right) grayscale images"
+#| fig-width: 8
+#| fig-height: 4
+p1 <- ggplot() +
+    annotation_raster(matrix(gray(u_orig), rows, cols),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Original Image")
+
+p2 <- ggplot() +
+    annotation_raster(matrix(gray(u_corr), rows, cols),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Corrupted Image")
+
+grid.arrange(p1, p2, ncol = 2)
 ```
 
 Now we solve the total variation in-painting problem using CVXR. We
@@ -119,14 +140,26 @@ of `U`. We display the in-painted image and the intensity difference
 between the original and in-painted images (magnified by a factor of
 10 for visibility).
 
-```{r, fig.cap = "In-painted (left) and difference (right) images"}
-U_val <- value(U)
-par(mfrow = c(1, 2))
-image(t(U_val[nrow(U_val):1, ]), col = grey.colors(256),
-      main = "In-Painted Image", axes = FALSE)
-img_diff <- 10 * abs(u_orig - U_val)
-image(t(img_diff[nrow(img_diff):1, ]), col = grey.colors(256),
-      main = "Difference Image (10x)", axes = FALSE)
+```{r}
+#| fig-cap: "In-painted (left) and difference (right) grayscale images"
+#| fig-width: 8
+#| fig-height: 4
+U_val <- pmin(pmax(value(U), 0), 1)
+
+p3 <- ggplot() +
+    annotation_raster(matrix(gray(U_val), rows, cols),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("In-Painted Image")
+
+img_diff <- pmin(10 * abs(u_orig - U_val), 1)
+p4 <- ggplot() +
+    annotation_raster(matrix(gray(img_diff), rows, cols),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Difference Image (10x)")
+
+grid.arrange(p3, p4, ncol = 2)
 ```
 
 ## Color In-Painting
@@ -138,35 +171,27 @@ and $1$). We solve the problem by creating three CVXR variables (one
 per color channel) and minimizing the total variation jointly across
 all channels.
 
-We create a synthetic $32 \times 32 \times 3$ color test image and
-randomly discard $70\%$ of the pixels.
+We load a $128 \times 128$ color image and randomly discard $70\%$ of
+the pixels.
 
 ```{r}
 set.seed(1)
 
-## Create a synthetic color image
-rows_c <- 32
-cols_c <- 32
-colors <- 3
-
-u_orig_color <- array(0, dim = c(rows_c, cols_c, colors))
-for (i in 1:rows_c) {
-    for (j in 1:cols_c) {
-        u_orig_color[i, j, 1] <- 0.5 + 0.5 * sin(2 * pi * i / rows_c)
-        u_orig_color[i, j, 2] <- 0.5 + 0.5 * cos(2 * pi * j / cols_c)
-        u_orig_color[i, j, 3] <- 0.5 + 0.25 * sin(2 * pi * (i + j) / rows_c)
-    }
+## Load color image
+u_orig_color <- readPNG(here::here("images", "loki128color.png"))
+## Drop alpha channel if present
+if (dim(u_orig_color)[3] == 4) {
+    u_orig_color <- u_orig_color[, , 1:3]
 }
-## Rescale each channel to [0, 1]
-for (k in 1:colors) {
-    ch <- u_orig_color[, , k]
-    u_orig_color[, , k] <- (ch - min(ch)) / (max(ch) - min(ch))
-}
+rows_c <- dim(u_orig_color)[1]
+cols_c <- dim(u_orig_color)[2]
+colors <- dim(u_orig_color)[3]
 
-## Create known matrix: keep 30% of pixels
+## known is 1 if the pixel is known, 0 if corrupted
+## Randomly keep 30% of pixels
 known_color <- array(0, dim = c(rows_c, cols_c, colors))
-for (i in 1:rows_c) {
-    for (j in 1:cols_c) {
+for (i in seq_len(rows_c)) {
+    for (j in seq_len(cols_c)) {
         if (runif(1) > 0.7) {
             known_color[i, j, ] <- 1
         }
@@ -174,13 +199,40 @@ for (i in 1:rows_c) {
 }
 
 u_corr_color <- known_color * u_orig_color
+cat("Color image size:", rows_c, "x", cols_c, "x", colors, "\n")
+```
+
+```{r}
+#| fig-cap: "Original (left) and corrupted (right) color images"
+#| fig-width: 8
+#| fig-height: 4
+## Helper to convert array to raster string matrix for ggplot
+arr_to_raster <- function(arr) {
+    arr <- pmin(pmax(arr, 0), 1)
+    nr <- dim(arr)[1]; nc <- dim(arr)[2]
+    matrix(rgb(arr[, , 1], arr[, , 2], arr[, , 3]), nr, nc)
+}
+
+p5 <- ggplot() +
+    annotation_raster(arr_to_raster(u_orig_color),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Original Image")
+
+p6 <- ggplot() +
+    annotation_raster(arr_to_raster(u_corr_color),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Corrupted Image")
+
+grid.arrange(p5, p6, ncol = 2)
 ```
 
 ```{r}
 ## Solve the TV in-painting problem for each channel
 variables <- list()
 constraints_c <- list()
-for (k in 1:colors) {
+for (k in seq_len(colors)) {
     U_k <- Variable(c(rows_c, cols_c))
     variables[[k]] <- U_k
     constraints_c <- c(constraints_c,
@@ -208,25 +260,41 @@ if (params$mode == "save") {
 After solving, we reconstruct the color image and compare with the
 original.
 
-```{r, fig.cap = "Original (left), corrupted (center), and in-painted (right) color images"}
+```{r}
+#| fig-cap: "Original, corrupted, in-painted, and difference color images"
+#| fig-width: 10
+#| fig-height: 5
 rec_arr <- array(0, dim = c(rows_c, cols_c, colors))
-for (k in 1:colors) {
+for (k in seq_len(colors)) {
     rec_arr[, , k] <- pmin(pmax(value(variables[[k]]), 0), 1)
 }
 
-par(mfrow = c(1, 3))
-## R's image() doesn't directly handle RGB, so we use rasterImage
-plot(c(0, 1), c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "",
-     main = "Original Image")
-rasterImage(u_orig_color, 0, 0, 1, 1, interpolate = FALSE)
+p7 <- ggplot() +
+    annotation_raster(arr_to_raster(u_orig_color),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Original")
 
-plot(c(0, 1), c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "",
-     main = "Corrupted Image")
-rasterImage(u_corr_color, 0, 0, 1, 1, interpolate = FALSE)
+p8 <- ggplot() +
+    annotation_raster(arr_to_raster(u_corr_color),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Corrupted")
 
-plot(c(0, 1), c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "",
-     main = "In-Painted Image")
-rasterImage(rec_arr, 0, 0, 1, 1, interpolate = FALSE)
+p9 <- ggplot() +
+    annotation_raster(arr_to_raster(rec_arr),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("In-Painted")
+
+diff_arr <- pmin(10 * abs(u_orig_color - rec_arr), 1)
+p10 <- ggplot() +
+    annotation_raster(arr_to_raster(diff_arr),
+                      xmin = 0, xmax = 1, ymin = 0, ymax = 1,
+                      interpolate = FALSE) +
+    coord_fixed() + theme_void() + ggtitle("Difference (10x)")
+
+grid.arrange(p7, p8, p9, p10, ncol = 2)
 ```
 
 ## Session Info

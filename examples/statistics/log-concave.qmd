@@ -112,7 +112,7 @@ u <- Variable(K+1)
 obj <- t(counts) %*% u
 constraints <- list(sum(exp(u)) <= 1, diff(u[1:K]) >= diff(u[2:(K+1)]))
 prob <- Problem(Maximize(obj), constraints)
-result <- psolve(prob)
+result <- psolve(prob, solver = "ECOS")
 check_solver_status(prob)
 pmf <- value(exp(u))
 ```

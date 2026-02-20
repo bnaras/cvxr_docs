@@ -1,5 +1,5 @@
 ---
-title: Discplined Convex Programming
+title: Disciplined Convex Programming
 author: "Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
 params:
   mode: ignore
@@ -109,14 +109,14 @@ Each (sub)expression is flagged as one of the following curvatures
 d <- data.frame(
     Curvature = c('constant', 'affine', 'convex', 'concave', 'unknown'),
     Meaning = c(
-    '$f(x)$ independent of $x$',
-    '$f(\\theta x + (1-\\theta)y) = \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]$',
-    '$f(\\theta x + (1-\\theta)y) \\leq \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]$',
-    '$f(\\theta x + (1-\\theta)y) \\geq \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]$',
+    '\\(f(x)\\) independent of \\(x\\)',
+    '\\(f(\\theta x + (1-\\theta)y) = \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]\\)',
+    '\\(f(\\theta x + (1-\\theta)y) \\leq \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]\\)',
+    '\\(f(\\theta x + (1-\\theta)y) \\geq \\theta f(x) + (1-\\theta)f(y), \\; \\forall x, \\; y,\\; \\theta \\in [0,1]\\)',
     'DCP analysis cannot determine the curvature'),
     stringsAsFactors = FALSE)
 library(kableExtra)
-knitr::kable(d, "html") |>
+knitr::kable(d, "html", escape = FALSE) |>
   kable_styling("striped") |>
   column_spec(1:2, background = "#ececec")
 ```
@@ -192,14 +192,14 @@ visualization below shows how this works for the expression
 `2*square(x) + 3`. Here `square` is synonymous with squaring each element of the input `x`. 
 Each subexpression is displayed in a blue box. We mark its curvature on the left and its sign on the right.
 
-![](../../img/dcp_files/example1.png)
+![](../images/dcp_files/example1.png)
 
 ### Example 2
 
 We'll walk through the application of the DCP rules to the expression
 `sqrt(1 + square(x))`.
 
-![](../../img/dcp_files/example2.png)
+![](../images/dcp_files/example2.png)
 
 The variable `x` has affine curvature and unknown sign. The `square`
 function is convex and non-monotone for arguments of unknown sign. It

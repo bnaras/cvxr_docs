@@ -23,6 +23,7 @@ if (params$mode == "test") {
 library(CVXR)
 ## We restrict ourselves to solvers on CRAN
 library(ggplot2)
+library(tidyr)
 library(kableExtra)
 library(glmnet)
 source(here::here("_check_status.R"))
@@ -135,10 +136,14 @@ knitr::kable(d, format = "html", escape = FALSE, caption = "Elastic net fits fro
 We plot the coefficients against the regularization. 
 
 ```{r}
-plot(0, 0, type = "n", main = "Regularization Path for Elastic-net Regression",
-     xlab = expression(lambda), ylab = expression(beta),
-     ylim = c(-0.75, 1.25), xlim = c(0, 50))
-matlines(lambda_vals, t(beta_vals))
+df_path <- data.frame(lambda = lambda_vals, t(beta_vals)) |>
+    pivot_longer(-lambda, names_to = "Coefficient", values_to = "Value")
+ggplot(df_path, aes(x = lambda, y = Value, color = Coefficient)) +
+    geom_line() +
+    labs(x = expression(lambda), y = expression(beta),
+         title = "Regularization Path for Elastic-net Regression") +
+    theme_minimal() +
+    guides(color = "none")
 ```
   
 We can also compare with the `glmnet` results.

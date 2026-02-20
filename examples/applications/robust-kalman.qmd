@@ -206,15 +206,26 @@ x_true <- x_sim
 w_true <- w_sim
 ```
 
-```{r, fig.cap="True and observed vehicle positions"}
+```{r, fig.cap="True and observed vehicle positions", fig.width=10, fig.height=4}
+library(gridExtra)
+
 df_true <- data.frame(x = x_true[1, 1:N], y = x_true[2, 1:N])
 df_obs <- data.frame(x = y[1, ], y = y[2, ])
 
-ggplot() +
-    geom_point(data = df_true, aes(x = x, y = y), color = "blue", alpha = 0.3, size = 0.5) +
-    geom_point(data = df_obs, aes(x = x, y = y), color = "red", alpha = 0.1, size = 0.5) +
-    labs(title = "True (blue) and Observed (red) positions") +
-    theme_minimal()
+xlims <- range(c(df_true$x, df_obs$x))
+ylims <- range(c(df_true$y, df_obs$y))
+
+p1 <- ggplot(df_true, aes(x = x, y = y)) +
+    geom_point(color = "black", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "True positions") + theme_minimal()
+
+p2 <- ggplot(df_obs, aes(x = x, y = y)) +
+    geom_point(color = "firebrick", alpha = 0.15, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "Observed positions") + theme_minimal()
+
+grid.arrange(p1, p2, ncol = 2)
 ```
 
 ## Kalman Filtering Recovery
@@ -241,7 +252,7 @@ for (t in 1:N) {
 }
 
 prob_kf <- Problem(obj_kf, constr)
-result_kf <- psolve(prob_kf, verbose = TRUE)
+result_kf <- psolve(prob_kf, solver = "OSQP", verbose = TRUE)
 check_solver_status(prob_kf)
 cat("Optimal objective value:", result_kf, "\n")
 ```
@@ -256,15 +267,21 @@ if (params$mode == "save") {
 }
 ```
 
-```{r, fig.cap = "True (blue) and Kalman filter recovered (red) positions"}
+```{r, fig.cap = "True and Kalman filter recovered positions", fig.width=10, fig.height=4}
 x_kf <- value(x)
 df_kf <- data.frame(x = x_kf[1, 1:N], y = x_kf[2, 1:N])
 
-ggplot() +
-    geom_point(data = df_true, aes(x = x, y = y), color = "blue", alpha = 0.3, size = 0.5) +
-    geom_point(data = df_kf, aes(x = x, y = y), color = "red", alpha = 0.3, size = 0.5) +
-    labs(title = "True (blue) vs KF Recovery (red)") +
-    theme_minimal()
+p1 <- ggplot(df_true, aes(x = x, y = y)) +
+    geom_point(color = "black", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "True positions") + theme_minimal()
+
+p2 <- ggplot(df_kf, aes(x = x, y = y)) +
+    geom_point(color = "steelblue", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "Kalman filter recovery") + theme_minimal()
+
+grid.arrange(p1, p2, ncol = 2)
 ```
 
 ## Robust Kalman Filtering Recovery
@@ -297,7 +314,7 @@ for (t in 1:N) {
 }
 
 prob_rkf <- Problem(obj_rkf, constr)
-result_rkf <- psolve(prob_rkf, verbose = TRUE)
+result_rkf <- psolve(prob_rkf, solver = "ECOS", verbose = TRUE)
 check_solver_status(prob_rkf)
 cat("Optimal objective value:", result_rkf, "\n")
 ```
@@ -312,27 +329,45 @@ if (params$mode == "save") {
 }
 ```
 
-```{r, fig.cap = "True (blue) and robust Kalman filter recovered (red) positions"}
+```{r, fig.cap = "True and robust Kalman filter recovered positions", fig.width=10, fig.height=4}
 x_rkf <- value(x)
 df_rkf <- data.frame(x = x_rkf[1, 1:N], y = x_rkf[2, 1:N])
 
-ggplot() +
-    geom_point(data = df_true, aes(x = x, y = y), color = "blue", alpha = 0.3, size = 0.5) +
-    geom_point(data = df_rkf, aes(x = x, y = y), color = "red", alpha = 0.3, size = 0.5) +
-    labs(title = "True (blue) vs Robust KF Recovery (red)") +
-    theme_minimal()
+p1 <- ggplot(df_true, aes(x = x, y = y)) +
+    geom_point(color = "black", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "True positions") + theme_minimal()
+
+p2 <- ggplot(df_rkf, aes(x = x, y = y)) +
+    geom_point(color = "darkgreen", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "Robust Kalman filter recovery") + theme_minimal()
+
+grid.arrange(p1, p2, ncol = 2)
 ```
 
-```{r, fig.cap = "Comparison of all three position estimates"}
-ggplot() +
-    geom_point(data = df_obs, aes(x = x, y = y, color = "Observed"), alpha = 0.1, size = 0.5) +
-    geom_point(data = df_kf, aes(x = x, y = y, color = "KF Recovery"), alpha = 0.3, size = 0.5) +
-    geom_point(data = df_rkf, aes(x = x, y = y, color = "Robust KF Recovery"), alpha = 0.3, size = 0.5) +
-    geom_point(data = df_true, aes(x = x, y = y, color = "True"), alpha = 0.3, size = 0.5) +
-    scale_color_manual(values = c("Observed" = "grey", "KF Recovery" = "orange",
-                                  "Robust KF Recovery" = "red", "True" = "blue")) +
-    labs(title = "Position estimates comparison", color = "Method") +
-    theme_minimal()
+```{r, fig.cap = "Comparison of all four position estimates", fig.width=10, fig.height=8}
+p1 <- ggplot(df_true, aes(x = x, y = y)) +
+    geom_point(color = "black", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "True") + theme_minimal()
+
+p2 <- ggplot(df_obs, aes(x = x, y = y)) +
+    geom_point(color = "firebrick", alpha = 0.15, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "Observed") + theme_minimal()
+
+p3 <- ggplot(df_kf, aes(x = x, y = y)) +
+    geom_point(color = "steelblue", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "Kalman filter") + theme_minimal()
+
+p4 <- ggplot(df_rkf, aes(x = x, y = y)) +
+    geom_point(color = "darkgreen", alpha = 0.4, size = 0.5) +
+    coord_fixed(xlim = xlims, ylim = ylims) +
+    labs(title = "Robust Kalman filter") + theme_minimal()
+
+grid.arrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
 ```
 
 ## Session Info

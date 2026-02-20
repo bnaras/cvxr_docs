@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: _site
+  resources:
+    - "images/**"
   render:
     - "*.qmd"
     - "examples/**/*.qmd"

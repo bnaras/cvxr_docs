@@ -19,6 +19,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+library(ggplot2)
 source(here::here("_check_status.R"))
 ```
 
@@ -103,9 +104,11 @@ We can visualize the D/L ratio as a function of $\Delta x$:
 ```{r}
 x_vals <- seq(0.25, 1, length.out = 201)
 obj_vals <- sqrt(1 / x_vals^2 - 1)
-plot(x_vals, obj_vals, type = "l", col = "blue",
-     xlab = expression(Delta * x), ylab = "D/L Ratio",
-     main = "Drag-to-Lift Ratio vs. Wedge Width")
+ggplot(data.frame(x = x_vals, y = obj_vals), aes(x, y)) +
+    geom_line(color = "blue") +
+    labs(x = expression(Delta * x), y = "D/L Ratio",
+         title = "Drag-to-Lift Ratio vs. Wedge Width") +
+    theme_minimal()
 ```
 
 ## DQCP Formulation
@@ -165,30 +168,29 @@ the rectangle is inscribed within the wedge.
 ```{r}
 y <- sqrt(1 - x_opt^2)
 lambda1 <- a * x_opt / y
-lambda2 <- a * x_opt^2 / y + a * y
-lambda3 <- a * x_opt - y * (a * x_opt / y - b)
 
-## Draw the wedge
-plot(NA, xlim = c(-0.05, 1.05), ylim = c(-0.2, 0.02),
-     xlab = "", ylab = "", asp = 1,
-     main = "Wedge with Inscribed Rectangle")
-lines(c(0, x_opt), c(0, 0), col = "blue", lwd = 2)
-lines(c(0, x_opt), c(0, -y), col = "blue", lwd = 2)
-lines(c(x_opt, x_opt), c(0, -y), col = "blue", lwd = 2)
+## Wedge vertices
+wedge <- data.frame(
+    x = c(0, x_opt, x_opt, 0),
+    y = c(0, 0, -y, 0)
+)
 
-## Draw the inscribed rectangle
+## Rectangle vertices
 pt1 <- c(lambda1 * x_opt, -lambda1 * y)
 pt2 <- c((lambda1 + b) * x_opt, -(lambda1 + b) * y)
 pt3 <- c((lambda1 + b) * x_opt + a * y, -(lambda1 + b) * y + a * x_opt)
 pt4 <- c(lambda1 * x_opt + a * y, -lambda1 * y + a * x_opt)
+rect <- data.frame(
+    x = c(pt1[1], pt2[1], pt3[1], pt4[1], pt1[1]),
+    y = c(pt1[2], pt2[2], pt3[2], pt4[2], pt1[2])
+)
 
-lines(c(pt1[1], pt2[1]), c(pt1[2], pt2[2]), col = "red", lwd = 2)
-lines(c(pt2[1], pt3[1]), c(pt2[2], pt3[2]), col = "red", lwd = 2)
-lines(c(pt3[1], pt4[1]), c(pt3[2], pt4[2]), col = "red", lwd = 2)
-lines(c(pt4[1], pt1[1]), c(pt4[2], pt1[2]), col = "red", lwd = 2)
-
-legend("topright", legend = c("Wedge", "Rectangle"),
-       col = c("blue", "red"), lwd = 2)
+ggplot() +
+    geom_path(data = wedge, aes(x, y), color = "blue", linewidth = 1) +
+    geom_path(data = rect, aes(x, y), color = "red", linewidth = 1) +
+    coord_fixed() +
+    labs(title = "Wedge with Inscribed Rectangle") +
+    theme_minimal()
 ```
 
 ## Session Info
