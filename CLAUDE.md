@@ -4,9 +4,12 @@
 - `CVXR` is the current (old) R implementation. Source: `/Users/naras/GitHub/CVXR` branch claude
 - Old `CVXR` has a number of examples here. Source `/Users/naras/GitHub/cvxr_docs` branch claude.
 - New `CVXR` is installed in R currently and is a massive update.
+- We now haven initial quarto website here
 
 ## TASK
 
-- Perhaps redesign our website, but I like the alabaster clean look, perhaps a quarto website.
-- Port all existing examples to the new `CVXR` API. The folder `v1.8.x_port` in this project contains the modified markdowns.
-- Port many of the existing examples in `CVXPY` especially `DGP` and `DPP` others.
+- We would like smaller font size maybe
+- We want ggplots for everything, e.g. robust kalman example
+- Some code sections were made not executable---this has to be revisited because the older version unintentionally dropped some features
+- Notice the testing infrastructure---it has to be kept intact. For now we use `ignore`. 
+- Make sure the `cvxr` logo is not dropped

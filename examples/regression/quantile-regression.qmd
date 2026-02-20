@@ -34,9 +34,9 @@ source(here::here("_check_status.R"))
 Quantile regression is another variation on least squares
 \citep{quantile}. The loss is the tilted $l_1$ function,
 
-\[
-	\phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
-\]
+$$
+\phi(u) = \tau\max(u,0) - (1-\tau)\max(-u,0) = \frac{1}{2}|u| + \left(\tau - \frac{1}{2}\right)u,
+$$
 
 where $\tau \in (0,1)$ specifies the quantile. The problem as before
 is to minimize the total residual loss. This model is commonly used in
@@ -59,7 +59,7 @@ taus <- c(0.1, 0.25, 0.5, 0.75, 0.90, 0.95)
 fits <- data.frame(
     coef(lm(foodexp ~ income, data = engel)),
     sapply(taus, function(x) coef(rq(formula = foodexp ~ income, data = engel, tau = x))))
-names(fits) <- c("OLS", sprintf("$\\tau_{%0.2f}$", taus))
+names(fits) <- c("OLS", sprintf("\\(\\tau_{%0.2f}\\)", taus))
 
 nf <- ncol(fits)
 colors <- colorRampPalette(colors = c("black", "red"))(nf)
@@ -76,7 +76,7 @@ The above plot shows the quantile regression fits for $\tau = (0.1,
 The following is a table of the estimates.
 
 ```{r}
-knitr::kable(fits, format = "html", caption = "Fits from OLS and `quantreg`") |>
+knitr::kable(fits, format = "html", escape = FALSE, caption = "Fits from OLS and `quantreg`") |>
     kable_styling("striped") |>
     column_spec(1:8, background = "#ececec")
 ```
@@ -99,7 +99,7 @@ solutions <- sapply(taus, function(tau) {
 })
 fits <- data.frame(coef(lm(foodexp ~ income, data = engel)),
                    solutions)
-names(fits) <- c("OLS", sprintf("$\\tau_{%0.2f}$", taus))
+names(fits) <- c("OLS", sprintf("\\(\\tau_{%0.2f}\\)", taus))
 ```
 
 Here is a table similar to the above with the OLS estimate added in
@@ -107,7 +107,7 @@ for easy comparison.
 
 
 ```{r}
-knitr::kable(fits, format = "html", caption = "Fits from OLS and `CVXR`") |>
+knitr::kable(fits, format = "html", escape = FALSE, caption = "Fits from OLS and `CVXR`") |>
     kable_styling("striped") |>
     column_spec(1:8, background = "#ececec")
 ```

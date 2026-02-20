@@ -17,6 +17,7 @@ website:
     type: textbox
   page-navigation: true
   navbar:
+    logo: images/logo.png
     background: white
     foreground: dark
     left:

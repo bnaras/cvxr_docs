@@ -37,12 +37,12 @@ of the most common regularization functions are the $l_1$-norm and
 squared $l_2$-norm, combined in the elastic net regression model
 [@elasticnet, @glmnet],
 
-\[
-\begin{array}{ll} 
+$$
+\begin{array}{ll}
 \underset{\beta}{\mbox{minimize}} & \frac{1}{2m}\|y - X\beta\|_2^2 +
-\lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1). 
+\lambda(\frac{1-\alpha}{2}\|\beta\|_2^2 + \alpha\|\beta\|_1).
 \end{array}
-\]
+$$
 
 Here $\lambda \geq 0$ is the overall regularization weight and
 $\alpha \in [0,1]$ controls the relative $l_1$ versus squared $l_2$
@@ -125,9 +125,9 @@ We can now get a table of the coefficients.
 
 ```{r}
 d <- as.data.frame(beta_vals)
-rownames(d) <- sprintf("$\\beta_{%d}$", seq_len(p))
-names(d) <- sprintf("$\\lambda = %.3f$", lambda_vals)
-knitr::kable(d, format = "html", caption = "Elastic net fits from `CVXR`", digits = 3) |>
+rownames(d) <- sprintf("\\(\\beta_{%d}\\)", seq_len(p))
+names(d) <- sprintf("\\(\\lambda = %.3f\\)", lambda_vals)
+knitr::kable(d, format = "html", escape = FALSE, caption = "Elastic net fits from `CVXR`", digits = 3) |>
     kable_styling("striped") |>
     column_spec(1:11, background = "#ececec")
 ```
@@ -149,9 +149,9 @@ model_net <- glmnet(X, y, family = "gaussian", alpha = alpha,
                     intercept = FALSE)
 ## Reverse order to match beta_vals
 coef_net <- as.data.frame(as.matrix(coef(model_net)[-1, seq(TRIALS, 1, by = -1)]))
-rownames(coef_net) <- sprintf("$\\beta_{%d}$", seq_len(p))
-names(coef_net) <- sprintf("$\\lambda = %.3f$", lambda_vals)
-knitr::kable(coef_net, format = "html", digits = 3, caption = "Coefficients from `glmnet`") |>
+rownames(coef_net) <- sprintf("\\(\\beta_{%d}\\)", seq_len(p))
+names(coef_net) <- sprintf("\\(\\lambda = %.3f\\)", lambda_vals)
+knitr::kable(coef_net, format = "html", escape = FALSE, digits = 3, caption = "Coefficients from `glmnet`") |>
     kable_styling("striped") |>
     column_spec(1:11, background = "#ececec")
 ```

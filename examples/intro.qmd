@@ -55,9 +55,9 @@ Given the data $X$ and $Y$, we can estimate the $\beta$ vector using
 ```{r}
 ls.model <- lm(Y ~ 0 + X)   # There is no intercept in our model above
 m <- matrix(coef(ls.model), ncol = 1)
-rownames(m) <- paste0("$\\beta_{", 1:p, "}$")
+rownames(m) <- paste0("\\(\\beta_{", 1:p, "}\\)")
 library(kableExtra)
-knitr::kable(m, format = "html") |>
+knitr::kable(m, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:2, background = "#ececec")
 ```
@@ -126,8 +126,8 @@ from `lm`.
 ```{r}
 m <- cbind(value(betaHat), coef(ls.model))
 colnames(m) <- c("CVXR est.", "lm est.")
-rownames(m) <- paste0("$\\beta_{", 1:p, "}$")
-knitr::kable(m, format = "html") |>
+rownames(m) <- paste0("\\(\\beta_{", 1:p, "}\\)")
+knitr::kable(m, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:3, background = "#ececec")
 ```
@@ -163,8 +163,8 @@ problem <- Problem(objective, constraints = list(betaHat >= 0))
 result <- psolve(problem)
 check_solver_status(problem)
 m <- matrix(value(betaHat), ncol = 1)
-rownames(m) <- paste0("$\\beta_{", 1:p, "}$")
-knitr::kable(m, format = "html") |>
+rownames(m) <- paste0("\\(\\beta_{", 1:p, "}\\)")
+knitr::kable(m, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:2, background = "#ececec")
 ```
@@ -181,8 +181,8 @@ nnls.fit <- nnls(X, Y)$x
 ```{r}
 m <- cbind(value(betaHat), nnls.fit)
 colnames(m) <- c("CVXR est.", "nnls est.")
-rownames(m) <- paste0("$\\beta_{", 1:p, "}$")
-knitr::kable(m, format = "html") |>
+rownames(m) <- paste0("\\(\\beta_{", 1:p, "}\\)")
+knitr::kable(m, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:3, background = "#ececec")
 ```
@@ -216,8 +216,8 @@ $\beta_2$ and $\beta_3$ respectively).
 
 ```{r}
 A <- matrix(c(0, 1, 1, rep(0, 7)), nrow = 1)
-colnames(A) <- paste0("$\\beta_{", 1:p, "}$")
-knitr::kable(A, format = "html") |>
+colnames(A) <- paste0("\\(\\beta_{", 1:p, "}\\)")
+knitr::kable(A, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:10, background = "#ececec")
 ```
@@ -247,8 +247,8 @@ and 3 and zeros everywhere.
 
 ```{r}
 B <- diag(c(1, 0, 0, rep(1, 7)))
-colnames(B) <- rownames(B) <- paste0("$\\beta_{", 1:p, "}$")
-knitr::kable(B, format = "html") |>
+colnames(B) <- rownames(B) <- paste0("\\(\\beta_{", 1:p, "}\\)")
+knitr::kable(B, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:11, background = "#ececec")
 ```
@@ -275,8 +275,8 @@ And we can get the estimates of $\beta$.
 
 ```{r}
 m <- matrix(value(betaHat), ncol = 1)
-rownames(m) <- paste0("$\\beta_{", 1:p, "}$")
-knitr::kable(m, format = "html") |>
+rownames(m) <- paste0("\\(\\beta_{", 1:p, "}\\)")
+knitr::kable(m, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:2, background = "#ececec")
 ```

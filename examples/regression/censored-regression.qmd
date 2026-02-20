@@ -43,11 +43,11 @@ but only know $y_i \geq D$ for $i = K+1,\ldots,m$ and some constant $D
 restricting the fitted values $\hat y_i = x_i^T\beta$ to lie above $D$
 for the censored observations:
 
-\[
+$$
 \begin{array}{ll} \underset{\beta}{\mbox{minimize}} & \sum_{i=1}^K (y_i - x_i^T\beta)^2 \\
 \mbox{subject to} & x_i^T\beta \geq D, \quad i = K+1,\ldots,m.
 \end{array}
-\]
+$$
 
 This avoids the bias introduced by standard OLS, while still utilizing
 all of the data points in the regression. The constraint requires only

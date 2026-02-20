@@ -132,13 +132,13 @@ colnames(table) <- table[1, ]
 colnames(table)[5] <- "Curvature"
 table <- table[-1, ]
 ## Fix up two rows manually
-table[5, 2] <- "$\\text{sum of } k \\text{ largest }\\\\ \\text{eigenvalues of }X$"
-table[6, 2] <- "$\\text{sum of } k \\text{ smallest}\\\\ \\text{eigenvalues of }X$"
+table[5, 2] <- "\\(\\text{sum of } k \\text{ largest } \\text{eigenvalues of }X\\)"
+table[6, 2] <- "\\(\\text{sum of } k \\text{ smallest} \\text{eigenvalues of }X\\)"
 ```
 
 ```{r, echo = FALSE, message = FALSE}
 library(kableExtra)
-knitr::kable(table, "html") |>
+knitr::kable(table, "html", escape = FALSE) |>
   kable_styling("striped") |>
   column_spec(1:6, background = "#ececec")
 ```
@@ -261,7 +261,7 @@ table <- table[-1, ]
 ```
 
 ```{r, echo = FALSE}
-s <- knitr::kable(table, "html") |>
+s <- knitr::kable(table, "html", escape = FALSE) |>
   kable_styling("striped") |>
   column_spec(1:6, background = "#ececec")
 ## Unescape that bloody ampersand.

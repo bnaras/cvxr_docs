@@ -99,7 +99,7 @@ for(i in seq_along(gammas)) {
 Note how we can obtain the risk and return by _directly evaluating_
 the value of the separate expressions:
 
-```{r, eval = FALSE}
+```{r}
 value(risk)
 value(ret)
 ```

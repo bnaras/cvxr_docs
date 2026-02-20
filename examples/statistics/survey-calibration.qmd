@@ -64,12 +64,12 @@ Let $X \in {\mathbf R}^{m \times n}$ be the matrix of survey samples, with
 each column corresponding to an auxiliary variable. Reweighting can be
 expressed as the optimization problem (see @Davies:2016):
 
-\[
-	\begin{array}{ll}
-		\mbox{minimize} & \sum_{i=1}^m d_i\phi(g_i) \\
-		\mbox{subject to} & A^Tg = r
-	\end{array}
-\]
+$$
+\begin{array}{ll}
+\mbox{minimize} & \sum_{i=1}^m d_i\phi(g_i) \\
+\mbox{subject to} & A^Tg = r
+\end{array}
+$$
 
 with respect to $g \in {\mathbf R}^m$, where $\phi:{\mathbf R} \rightarrow
 {\mathbf R}$ is a strictly convex function with $\phi(1) = 0$, $r \in
@@ -138,15 +138,18 @@ build_table(d1 = build_df(apisrs, "Survey", w_survey),
 
 Two other penalty functions commonly used are:
 
-- __Quadratic__
-\[
-  \phi^{Q}(g) = \frac{1}{2}(g-1)^2;
-\]
-- __Logit__
-\[
-  \phi^{L}(g; l, u) = \frac{1}{C}\biggl[ (g-l)\log\left(\frac{g-l}{1-l}\right) +
-  (u-g)\log\left(\frac{u-g}{u-1}\right) \biggr] \mbox{ for } C = \frac{u-l}{(1-l)(u-1)}.
-\]
+__Quadratic__
+
+$$
+\phi^{Q}(g) = \frac{1}{2}(g-1)^2;
+$$
+
+__Logit__
+
+$$
+\phi^{L}(g; l, u) = \frac{1}{C}\biggl[ (g-l)\log\left(\frac{g-l}{1-l}\right) +
+(u-g)\log\left(\frac{u-g}{u-1}\right) \biggr] \mbox{ for } C = \frac{u-l}{(1-l)(u-1)}.
+$$
 
 It is again easy to incorporate these in our example and compare to
 `survey` results.

@@ -73,7 +73,9 @@ optimal value.
 In the following code, we solve a quadratic program with `CVXR`.
 
 ```{r}
-## Generate a random non-trivial quadratic program
+## Generate a random non-trivial quadratic program.
+## Construct h and b from a known feasible point x0
+## to guarantee joint feasibility of the constraints.
 set.seed(1)
 m <- 15
 n <- 10
@@ -82,9 +84,10 @@ P <- matrix(rnorm(n * n), nrow = n, ncol = n)
 P <- t(P) %*% P
 q <- rnorm(n)
 G <- matrix(rnorm(m * n), nrow = m, ncol = n)
-h <- G %*% rnorm(n)
 A <- matrix(rnorm(p * n), nrow = p, ncol = n)
-b <- rnorm(p)
+x0 <- rnorm(n)
+h <- G %*% x0 + abs(rnorm(m))
+b <- A %*% x0
 
 ## Define and solve the CVXR problem
 x <- Variable(n)

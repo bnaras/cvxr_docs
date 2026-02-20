@@ -39,13 +39,13 @@ x_i^T\beta)
 
 for variable $\beta \in {\mathbf R}^n$, where the loss $\phi$ is the Huber
 function with threshold $M > 0$,
-\[
-	\phi(u) = 
-	\begin{cases}
-		u^2 & \mbox{if } |u| \leq M \\
-		2Mu - M^2 & \mbox{if } |u| > M.
-	\end{cases}
-\]
+$$
+\phi(u) =
+\begin{cases}
+u^2 & \mbox{if } |u| \leq M \\
+2Mu - M^2 & \mbox{if } |u| > M.
+\end{cases}
+$$
 
 This function is identical to the least squares penalty for small
 residuals, but on large residuals, its penalty is lower and increases

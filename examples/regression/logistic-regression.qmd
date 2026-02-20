@@ -39,12 +39,12 @@ conditional response is modeled as $y|x \sim
 e^{-x^T\beta}}$ is the logistic function, and maximize the
 log-likelihood function, yielding the optimization problem
 
-\[
-\begin{array}{ll} 
+$$
+\begin{array}{ll}
 \underset{\beta}{\mbox{maximize}} & \sum_{i=1}^m \{
 y_i\log(g_{\beta}(x_i)) + (1-y_i)\log(1 - g_{\beta}(x_i)) \}.
-\end{array} 
-\]
+\end{array}
+$$
 
 `CVXR` provides the `logistic` atom as a shortcut for $f(z) =
 \log(1 + e^z)$ to express the optimization problem.  One may be
@@ -99,8 +99,8 @@ We can compare with the standard `stats::glm` estimate.
 d <- data.frame(y = as.numeric(y > 0), X = X)
 glm <- stats::glm(formula = y ~ 0 + X, family = "binomial", data = d)
 est.table <- data.frame("CVXR.est" = beta_res, "GLM.est" = coef(glm))
-rownames(est.table) <- paste0("$\\beta_{", 1:n, "}$")
-knitr::kable(est.table, format = "html") |>
+rownames(est.table) <- paste0("\\(\\beta_{", 1:n, "}\\)")
+knitr::kable(est.table, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:3, background = "#ececec")
 ```
@@ -119,8 +119,8 @@ psolve(prob)
 check_solver_status(prob)
 beta_log <- value(beta)
 est.table <- data.frame("CVXR.est" = beta_log, "GLM.est" = coef(glm))
-rownames(est.table) <- paste0("$\\beta_{", 1:n, "}$")
-knitr::kable(est.table, format = "html") |>
+rownames(est.table) <- paste0("\\(\\beta_{", 1:n, "}\\)")
+knitr::kable(est.table, format = "html", escape = FALSE) |>
     kable_styling("striped") |>
     column_spec(1:3, background = "#ececec")
 ```
