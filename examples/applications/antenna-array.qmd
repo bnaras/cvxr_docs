@@ -1,6 +1,6 @@
 ---
 title: "Minimize Beamwidth of an Antenna Array"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -126,7 +126,7 @@ Since CVXR works with real variables, we represent complex-valued
 quantities by separating real and imaginary parts. A complex vector
 $w = w_R + i w_I$ is stored as a real vector $(w_R, w_I)$.
 
-```{r}
+```{r, results = "hold"}
 ## Set up real/imaginary representation of Atar
 Atar_R <- Re(Atar)
 Atar_I <- Im(Atar)
@@ -316,7 +316,7 @@ ggplot() +
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

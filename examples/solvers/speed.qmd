@@ -47,12 +47,18 @@ the DSL entirely and call the solver directly. This avoids all
 overhead from `CVXR`'s compilation and DCP verification on each
 solve, but requires working with low-level solver data structures.
 
+`CVXR` provides a three-step public API for this, mirroring the
+`CVXPY` interface:
+
+1. `problem_data()` — compile the problem into solver-ready data
+2. `solve_via_data()` — call the solver on the compiled data
+3. `problem_unpack_results()` — invert the compilation chain and
+   populate variable values
+
 ::: {.callout-warning}
-The approach below uses internal functions and solver-specific data
-formats that may change between `CVXR` versions. We recommend
-checking DCP-compliance at least once (via `is_dcp(prob)`) before
-bypassing verification. _Not verifying DCP-compliance may result in
-garbage!_
+We recommend checking DCP-compliance at least once (via
+`is_dcp(prob)`) before bypassing verification. _Not verifying
+DCP-compliance may result in garbage!_
 :::
 
 ## An Example
@@ -87,16 +93,25 @@ check_solver_status(prob)
 betaHat <- value(beta)
 ```
 
-This is the _recommended way_ to solve a problem.
+This is the _recommended way_ to solve a problem. After solving, you
+can inspect timing via `solver_stats()`:
+
+```{r}
+stats <- solver_stats(prob)
+stats
+```
+
+The `SolverStats` object reports the solver's own wall-clock time,
+setup time, and iteration count.
 
 However, suppose we wished to construct bootstrap confidence intervals
-for the estimate using 100 resamples.  It is clear that this
-computation time can quickly become limiting .
+for the estimate using 100 resamples. It is clear that this
+computation time can quickly become limiting.
 
 Below, we show how one can get at the problem data and directly call a
 solver to get faster results.
 
-## Profile the code
+## Profile the Code
 
 Profiling a single fit to the model is useful to figure out where most
 of the time is spent.
@@ -115,48 +130,38 @@ profvis({
 ```
 
 It is especially instructive to click on the _data_ tab and open up
-the tree for `solve` to see the sequence of calls and cumulative time
+the tree for `psolve` to see the sequence of calls and cumulative time
 used.
 
 ## Directly Calling the Solver
 
 We are mathematically certain that the above is convex and so we can
-avoid the repeated DCP checks. We can obtain the problem data for a
-particular solver using the function `get_problem_data` and directly
-hand that data to the solver to get the solution.
+avoid the repeated DCP checks. The three steps are:
+
+**Step 1.** Extract the compiled problem data using `problem_data()`.
+This returns the low-level solver data, the compilation chain, and
+inverse data needed to reconstruct the solution.
 
 ```{r}
-prob_data <- get_problem_data(prob, solver = "CLARABEL")
+prob_data <- problem_data(prob, solver = "CLARABEL")
 ```
 
-Now that we have the problem data, we can call the Clarabel solver
-directly with the right arguments.
+**Step 2.** Call the solver directly via `solve_via_data()` on the
+compilation chain. This bypasses DCP verification entirely.
 
 ```{r}
-solver_data <- prob_data$data
-## Convert ConeDims to a list format that clarabel::clarabel expects
-cone_dims <- solver_data[["dims"]]
-cones <- list()
-if (cone_dims@zero > 0L) cones$z <- cone_dims@zero
-if (cone_dims@nonneg > 0L) cones$l <- cone_dims@nonneg
-for (q in cone_dims@soc) cones <- c(cones, list(q = q))
-if (cone_dims@exp > 0L) {
-    for (i in seq_len(cone_dims@exp)) cones <- c(cones, list(ep = 0L))
-}
-solver_output <- clarabel::clarabel(
-    A = solver_data[["A"]],
-    b = solver_data[["b"]],
-    q = solver_data[["c"]],
-    cones = cones
-)
+solver_output <- solve_via_data(prob_data$chain, prob_data$data,
+                                warm_start = FALSE, verbose = FALSE,
+                                solver_opts = list())
 ```
 
-Finally, we can obtain the results by using the internal chain to
-unpack the solver results.
+**Step 3.** Unpack the solver results back into the problem's
+variables using `problem_unpack_results()`. This reverses the
+compilation chain and populates `value(beta)` etc.
 
 ```{r}
-solver_solution <- CVXR:::problem_unpack_results(prob, solver_output,
-                                                  prob_data$chain, prob_data$inverse_data)
+problem_unpack_results(prob, solver_output,
+                       prob_data$chain, prob_data$inverse_data)
 ```
 
 ## Profile the Direct Call
@@ -168,31 +173,19 @@ profvis({
     beta <- Variable(m)
     obj <- Minimize(0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta))))
     prob <- Problem(obj)
-    prob_data <- get_problem_data(prob, solver = "CLARABEL")
-    solver_data <- prob_data$data
-    cone_dims <- solver_data[["dims"]]
-    cones <- list()
-    if (cone_dims@zero > 0L) cones$z <- cone_dims@zero
-    if (cone_dims@nonneg > 0L) cones$l <- cone_dims@nonneg
-    for (q in cone_dims@soc) cones <- c(cones, list(q = q))
-    if (cone_dims@exp > 0L) {
-        for (i in seq_len(cone_dims@exp)) cones <- c(cones, list(ep = 0L))
-    }
-    solver_output <- clarabel::clarabel(
-        A = solver_data[["A"]],
-        b = solver_data[["b"]],
-        q = solver_data[["c"]],
-        cones = cones
-    )
-    CVXR:::problem_unpack_results(prob, solver_output,
-                                  prob_data$chain, prob_data$inverse_data)
+    prob_data <- problem_data(prob, solver = "CLARABEL")
+    solver_output <- solve_via_data(prob_data$chain, prob_data$data,
+                                    warm_start = FALSE, verbose = FALSE,
+                                    solver_opts = list())
+    problem_unpack_results(prob, solver_output,
+                           prob_data$chain, prob_data$inverse_data)
 })
 ```
 
 ## Same Answer?
 
 Of course, we should also verify that the results obtained in both
-cases are same.
+cases are the same.
 
 ```{r}
 identical(betaHat, value(beta))
@@ -200,7 +193,7 @@ identical(betaHat, value(beta))
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

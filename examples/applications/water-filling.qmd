@@ -1,6 +1,6 @@
 ---
 title: "Water Filling in Communications"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -105,7 +105,7 @@ The function outputs the problem status, the maximum communication
 rate, and the power allocation required to achieve this maximum
 communication rate.
 
-```{r}
+```{r, results = "hold"}
 buckets <- 3
 alpha <- c(0.8, 1.0, 1.2)
 
@@ -160,7 +160,7 @@ ggplot(df) +
 We now solve a larger water filling problem with $N = 6$ channels and
 varying floor levels.
 
-```{r}
+```{r, results = "hold"}
 n_large <- 6
 alpha_large <- c(0.2, 0.5, 0.8, 1.0, 1.2, 1.5)
 P_large <- 2
@@ -207,7 +207,7 @@ ggplot(df_l) +
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

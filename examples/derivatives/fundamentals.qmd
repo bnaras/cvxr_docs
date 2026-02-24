@@ -1,6 +1,6 @@
 ---
 title: "Derivatives Fundamentals"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -258,7 +258,7 @@ cat(sprintf("original %.5f  predicted %.5f  actual %.5f\n",
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

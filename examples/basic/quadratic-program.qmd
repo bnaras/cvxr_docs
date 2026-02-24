@@ -112,7 +112,7 @@ if (params$mode == "save") {
 }
 ```
 
-```{r}
+```{r, results = "hold"}
 ## Print result
 cat(sprintf("The optimal value is %f\n", result))
 cat("A solution x is\n")
@@ -124,7 +124,7 @@ print(dual_value(ineq_con))
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

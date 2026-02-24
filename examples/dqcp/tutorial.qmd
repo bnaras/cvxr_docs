@@ -1,6 +1,6 @@
 ---
 title: "Disciplined Quasiconvex Programming"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -43,7 +43,7 @@ quasiconvex program, but the converse is not true.
 `CVXR` lets you form and solve DQCP problems, just as it does for DCP
 problems. For example, the following code solves a simple QCP:
 
-```{r}
+```{r, results = "hold"}
 x <- Variable()
 y <- Variable(pos = TRUE)
 objective_fn <- -sqrt(x) / y
@@ -90,7 +90,7 @@ flag an expression as quasiconvex or quasiconcave.
 The curvature of an Expression is stored in its `curvature()`
 attribute. For example:
 
-```{r}
+```{r, results = "hold"}
 x <- Variable(3)
 w <- ceil_expr(x)
 cat("Curvature of ceil_expr(x):", curvature(w), "\n")
@@ -146,7 +146,7 @@ If an Expression satisfies the above rules, we say that the Expression
 "is DQCP." You can check whether an Expression is DQCP by calling
 `is_dqcp()`. For example:
 
-```{r}
+```{r, results = "hold"}
 x <- Variable(pos = TRUE)
 y <- Variable(pos = TRUE)
 
@@ -183,7 +183,7 @@ You can check that a problem, constraint, or objective satisfies the
 DQCP rules by calling `is_dqcp()`. Here are some examples of DQCP and
 non-DQCP problems:
 
-```{r}
+```{r, results = "hold"}
 ## The sign of variables affects curvature analysis.
 x <- Variable(nonneg = TRUE)
 concave_fractional_fn <- x * sqrt(x)
@@ -195,7 +195,7 @@ cat("Is constraint DQCP?", is_dqcp(constraint[[1]]), "\n")
 cat("Is problem DQCP?", is_dqcp(problem), "\n")
 ```
 
-```{r}
+```{r, results = "hold"}
 w <- Variable()
 fn <- w * sqrt(w)
 problem2 <- Problem(Maximize(fn))
@@ -267,7 +267,7 @@ output describing the bisection, supply the keyword argument
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

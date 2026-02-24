@@ -1,6 +1,6 @@
 ---
 title: Rank-One Nonnegative Matrix Factorization
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -77,7 +77,7 @@ where the question marks denote the missing entries.
 
 ## Problem Formulation and Solution
 
-```{r}
+```{r, results = "hold"}
 m <- 3
 n <- 3
 
@@ -138,7 +138,7 @@ rank-one outer product structure.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

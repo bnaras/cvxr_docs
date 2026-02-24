@@ -1,6 +1,6 @@
 ---
 title: "Sensitivity Analysis and Gradients"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -200,7 +200,7 @@ cat("Predicted change in x:", delta(x), "\n")
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

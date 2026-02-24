@@ -1,6 +1,6 @@
 ---
 title: "Sparse Solution of Linear Inequalities"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -105,7 +105,7 @@ b <- as.vector(A %*% x0) + runif(m)
 
 ## $\ell_1$-norm Heuristic
 
-```{r}
+```{r, results = "hold"}
 ## Create variable
 x_l1 <- Variable(n)
 
@@ -217,7 +217,7 @@ $\ell_1$-norm heuristic.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

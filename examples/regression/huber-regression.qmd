@@ -148,7 +148,7 @@ if (params$mode == "save") {
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

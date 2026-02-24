@@ -102,7 +102,7 @@ if (params$mode == "save") {
 }
 ```
 
-```{r}
+```{r, results = "hold"}
 cat(sprintf("Status: %s\n", status(prob)))
 cat(sprintf("The optimal value is %f\n", result))
 cat("A solution x is\n")
@@ -112,7 +112,7 @@ print(value(x))
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

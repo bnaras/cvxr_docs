@@ -67,15 +67,15 @@ result$status      # problem status
 
 ### Axis parameter changes
 
-The `axis` parameter now uses 0-based indexing (matching CVXPY/NumPy):
+The `axis` parameter now uses R's `apply()` convention (1-based indexing):
 
 | Old CVXR | New CVXR | Meaning |
 |----------|----------|---------|
-| `axis = 2` | `axis = 0` | Column-wise reduction |
 | `axis = 1` | `axis = 1` | Row-wise reduction (unchanged) |
+| `axis = 2` | `axis = 2` | Column-wise reduction (unchanged) |
 | `axis = NA` | `axis = NULL` | All entries |
 
-Passing `axis = 2` now produces an informative error with migration guidance.
+Passing `axis = 0` now produces an informative error with migration guidance.
 
 ### PSD constraints
 
@@ -157,7 +157,7 @@ To migrate code from CVXR 1.x to 1.8.x:
 5. Replace `result$getDualValue(con)` with `dual_value(con)`
 6. Replace `add_to_solver_blacklist()` calls (no longer needed)
 7. Update solver names: `"ECOS"` → `"CLARABEL"`, `"GLPK"` → `"HIGHS"`
-8. Update `axis` arguments: `axis = 2` → `axis = 0`, `axis = NA` → `axis = NULL`
+8. Update `axis` arguments: `axis = NA` → `axis = NULL` (row/column axis values 1 and 2 are unchanged)
 9. Replace `A %>>% B` with `PSD(A - B)` if desired
 
 ## References

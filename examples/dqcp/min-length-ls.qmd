@@ -1,6 +1,6 @@
 ---
 title: "Minimum-Length Least Squares"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -64,7 +64,7 @@ Now we construct and solve the QCP using DQCP. The objective
 `length_expr(x)` computes the index of the last nonzero element in
 $x$, and the constraint requires the MSE to be at most $\epsilon$.
 
-```{r}
+```{r, results = "hold"}
 x <- Variable(n)
 mse <- sum_squares(A %*% x - b) / n
 problem <- Problem(Minimize(length_expr(x)), list(mse <= epsilon))
@@ -125,7 +125,7 @@ provides.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: "Fractional Optimization"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -61,7 +61,7 @@ quasiconcave (actually quasilinear), increasing in the numerator when
 the denominator is positive, and decreasing in the denominator when
 the numerator is nonnegative.
 
-```{r}
+```{r, results = "hold"}
 x <- Variable()
 concave_fractional_fn <- sqrt(x) / exp(x)
 problem <- Problem(Maximize(concave_fractional_fn))
@@ -96,7 +96,7 @@ gives $x = 1/2$.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

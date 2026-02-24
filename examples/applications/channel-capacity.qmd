@@ -1,6 +1,6 @@
 ---
 title: "Channel Capacity"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -123,7 +123,7 @@ $$
 Note that the columns of $P$ must sum to 1 and all elements of $P$
 must be positive.
 
-```{r}
+```{r, results = "hold"}
 n <- 2
 m <- 2
 P <- matrix(c(0.75, 0.25,
@@ -156,7 +156,7 @@ if (params$mode == "save") {
 We can also consider a non-symmetric channel with $n = 4$ inputs and
 $m = 3$ outputs.
 
-```{r}
+```{r, results = "hold"}
 n2 <- 4
 m2 <- 3
 set.seed(42)
@@ -185,7 +185,7 @@ if (params$mode == "save") {
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

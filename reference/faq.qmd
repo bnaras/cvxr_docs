@@ -18,7 +18,7 @@ Please post questions to the `cvx` tag on [StackOverflow](https://stackoverflow.
 2. <a name="dcp-help"></a>My problem is not DCP compliant. How do I reformulate it?
 
 It is impossible for us to analyze every individual problem and determine whether it can be reformulated as a DCP problem.
-Your best bet is to go through the examples in the @BoydVandenberghe:2004 book and its [additional exercises](http://stanford.edu/~boyd/cvxbook/).
+Your best bet is to go through the examples in the @BoydVandenberghe:2004 book and its [additional exercises](https://stanford.edu/~boyd/cvxbook/).
 
 3. <a name="bug"></a>I want to report a bug.
 
@@ -27,3 +27,6 @@ Issues](https://github.com/cvxgrp/CVXR/issues) page with a
 reproducible example.
 
 ## References
+
+::: {#refs}
+:::

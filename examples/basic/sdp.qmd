@@ -61,7 +61,7 @@ In the following code, we solve a SDP with `CVXR`.
 
 ```{r}
 ## Generate a random SDP
-set.seed(1)
+set.seed(4)
 n <- 3
 p <- 3
 C <- matrix(rnorm(n * n), nrow = n, ncol = n)
@@ -97,7 +97,7 @@ if (params$mode == "save") {
 }
 ```
 
-```{r}
+```{r, results = "hold"}
 ## Print result
 cat(sprintf("The optimal value is %f\n", result))
 cat("A solution X is\n")
@@ -107,7 +107,7 @@ print(value(X))
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

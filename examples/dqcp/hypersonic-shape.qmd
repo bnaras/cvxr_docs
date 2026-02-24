@@ -1,6 +1,6 @@
 ---
 title: "Aerospace Design via Quasiconvex Optimization"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -135,7 +135,7 @@ constraint <- list(a * inv_pos(x) - (1 - b) * sqrt(1 - power(x, 2)) <= 0)
 
 ## Solving the Problem
 
-```{r}
+```{r, results = "hold"}
 prob <- Problem(Minimize(obj), constraint)
 result <- psolve(prob, qcp = TRUE)
 check_solver_status(prob)
@@ -195,7 +195,7 @@ ggplot() +
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

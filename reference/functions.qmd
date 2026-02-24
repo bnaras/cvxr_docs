@@ -7,7 +7,7 @@ author: Anqi Fu and Balasubramanian Narasimhan
 
 Here we describe the functions that can be applied to `CVXR`
 expressions. `CVXR` uses the function information in this section and
-the [Disciplined Convex Programming tools](http://dcp.stanford.edu/)
+the [Disciplined Convex Programming tools](https://dcp.stanford.edu/)
 to mark expressions with a sign and curvature.
 
 ### Operators
@@ -324,11 +324,11 @@ col_sums <- sum_entries(X, axis=2) # Has size (1, 4)
 ```
 
 Note that the use of `axis` differs from its use in `CVXPY` where
-`axis=2` implies the columns. In `CVXR`, we align our implementation
+`axis=0` implies the rows. In `CVXR`, we align our implementation
 with the `base::apply` function. The default in most cases is `axis =
-NA`, which treats a matrix as one long vector, basically the same as
+NULL`, which treats a matrix as one long vector, basically the same as
 apply with `c(1,2)`. The exception is `cumsum_axis` (see below), which cannot take
-`axis = NA`; it will throw an error.
+`axis = NULL`; it will throw an error.
 
 ### Elementwise functions {#elementwise-functions}
 
@@ -596,6 +596,6 @@ knitr::kable(d, "html", escape = FALSE,
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```

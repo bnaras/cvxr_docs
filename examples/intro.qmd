@@ -315,7 +315,7 @@ available to study and mimic.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

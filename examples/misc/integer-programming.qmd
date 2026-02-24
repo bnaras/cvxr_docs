@@ -214,7 +214,7 @@ constraints <- list(
     occupy >= 0,
     occupy <= 1,
     sum_entries(occupy, axis = 1) == 1,
-    sum_entries(occupy, axis = 0) <= 1
+    sum_entries(occupy, axis = 2) <= 1
 )
 ```
 
@@ -279,7 +279,7 @@ if (params$mode == "save") {
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

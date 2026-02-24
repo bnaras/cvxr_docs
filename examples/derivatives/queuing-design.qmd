@@ -1,6 +1,6 @@
 ---
 title: "Queuing Design"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -251,7 +251,7 @@ cat(sprintf("mu  actual    (percent change): [%.4f, %.4f]\n", mu_actual[1], mu_a
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

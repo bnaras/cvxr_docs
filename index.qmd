@@ -54,7 +54,7 @@ the R implementation isomorphic with CVXPY 1.8.1. See [What's New in
 library(kableExtra)
 check <- "\U2713"
 d  <- tibble::tibble(
-                  Solver = c("CLARABEL", "SCS", "OSQP", "HIGHS", "ECOS", "ECOS_BB", "GLPK", "GLPK_MI", "CPLEX", "GUROBI", "MOSEK"),
+                  Solver = c("CLARABEL", "SCS", "OSQP", "HIGHS", "ECOS", "ECOS_BB", "GLPK", "GLPK_MI", "CPLEX", "GUROBI", "MOSEK", "CVXOPT", "PIQP"),
                   `R package` = c("[clarabel](https://clarabel.org)",
                                   "[scs](https://cran.r-project.org/package=scs)",
                                   "[osqp](https://www.osqp.org)",
@@ -65,13 +65,15 @@ d  <- tibble::tibble(
                                   "[Rglpk](https://cran.r-project.org/package=Rglpk)",
                                   "[Rcplex](https://cran.r-project.org/package=Rcplex)",
                                   "[gurobi](https://www.gurobi.com)",
-                                  "[Rmosek](https://docs.mosek.com/latest/rmosek/index.html)"),
-                  LP = c(check, check, check, check, check, " ", check, check, check, check, check),
-                  QP = c(check, check, check, check, check, " ", " ", " ", check, check, check),
-                  SOCP = c(check, check, " ", " ", check, " ", " ", " ", check, check, check),
-                  SDP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check),
-                  EXP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check),
-                  MIP = c(" ", check, " ", check, " ", check, " ", check, " ", check, check)
+                                  "[Rmosek](https://docs.mosek.com/latest/rmosek/index.html)",
+                                  "[cccp](https://cran.r-project.org/package=cccp)",
+                                  "[piqp](https://cran.r-project.org/package=piqp)"),
+                  LP = c(check, check, check, check, check, " ", check, check, check, check, check, check, check),
+                  QP = c(check, check, check, check, check, " ", " ", " ", check, check, check, " ", check),
+                  SOCP = c(check, check, " ", " ", check, " ", " ", " ", check, check, check, check, " "),
+                  SDP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " "),
+                  EXP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " "),
+                  MIP = c(" ", check, " ", check, " ", check, " ", check, " ", check, check, " ", " ")
               )
 knitr::kable(d, format = "html") |>
     kableExtra::kable_styling("striped") |>

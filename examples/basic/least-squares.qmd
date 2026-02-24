@@ -88,7 +88,7 @@ if (params$mode == "save") {
 }
 ```
 
-```{r}
+```{r, results = "hold"}
 ## Print result
 cat(sprintf("The optimal value is %f\n", result))
 cat("The optimal x is\n")
@@ -100,7 +100,7 @@ cat(sprintf("The norm of the residual is %f\n",
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

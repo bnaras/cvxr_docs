@@ -31,7 +31,7 @@ library(Matrix)
 source(here::here("_check_status.R"))
 ```
 
-```{r}
+```{r, results = "hold"}
 ## Problem data
 set.seed(1)
 m <- 2000
@@ -61,7 +61,7 @@ cat(sprintf("gamma = 2, optimal value: %f\n", result2))
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

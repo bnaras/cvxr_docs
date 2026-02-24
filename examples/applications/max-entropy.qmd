@@ -1,6 +1,6 @@
 ---
 title: "Entropy Maximization"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -64,7 +64,7 @@ g_vec <- F_mat %*% tmp + runif(p)
 
 ## Formulate and Solve
 
-```{r}
+```{r, results = "hold"}
 ## Entropy maximization
 x <- Variable(n)
 obj <- Maximize(sum(entr(x)))
@@ -96,7 +96,7 @@ if (params$mode == "save") {
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

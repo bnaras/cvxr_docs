@@ -168,7 +168,7 @@ restrictions, and VaR/CVaR bounds are also readily incorporated.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

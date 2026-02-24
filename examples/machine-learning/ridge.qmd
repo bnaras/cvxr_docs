@@ -1,6 +1,6 @@
 ---
 title: "Ridge Regression"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -182,7 +182,7 @@ ggplot(df_path, aes(x = lambda, y = Value, color = Coefficient)) +
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

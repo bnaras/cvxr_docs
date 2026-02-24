@@ -159,7 +159,7 @@ prob2.1 <- Problem(objective, constraints)
 
 # Problem solution
 solution2.1 <- psolve(prob2.1)
-problem_status(prob2.1)
+status(prob2.1)
 solution2.1    # optimal objective value
 value(x)
 value(y)
@@ -244,38 +244,38 @@ Behind the scenes, this call translates the problem into a format that
 a convex solver can understand, feeds the problem to the solver, and
 then returns the optimal objective value directly. After solving,
 you can retrieve variable values using `value()` and the problem
-status using `problem_status()`.
+status using `status()`.
 
 ```{r}
-problem_status(prob2.1)   # "optimal"
+status(prob2.1)   # "optimal"
 solution2.1               # optimal objective value
 value(x)
 value(y)
 ```
 
-In general, when you apply the `solve()` method to a Problem, several
+In general, when you apply `psolve()` to a Problem, several
 things can happen:
 
-1. `problem_status(prob) == "optimal"`: The problem was solved. Values for
+1. `status(prob) == "optimal"`: The problem was solved. Values for
    the optimization variables were found, which satisfy all of the
    constraints and minimize/maximize the objective.
 
-2. `problem_status(prob) == "infeasible"`: The problem was _not_ solved
+2. `status(prob) == "infeasible"`: The problem was _not_ solved
    because no combination of input variables exists that can satisfy
    all of the constraints. For a trivial example of when this might
    happen, consider a problem with optimization variable `x`, and
    constraints `x >= 1` and `x <= 0`. Obviously, no value of `x`
    exists that can satisfy both constraints. In this case,
-   `solve()` returns `+Inf` for a minimization problem and `-Inf`
+   `psolve()` returns `+Inf` for a minimization problem and `-Inf`
    for a maximization problem, indicating infinite dissatisfaction
    with the result. The values for the input variables are `NA`.
 
-3. `problem_status(prob) == "unbounded"`: The problem was _not_ solved
+3. `status(prob) == "unbounded"`: The problem was _not_ solved
    because the objective can be made arbitrarily small for a
    minimization problem or arbitrarily large for a maximization
    problem. Hence there is no optimal solution because for any given
    solution, it is always possible to find something even more
-   optimal. In this case, `solve()` returns `-Inf` for a
+   optimal. In this case, `psolve()` returns `-Inf` for a
    minimization problem and `+Inf` for a maximization problem,
    indicating infinite satisfaction with the result. Again, the values
    of the the input variables are `NA`.
@@ -298,7 +298,7 @@ prob2.2 <- Problem(Minimize(x^2 + y^2 + abs(x-y)),
 solution2.2 <- psolve(prob2.2)
 
 # Examine the solution
-problem_status(prob2.2)
+status(prob2.2)
 solution2.2               # optimal objective value
 value(x)
 value(y)
@@ -563,7 +563,7 @@ described in [Function Reference](../reference/functions.qmd).
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

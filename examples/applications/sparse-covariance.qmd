@@ -1,6 +1,6 @@
 ---
 title: "Sparse Covariance Estimation"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -181,7 +181,7 @@ $\alpha = 1$, most off-diagonal entries are zero.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

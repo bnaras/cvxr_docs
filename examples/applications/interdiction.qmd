@@ -1,6 +1,6 @@
 ---
 title: "Interdiction"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -175,7 +175,7 @@ p <- exp(-a)
 We solve the smuggler's relaxed LP to find the optimal path from node
 1 (upper-left) to node $n$ (lower-right).
 
-```{r}
+```{r, results = "hold"}
 ## Build the incidence matrix
 el <- as_edgelist(G)
 m <- nrow(el)
@@ -289,7 +289,7 @@ $$
 where $B$ enforces that symmetric edges have equal evasion
 probabilities, and $R$ is the maximum per-edge budget.
 
-```{r}
+```{r, results = "hold"}
 ## Build B matrix for symmetry constraints
 ## For each pair of edges (i,j) and (j,i), enforce equal allocation
 pairs <- list()
@@ -421,7 +421,7 @@ probability dramatically smaller than the uniform allocation.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

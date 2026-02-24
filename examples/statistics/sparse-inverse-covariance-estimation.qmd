@@ -228,7 +228,7 @@ do.call(multiplot, args = c(list(plotSpMat(Strue)),
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

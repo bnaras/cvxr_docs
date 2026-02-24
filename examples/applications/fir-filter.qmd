@@ -1,6 +1,6 @@
 ---
 title: "Chebyshev Design of an FIR Filter"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -74,7 +74,7 @@ $$
 \mbox{minimize} \quad \max_\omega \left[ (\mathrm{Re}(A) h - \mathrm{Re}(H_{\mathrm{des}}))^2 + (\mathrm{Im}(A) h - \mathrm{Im}(H_{\mathrm{des}}))^2 \right].
 $$
 
-```{r}
+```{r, results = "hold"}
 ## A is the matrix used to compute the frequency response
 ## A[w,:] = [1, exp(-j*w), exp(-j*2*w), ..., exp(-j*(n-1)*w)]
 A <- exp(-1i * outer(w, 0:(n-1)))
@@ -166,7 +166,7 @@ ggplot(df_phase, aes(x = omega, y = phase)) +
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

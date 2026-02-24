@@ -1,6 +1,6 @@
 ---
 title: "Nonnegative Matrix Factorization"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -142,7 +142,7 @@ ggplot(df_resid, aes(x = iteration, y = residual)) +
 
 ### Factor Matrices
 
-```{r}
+```{r, results = "hold"}
 cat("Original matrix A:\n")
 print(round(A, 4))
 
@@ -161,7 +161,7 @@ cat(sprintf("\nFinal residual after %d iterations: %.6f\n",
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

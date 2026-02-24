@@ -1,6 +1,6 @@
 ---
 title: "Logistic Regression with l1 Regularization"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -200,7 +200,7 @@ ggplot(df_coef, aes(x = i, y = Value, color = Type)) +
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

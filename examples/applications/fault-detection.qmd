@@ -1,6 +1,6 @@
 ---
 title: "Fault Detection"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -140,7 +140,7 @@ ggplot(df_signal, aes(x = index, y = value, color = type)) +
 We solve the relaxed maximum likelihood problem with `CVXR` and then
 round the result to get a Boolean solution.
 
-```{r}
+```{r, results = "hold"}
 x_var <- Variable(n)
 tau <- 2 * log(1/p - 1) * sigma^2
 obj <- Minimize(sum_squares(A %*% x_var - y) + tau * sum(x_var))
@@ -175,7 +175,7 @@ if (params$mode == "save") {
 We compute the estimation errors and plot the true, relaxed ML, and
 rounded solutions.
 
-```{r}
+```{r, results = "hold"}
 errors <- function(x_true, x_est, threshold = 0.5) {
     k <- sum(x_true)
     false_pos <- sum(x_true < threshold & x_est >= threshold)
@@ -211,7 +211,7 @@ and 0 false positives.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

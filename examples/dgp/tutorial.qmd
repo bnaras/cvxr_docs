@@ -1,6 +1,6 @@
 ---
 title: Disciplined Geometric Programming
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -41,7 +41,7 @@ that are neither GPs nor GGPs.
 problems. For example, the following code solves a simple geometric
 program:
 
-```{r}
+```{r, results = "hold"}
 # DGP requires Variables to be declared positive via `pos=TRUE`.
 x <- Variable(pos = TRUE)
 y <- Variable(pos = TRUE)
@@ -191,7 +191,7 @@ cat("Is problem DGP?", is_dgp(problem), "\n")
 
 You can solve a DGP Problem by calling `psolve()` with `gp = TRUE`:
 
-```{r}
+```{r, results = "hold"}
 result <- psolve(problem, gp = TRUE)
 check_solver_status(problem)
 cat("Optimal value:", result, "\n")
@@ -260,7 +260,7 @@ For a complete reference on DGP, see the paper at
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

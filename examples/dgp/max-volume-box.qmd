@@ -1,6 +1,6 @@
 ---
 title: Maximizing the Volume of a Box
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -78,7 +78,7 @@ cat("Is problem DGP?", is_dgp(problem), "\n")
 
 ## Solution
 
-```{r}
+```{r, results = "hold"}
 result <- psolve(problem, gp = TRUE)
 check_solver_status(problem)
 cat("Optimal value (volume):", result, "\n")
@@ -107,7 +107,7 @@ The dual values provide sensitivity information. A 1% increase in the
 allowed wall area should yield approximately a proportional increase
 in the maximum volume value.
 
-```{r}
+```{r, results = "hold"}
 cat("Dual value for wall area constraint:", dual_value(constraints[[1]]), "\n")
 cat("Dual value for floor area constraint:", dual_value(constraints[[2]]), "\n")
 ```
@@ -121,7 +121,7 @@ volume.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

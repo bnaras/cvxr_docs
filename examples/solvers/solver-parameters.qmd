@@ -331,7 +331,7 @@ Note: CPLEX requires a license (free academic licenses are available).
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

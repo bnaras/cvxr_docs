@@ -1,6 +1,6 @@
 ---
 title: "Robust Kalman Filtering for Vehicle Tracking"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -372,7 +372,7 @@ grid.arrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

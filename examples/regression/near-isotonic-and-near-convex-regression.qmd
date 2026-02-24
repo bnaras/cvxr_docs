@@ -188,7 +188,7 @@ as `diff(x, differences = 3)`.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

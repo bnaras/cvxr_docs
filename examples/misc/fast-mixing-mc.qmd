@@ -120,8 +120,8 @@ FMMC <- function(g, verbose = FALSE) {
     prob <- Problem(objective, constraints)
     opt_val <- psolve(prob)
     if(verbose)
-        cat("Status: ", problem_status(prob), ", Optimal Value = ", opt_val, "\n")
-    list(status = problem_status(prob), value = opt_val, P = value(P))
+        cat("Status: ", status(prob), ", Optimal Value = ", opt_val, "\n")
+    list(status = status(prob), value = opt_val, P = value(P))
 }
 
 disp_result <- function(states, P, tolerance = 1e-3) {
@@ -202,7 +202,7 @@ constr2 <- list(P[1,3] == 0, P[2,4] == 0, P[2,5] == 0, P[4,5] == 0)
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

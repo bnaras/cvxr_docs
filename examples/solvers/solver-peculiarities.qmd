@@ -54,12 +54,12 @@ result <- psolve(prob, solver = "CLARABEL")
 The solution status is no longer optimal.
 
 ```{r}
-cat("Solution status is", problem_status(prob))
+cat("Solution status is", status(prob))
 ```
 
 ```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
 cat("Testthat Results: No output is good\n")
-expect_identical(problem_status(prob), "optimal_inaccurate")
+expect_identical(status(prob), "optimal_inaccurate")
 ```
 
 
@@ -68,12 +68,12 @@ results. Let us try `MOSEK` for example.
 
 ```{r}
 result <- psolve(prob, solver = "MOSEK")
-cat("Solution status is", problem_status(prob))
+cat("Solution status is", status(prob))
 ```
 
 ```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
 cat("Testthat Results: No output is good\n")
-expect_identical(problem_status(prob), "optimal")
+expect_identical(status(prob), "optimal")
 ```
 
 This returns an optimal solution. 
@@ -84,7 +84,7 @@ alternatives when one solver does not produce satisfactory results.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

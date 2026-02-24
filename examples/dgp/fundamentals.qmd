@@ -1,6 +1,6 @@
 ---
 title: DGP Fundamentals
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -58,7 +58,7 @@ positive.
 Variables and parameters must be positive, i.e., they must be
 constructed with the option `pos = TRUE`:
 
-```{r}
+```{r, results = "hold"}
 v <- Variable(pos = TRUE)
 cat("Positive variable is log-log affine:", is_log_log_affine(v), "\n")
 
@@ -90,7 +90,7 @@ A sum of monomial functions is log-log convex; in the context of
 geometric programming, such a function is called a posynomial. There
 are functions that are not posynomials that are still log-log convex.
 
-```{r}
+```{r, results = "hold"}
 x <- Variable(pos = TRUE)
 y <- Variable(pos = TRUE)
 
@@ -127,7 +127,7 @@ an expression using `is_log_log_convex()`, `is_log_log_concave()`, and
 `is_log_log_affine()`. You can check whether a Problem is DGP by
 calling `is_dgp()`.
 
-```{r}
+```{r, results = "hold"}
 x <- Variable(pos = TRUE)
 y <- Variable(pos = TRUE)
 
@@ -178,7 +178,7 @@ cat("Is this problem DGP?", is_dgp(problem), "\n")
 
 You can solve a DGP Problem by calling `psolve()` with `gp = TRUE`.
 
-```{r}
+```{r, results = "hold"}
 result <- psolve(problem, gp = TRUE)
 check_solver_status(problem)
 cat("Optimal value:", result, "\n")
@@ -220,6 +220,6 @@ For a reference on DGP, consult the following paper:
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```

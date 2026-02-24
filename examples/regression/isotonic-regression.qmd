@@ -157,7 +157,7 @@ observations using the above as a guide.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: Power Control
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -128,7 +128,7 @@ cat("Is problem DGP?", is_dgp(problem), "\n")
 
 ## Solution
 
-```{r}
+```{r, results = "hold"}
 result <- psolve(problem, gp = TRUE)
 check_solver_status(problem)
 cat("Optimal total power:", result, "\n")
@@ -159,7 +159,7 @@ for (i in 1:n) {
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

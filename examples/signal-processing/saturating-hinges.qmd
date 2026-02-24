@@ -218,7 +218,7 @@ ggplot() +
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

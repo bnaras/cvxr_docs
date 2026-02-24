@@ -1,6 +1,6 @@
 ---
 title: Perron-Frobenius Matrix Completion
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -62,7 +62,7 @@ where the question marks denote the missing entries.
 
 ## Problem Formulation and Solution
 
-```{r}
+```{r, results = "hold"}
 n <- 3
 
 # Known entries: (row, col) pairs (1-indexed in R)
@@ -111,7 +111,7 @@ entries equals 1.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

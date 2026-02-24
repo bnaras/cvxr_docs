@@ -155,7 +155,7 @@ on the right, it does not have as many knots as `l1tf`.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

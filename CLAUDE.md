@@ -13,3 +13,18 @@
 - Some code sections were made not executable---this has to be revisited because the older version unintentionally dropped some features
 - Notice the testing infrastructure---it has to be kept intact. For now we use `ignore`. 
 - Make sure the `cvxr` logo is not dropped
+
+## Update
+
+1. Revert all the changes made from previous commit because `axes` indexing
+   was wrong in `CVXR`.  Now it is `axes=1` for rows, `axes=2` for
+   columns, exactly like `apply()` in R. The new version is currently
+   installed in R.
+2. The examples ported from have `Balasubramanian Narasimhan` as
+   the sole author. They should state that it is from CVXPY
+   developers.
+3. With that in mind, **deeply and thoroughly analyze** and present a
+   plan to modify everything in this site. This includes function
+   documentation etc. 
+   
+   

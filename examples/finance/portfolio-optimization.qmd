@@ -173,7 +173,7 @@ to the code above.
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

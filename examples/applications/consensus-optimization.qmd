@@ -1,6 +1,6 @@
 ---
 title: "Consensus Optimization"
-author: "Balasubramanian Narasimhan"
+author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
   testdata_dir: test_data_1.8
@@ -112,7 +112,7 @@ b_blocks <- lapply(1:N, function(i) {
 First, we solve the problem in the standard (non-distributed) way for
 comparison.
 
-```{r}
+```{r, results = "hold"}
 x_central <- Variable(n)
 obj_central <- Minimize(sum_squares(A_full %*% x_central - b_full))
 prob_central <- Problem(obj_central)
@@ -141,7 +141,7 @@ Now we implement the consensus ADMM algorithm. In each iteration, we
 solve $N$ local subproblems using `CVXR` and then average to get the
 global update.
 
-```{r}
+```{r, results = "hold"}
 rho <- 1.0
 MAX_ITER <- 50
 
@@ -216,14 +216,14 @@ optimal solution.
 
 ## Comparison of Solutions
 
-```{r}
+```{r, results = "hold"}
 cat("Max absolute difference between ADMM and centralized solution:\n")
 cat(sprintf("  %.6e\n", max(abs(xbar - x_central_val))))
 ```
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 

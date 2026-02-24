@@ -136,7 +136,7 @@ Once a commercial solver is installed, you can use it by passing
 
 ## Session Info
 
-```{r}
+```{r, echo = FALSE}
 sessionInfo()
 ```
 
