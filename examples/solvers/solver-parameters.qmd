@@ -145,20 +145,17 @@ directly.
 ```{r}
 #| message: false
 set.seed(1)
-n<-3
-p<-3
+n <- 3
+p <- 3
 C <- matrix(rnorm(n^2), ncol = n)
-A <- list(matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n), matrix(rnorm(n*n), nrow = n, ncol = n))
-b <- matrix(rnorm(p), nrow = p)
+A <- lapply(1:p, function(i) matrix(rnorm(n^2), nrow = n))
+b <- rnorm(p)
 
 X <- Variable(c(n, n), symmetric = TRUE)
-constraints <- list(X >= 0)
-for(i in 1:p){
-  constraints <- c(constraints, list(matrix_trace(A[[i]]%*%X) == b[i] ))
-}
+trace_constraints <- lapply(1:p, function(i) matrix_trace(A[[i]] %*% X) == b[i])
 
 obj <- Minimize(matrix_trace(C %*% X))
-prob <- Problem(obj, constraints)
+prob <- Problem(obj, c(list(X >= 0), trace_constraints))
 result  <- psolve(prob, solver = "SCS", verbose = FALSE, num_iter = 5000)
 check_solver_status(prob)
 ```

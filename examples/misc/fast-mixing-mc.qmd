@@ -91,15 +91,9 @@ finally display the chain graphically.
 ## Form the complementary graph
 antiadjacency <- function(g) {
     n <- max(as.numeric(names(g)))   ## Assumes names are integers starting from 1
-    a <- lapply(1:n, function(i) c())
-    names(a) <- 1:n
-    for(x in names(g)) {
-        for(y in 1:n) {
-            if(!(y %in% g[[x]]))
-                a[[x]] <- c(a[[x]], y)
-        }
-    }
-    a
+    setNames(lapply(as.character(1:n), function(v) {
+        setdiff(1:n, g[[v]])
+    }), 1:n)
 }
 
 ## Fastest mixing Markov chain on graph g
@@ -110,13 +104,13 @@ FMMC <- function(g, verbose = FALSE) {
     o <- rep(1, n)
     objective <- Minimize(cvxr_norm(P - 1.0/n, "2"))
     constraints <- list(P %*% o == o, t(P) == P, P >= 0)
-    for(i in names(a)) {
-        for(j in a[[i]]) {  ## (i-j) is a not-edge of g!
-            idx <- as.numeric(i)
-            if(idx != j)
-                constraints <- c(constraints, P[idx,j] == 0)
-        }
-    }
+    ## Zero out transition probabilities for non-edges (excluding diagonal)
+    non_edge_constraints <- do.call(c, lapply(names(a), function(i) {
+        idx <- as.numeric(i)
+        js <- setdiff(a[[i]], idx)
+        lapply(js, function(j) P[idx, j] == 0)
+    }))
+    constraints <- c(constraints, non_edge_constraints)
     prob <- Problem(objective, constraints)
     opt_val <- psolve(prob)
     if(verbose)

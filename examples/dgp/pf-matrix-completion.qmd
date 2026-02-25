@@ -73,10 +73,9 @@ known_values <- c(1.0, 1.9, 0.8, 3.2, 5.9)
 X <- Variable(c(n, n), pos = TRUE)
 objective_fn <- pf_eigenvalue(X)
 
-constraints <- list()
-for (k in seq_along(known_values)) {
-  constraints <- c(constraints, list(X[known_rows[k], known_cols[k]] == known_values[k]))
-}
+constraints <- lapply(seq_along(known_values), function(k) {
+    X[known_rows[k], known_cols[k]] == known_values[k]
+})
 
 # Constraint on the product of unknown entries
 # Unknown entries are: (1,2), (2,1), (2,3), (3,3)

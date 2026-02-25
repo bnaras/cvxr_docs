@@ -79,14 +79,7 @@ rows <- nrow(u_orig)
 cols <- ncol(u_orig)
 
 ## known is 1 if the pixel is known, 0 if corrupted
-known <- matrix(0, rows, cols)
-for (i in seq_len(rows)) {
-    for (j in seq_len(cols)) {
-        if (u_orig[i, j] == u_corr[i, j]) {
-            known[i, j] <- 1
-        }
-    }
-}
+known <- 1 * (u_orig == u_corr)
 cat("Image size:", rows, "x", cols, "\n")
 cat("Known pixels:", sum(known), "out of", rows * cols,
     sprintf("(%.0f%%)\n", 100 * sum(known) / (rows * cols)))
@@ -189,14 +182,8 @@ colors <- dim(u_orig_color)[3]
 
 ## known is 1 if the pixel is known, 0 if corrupted
 ## Randomly keep 30% of pixels
-known_color <- array(0, dim = c(rows_c, cols_c, colors))
-for (i in seq_len(rows_c)) {
-    for (j in seq_len(cols_c)) {
-        if (runif(1) > 0.7) {
-            known_color[i, j, ] <- 1
-        }
-    }
-}
+pixel_mask <- matrix(as.numeric(runif(rows_c * cols_c) > 0.7), rows_c, cols_c)
+known_color <- array(rep(pixel_mask, colors), dim = c(rows_c, cols_c, colors))
 
 u_corr_color <- known_color * u_orig_color
 cat("Color image size:", rows_c, "x", cols_c, "x", colors, "\n")
@@ -230,15 +217,14 @@ grid.arrange(p5, p6, ncol = 2)
 
 ```{r}
 ## Solve the TV in-painting problem for each channel
-variables <- list()
-constraints_c <- list()
-for (k in seq_len(colors)) {
+channels <- lapply(seq_len(colors), function(k) {
     U_k <- Variable(c(rows_c, cols_c))
-    variables[[k]] <- U_k
-    constraints_c <- c(constraints_c,
-        list(multiply(known_color[, , k], U_k) ==
-             multiply(known_color[, , k], u_corr_color[, , k])))
-}
+    constr <- multiply(known_color[, , k], U_k) ==
+              multiply(known_color[, , k], u_corr_color[, , k])
+    list(var = U_k, constr = constr)
+})
+variables <- lapply(channels, `[[`, "var")
+constraints_c <- lapply(channels, `[[`, "constr")
 
 prob_color <- Problem(Minimize(tv(variables[[1]], variables[[2]], variables[[3]])),
                       constraints_c)
@@ -264,10 +250,10 @@ original.
 #| fig-cap: "Original, corrupted, in-painted, and difference color images"
 #| fig-width: 10
 #| fig-height: 5
-rec_arr <- array(0, dim = c(rows_c, cols_c, colors))
-for (k in seq_len(colors)) {
-    rec_arr[, , k] <- pmin(pmax(value(variables[[k]]), 0), 1)
-}
+rec_arr <- array(
+    unlist(lapply(variables, function(v) pmin(pmax(value(v), 0), 1))),
+    dim = c(rows_c, cols_c, colors)
+)
 
 p7 <- ggplot() +
     annotation_raster(arr_to_raster(u_orig_color),

@@ -106,16 +106,10 @@ form_graph <- function(N, mu, eta, seed = NULL) {
     n <- nrow(pos)
 
     ## Connect nodes within distance eta (random geometric graph)
-    edges <- c()
-    for (i in 1:(n-1)) {
-        for (j in (i+1):n) {
-            d <- sqrt((pos$x[i] - pos$x[j])^2 + (pos$y[i] - pos$y[j])^2)
-            if (d <= eta) {
-                ## Add both directions for a directed graph
-                edges <- c(edges, i, j, j, i)
-            }
-        }
-    }
+    d <- as.matrix(dist(pos))
+    pairs <- which(d <= eta & upper.tri(d), arr.ind = TRUE)
+    ## Both directions for a directed graph: (i->j) and (j->i) for each pair
+    edges <- c(t(rbind(pairs, pairs[, 2:1, drop = FALSE])))
 
     G <- make_graph(edges, directed = TRUE, n = n)
     list(G = G, pos = pos, n = n)
@@ -126,19 +120,12 @@ form_graph <- function(N, mu, eta, seed = NULL) {
 get_edge_probs <- function(G, seed = NULL) {
     if (!is.null(seed)) set.seed(seed)
     el <- as_edgelist(G)
-    m <- nrow(el)
-    a <- numeric(m)
-    assigned <- list()
-
-    for (k in 1:m) {
-        e <- el[k, ]
-        key <- paste(min(e[1], e[2]), max(e[1], e[2]), sep = "-")
-        if (is.null(assigned[[key]])) {
-            assigned[[key]] <- runif(1)
-        }
-        a[k] <- assigned[[key]]
-    }
-    a
+    ## Create canonical key for each edge (smaller node first)
+    keys <- paste(pmin(el[, 1], el[, 2]), pmax(el[, 1], el[, 2]), sep = "-")
+    unique_keys <- unique(keys)
+    ## Assign random probability to each unique edge pair
+    vals <- setNames(runif(length(unique_keys)), unique_keys)
+    as.numeric(vals[keys])
 }
 
 ## Find optimal smuggler path using shortest path (Dijkstra)
@@ -180,10 +167,8 @@ We solve the smuggler's relaxed LP to find the optimal path from node
 el <- as_edgelist(G)
 m <- nrow(el)
 A_inc <- matrix(0, nrow = n, ncol = m)
-for (k in 1:m) {
-    A_inc[el[k, 1], k] <- -1   # tail (outgoing)
-    A_inc[el[k, 2], k] <-  1   # head (incoming)
-}
+A_inc[cbind(el[, 1], 1:m)] <- -1   # tail (outgoing)
+A_inc[cbind(el[, 2], 1:m)] <-  1   # head (incoming)
 
 b <- rep(0, n)
 b[1] <- -1       # source
@@ -292,26 +277,18 @@ probabilities, and $R$ is the maximum per-edge budget.
 ```{r, results = "hold"}
 ## Build B matrix for symmetry constraints
 ## For each pair of edges (i,j) and (j,i), enforce equal allocation
-pairs <- list()
-count <- 0
-B_rows <- list()
-for (k in 1:m) {
-    i <- el[k, 1]; j <- el[k, 2]
-    if (i < j) {
-        ## Find the reverse edge
-        rev_idx <- which(el[, 1] == j & el[, 2] == i)
-        if (length(rev_idx) > 0) {
-            count <- count + 1
-            row <- rep(0, m)
-            row[k] <- 1
-            row[rev_idx[1]] <- -1
-            B_rows[[count]] <- row
-        }
-    }
-}
+fwd <- which(el[, 1] < el[, 2])
+rev_idx <- match(paste(el[fwd, 2], el[fwd, 1]),
+                 paste(el[, 1], el[, 2]))
+## Keep only pairs where the reverse edge exists
+has_rev <- !is.na(rev_idx)
+fwd <- fwd[has_rev]
+rev_idx <- rev_idx[has_rev]
 
-if (count > 0) {
-    B <- do.call(rbind, B_rows)
+if (length(fwd) > 0) {
+    B <- matrix(0, nrow = length(fwd), ncol = m)
+    B[cbind(seq_along(fwd), fwd)] <- 1
+    B[cbind(seq_along(fwd), rev_idx)] <- -1
 } else {
     B <- matrix(0, nrow = 1, ncol = m)
 }

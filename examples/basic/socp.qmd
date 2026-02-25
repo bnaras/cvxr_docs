@@ -76,33 +76,35 @@ cone constraint $\|Ax + b\|_2 \leq t$ is expressed as
 `norm2(A %*% x + b) <= t` in `CVXR`.
 
 ```{r}
-## Generate a random feasible SOCP
+## Problem dimensions
 set.seed(2)
-m <- 3
-n <- 10
-p <- 5
-n_i <- 5
-f <- rnorm(n)
-A <- list()
-b_vec <- list()
-c_list <- list()
-d <- list()
+m <- 3    # number of SOC constraints
+n <- 10   # number of variables
+p <- 5    # number of equality constraints
+n_i <- 5  # rows per SOC constraint
+
+## A feasible point used to construct the problem data
 x0 <- rnorm(n)
-for (i in 1:m) {
-    A[[i]] <- matrix(rnorm(n_i * n), nrow = n_i, ncol = n)
-    b_vec[[i]] <- rnorm(n_i)
-    c_list[[i]] <- rnorm(n)
-    d[[i]] <- norm(A[[i]] %*% x0 + b_vec[[i]], type = "2") -
-        sum(c_list[[i]] * x0)
-}
-F_mat <- matrix(rnorm(p * n), nrow = p, ncol = n)
+f <- rnorm(n)
+
+## Generate random data for each SOC constraint
+soc_data <- lapply(1:m, function(i) {
+    Ai <- matrix(rnorm(n_i * n), nrow = n_i)
+    bi <- rnorm(n_i)
+    ci <- rnorm(n)
+    ## Choose d_i so that x0 is feasible: ||A_i x0 + b_i||_2 <= c_i'x0 + d_i
+    di <- norm(Ai %*% x0 + bi, type = "2") - sum(ci * x0)
+    list(A = Ai, b = bi, c = ci, d = di)
+})
+
+## Equality constraint: F x = g with g = F x0 so x0 is feasible
+F_mat <- matrix(rnorm(p * n), nrow = p)
 g <- F_mat %*% x0
 
 ## Define and solve the CVXR problem
 x <- Variable(n)
-## SOC constraints: ||A_i x + b_i||_2 <= c_i^T x + d_i
-soc_constraints <- lapply(1:m, function(i) {
-    norm2(A[[i]] %*% x + b_vec[[i]]) <= sum(c_list[[i]] * x) + d[[i]]
+soc_constraints <- lapply(soc_data, function(s) {
+    norm2(s$A %*% x + s$b) <= sum(s$c * x) + s$d
 })
 prob <- Problem(Minimize(t(f) %*% x),
                 constraints = c(soc_constraints, list(F_mat %*% x == g)))

@@ -86,41 +86,18 @@ G <- matrix(
 p <- Variable(n, pos = TRUE)
 objective <- Minimize(sum_entries(p))
 
-# Compute interference plus noise for each receiver
-S_p <- list()
-for (i in 1:n) {
-  interference_terms <- list()
-  for (k in 1:n) {
-    if (k != i) {
-      interference_terms <- c(interference_terms, list(G[i, k] * p[k]))
-    }
-  }
-  # Sum all interference terms
-  interf <- interference_terms[[1]]
-  if (length(interference_terms) > 1) {
-    for (j in 2:length(interference_terms)) {
-      interf <- interf + interference_terms[[j]]
-    }
-  }
-  S_p[[i]] <- sigma[i] + interf
-}
+## For each receiver, compute interference-plus-noise and inverse SINR
+inverse_sinr <- lapply(1:n, function(i) {
+    ## Interference from all other transmitters
+    others <- setdiff(1:n, i)
+    interf <- Reduce(`+`, lapply(others, function(k) G[i, k] * p[k]))
+    S_i <- sigma[i] + interf
+    ## Inverse SINR = (noise + interference) / signal
+    S_i / (G[i, i] * p[i])
+})
 
-# Build the signal power vector and the inverse SINR constraint
-signal_power <- list()
-inverse_sinr <- list()
-for (i in 1:n) {
-  signal_power[[i]] <- G[i, i] * p[i]
-  inverse_sinr[[i]] <- S_p[[i]] / signal_power[[i]]
-}
-
-constraints <- list(
-  p >= p_min,
-  p <= p_max
-)
-
-for (i in 1:n) {
-  constraints <- c(constraints, list(inverse_sinr[[i]] <= 1 / sinr_min))
-}
+sinr_constraints <- lapply(inverse_sinr, function(inv) inv <= 1 / sinr_min)
+constraints <- c(list(p >= p_min, p <= p_max), sinr_constraints)
 
 problem <- Problem(objective, constraints)
 cat("Is problem DGP?", is_dgp(problem), "\n")

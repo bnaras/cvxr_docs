@@ -238,21 +238,9 @@ for (idx in seq_len(npts + xnpts)) {
         Y <- simple_step(Amat, Bvec, T_vec[2], length(T_vec))
 
         ## Find fastest and slowest step responses
-        indmax <- -Inf
-        indmin <- Inf
-        jmax <- 1
-        jmin <- 1
-        for (j in 1:nrow(Y)) {
-            first_above <- min(which(Y[j, ] >= 0.5))
-            if (first_above > indmax) {
-                indmax <- first_above
-                jmax <- j
-            }
-            if (first_above < indmin) {
-                indmin <- first_above
-                jmin <- j
-            }
-        }
+        first_above <- apply(Y, 1, function(row) min(which(row >= 0.5)))
+        jmax <- which.max(first_above)
+        jmin <- which.min(first_above)
 
         cat(sprintf("  Slowest node: v%d, Fastest node: v%d\n", jmax, jmin))
     }
@@ -284,9 +272,13 @@ p <- ggplot(df_tradeoff, aes(x = area, y = delay)) +
     theme_minimal()
 
 ## Label specific cases
-for (k in seq_along(xareas)) {
-    p <- p + annotate("text", x = xareas[[k]], y = xdelays[k],
-                      label = sprintf("(%d)", k))
+if (length(xareas) > 0) {
+    df_labels <- data.frame(
+        x = unlist(xareas),
+        y = xdelays[seq_along(xareas)],
+        label = sprintf("(%d)", seq_along(xareas))
+    )
+    p <- p + geom_text(data = df_labels, aes(x = x, y = y, label = label))
 }
 print(p)
 ```

@@ -33,6 +33,11 @@ h1 { font-size: 1.65rem; border-bottom: 1px solid #e1e4e5; padding-bottom: 0.3em
 h2 { font-size: 1.38rem; }
 h3 { font-size: 1.15rem; }
 
+h1 code, h2 code, h3 code, h4 code,
+.title code {
+  font-size: inherit;
+}
+
 /* Sidebar styling */
 .sidebar {
   background-color: #fcfcfc;

@@ -60,27 +60,25 @@ $$
 In the following code, we solve a SDP with `CVXR`.
 
 ```{r}
-## Generate a random SDP
+## Problem dimensions
 set.seed(4)
-n <- 3
-p <- 3
-C <- matrix(rnorm(n * n), nrow = n, ncol = n)
-A <- list()
-b <- c()
-for (i in 1:p) {
-    A[[i]] <- matrix(rnorm(n * n), nrow = n, ncol = n)
-    b[i] <- rnorm(1)
-}
+n <- 3   # matrix size
+p <- 3   # number of equality constraints
+
+## Generate random problem data
+C <- matrix(rnorm(n^2), nrow = n)
+sdp_data <- lapply(1:p, function(i) {
+    list(A = matrix(rnorm(n^2), nrow = n), b = rnorm(1))
+})
 
 ## Define and solve the CVXR problem
-## Create a symmetric matrix variable
 X <- Variable(c(n, n), symmetric = TRUE)
-## The PSD() function enforces the positive semidefinite constraint X >> 0
-constraints <- list(PSD(X))
-for (i in 1:p) {
-    constraints <- c(constraints, list(matrix_trace(A[[i]] %*% X) == b[i]))
-}
-prob <- Problem(Minimize(matrix_trace(C %*% X)), constraints)
+## Trace constraints: tr(A_i X) = b_i
+trace_constraints <- lapply(sdp_data, function(s) {
+    matrix_trace(s$A %*% X) == s$b
+})
+prob <- Problem(Minimize(matrix_trace(C %*% X)),
+                constraints = c(list(PSD(X)), trace_constraints))
 result <- psolve(prob)
 check_solver_status(prob)
 ```

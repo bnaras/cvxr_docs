@@ -163,12 +163,12 @@ while (halfbeam_top - halfbeam_bot > 1) {
 
     ## Add sidelobe constraints row by row
     sidelobe_thresh <- 10^(min_sidelobe / 20)
-    for (i in seq_len(nrow(As))) {
+    sidelobe_constraints <- lapply(seq_len(nrow(As)), function(i) {
         As_ri_row <- rbind(As_RI_top[i, , drop = FALSE],
                            As_RI_bot[i, , drop = FALSE])
-        constraints <- c(constraints,
-                         list(p_norm(As_ri_row %*% w_ri, 2) <= sidelobe_thresh))
-    }
+        p_norm(As_ri_row %*% w_ri, 2) <= sidelobe_thresh
+    })
+    constraints <- c(constraints, sidelobe_constraints)
 
     ## Solve feasibility problem
     obj <- Minimize(0)
@@ -210,12 +210,12 @@ w_ri <- Variable(2 * n)
 constraints <- list(Atar_RI %*% w_ri == realones_ri)
 
 sidelobe_thresh <- 10^(min_sidelobe / 20)
-for (i in seq_len(nrow(As))) {
+sidelobe_constraints <- lapply(seq_len(nrow(As)), function(i) {
     As_ri_row <- rbind(As_RI_top[i, , drop = FALSE],
                        As_RI_bot[i, , drop = FALSE])
-    constraints <- c(constraints,
-                     list(p_norm(As_ri_row %*% w_ri, 2) <= sidelobe_thresh))
-}
+    p_norm(As_ri_row %*% w_ri, 2) <= sidelobe_thresh
+})
+constraints <- c(constraints, sidelobe_constraints)
 
 ## Minimize the weight norm
 obj <- Minimize(p_norm(w_ri, 2))
