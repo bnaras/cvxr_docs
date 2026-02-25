@@ -126,9 +126,10 @@ code, documentation, and examples were ported from the Python library.
 
 ## About this site
 
-Much of the documentation on this site was modified
-from [`CVXPY`](https://cvxpy.org) in a semi-automated way.
-
-This site was built with [Quarto](https://quarto.org).
+This site is built with [Quarto](https://quarto.org) and is
+re-generated with every new release of `CVXR`. Many
+[CVXPY](https://cvxpy.org) examples have been directly converted to
+`CVXR`, serving both as tests of the package and as illustrations of
+its use.
 
 ## References
