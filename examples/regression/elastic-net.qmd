@@ -11,7 +11,7 @@ params:
 
 ```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
 library(here)
-testdata_dir  <- here("static", params$testdata_dir, params$data_dir) 
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
 if (params$mode == "test") {
     library(testthat)
 } else {
@@ -58,7 +58,7 @@ weights.
 
 ```{r}
 elastic_reg <- function(beta, lambda = 0, alpha = 0) {
-    ridge <- (1 - alpha) / 2 * sum(beta^2)
+    ridge <- (1 - alpha) / 2 * sum_squares(beta)
     lasso <- alpha * p_norm(beta, 1)
     lambda * (lasso + ridge)
 }
@@ -67,7 +67,7 @@ elastic_reg <- function(beta, lambda = 0, alpha = 0) {
 Later, we will add it to the scaled least squares loss as shown below.
 
 ```{r, eval = FALSE}
-loss <- sum((y - X %*% beta)^2) / (2 * n)
+loss <- sum_squares(y - X %*% beta) / (2 * n)
 obj <- loss + elastic_reg(beta, lambda, alpha)
 ```
 
@@ -81,38 +81,54 @@ single changed line.
 loss <- huber(y - X %*% beta, M)
 ```
 
-We generate some synthetic sparse data for this example.
+We generate some synthetic sparse data for this example. We use
+correlated features (Toeplitz structure with $\rho = 0.8$) and set
+$n = 100$, $p = 50$ so that regularization is essential. Correlated
+features are the classic motivation for elastic net over pure lasso:
+lasso tends to pick one variable from a correlated group arbitrarily,
+while elastic net encourages the group to enter or leave together.
+
+We also scale $y$ so that $\sqrt{\text{mean}(y^2)} = 1$. The reason
+is explained in the `glmnet` comparison below.
 
 ```{r}
 set.seed(1)
 
 # Problem data
-p <- 20
-n <- 1000
-DENSITY <- 0.25    # Fraction of non-zero beta
-beta_true <- matrix(rnorm(p), ncol = 1)
-idxs <- sample.int(p, size = floor((1 - DENSITY) * p), replace = FALSE)
-beta_true[idxs] <- 0
+p <- 50
+n <- 100
 
-sigma <- 45
-X <- matrix(rnorm(n * p, sd = 5), nrow = n, ncol = p)
-eps <- matrix(rnorm(n, sd = sigma), ncol = 1)
-y <- X %*% beta_true + eps
+# Correlated features: Toeplitz covariance Sigma_ij = rho^|i-j|
+rho <- 0.8
+Sigma <- rho^abs(outer(seq_len(p), seq_len(p), "-"))
+X <- MASS::mvrnorm(n, mu = rep(0, p), Sigma = Sigma)
+
+# Sparse true coefficients: 10 non-zero with varying magnitudes
+beta_true <- rep(0, p)
+beta_true[c(1, 5, 10, 15, 20, 25, 30, 35, 40, 45)] <-
+    c(3, -2.5, 2, -1.5, 1, -3, 2.5, -2, 1.5, -1)
+
+# Noise calibrated for SNR ~ 3
+signal_sd <- sqrt(drop(t(beta_true) %*% Sigma %*% beta_true))
+sigma <- signal_sd / 3
+y <- X %*% beta_true + rnorm(n, sd = sigma)
+
+# Scale y so that sqrt(mean(y^2)) = 1
+y <- y / sqrt(mean(y^2))
 ```
 
-We fit the elastic net model for several values of $\lambda$ .
+We fit the elastic net model for several values of $\lambda$.
 
 ```{r}
 TRIALS <- 10
-beta_vals <- matrix(0, nrow = p, ncol = TRIALS)
-lambda_vals <- 10^seq(-2, log10(50), length.out = TRIALS)
-beta <- Variable(p)  
-loss <- sum((y - X %*% beta)^2) / (2 * n)
+lambda_vals <- 10^seq(-2, 0, length.out = TRIALS)
+beta <- Variable(p)
+loss <- sum_squares(y - X %*% beta) / (2 * n)
 
 ## Elastic-net regression
 alpha <- 0.75
 beta_vals <- sapply(lambda_vals,
-                    function (lambda) {
+                    function(lambda) {
                         obj <- loss + elastic_reg(beta, lambda, alpha)
                         prob <- Problem(Minimize(obj))
                         psolve(prob)
@@ -121,42 +137,59 @@ beta_vals <- sapply(lambda_vals,
                     })
 ```
 
-We can now get a table of the coefficients.
-
+We can now get a table of the coefficients. With $p = 50$ coefficients,
+we show only the 10 that correspond to the true non-zero entries.
 
 ```{r}
-d <- as.data.frame(beta_vals)
-rownames(d) <- sprintf("\\(\\beta_{%d}\\)", seq_len(p))
+nz_idx <- which(beta_true != 0)
+d <- as.data.frame(beta_vals[nz_idx, ])
+rownames(d) <- sprintf("\\(\\beta_{%d}\\)", nz_idx)
 names(d) <- sprintf("\\(\\lambda = %.3f\\)", lambda_vals)
-knitr::kable(d, format = "html", escape = FALSE, caption = "Elastic net fits from `CVXR`", digits = 3) |>
+knitr::kable(d, format = "html", escape = FALSE, caption = "Elastic net fits from <code>CVXR</code> (non-zero coefficients)", digits = 3) |>
     kable_styling("striped") |>
     column_spec(1:11, background = "#ececec")
 ```
 
-We plot the coefficients against the regularization. 
+We plot the regularization path for all coefficients. With correlated
+features and $n$ only twice $p$, the coefficients sweep dramatically
+from their unregularized values down to zero as $\lambda$ increases.
 
 ```{r}
 df_path <- data.frame(lambda = lambda_vals, t(beta_vals)) |>
     pivot_longer(-lambda, names_to = "Coefficient", values_to = "Value")
 ggplot(df_path, aes(x = lambda, y = Value, color = Coefficient)) +
     geom_line() +
+    scale_x_log10() +
     labs(x = expression(lambda), y = expression(beta),
          title = "Regularization Path for Elastic-net Regression") +
     theme_minimal() +
     guides(color = "none")
 ```
-  
-We can also compare with the `glmnet` results.
+
+## Comparison with `glmnet`
+
+We can compare with results from `glmnet`. One subtlety: for the
+Gaussian family with `intercept = FALSE`, `glmnet` internally divides
+$y$ by $s = \sqrt{\text{mean}(y^2)}$ before fitting, then rescales the
+returned coefficients by $s$. Because the internal fit uses $\tilde{y}
+= y/s$ while the penalty is unchanged, the $l_1$ and $l_2$ terms in
+the elastic net get reweighted by different powers of $s$. No single
+$\lambda$-correction can undo this when $\alpha \in (0, 1)$.
+
+The simplest fix is to ensure $s = 1$ so the standardization is a
+no-op, which is why we scaled $y$ above. With that in place, the same
+$\lambda$ values give both methods the same effective problem.
 
 ```{r}
 model_net <- glmnet(X, y, family = "gaussian", alpha = alpha,
                     lambda = lambda_vals, standardize = FALSE,
                     intercept = FALSE)
-## Reverse order to match beta_vals
+## glmnet returns columns in decreasing lambda order; reverse to match
 coef_net <- as.data.frame(as.matrix(coef(model_net)[-1, seq(TRIALS, 1, by = -1)]))
-rownames(coef_net) <- sprintf("\\(\\beta_{%d}\\)", seq_len(p))
-names(coef_net) <- sprintf("\\(\\lambda = %.3f\\)", lambda_vals)
-knitr::kable(coef_net, format = "html", escape = FALSE, digits = 3, caption = "Coefficients from `glmnet`") |>
+d_net <- coef_net[nz_idx, ]
+rownames(d_net) <- sprintf("\\(\\beta_{%d}\\)", nz_idx)
+names(d_net) <- sprintf("\\(\\lambda = %.3f\\)", lambda_vals)
+knitr::kable(d_net, format = "html", escape = FALSE, digits = 3, caption = "Coefficients from <code>glmnet</code> (non-zero coefficients)") |>
     kable_styling("striped") |>
     column_spec(1:11, background = "#ececec")
 ```
