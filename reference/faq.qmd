@@ -3,26 +3,45 @@ title: Frequently Asked Questions
 author: "Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
 ---
 
-## Questions
+## Where can I go for help? {#gen-help}
 
-1. [Where can I go for help?](#gen-help)
-2. [How do I reformulate my problem to be DCP compliant?](#dcp-help)
-3. [I want to report a bug.](#bug)
+Please open an issue on the [CVXR GitHub
+Issues](https://github.com/cvxgrp/CVXR/issues) page. Include a
+minimal reproducible example whenever possible.
 
-## Answers
+Since `CVXR` is an R port of
+[CVXPY](https://www.cvxpy.org/), the broader CVXPY community can
+also be a valuable resource:
 
-1. <a name="gen-help"></a>Where can I go for help?
+- [CVXPY Discussions on GitHub](https://github.com/cvxpy/cvxpy/discussions) — search for similar modeling questions
+- [CVXPY Discord](https://discord.gg/4urRQeGBCr) — active community chat for convex optimization questions
 
-Please post questions to the `cvx` tag on [StackOverflow](https://stackoverflow.com/questions/tagged/cvx).
+Many modeling and DCP questions that arise in `CVXR` have direct
+analogs in `CVXPY`, so answers from these forums often translate
+directly.
 
-2. <a name="dcp-help"></a>My problem is not DCP compliant. How do I reformulate it?
+## My problem is not DCP compliant. How do I reformulate it? {#dcp-help}
 
-It is impossible for us to analyze every individual problem and determine whether it can be reformulated as a DCP problem.
-Your best bet is to go through the examples in the @BoydVandenberghe:2004 book and its [additional exercises](https://stanford.edu/~boyd/cvxbook/).
+It is impossible for us to analyze every individual problem and
+determine whether it can be reformulated as a DCP problem. We
+unfortunately cannot help with reformulating specific problems.
 
-3. <a name="bug"></a>I want to report a bug.
+However, there are excellent resources for learning DCP:
 
-Please open an issue on the [CVXR Github
+- The @BoydVandenberghe:2004 book and its [additional
+  exercises](https://stanford.edu/~boyd/cvxbook/) are the definitive
+  reference.
+- The [DCP rules](https://dcp.stanford.edu/) website provides an
+  interactive tool for checking DCP compliance and understanding the
+  composition rules.
+- The [CVXPY DCP tutorial](https://www.cvxpy.org/tutorial/dcp/index.html)
+  explains the rules with many examples — these apply equally to `CVXR`.
+- The examples on this site cover a wide range of problems and may
+  contain patterns similar to yours.
+
+## I want to report a bug. {#bug}
+
+Please open an issue on the [CVXR GitHub
 Issues](https://github.com/cvxgrp/CVXR/issues) page with a
 reproducible example.
 

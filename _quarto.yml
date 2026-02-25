@@ -136,8 +136,6 @@ website:
             href: examples/applications/fault-detection.qmd
           - text: "Sparse Solution"
             href: examples/applications/sparse-solution.qmd
-          - text: "Sparse Covariance"
-            href: examples/applications/sparse-covariance.qmd
           - text: "Consensus Optimization"
             href: examples/applications/consensus-optimization.qmd
           - text: "Interdiction"

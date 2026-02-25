@@ -31,11 +31,11 @@ library(Matrix)
 source(here::here("_check_status.R"))
 ```
 
-```{r, results = "hold"}
+```{r, message = FALSE}
 ## Problem data
 set.seed(1)
-m <- 2000
-n <- 1000
+m <- 200
+n <- 100
 A <- matrix(rnorm(m*n), nrow = m, ncol = n)
 b <- rnorm(m)
 
@@ -46,17 +46,29 @@ obj <- Minimize(.5 * sum_squares(A %*% x - b) + gamma * norm1(x))
 constraint <- list(x >= 0)
 prob <- Problem(obj, constraint)
 
-## Solve for gamma = 1
-value(gamma) <- 1
-result1 <- psolve(prob, solver = "OSQP")
-check_solver_status(prob)
-cat(sprintf("gamma = 1, optimal value: %f\n", result1))
+## Sweep over gamma values
+gamma_vals <- c(0.1, 0.5, 1, 2, 5, 10)
+timings <- numeric(length(gamma_vals))
+opt_vals <- numeric(length(gamma_vals))
 
-## Re-solve for gamma = 2 (much faster — reuses cached compilation)
-value(gamma) <- 2
-result2 <- psolve(prob, solver = "OSQP")
-check_solver_status(prob)
-cat(sprintf("gamma = 2, optimal value: %f\n", result2))
+for (i in seq_along(gamma_vals)) {
+    value(gamma) <- gamma_vals[i]
+    timings[i] <- system.time(opt_vals[i] <- psolve(prob, solver = "OSQP"))["elapsed"]
+    check_solver_status(prob)
+}
+
+results <- data.frame(
+    gamma = gamma_vals,
+    optimal_value = round(opt_vals, 4),
+    elapsed = round(timings, 3)
+)
+```
+
+The first solve includes one-time compilation overhead; subsequent
+re-solves skip this step entirely:
+
+```{r}
+knitr::kable(results, col.names = c("gamma", "Optimal Value", "Elapsed (s)"))
 ```
 
 ## Session Info

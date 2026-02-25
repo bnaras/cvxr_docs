@@ -71,12 +71,13 @@ The parameters can be entered individually in the arguments of the
 solver-specific names:
 
 ```{r}
+#| message: false
 x <- Variable(1)
 obj <- Minimize(x)
 prob <- Problem(obj, list(x >= 0))
 
 # Using standard parameter names
-result  <- psolve(prob, solver = "CLARABEL", feastol = 1e-2, verbose = TRUE)
+result  <- psolve(prob, solver = "CLARABEL", feastol = 1e-2, verbose = FALSE)
 check_solver_status(prob)
 
 # Using solver-specific parameter names (equivalent)
@@ -103,6 +104,7 @@ knitr::kable(osqp_params,
 ```
 
 ```{r}
+#| message: false
 x <- Variable(1)
 obj <- Minimize(x)
 prob <- Problem(obj, list(x >= 0))
@@ -141,6 +143,8 @@ Additional solver-specific parameters (like `scale`) can be passed
 directly.
 
 ```{r}
+#| message: false
+set.seed(1)
 n<-3
 p<-3
 C <- matrix(rnorm(n^2), ncol = n)
@@ -179,6 +183,7 @@ knitr::kable(highs_params,
 ```
 
 ```{r}
+#| message: false
 x <- Variable(1)
 obj <- Minimize(x)
 prob <- Problem(obj, list(x >= 0))
@@ -288,6 +293,7 @@ knitr::kable(ecos_params,
 ```
 
 ```{r}
+#| message: false
 x <- Variable(1)
 obj <- Minimize(x)
 prob <- Problem(obj, list(x >= 0))
