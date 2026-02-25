@@ -114,6 +114,17 @@ a:hover {
   box-shadow: none;
 }
 
+.navbar {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+}
+
+.navbar-brand img {
+  max-height: 56px;
+  height: 56px;
+  margin-right: 0.5rem;
+}
+
 /* Footer */
 .nav-footer {
   border-top: 1px solid #e1e4e5;

@@ -68,7 +68,7 @@ The first solve includes one-time compilation overhead; subsequent
 re-solves skip this step entirely:
 
 ```{r}
-knitr::kable(results, col.names = c("gamma", "Optimal Value", "Elapsed (s)"))
+knitr::kable(results, col.names = c("$\\gamma$", "Optimal Value", "Elapsed (s)"))
 ```
 
 ## Session Info
