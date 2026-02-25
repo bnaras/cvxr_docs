@@ -8,3 +8,5 @@
 **/*.quarto_ipynb
 #CLAUDE.md#
 .#CLAUDE.md
+.netlify/
+*.pdf
