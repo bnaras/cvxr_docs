@@ -55,19 +55,19 @@ library(kableExtra)
 check <- "\U2713"
 d  <- tibble::tibble(
                   Solver = c("CLARABEL", "SCS", "OSQP", "HIGHS", "ECOS", "ECOS_BB", "GLPK", "GLPK_MI", "CPLEX", "GUROBI", "MOSEK", "CVXOPT", "PIQP"),
-                  `R package` = c("[clarabel](https://clarabel.org)",
-                                  "[scs](https://cran.r-project.org/package=scs)",
-                                  "[osqp](https://www.osqp.org)",
-                                  "[highs](https://cran.r-project.org/package=highs)",
-                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
-                                  "[ECOSolveR](https://cran.r-project.org/package=ECOSolveR)",
-                                  "[Rglpk](https://cran.r-project.org/package=Rglpk)",
-                                  "[Rglpk](https://cran.r-project.org/package=Rglpk)",
-                                  "[Rcplex](https://cran.r-project.org/package=Rcplex)",
-                                  "[gurobi](https://www.gurobi.com)",
-                                  "[Rmosek](https://docs.mosek.com/latest/rmosek/index.html)",
-                                  "[cccp](https://cran.r-project.org/package=cccp)",
-                                  "[piqp](https://cran.r-project.org/package=piqp)"),
+                  `R package` = c('<a href="https://clarabel.org">clarabel</a>',
+                                  '<a href="https://cran.r-project.org/package=scs">scs</a>',
+                                  '<a href="https://www.osqp.org">osqp</a>',
+                                  '<a href="https://cran.r-project.org/package=highs">highs</a>',
+                                  '<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>',
+                                  '<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>',
+                                  '<a href="https://cran.r-project.org/package=Rglpk">Rglpk</a>',
+                                  '<a href="https://cran.r-project.org/package=Rglpk">Rglpk</a>',
+                                  '<a href="https://cran.r-project.org/package=Rcplex">Rcplex</a>',
+                                  '<a href="https://www.gurobi.com">gurobi</a>',
+                                  '<a href="https://docs.mosek.com/latest/rmosek/index.html">Rmosek</a>',
+                                  '<a href="https://cran.r-project.org/package=cccp">cccp</a>',
+                                  '<a href="https://cran.r-project.org/package=piqp">piqp</a>'),
                   LP = c(check, check, check, check, check, " ", check, check, check, check, check, check, check),
                   QP = c(check, check, check, check, check, " ", " ", " ", check, check, check, " ", check),
                   SOCP = c(check, check, " ", " ", check, " ", " ", " ", check, check, check, check, " "),
@@ -75,7 +75,7 @@ d  <- tibble::tibble(
                   EXP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " "),
                   MIP = c(" ", check, " ", check, " ", check, " ", check, " ", check, check, " ", " ")
               )
-knitr::kable(d, format = "html") |>
+knitr::kable(d, format = "html", escape = FALSE) |>
     kableExtra::kable_styling("striped") |>
     kableExtra::column_spec(1:8, background = "#ececec")
 ```
