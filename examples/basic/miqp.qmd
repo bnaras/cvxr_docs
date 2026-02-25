@@ -82,7 +82,11 @@ b <- rnorm(m)
 ```
 
 ```{r}
+#| message: false
 ## Construct and solve a CVXR problem
+## (message: false suppresses a deprecation warning from the gurobi R
+## package which calls as(x, "dgCMatrix") on a dtCMatrix internally;
+## see gurobi::to_triplets — needs fix in the gurobi package)
 x <- Variable(n, integer = TRUE)
 objective <- Minimize(sum_squares(A %*% x - b))
 prob <- Problem(objective)
