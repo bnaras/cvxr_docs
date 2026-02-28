@@ -63,12 +63,20 @@ x | y    # equivalent to Or(x, y)
 directly to expressions:
 
 - **Math**: `abs()`, `exp()`, `log()`, `sqrt()`, `cumsum()`,
-  `ceiling()`, `floor()`, `log2()`, `log10()`, `log1p()`
-- **Summary**: `sum()`, `max()`, `min()`, `prod()`
-- **Complex**: `Re()`, `Im()`, `Conj()`
+  `cummax()`, `cumprod()`, `ceiling()`, `floor()`, `log2()`,
+  `log10()`, `log1p()`
+- **Summary**: `sum()`, `max()`, `min()`, `prod()`, `mean()`
+- **Complex**: `Re()`, `Im()`, `Conj()`, `Mod()`
+- **Masked from base/stats**: `norm()`, `outer()`, `sd()`, `var()`
 
 These dispatch to the corresponding `CVXR` atoms (e.g., `abs(x)`
 calls `Abs`, `sum(x)` calls `SumEntries`).
+
+::: {.callout-note}
+R Math group functions not listed above (e.g., `sign()`, `round()`,
+`sin()`, `cos()`) are **not** supported and will produce a clear
+error message if used on `CVXR` expressions.
+:::
 
 #### Indexing and slicing
 
