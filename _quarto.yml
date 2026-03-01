@@ -3,6 +3,7 @@ project:
   output-dir: _site
   resources:
     - "images/**"
+    - "reference/viz/**"
   render:
     - "*.qmd"
     - "examples/**/*.qmd"
@@ -204,6 +205,8 @@ website:
         contents:
           - text: "DCP Rules"
             href: reference/dcp.qmd
+          - text: "Visualization"
+            href: reference/visualization.qmd
           - text: "Function Reference"
             href: reference/functions.qmd
           - text: "FAQ"

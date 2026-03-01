@@ -57,7 +57,7 @@ cat("dimensions of A %*% Z:", (A %*% Z)@shape, "\n")
 Error raised for invalid dimensions.
 
 ```{r, error=TRUE}
-tryCatch(A + Z, error = function(e) geterrmessage())
+tryCatch(A + Z, error = function(e) conditionMessage(e))
 ```
 
 `CVXR` uses DCP analysis to determine the sign and curvature of each
@@ -273,12 +273,16 @@ cat("sqrt(x) <= 2 is DCP:", is_dcp(sqrt(x) <= 2), "\n")
 ```
 
 `CVXR` will raise an exception if you call `solve()` on a non-DCP
-problem.
+problem. Calling [`visualize(prob)`](visualization.qmd) can help
+pinpoint exactly where the DCP violation occurs by displaying the
+expression tree with curvature annotations, highlighting offending
+nodes in red. See the [Visualization](visualization.qmd) page for
+detailed examples.
 
 ```{r}
 ## A non-DCP problem.
 prob <- Problem(Minimize(sqrt(x)))
-tryCatch(psolve(prob), error = function(e) geterrmessage())
+tryCatch(psolve(prob), error = function(e) conditionMessage(e))
 ```
 
 ## Session Info

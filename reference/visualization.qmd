@@ -1,0 +1,363 @@
+---
+title: Visualization
+author: "Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: visualization
+---
+
+```{r}
+#| label: prereqs
+#| echo: false
+#| message: false
+suppressWarnings(suppressMessages(library(CVXR)))
+source(here::here("_check_status.R"))
+```
+
+The `visualize()` function generates interactive visualizations of
+CVXR optimization problems, showing the expression tree with DCP
+curvature annotations. It is useful for understanding how CVXR
+decomposes a problem and for diagnosing DCP violations.
+
+## Function Signature
+
+```r
+visualize(
+  problem,
+  output = c("text", "json", "html", "latex", "tikz"),
+  digits = 4L,
+  file   = NULL,
+  open   = interactive(),
+  doc_base = "https://cvxr.rbind.io/reference/"
+)
+```
+
+The key arguments:
+
+- `output`: format for the visualization. `"html"` produces a
+  self-contained interactive HTML page; `"text"` prints to the console
+- `file`: path to write the output (used with `"html"`)
+- `open`: whether to open the file in a browser (default `TRUE` in
+  interactive sessions)
+- `doc_base`: base URL for documentation links in the visualization
+
+Two helper features for richer output:
+
+- **`latex_name`** argument in `Variable()` and `Parameter()` sets the
+  display name in LaTeX-rendered visualizations
+- **`set_label(constraint, label)`** attaches a human-readable label
+  to a constraint
+
+## DCP-Compliant Examples
+
+The examples below show `visualize()` output for problems that
+satisfy the DCP rules. Each tree node is annotated with its curvature
+and sign using color-coded borders: blue for convex, red for concave,
+green for affine, and grey for constant. These colors indicate
+curvature, not validity --- a red border on a concave node is
+expected, not an error. DCP violations are shown differently, with a
+red background and a banner (see the [Non-DCP examples](#non-dcp-examples)
+below).
+
+### Simple Norm Minimization
+
+$$
+\text{minimize} \; \|x\|_2 \quad \text{subject to} \quad x \geq 1
+$$
+
+A basic second-order cone program. The objective `p_norm(x, 2)` is
+convex and the constraint is affine, so the problem is DCP-compliant.
+
+```{r}
+#| label: ex1-build
+x <- Variable(3, name = "x")
+prob1 <- Problem(Minimize(p_norm(x, 2)), list(x >= 1))
+is_dcp(prob1)
+```
+
+```{r}
+#| label: ex1-viz
+#| echo: false
+#| results: hide
+visualize(prob1, output = "html",
+          file = "viz/simple-norm.html", open = FALSE)
+```
+
+<iframe src="viz/simple-norm.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Least Squares
+
+$$
+\text{minimize} \; \|Ax - b\|_2^2
+$$
+
+The classic unconstrained least squares problem. `sum_squares()` is a
+convex atom applied to an affine argument.
+
+```{r}
+#| label: ex2-build
+set.seed(42)
+A <- matrix(rnorm(12), 4, 3)
+b <- rnorm(4)
+x2 <- Variable(3, name = "x")
+prob2 <- Problem(Minimize(sum_squares(A %*% x2 - b)))
+is_dcp(prob2)
+```
+
+```{r}
+#| label: ex2-viz
+#| echo: false
+#| results: hide
+visualize(prob2, output = "html",
+          file = "viz/least-squares.html", open = FALSE)
+```
+
+<iframe src="viz/least-squares.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Portfolio Optimization
+
+$$
+\text{maximize} \; \boldsymbol{\mu}^T \mathbf{w} - \gamma \, \mathbf{w}^T \Sigma \mathbf{w}
+\quad \text{subject to} \quad \sum w_i = 1, \quad w \geq 0
+$$
+
+A Markowitz portfolio problem with a risk-aversion parameter
+$\gamma$. This example demonstrates `latex_name` for display
+customization and `set_label()` for named constraints.
+
+```{r}
+#| label: ex3-build
+w <- Variable(4, name = "w", latex_name = "\\mathbf{w}")
+mu <- Parameter(4, name = "mu", latex_name = "\\boldsymbol{\\mu}")
+gamma <- Parameter(1, name = "gamma", nonneg = TRUE, latex_name = "\\gamma")
+Sigma <- matrix(c(1,.5,.3,.1, .5,1,.4,.2, .3,.4,1,.5, .1,.2,.5,1), 4, 4)
+prob3 <- Problem(
+  Maximize(t(mu) %*% w - gamma * quad_form(w, Sigma)),
+  list(
+    set_label(sum(w) == 1, "budget"),
+    set_label(w >= 0, "long only")
+  )
+)
+is_dcp(prob3)
+```
+
+```{r}
+#| label: ex3-viz
+#| echo: false
+#| results: hide
+visualize(prob3, output = "html",
+          file = "viz/portfolio.html", open = FALSE)
+```
+
+<iframe src="viz/portfolio.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Entropy Maximization
+
+$$
+\text{maximize} \; \sum \text{entr}(x_i) \quad \text{subject to} \quad \sum x_i = 1
+$$
+
+Maximum entropy distribution. The `entr()` atom is concave, so
+maximizing a sum of concave atoms is DCP-compliant.
+
+```{r}
+#| label: ex4-build
+x4 <- Variable(5, name = "x")
+prob4 <- Problem(Maximize(sum(entr(x4))), list(sum(x4) == 1))
+is_dcp(prob4)
+```
+
+```{r}
+#| label: ex4-viz
+#| echo: false
+#| results: hide
+visualize(prob4, output = "html",
+          file = "viz/entropy.html", open = FALSE)
+```
+
+<iframe src="viz/entropy.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Huber Loss
+
+$$
+\text{minimize} \; \sum \text{huber}(x_i)
+$$
+
+The Huber function is convex; minimizing its sum is DCP-compliant.
+This is an unconstrained problem.
+
+```{r}
+#| label: ex5-build
+x5 <- Variable(3, name = "x")
+prob5 <- Problem(Minimize(sum(huber(x5))))
+is_dcp(prob5)
+```
+
+```{r}
+#| label: ex5-viz
+#| echo: false
+#| results: hide
+visualize(prob5, output = "html",
+          file = "viz/huber.html", open = FALSE)
+```
+
+<iframe src="viz/huber.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Log-Sum-Exp
+
+$$
+\text{minimize} \; \log\sum e^{x_i} \quad \text{subject to} \quad x \geq -1
+$$
+
+`log_sum_exp()` is a convex atom. The constraint is affine.
+
+```{r}
+#| label: ex6-build
+x6 <- Variable(4, name = "x")
+prob6 <- Problem(Minimize(log_sum_exp(x6)), list(x6 >= -1))
+is_dcp(prob6)
+```
+
+```{r}
+#| label: ex6-viz
+#| echo: false
+#| results: hide
+visualize(prob6, output = "html",
+          file = "viz/log-sum-exp.html", open = FALSE)
+```
+
+<iframe src="viz/log-sum-exp.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Semidefinite Program
+
+$$
+\text{minimize} \; \lambda_{\max}(X) \quad \text{subject to} \quad X_{11} = 1
+$$
+
+An SDP with a symmetric matrix variable. `lambda_max()` is convex and
+the equality constraint is affine.
+
+```{r}
+#| label: ex7-build
+X7 <- Variable(c(3, 3), name = "X", symmetric = TRUE)
+prob7 <- Problem(Minimize(lambda_max(X7)), list(X7[1, 1] == 1))
+is_dcp(prob7)
+```
+
+```{r}
+#| label: ex7-viz
+#| echo: false
+#| results: hide
+visualize(prob7, output = "html",
+          file = "viz/sdp.html", open = FALSE)
+```
+
+<iframe src="viz/sdp.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Mixed Atoms
+
+$$
+\text{minimize} \; \max_i |x_i| + \sum \text{pos}(x_i)
+$$
+
+A combination of `max_entries(abs(x))` (convex) and
+`sum_entries(pos(x))` (convex). The sum of convex functions is convex.
+
+```{r}
+#| label: ex8-build
+x8 <- Variable(3, name = "x")
+prob8 <- Problem(Minimize(max_entries(abs(x8)) + sum_entries(pos(x8))))
+is_dcp(prob8)
+```
+
+```{r}
+#| label: ex8-viz
+#| echo: false
+#| results: hide
+visualize(prob8, output = "html",
+          file = "viz/mixed-atoms.html", open = FALSE)
+```
+
+<iframe src="viz/mixed-atoms.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+## Non-DCP Examples
+
+The following problems violate the DCP rules. The visualization
+highlights the offending nodes in red, making it easy to pinpoint
+where the violation occurs.
+
+### Bilinear Objective
+
+$$
+\text{minimize} \; x_1 x_2 \quad \text{subject to} \quad x \geq 0
+$$
+
+::: {.callout-warning}
+**DCP violation:** The product $x_1 x_2$ is neither convex nor
+concave --- it is bilinear. `visualize()` marks the objective node in
+red.
+:::
+
+```{r}
+#| label: ex9-build
+x9 <- Variable(2, name = "x")
+prob9 <- Problem(Minimize(x9[1] * x9[2]), list(x9 >= 0))
+is_dcp(prob9)
+```
+
+```{r}
+#| label: ex9-viz
+#| echo: false
+#| results: hide
+visualize(prob9, output = "html",
+          file = "viz/bilinear.html", open = FALSE)
+```
+
+<iframe src="viz/bilinear.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+### Nonaffine Equality Constraint
+
+$$
+\text{minimize} \; \mathbf{1}^T x \quad \text{subject to} \quad \|x\|_2 = 1
+$$
+
+::: {.callout-warning}
+**DCP violation:** Equality constraints must be affine. Here
+$\|x\|_2$ is convex, so the equality $\|x\|_2 = 1$ is not
+DCP-compliant. The constraint node is highlighted in red.
+:::
+
+```{r}
+#| label: ex10-build
+x10 <- Variable(3, name = "x")
+prob10 <- Problem(Minimize(sum(x10)), list(p_norm(x10, 2) == 1))
+is_dcp(prob10)
+```
+
+```{r}
+#| label: ex10-viz
+#| echo: false
+#| results: hide
+visualize(prob10, output = "html",
+          file = "viz/nonaffine-eq.html", open = FALSE)
+```
+
+<iframe src="viz/nonaffine-eq.html" width="100%" height="550" style="border: 1px solid #dee2e6; border-radius: 6px;" loading="lazy"></iframe>
+
+## Text Output
+
+For quick inspection in the console, use `output = "text"` (the
+default):
+
+```{r}
+#| label: text-output
+visualize(prob1, output = "text")
+```
+
+## Session Info
+
+```{r}
+#| label: sessioninfo
+sessionInfo()
+```
