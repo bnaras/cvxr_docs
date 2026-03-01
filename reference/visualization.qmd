@@ -49,6 +49,66 @@ Two helper features for richer output:
 - **`set_label(constraint, label)`** attaches a human-readable label
   to a constraint
 
+## Smith Form Notation
+
+The visualization uses $\varphi$ (phi) symbols to represent CVXR
+atoms in the _Smith form_ --- the intermediate representation that
+shows how each expression is decomposed before conic canonicalization.
+Each atom is written as $t_i = \varphi^{\text{tag}}(\text{args})$ in
+the Smith form, and relaxed to an inequality ($\geq$ for convex,
+$\leq$ for concave) in the relaxed Smith form.
+
+The table below lists the $\varphi$ functions that have dedicated
+annotations. Any atom not listed here uses a generic fallback:
+$\varphi^{\texttt{ClassName}}$.
+
+### Affine Atoms
+
+These atoms preserve curvature (both convex _and_ concave). Their
+Smith form uses equality ($=$) since no relaxation is needed.
+
+| Symbol | CVXR Function | Meaning |
+|:------:|:--------------|:--------|
+| $\varphi^{+}$ | `+` | Addition |
+| $\varphi^{-}$ | `-x` | Negation |
+| $\varphi^{\times}$ | `%*%` | Matrix multiplication |
+| $\varphi^{\odot}$ | `*` (elementwise) | Hadamard (elementwise) product |
+| $\varphi^{\div}$ | `/` | Division by constant |
+| $\varphi^{\top}$ | `t()` | Transpose |
+| $\varphi^{\text{vec}}$ | `reshape_expr()`, `vec()` | Vectorization / reshape |
+| $\varphi^{\Sigma}$ | `sum()`, `sum_entries()` | Sum of entries |
+
+### Convex and Concave Atoms
+
+These atoms have specific curvature. In the relaxed Smith form,
+convex atoms use $t_i \geq \varphi(\cdots)$ and concave atoms use
+$t_i \leq \varphi(\cdots)$.
+
+| Symbol | CVXR Function | Meaning | Curvature |
+|:------:|:--------------|:--------|:---------:|
+| $\varphi^{\lvert\cdot\rvert}$ | `abs()` | Absolute value | convex |
+| $\varphi^{\lVert\cdot\rVert_2}$ | `p_norm(x, 2)` | Euclidean norm | convex |
+| $\varphi^{\lVert\cdot\rVert_p}$ | `p_norm(x, p)` | General $p$-norm | convex ($p \geq 1$) |
+| $\varphi^{(\cdot)^2}$ | `power(x, 2)`, `x^2` | Square | convex |
+| $\varphi^{(\cdot)^p}$ | `power(x, p)`, `x^p` | General power | varies with $p$ |
+| $\varphi^{\text{qol}}$ | `quad_over_lin()` | $\lVert x\rVert_2^2 / y$ | convex |
+| $\varphi^{\text{quad}}$ | `quad_form(x, P)` | $x^\top P x$ | convex ($P \succeq 0$) |
+| $\varphi^{\max}$ | `max_entries()`, `maximum()` | Maximum | convex |
+| $\varphi^{\min}$ | `min_entries()`, `minimum()` | Minimum | concave |
+
+### Leaves and Fallback
+
+| Symbol | Node Type | Description |
+|:------:|:----------|:------------|
+| $\mathbf{x}$ | `Variable` | Optimization variable |
+| $\theta_{\text{name}}$ | `Parameter` | Named parameter (value set at solve time) |
+| literal value | `Constant` | Numeric constant (shown as value or $C_{(m,n)}$) |
+| $\varphi^{\texttt{ClassName}}$ | any other `Atom` | Generic fallback for atoms without custom annotation |
+
+Atoms that appear in the examples on this page but use the generic
+fallback include `entr()`, `huber()`, `log_sum_exp()`, `lambda_max()`,
+and `pos()`.
+
 ## DCP-Compliant Examples
 
 The examples below show `visualize()` output for problems that
