@@ -425,8 +425,18 @@ default):
 
 ```{r}
 #| label: text-output
+#| collapse: true
 visualize(prob1, output = "text")
 ```
+
+## Practical Considerations
+
+`visualize()` is designed for small to moderate problems --- the kind
+you build during modeling and debugging. Problems with many
+variables, large data matrices, or hundreds of constraints will
+produce unwieldy expression trees and oversized conic forms that
+obscure rather than illuminate. Keep the problem small and
+representative when using this tool.
 
 ## Session Info
 
