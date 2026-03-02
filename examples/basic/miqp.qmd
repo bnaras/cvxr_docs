@@ -21,6 +21,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+include_solvers("GUROBI")
 ```
 
 ## Introduction

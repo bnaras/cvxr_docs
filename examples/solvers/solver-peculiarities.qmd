@@ -21,6 +21,7 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+include_solvers("MOSEK")
 ```
 
 The default solver in `CVXR` is `Clarabel`. However, it is not always the
