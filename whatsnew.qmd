@@ -26,6 +26,13 @@ page summarizes the key changes from CVXR 1.x that may affect users.
 - **DQCP** (Disciplined Quasiconvex Programming) via `psolve(prob, qcp = TRUE)`.
 - **Complex variable support** via `Variable(n, complex = TRUE)`.
 - **Warm-start support** for 6 solvers (OSQP, SCS, Gurobi, MOSEK, CLARABEL, HiGHS).
+- **Matrix package interoperability** via `as_cvxr_expr()`. Matrix
+  package objects (`dgCMatrix`, `dgeMatrix`, `dsCMatrix`, `ddiMatrix`,
+  `sparseVector`) use S4 dispatch which preempts S7/S3, so they cannot
+  be used directly with CVXR operators. Wrapping with `as_cvxr_expr()`
+  converts them to CVXR `Constant` objects while preserving sparsity
+  (unlike `as.matrix()` which densifies). Base R `matrix` and `numeric`
+  objects work natively without wrapping.
 
 ## Breaking Changes from CVXR 1.x
 
@@ -159,5 +166,21 @@ To migrate code from CVXR 1.x to 1.8.x:
 7. Update solver names: `"ECOS"` → `"CLARABEL"`, `"GLPK"` → `"HIGHS"`
 8. Update `axis` arguments: `axis = NA` → `axis = NULL` (row/column axis values 1 and 2 are unchanged)
 9. Replace `A %>>% B` with `PSD(A - B)` if desired
+10. Wrap Matrix package objects with `as_cvxr_expr()` before using
+    them in CVXR expressions (e.g., `as_cvxr_expr(A) %*% x` instead
+    of `A %*% x` when `A` is a `dgCMatrix` or other Matrix class).
+    This preserves sparsity. Base R matrices need no wrapping.
+
+## Known Limitations
+
+- Matrix package objects (`dgCMatrix`, `dgeMatrix`, `ddiMatrix`,
+  `sparseVector`) cannot be used directly with CVXR operators due to
+  S4 dispatch preempting S7/S3. Wrap with `as_cvxr_expr()` first.
+  Base R `matrix`/`numeric` work natively. This is an R dispatch
+  limitation requiring upstream changes in S7 and/or Matrix.
+- Warm-start for HiGHS is blocked (R `highs` package lacks
+  `setSolution()` API).
+- Derivative/sensitivity API deferred (requires `diffcp`, no R
+  equivalent).
 
 ## References
