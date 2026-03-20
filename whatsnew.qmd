@@ -7,7 +7,11 @@ author: Anqi Fu and Balasubramanian Narasimhan
 
 CVXR 1.8.x is a ground-up rewrite using R's S7 object system, designed
 to be isomorphic with CVXPY 1.8.1 for long-term maintainability. This
-page summarizes the key changes from CVXR 1.x that may affect users.
+page summarizes the key changes from CVXR 1.x that may affect
+users. 
+
+_Note:_ Package authors encountering `Rmosek` issues while
+submitting to CRAN should especially see [CRAN Submission Tip](#cran-submission-tip) below.
 
 ## New Features
 
@@ -188,6 +192,23 @@ To migrate code from CVXR 1.x to 1.8.x:
     Similarly, if you extract a scalar from a CVXR result and need a
     plain numeric value, use `as.numeric()` to drop the matrix
     dimensions.
+
+### CRAN Submission Tip
+
+If you encounter issues involving `Rmosek` package while submitting
+your package to CRAN, just include the following code in
+`<your_pkg>/R/zzz.R` to resolve the issue.
+
+```{r, eval = FALSE}
+## Content of <your_pkg>/R/zzz.R
+
+.onLoad <- function(libname, pkgname) {
+  CVXR::exclude_solvers("MOSEK")
+}
+.onUnload <- function(libname, pkgname) {
+  CVXR::include_solvers("MOSEK")
+}
+```
 
 ## Known Limitations
 
