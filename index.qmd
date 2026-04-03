@@ -26,8 +26,9 @@ if installed.
 ## Version 1.8.x — Complete Rewrite
 
 CVXR 1.8.x is a ground-up rewrite using R's S7 class system, making
-the R implementation isomorphic with CVXPY 1.8.1. See [What's New in
-1.8.x](whatsnew.qmd) for details on the new API and migration guide.
+the R implementation isomorphic with the released version of CVXPY
+(currently 1.8.2). See [What's New in 1.8.x](whatsnew.qmd) for
+details on the new API and migration guide.
 :::
 
 ## Citing `CVXR`
@@ -52,30 +53,8 @@ the R implementation isomorphic with CVXPY 1.8.1. See [What's New in
 
 ```{r, echo = FALSE}
 library(kableExtra)
-check <- "\U2713"
-d  <- tibble::tibble(
-                  Solver = c("CLARABEL", "SCS", "OSQP", "HIGHS", "ECOS", "ECOS_BB", "GLPK", "GLPK_MI", "CPLEX", "GUROBI", "MOSEK", "CVXOPT", "PIQP"),
-                  `R package` = c('<a href="https://clarabel.org">clarabel</a>',
-                                  '<a href="https://cran.r-project.org/package=scs">scs</a>',
-                                  '<a href="https://www.osqp.org">osqp</a>',
-                                  '<a href="https://cran.r-project.org/package=highs">highs</a>',
-                                  '<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>',
-                                  '<a href="https://cran.r-project.org/package=ECOSolveR">ECOSolveR</a>',
-                                  '<a href="https://cran.r-project.org/package=Rglpk">Rglpk</a>',
-                                  '<a href="https://cran.r-project.org/package=Rglpk">Rglpk</a>',
-                                  '<a href="https://cran.r-project.org/package=Rcplex">Rcplex</a>',
-                                  '<a href="https://www.gurobi.com">gurobi</a>',
-                                  '<a href="https://docs.mosek.com/latest/rmosek/index.html">Rmosek</a>',
-                                  '<a href="https://cran.r-project.org/package=cccp">cccp</a>',
-                                  '<a href="https://cran.r-project.org/package=piqp">piqp</a>'),
-                  LP = c(check, check, check, check, check, " ", check, check, check, check, check, check, check),
-                  QP = c(check, check, check, check, check, " ", " ", " ", check, check, check, " ", check),
-                  SOCP = c(check, check, " ", " ", check, " ", " ", " ", check, check, check, check, " "),
-                  SDP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " "),
-                  EXP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " "),
-                  MIP = c(" ", check, " ", check, " ", check, " ", check, " ", check, check, " ", " ")
-              )
-knitr::kable(d, format = "html", escape = FALSE) |>
+source("_solver_table.R")
+knitr::kable(solver_tbl, format = "html", escape = FALSE) |>
     kableExtra::kable_styling("striped") |>
     kableExtra::column_spec(1:8, background = "#ececec")
 ```
@@ -90,7 +69,7 @@ Documentation](https://www.cvxgrp.org/CVXR).
 `CVXR` continues to be developed on
 [Github](https://github.com/cvxgrp/CVXR). Version 1.8.x is a major
 release implementing a complete rewrite using R's S7 class system,
-making `CVXR` isomorphic with CVXPY 1.8.1 and adding support for DGP,
+making `CVXR` isomorphic with the released version of CVXPY (currently 1.8.2) and adding support for DGP,
 DPP, and DQCP. More details can be found in [What's New in
 1.8.x](whatsnew.qmd).
 

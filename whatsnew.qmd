@@ -6,7 +6,7 @@ author: Anqi Fu and Balasubramanian Narasimhan
 ## Complete Rewrite Using S7
 
 CVXR 1.8.x is a ground-up rewrite using R's S7 object system, designed
-to be isomorphic with CVXPY 1.8.1 for long-term maintainability. This
+to be isomorphic with the released version of CVXPY (currently 1.8.2) for long-term maintainability. This
 page summarizes the key changes from CVXR 1.x that may affect
 users. 
 
@@ -17,8 +17,8 @@ submitting to CRAN should especially see [CRAN Submission Tip](#cran-submission-
 
 - **S7 class system** replaces S4 for all expression, constraint, and
   problem classes. Significantly faster construction and method dispatch.
-- **13 solvers**: CLARABEL (default), SCS, OSQP, HiGHS, MOSEK, Gurobi,
-  GLPK, GLPK_MI, ECOS, ECOS_BB, CPLEX, CVXOPT, and PIQP.
+- **15 solvers**: CLARABEL (default), SCS, OSQP, HiGHS, MOSEK, Gurobi,
+  GLPK, GLPK_MI, ECOS, ECOS_BB, CPLEX, CVXOPT, PIQP, SCIP, and XPRESS.
 - **Mixed-integer programming** via GLPK_MI, ECOS_BB, Gurobi, CPLEX,
   or HiGHS (`boolean = TRUE` or `integer = TRUE` in `Variable()`).
 - **Parameter support** via `Parameter()` class and `EvalParams` reduction.
@@ -29,7 +29,10 @@ submitting to CRAN should especially see [CRAN Submission Tip](#cran-submission-
 - **DGP** (Disciplined Geometric Programming) via `psolve(prob, gp = TRUE)`.
 - **DQCP** (Disciplined Quasiconvex Programming) via `psolve(prob, qcp = TRUE)`.
 - **Complex variable support** via `Variable(n, complex = TRUE)`.
-- **Warm-start support** for 6 solvers (OSQP, SCS, Gurobi, MOSEK, CLARABEL, HiGHS).
+- **Warm-start support** for 8 solvers (OSQP, SCS, Gurobi, MOSEK, CLARABEL, PIQP, XPRESS MIP, HiGHS).
+- **Element-wise matrix indexing** via `SpecialIndex`: `X[cbind(rows, cols)]`,
+  `X[logical_mask]`, `X[linear_indices]` — natural R idioms for constraining
+  specific entries of a matrix variable.
 - **Matrix package interoperability** via `as_cvxr_expr()`. Matrix
   package objects (`dgCMatrix`, `dgeMatrix`, `dsCMatrix`, `ddiMatrix`,
   `sparseVector`) use S4 dispatch which preempts S7/S3, so they cannot
@@ -97,26 +100,19 @@ and `%<<%` operators are still available for backward compatibility).
 
 - **Removed**: CBC
 - **Added**: HiGHS (LP, QP, MILP), Gurobi (LP, QP, SOCP, MIP), CVXOPT
-  (LP, SOCP), PIQP (QP)
+  (LP, SOCP), PIQP (QP), SCIP (LP, SOCP, MIP), XPRESS (LP, QP, SOCP, MIP)
 - **Default solver**: CLARABEL (replaces ECOS)
 
 ### Supported solvers
 
-| Solver | R Package | Type | Problem Classes |
-|--------|-----------|------|-----------------|
-| CLARABEL | `clarabel` (>= 0.11.2) | Conic | LP, QP, SOCP, SDP, ExpCone, PowCone |
-| SCS | `scs` (>= 3.2.7) | Conic | LP, QP, SOCP, SDP, ExpCone, PowCone |
-| MOSEK | `Rmosek` (>= 11.1.1) | Conic | LP, QP, SOCP, SDP, ExpCone, PowCone |
-| ECOS | `ECOSolveR` (>= 0.6) | Conic | LP, SOCP, ExpCone |
-| ECOS_BB | `ECOSolveR` (>= 0.6) | Conic | LP, SOCP, ExpCone + MI |
-| GUROBI | `gurobi` (>= 13.0.1) | Conic/QP | LP, QP, SOCP, MI |
-| GLPK | `Rglpk` (>= 0.6.5.1) | Conic | LP |
-| GLPK_MI | `Rglpk` (>= 0.6.5.1) | Conic | LP, MILP |
-| HIGHS | `highs` (>= 1.12.0.3) | Conic/QP | LP, QP, MILP |
-| CVXOPT | `cccp` (>= 0.3.3) | Conic | LP, SOCP |
-| OSQP | `osqp` (>= 1.0.0) | QP | LP, QP |
-| CPLEX | `Rcplex` (>= 0.3.8) | QP | LP, QP, MI |
-| PIQP | `piqp` (>= 0.6.2) | QP | LP, QP |
+```{r, echo = FALSE}
+library(kableExtra)
+source("_solver_table.R")
+knitr::kable(solver_tbl, format = "html", escape = FALSE,
+             caption = "Supported Solvers") |>
+    kableExtra::kable_styling("striped") |>
+    kableExtra::column_spec(1:8, background = "#ececec")
+```
 
 ## New Atoms and Functions
 

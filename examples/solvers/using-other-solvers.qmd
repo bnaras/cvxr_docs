@@ -17,7 +17,7 @@ library(kableExtra)
 
 ## Introduction
 
-`CVXR` supports 13 solvers, including several bundled open source
+`CVXR` (version `packageVersion("CVXR")`) supports `length(installed_solvers)` solvers, including several bundled open source
 solvers and optional commercial ones.
 
 ### Open Source Solvers (on CRAN)
@@ -37,6 +37,8 @@ solvers and optional commercial ones.
 - [CVXOPT](https://cvxopt.org/), for linear and second-order cone programs.
 - [PIQP](https://predict-epfl.github.io/piqp/), a proximal
   interior-point solver for quadratic programs.
+- [SCIP](https://www.scipopt.org/) for linear, second-order cone
+  programs and mixed-integer programs.
 
 ### Commercial Solvers
 
@@ -46,6 +48,8 @@ solvers and optional commercial ones.
   mixed-integer programs. Free academic licenses available.
 - [CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio),
   supporting LP, QP, and mixed-integer programs.
+- [XPRESS](https://www.fico.com/en/products/fico-xpress-optimization)
+  supporting LP, QP, SOCP and mixed-integer programs
 
 ## Solver Capabilities
 
@@ -53,49 +57,21 @@ The table below shows each solver, its R package dependency, and the
 problem classes it supports.
 
 ```{r, echo = FALSE}
-check <- "\U2713"
-d <- tibble::tibble(
-    Solver = c("CLARABEL", "SCS", "MOSEK", "ECOS", "ECOS_BB",
-               "GUROBI", "GLPK", "GLPK_MI", "HIGHS",
-               "CVXOPT", "OSQP", "CPLEX", "PIQP"),
-    `R Package` = c(
-        '<a href="https://cran.r-project.org/package=clarabel"><code>clarabel</code></a>',
-        '<a href="https://cran.r-project.org/package=scs"><code>scs</code></a>',
-        '<a href="https://docs.mosek.com/latest/rmosek/index.html"><code>Rmosek</code></a>',
-        '<a href="https://cran.r-project.org/package=ECOSolveR"><code>ECOSolveR</code></a>',
-        '<a href="https://cran.r-project.org/package=ECOSolveR"><code>ECOSolveR</code></a>',
-        '<a href="https://www.gurobi.com/"><code>gurobi</code></a>',
-        '<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>',
-        '<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>',
-        '<a href="https://cran.r-project.org/package=highs"><code>highs</code></a>',
-        '<a href="https://cran.r-project.org/package=cccp"><code>cccp</code></a>',
-        '<a href="https://cran.r-project.org/package=osqp"><code>osqp</code></a>',
-        '<a href="https://cran.r-project.org/package=Rcplex"><code>Rcplex</code></a>',
-        '<a href="https://cran.r-project.org/package=piqp"><code>piqp</code></a>'),
-    LP   = rep(check, 13),
-    QP   = c(check, check, check, " ", " ",
-             check, " ", " ", check,
-             " ", check, check, check),
-    SOCP = c(check, check, check, check, check,
-             check, " ", " ", " ",
-             check, " ", " ", " "),
-    SDP  = c(check, check, check, " ", " ",
-             " ", " ", " ", " ",
-             " ", " ", " ", " "),
-    EXP  = c(check, check, check, check, check,
-             " ", " ", " ", " ",
-             " ", " ", " ", " "),
-    MIP  = c(" ", " ", " ", " ", check,
-             check, " ", check, check,
-             " ", " ", check, " ")
-)
-knitr::kable(d, format = "html", escape = FALSE,
+source(here::here("_solver_table.R"))
+knitr::kable(solver_tbl, format = "html", escape = FALSE,
              caption = "Solver Capabilities") |>
-    kable_styling("striped") |>
-    column_spec(1:8, background = "#ececec")
+    kableExtra::kable_styling("striped") |>
+    kableExtra::column_spec(1:8, background = "#ececec")
 ```
 
 ## Installing Commercial Solvers
+
+Once a commercial solver is installed, it will be auto-detected
+depending on the type of problem you solve. However, you can force its
+use by passing `solver = "MOSEK"`, `solver = "GUROBI"`, or `solver =
+"CPLEX"` to `psolve()`.
+
+Below we provide some hints for installing commercial solvers. 
 
 ### MOSEK
 
@@ -103,8 +79,14 @@ knitr::kable(d, format = "html", escape = FALSE,
 free of charge: one can obtain the free academic license after
 registering. Once the license for the product has been activated, the
 [Rmosek documentation](https://docs.mosek.com/latest/rmosek/index.html)
-provides all the details for installation. A quick check to ensure
-things are working is to run the example:
+provides all the details for installation. 
+
+To be concrete, on my Apple Silicon Mac, the personal use installation
+lands in `~/mosek/11.1`. So all one has to do is to
+`source("~/mosek/11.1/tools/platform/osxaarch64/rmosek.R")` and follow
+the directions given.
+
+A quick check to ensure things are working is to run the example:
 
 ```{r, eval = FALSE}
 library(Rmosek)
@@ -113,9 +95,11 @@ example(mosek)
 
 ### Gurobi
 
-[Gurobi](https://www.gurobi.com/) offers free academic licenses. After
-installing Gurobi and the `gurobi` R package (bundled with the Gurobi
-installation), verify with:
+[Gurobi](https://www.gurobi.com/) offers free academic licenses and
+includes a binary R package in the installation bundle. On my Apple
+Silicon mac, this binary package may be found at
+`/Library/gurobi1301/macos_universal2/R` along with a `README`
+containing instructions to follow. Verify with:
 
 ```{r, eval = FALSE}
 library(gurobi)
@@ -126,13 +110,64 @@ gurobi(model)
 
 ### CPLEX
 
-[IBM CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio)
-is available through IBM's academic initiative. Install the `Rcplex`
-package from CRAN after installing the CPLEX library.
+[IBM
+CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio) is
+available through IBM's academic initiative. The hardest part is
+finding the community edition and IBM doesn't make this easy, but a
+free community edition **is** available. There is also a specific
+version for Apple Silicon and you have to ensure that you don't
+mistakenly use the `x86_64` version; that will not work on the Apple
+Silicon platform, even if you use rosetta.
 
-Once a commercial solver is installed, you can use it by passing
-`solver = "MOSEK"`, `solver = "GUROBI"`, or `solver = "CPLEX"` to
-`psolve()`.
+Once CPLEX is installed, the R package installation is from source and
+so you need compilation tools.  An example R installation script for
+Apple Silicon is below.
+
+```{r, eval = FALSE}
+cplex_location <- "/Applications/CPLEX_Studio_Community2212"
+arch <- "arm64"
+cplex_configure_args <- c(Rcplex = sprintf("--with-cplex-include='%s/cplex/include' --with-cplex-lib='-L%s/cplex/lib/%s_osx/static_pic -lilocplex -lcplex'", cplex_location, cplex_location, arch))
+install.packages("Rcplex", configure.args = cplex_configure_args)
+```
+
+### XPRESS
+
+[XPRESS](https://www.fico.com/en/products/fico-xpress-optimization)
+can be downloaded from the website after surrendering some information
+on who you are etc. Once again, a community license is automatically
+included with the download. The annoyance is that the license needs to
+be available any time you use the solver. So I usually copy the first
+section below into `~/.Rprofile` after verifying that it works in an
+initial R session.
+
+```{r, eval = FALSE}
+## Test that this code chunk doesn't warn in an R session and then copy into ~/.Rprofile
+XPRESSDIR <- "/Applications/FICO Xpress/xpressmp"
+XPRESS_LICENSE_FILE <- "xpauth.xpr" ## sometimes named "community-xpauth.xpr"
+XPAUTH_PATH <- sprintf("%s/bin/%s", XPRESSDIR, XPRESS_LICENSE_FILE)
+if (!file.exists(XPAUTH_PATH)) {
+  warning(sprintf("XPRESS license file not located at %s", XPAUTH_PATH))
+}
+## Set environment variables
+Sys.setenv(
+  XPRESSDIR = XPRESSDIR,
+  XPAUTH_PATH = XPAUTH_PATH
+)
+```
+
+Install the solver from source (so you need compilation tools) via:
+
+```{r, eval = FALSE}
+install.packages(sprintf("%s/R/xpress.tar.gz", XPRESSDIR))
+```
+
+Finally, verify that this runs.
+
+```{r, eval = FALSE}
+library(xpress)
+prob <- createprob()
+print(prob)
+```
 
 ## Session Info
 
