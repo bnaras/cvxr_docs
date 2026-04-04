@@ -127,8 +127,20 @@ disp_result <- function(states, P, tolerance = 1e-3) {
         P[P < tolerance] <- 0
         P <- P/apply(P, 1, sum)   ## Normalize so rows sum to exactly 1
         mc <- new("markovchain", states = states, transitionMatrix = P)
-        par(mar = c(3, 3, 3, 3))
-        plot(mc, edge.arrow.size = 0.5, vertex.size = 20)
+        ## Plot igraph directly with padding so self-loops aren't clipped
+        g <- methods::as(mc, "igraph")
+        set.seed(42)
+        lay <- igraph::layout_nicely(g)
+        lay <- igraph::norm_coords(lay)
+        pad <- 1.6
+        par(mar = c(1, 1, 1, 1))
+        igraph::plot.igraph(g, layout = lay, rescale = FALSE,
+             xlim = c(-pad, pad), ylim = c(-pad, pad),
+             edge.arrow.size = 0.5, vertex.size = 20,
+             edge.label = round(igraph::E(g)$prob, 2),
+             edge.label.color = "navy", edge.label.cex = 0.9,
+             vertex.color = "orange", vertex.frame.color = "darkgoldenrod",
+             vertex.label.color = "navy", vertex.label.font = 2)
     }
 }
 ```
