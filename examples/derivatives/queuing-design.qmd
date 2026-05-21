@@ -23,13 +23,6 @@ library(CVXR)
 
 ## Introduction
 
-::: {.callout-warning}
-The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`) is **not implemented** in `CVXR` at this time. The sensitivity
-analysis and perturbation sections below illustrate the intended API
-based on CVXPY but are not executable.
-:::
-
 In this example, we consider the design of an $M/M/N$ queuing system,
 and we study the sensitivity of the design with respect to various
 parameters, such as the maximum total delay and total service rate.
@@ -145,15 +138,15 @@ problem <- Problem(Minimize(objective_fn), constraints)
 
 ## Solving the Problem
 
-```{r, eval = FALSE}
-result <- psolve(problem, requires_grad = TRUE, gp = TRUE,
+```{r}
+result <- psolve(problem, requires_grad = TRUE, gp = TRUE, solve_method = "SCS",
                  eps = 1e-14, max_iters = 10000, mode = "dense")
 cat(sprintf("Optimal value: %f\n", result))
 ```
 
 The solution is printed below.
 
-```{r, eval = FALSE}
+```{r}
 cat(sprintf("mu:  [%f, %f]\n", value(mu)[1], value(mu)[2]))
 cat(sprintf("lam: [%f, %f]\n", value(lam)[1], value(lam)[2]))
 cat(sprintf("ell: [%f, %f]\n", value(ell)[1], value(ell)[2]))
@@ -167,8 +160,8 @@ the values of $d_{\max}$ and $\mu_{\max}$, and that increasing these
 parameters would decrease the service loads, especially on the first
 queue.
 
-```{r, eval = FALSE}
-result <- psolve(problem, requires_grad = TRUE, gp = TRUE,
+```{r}
+result <- psolve(problem, requires_grad = TRUE, gp = TRUE, solve_method = "SCS",
                  eps = 1e-14, max_iters = 10000, mode = "dense")
 
 params_list <- list(gamma = gamma, w_max = w_max, d_max = d_max,
@@ -214,8 +207,8 @@ Next, we perturb each parameter by a small amount, and compare the
 prediction of a first-order approximation to the solution of the
 perturbed problem to the true solution.
 
-```{r, eval = FALSE}
-result <- psolve(problem, requires_grad = TRUE, gp = TRUE,
+```{r}
+result <- psolve(problem, requires_grad = TRUE, gp = TRUE, solve_method = "SCS",
                  eps = 1e-14, max_iters = 10000, mode = "dense")
 
 mu_value  <- value(mu)
@@ -240,7 +233,7 @@ for (nm in names(params_list)) {
     p <- params_list[[nm]]
     value(p) <- value(p) + delta(p)
 }
-psolve(problem, gp = TRUE, eps = 1e-14, max_iters = 10000)
+psolve(problem, solver = "SCS", gp = TRUE, eps = 1e-14, max_iters = 10000)
 
 lam_actual <- ((value(lam) - lam_value) / lam_value) * 100
 mu_actual  <- ((value(mu) - mu_value) / mu_value) * 100

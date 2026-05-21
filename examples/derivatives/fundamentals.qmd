@@ -23,12 +23,6 @@ library(CVXR)
 
 ## Introduction
 
-::: {.callout-warning}
-The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`) is **not implemented** in `CVXR` at this time. The code below
-illustrates the intended API based on CVXPY but is not executable.
-:::
-
 This example introduces the fundamentals of computing the derivative
 of the solution map to optimization problems. The derivative can be
 used for **sensitivity analysis**, to see how a solution would change
@@ -85,7 +79,7 @@ is_dgp(problem)
 Next, we solve the problem, setting the parameters $a$, $b$, and $c$
 to $2$, $1$, and $0.5$.
 
-```{r, eval = FALSE}
+```{r}
 value(a) <- 2.0
 value(b) <- 1.0
 value(cc) <- 0.5
@@ -152,7 +146,7 @@ $$
 We set the `delta` attributes of the parameters to their
 perturbations, and then call the `derivative` method.
 
-```{r, eval = FALSE}
+```{r}
 da <- 1e-2
 db <- 1e-2
 dc <- 1e-2
@@ -168,7 +162,7 @@ variables as a side-effect, with the predicted change in the variable.
 We can compare the predictions to the actual solution of the perturbed
 problem.
 
-```{r, eval = FALSE}
+```{r}
 x_hat <- value(x) + delta(x)
 y_hat <- value(y) + delta(y)
 z_hat <- value(z) + delta(z)
@@ -227,7 +221,7 @@ $$
 f(\mathcal{S}(\alpha - \eta \, \mathsf{d}\alpha)) \approx f(\mathcal{S}(\alpha)) - \eta \, \mathsf{d}\alpha^T \mathsf{d}\alpha.
 $$
 
-```{r, eval = FALSE}
+```{r}
 result <- psolve(problem, gp = TRUE, requires_grad = TRUE)
 
 f_val <- function(xv, yv, zv) 0.5 * (xv^2 + yv^2 + zv^2)

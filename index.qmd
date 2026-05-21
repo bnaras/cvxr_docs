@@ -26,7 +26,7 @@ if installed.
 ## Version 1.8.x — Complete Rewrite
 
 CVXR 1.8.x is a ground-up rewrite using R's S7 class system, making
-the R implementation isomorphic with CVXPY 1.8.1. See [What's New in
+the R implementation isomorphic with CVXPY 1.8.2. See [What's New in
 1.8.x](whatsnew.qmd) for details on the new API and migration guide.
 :::
 
@@ -90,7 +90,7 @@ Documentation](https://www.cvxgrp.org/CVXR).
 `CVXR` continues to be developed on
 [Github](https://github.com/cvxgrp/CVXR). Version 1.8.x is a major
 release implementing a complete rewrite using R's S7 class system,
-making `CVXR` isomorphic with CVXPY 1.8.1 and adding support for DGP,
+making `CVXR` isomorphic with CVXPY 1.8.2 and adding support for DGP,
 DPP, and DQCP. More details can be found in [What's New in
 1.8.x](whatsnew.qmd).
 

@@ -19,16 +19,10 @@ if (params$mode == "test") {
 
 ```{r prereqs, message = FALSE, echo = FALSE}
 library(CVXR)
+library(ggplot2)
 ```
 
 ## Introduction
-
-::: {.callout-warning}
-The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`) is **not implemented** in `CVXR` at this time. The gradient
-descent training loop below illustrates the intended API based on CVXPY
-but is not executable.
-:::
 
 In this example, we fit a regression model to structured data, using a
 log-log convex program (LLCP). The training dataset $\mathcal{D}$
@@ -101,7 +95,7 @@ A_true <- matrix(rnorm(m * n), nrow = m, ncol = n) / 10
 c_true <- abs(rnorm(m))
 ```
 
-```{r, eval = FALSE}
+```{r}
 generate_data <- function(num_points, seed) {
     set.seed(seed)
 
@@ -110,7 +104,7 @@ generate_data <- function(num_points, seed) {
 
     ## For each input, solve the LLCP with true parameters to get output
     input_p <- Parameter(n, pos = TRUE)
-    prediction <- multiply(c_true, gmatmul(A_true, input_p))
+    prediction <- c_true * gmatmul(A_true, input_p)
     y_var <- Variable(m, pos = TRUE)
     obj_fn <- sum_entries(prediction / y_var + y_var / prediction)
     cons <- lapply(seq_len(m - 1), function(i) y_var[i] <= y_var[i + 1])
@@ -119,14 +113,14 @@ generate_data <- function(num_points, seed) {
     outputs <- matrix(0, nrow = num_points, ncol = m)
     for (i in seq_len(num_points)) {
         value(input_p) <- inputs[i, ]
-        psolve(prob, gp = TRUE)
+        psolve(prob, solver = "SCS", gp = TRUE)
         outputs[i, ] <- value(y_var)
     }
     list(inputs = inputs, outputs = outputs)
 }
 ```
 
-```{r, eval = FALSE}
+```{r}
 train_data <- generate_data(N, 243)
 train_inputs  <- train_data$inputs
 train_outputs <- train_data$outputs
@@ -143,13 +137,16 @@ if (params$mode == "save") {
 }
 ```
 
-```{r, eval = FALSE}
-plot(train_outputs[1, ], type = "o", pch = 16,
-     xlab = "i", ylab = expression(y[i]),
-     main = "First Training Output (sorted)")
+```{r}
+ggplot(data.frame(i = seq_len(m), y = as.vector(train_outputs[1, ])),
+       aes(i, y)) +
+    geom_line() + geom_point(size = 2) +
+    labs(x = "i", y = expression(y[i]),
+         title = "First Training Output (sorted)") +
+    theme_minimal()
 ```
 
-```{r, eval = FALSE}
+```{r}
 val_data <- generate_data(N_val, 0)
 val_inputs  <- val_data$inputs
 val_outputs <- val_data$outputs
@@ -161,7 +158,7 @@ We initialize the parameters in our LLCP model by fitting monomials
 to the training data, without enforcing the monotonicity constraint.
 This is a standard least squares problem in log space.
 
-```{r, eval = FALSE}
+```{r}
 log_outputs <- t(log(train_outputs))  # m x N
 log_inputs  <- t(log(train_inputs))   # n x N
 
@@ -169,12 +166,12 @@ log_inputs  <- t(log(train_inputs))   # n x N
 ## Variables: theta (n x m), log_c (m x 1)
 theta <- Variable(c(n, m))
 log_c <- Variable(c(m, 1))
-offsets <- do.call(cbind, replicate(N, log_c, simplify = FALSE))  # m x N
+offsets <- do.call(hstack, replicate(N, log_c, simplify = FALSE))  # m x N
 cp_preds <- t(theta) %*% log_inputs + offsets   # m x N
 lstsq_obj <- (1 / N) * sum_squares(cp_preds - log_outputs)
 lstsq_problem <- Problem(Minimize(lstsq_obj))
 
-lstsq_result <- psolve(lstsq_problem, verbose = TRUE)
+lstsq_result <- psolve(lstsq_problem, solver = "OSQP", verbose = TRUE)
 cat(sprintf("Least squares fit: %f\n", lstsq_result))
 ```
 
@@ -189,7 +186,7 @@ if (params$mode == "save") {
 }
 ```
 
-```{r, eval = FALSE}
+```{r}
 ## Extract initialized parameters
 A_init <- t(value(theta))    # m x n
 c_init <- exp(value(log_c))  # m x 1
@@ -200,14 +197,14 @@ c_init <- exp(value(log_c))  # m x 1
 We now set up the parameterized LLCP and iteratively fit the
 parameters using gradient descent with the `backward` method.
 
-```{r, eval = FALSE}
+```{r}
 A_param <- Parameter(c(m, n))
 c_param <- Parameter(m, pos = TRUE)
 x_slack <- Variable(n, pos = TRUE)
 x_param <- Parameter(n, pos = TRUE)
 y <- Variable(m, pos = TRUE)
 
-prediction <- multiply(c_param, gmatmul(A_param, x_slack))
+prediction <- c_param * gmatmul(A_param, x_slack)
 obj_fn <- sum_entries(prediction / y + y / prediction)
 cons <- c(list(x_slack == x_param),
           lapply(seq_len(m - 1), function(i) y[i] <= y[i + 1]))
@@ -221,7 +218,7 @@ example, we solve the LLCP, compute the gradient of the squared loss
 with respect to $A$ and $c$ via `backward`, and accumulate the
 gradients. We then update the parameters.
 
-```{r, eval = FALSE}
+```{r}
 ## Initialize parameters from the monomial fit
 A_current <- A_init
 c_current <- as.vector(c_init)
@@ -243,7 +240,7 @@ for (epoch in seq_len(n_epochs)) {
         value(c_param) <- c_current
         value(x_param) <- train_inputs[i, ]
 
-        psolve(problem, gp = TRUE, requires_grad = TRUE)
+        psolve(problem, gp = TRUE, requires_grad = TRUE, solve_method = "SCS")
         y_pred <- value(y)
         residual <- y_pred - train_outputs[i, ]
         train_loss <- train_loss + sum(residual^2)
@@ -263,7 +260,7 @@ for (epoch in seq_len(n_epochs)) {
         value(A_param) <- A_current
         value(c_param) <- c_current
         value(x_param) <- val_inputs[i, ]
-        psolve(problem, gp = TRUE)
+        psolve(problem, solver = "SCS", gp = TRUE)
         y_pred <- value(y)
         val_loss <- val_loss + sum((y_pred - val_outputs[i, ])^2)
     }
@@ -285,29 +282,32 @@ for (epoch in seq_len(n_epochs)) {
 We compare the LLCP model predictions (with fitted parameters) to the
 true outputs on a validation example.
 
-```{r, eval = FALSE}
+```{r}
 ## Compute LLCP predictions on a validation example
 val_idx <- 1
 value(A_param) <- A_current
 value(c_param) <- c_current
 value(x_param) <- val_inputs[val_idx, ]
-psolve(problem, gp = TRUE)
-llcp_pred <- value(y)
+psolve(problem, solver = "SCS", gp = TRUE)
+llcp_pred <- as.vector(value(y))
 
 ## Compute least-squares monomial predictions (no monotonicity)
-lstsq_pred <- as.vector(c_init) *
-    exp(A_init %*% log(val_inputs[val_idx, ]))
+lstsq_pred <- as.vector(as.vector(c_init) *
+    exp(A_init %*% log(val_inputs[val_idx, ])))
 
-plot(val_outputs[val_idx, ], type = "o", pch = 16, col = "orange",
-     xlab = "i", ylab = expression(y[i]),
-     main = "Validation Example: True vs. Predictions",
-     ylim = range(c(val_outputs[val_idx, ], llcp_pred, lstsq_pred)))
-lines(llcp_pred, type = "o", pch = 17, col = "teal")
-lines(lstsq_pred, type = "o", pch = 15, col = "gray", lty = 2)
-legend("topleft",
-       legend = c("True", "LLCP", "Least Squares"),
-       col = c("orange", "teal", "gray"),
-       pch = c(16, 17, 15), lty = c(1, 1, 2))
+pred_df <- data.frame(
+    i = rep(seq_len(m), 3),
+    y = c(as.vector(val_outputs[val_idx, ]), llcp_pred, lstsq_pred),
+    series = factor(rep(c("True", "LLCP", "Least Squares"), each = m),
+                    levels = c("True", "LLCP", "Least Squares")))
+
+ggplot(pred_df, aes(i, y, color = series, shape = series)) +
+    geom_line() + geom_point(size = 2) +
+    scale_color_manual(values = c("True" = "orange", "LLCP" = "#008080",
+                                  "Least Squares" = "gray")) +
+    labs(x = "i", y = expression(y[i]), color = NULL, shape = NULL,
+         title = "Validation Example: True vs. Predictions") +
+    theme_minimal() + theme(legend.position = "top")
 ```
 
 ## Session Info

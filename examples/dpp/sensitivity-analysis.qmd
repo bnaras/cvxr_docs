@@ -23,13 +23,6 @@ library(CVXR)
 
 ## Introduction
 
-::: {.callout-warning}
-The derivative functionality (`backward`, `derivative`, `gradient`,
-`delta`, `requires_grad`) is **not implemented** in `CVXR` at this
-time. The code below illustrates the intended API based on CVXPY but is
-not executable.
-:::
-
 An optimization problem can be viewed as a function mapping parameters
 to solutions. This solution map is sometimes differentiable. `CVXR`
 has built-in support for computing the derivative of the optimal
@@ -74,7 +67,7 @@ Next, we solve the problem for the particular value of $p = 3$. Note
 that when solving the problem, we supply the keyword argument
 `requires_grad = TRUE` to `psolve()`.
 
-```{r, eval = FALSE}
+```{r}
 value(p) <- 3.0
 result <- psolve(problem, requires_grad = TRUE)
 cat("Optimal value:", result, "\n")
@@ -90,7 +83,7 @@ gradient of the solution with respect to its parameter by calling
 `gradient()` attribute on all parameters with the gradient of the
 solution with respect to that parameter.
 
-```{r, eval = FALSE}
+```{r}
 backward(problem)
 cat("The gradient is", gradient(p), "\n")
 ```
@@ -107,7 +100,7 @@ affect the solution `x`. We perturb `p` by $10^{-5}$ by setting
 `delta()` attribute of `x` with the change in `x` predicted by a
 first-order approximation (which is $\frac{dx}{dp} \cdot \Delta p$).
 
-```{r, eval = FALSE}
+```{r}
 delta(p) <- 1e-5
 derivative(problem)
 cat("x delta is", delta(x), "\n")
@@ -162,7 +155,7 @@ Here we demonstrate sensitivity analysis on a more practical problem:
 a regularized least-squares problem where we want to understand how
 the solution changes with respect to the regularization parameter.
 
-```{r, eval = FALSE}
+```{r}
 set.seed(42)
 n <- 5
 m <- 3
@@ -184,7 +177,7 @@ cat("x:", value(x), "\n")
 Now compute the gradient of the solution with respect to the
 regularization parameter:
 
-```{r, eval = FALSE}
+```{r}
 backward(problem)
 cat("Gradient of solution w.r.t. lambda:", gradient(lam), "\n")
 ```
@@ -192,7 +185,7 @@ cat("Gradient of solution w.r.t. lambda:", gradient(lam), "\n")
 And use `derivative()` to predict the effect of a small perturbation
 in $\lambda$:
 
-```{r, eval = FALSE}
+```{r}
 delta(lam) <- 0.01
 derivative(problem)
 cat("Predicted change in x:", delta(x), "\n")
