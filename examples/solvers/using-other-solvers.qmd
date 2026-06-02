@@ -17,8 +17,9 @@ library(kableExtra)
 
 ## Introduction
 
-`CVXR` supports 13 solvers, including several bundled open source
-solvers and optional commercial ones.
+`CVXR` supports 15 conic and quadratic-program solvers, including several
+open-source solvers and optional commercial ones, plus two nonlinear-programming
+(NLP) solvers for disciplined nonlinear programs.
 
 ### Open Source Solvers (on CRAN)
 
@@ -37,6 +38,9 @@ solvers and optional commercial ones.
 - [CVXOPT](https://cvxopt.org/), for linear and second-order cone programs.
 - [PIQP](https://predict-epfl.github.io/piqp/), a proximal
   interior-point solver for quadratic programs.
+- [SCIP](https://www.scipopt.org/), for LP, mixed-integer LP, and
+  (mixed-integer) second-order cone programs. Free for academic and
+  non-commercial use; installed from r-universe.
 
 ### Commercial Solvers
 
@@ -45,7 +49,20 @@ solvers and optional commercial ones.
 - [Gurobi](https://www.gurobi.com/), supporting LP, QP, SOCP, and
   mixed-integer programs. Free academic licenses available.
 - [CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio),
-  supporting LP, QP, and mixed-integer programs.
+  supporting LP, QP, SOCP, and mixed-integer programs.
+- [FICO Xpress](https://www.fico.com/en/products/fico-xpress-optimization),
+  supporting LP, QP, SOCP, and mixed-integer programs.
+
+### Nonlinear (NLP) Solvers
+
+For smooth nonlinear programs — see the [DNLP Tutorial](../dnlp/tutorial.qmd),
+solved with `psolve(prob, nlp = TRUE)` — `CVXR` supports two open-source NLP
+solvers, each via an optional R package:
+
+- [IPOPT](https://github.com/coin-or/Ipopt) (the `ipopt` package), an
+  interior-point solver, and the recommended default.
+- [Uno](https://github.com/cvanaret/Uno) (the `Uno` package), Unifying
+  Nonlinear Optimization.
 
 ## Solver Capabilities
 
@@ -57,7 +74,7 @@ check <- "\U2713"
 d <- tibble::tibble(
     Solver = c("CLARABEL", "SCS", "MOSEK", "ECOS", "ECOS_BB",
                "GUROBI", "GLPK", "GLPK_MI", "HIGHS",
-               "CVXOPT", "OSQP", "CPLEX", "PIQP"),
+               "CVXOPT", "OSQP", "CPLEX", "PIQP", "SCIP", "XPRESS"),
     `R Package` = c(
         '<a href="https://cran.r-project.org/package=clarabel"><code>clarabel</code></a>',
         '<a href="https://cran.r-project.org/package=scs"><code>scs</code></a>',
@@ -71,23 +88,25 @@ d <- tibble::tibble(
         '<a href="https://cran.r-project.org/package=cccp"><code>cccp</code></a>',
         '<a href="https://cran.r-project.org/package=osqp"><code>osqp</code></a>',
         '<a href="https://cran.r-project.org/package=Rcplex"><code>Rcplex</code></a>',
-        '<a href="https://cran.r-project.org/package=piqp"><code>piqp</code></a>'),
-    LP   = rep(check, 13),
+        '<a href="https://cran.r-project.org/package=piqp"><code>piqp</code></a>',
+        '<a href="https://www.scipopt.org/"><code>scip</code></a>',
+        '<a href="https://www.fico.com/en/products/fico-xpress-optimization"><code>xpress</code></a>'),
+    LP   = rep(check, 15),
     QP   = c(check, check, check, " ", " ",
              check, " ", " ", check,
-             " ", check, check, check),
+             " ", check, check, check, " ", check),
     SOCP = c(check, check, check, check, check,
              check, " ", " ", " ",
-             check, " ", " ", " "),
+             check, " ", check, " ", check, check),
     SDP  = c(check, check, check, " ", " ",
              " ", " ", " ", " ",
-             " ", " ", " ", " "),
+             " ", " ", " ", " ", " ", " "),
     EXP  = c(check, check, check, check, check,
              " ", " ", " ", " ",
-             " ", " ", " ", " "),
+             " ", " ", " ", " ", " ", " "),
     MIP  = c(" ", " ", " ", " ", check,
              check, " ", check, check,
-             " ", " ", check, " ")
+             " ", " ", check, " ", check, check)
 )
 knitr::kable(d, format = "html", escape = FALSE,
              caption = "Solver Capabilities") |>

@@ -23,11 +23,12 @@ passed to a cone solver such as [CLARABEL](https://clarabel.org),
 if installed.
 
 ::: {.callout-note}
-## Version 1.8.x — Complete Rewrite
+## Recent Releases
 
-CVXR 1.8.x is a ground-up rewrite using R's S7 class system, making
-the R implementation isomorphic with CVXPY 1.8.2. See [What's New in
-1.8.x](whatsnew.qmd) for details on the new API and migration guide.
+CVXR 1.8.x was a ground-up rewrite using R's S7 class system, making the R
+implementation isomorphic with CVXPY. CVXR 1.9.x adds disciplined nonlinear
+programming (DNLP) and more. See [What's New](whatsnew.qmd) for a
+version-by-version summary, the new API, and the migration guide.
 :::
 
 ## Citing `CVXR`
@@ -54,7 +55,7 @@ the R implementation isomorphic with CVXPY 1.8.2. See [What's New in
 library(kableExtra)
 check <- "\U2713"
 d  <- tibble::tibble(
-                  Solver = c("CLARABEL", "SCS", "OSQP", "HIGHS", "ECOS", "ECOS_BB", "GLPK", "GLPK_MI", "CPLEX", "GUROBI", "MOSEK", "CVXOPT", "PIQP"),
+                  Solver = c("CLARABEL", "SCS", "OSQP", "HIGHS", "ECOS", "ECOS_BB", "GLPK", "GLPK_MI", "CPLEX", "GUROBI", "MOSEK", "CVXOPT", "PIQP", "SCIP", "XPRESS"),
                   `R package` = c('<a href="https://clarabel.org">clarabel</a>',
                                   '<a href="https://cran.r-project.org/package=scs">scs</a>',
                                   '<a href="https://www.osqp.org">osqp</a>',
@@ -67,13 +68,15 @@ d  <- tibble::tibble(
                                   '<a href="https://www.gurobi.com">gurobi</a>',
                                   '<a href="https://docs.mosek.com/latest/rmosek/index.html">Rmosek</a>',
                                   '<a href="https://cran.r-project.org/package=cccp">cccp</a>',
-                                  '<a href="https://cran.r-project.org/package=piqp">piqp</a>'),
-                  LP = c(check, check, check, check, check, " ", check, check, check, check, check, check, check),
-                  QP = c(check, check, check, check, check, " ", " ", " ", check, check, check, " ", check),
-                  SOCP = c(check, check, " ", " ", check, " ", " ", " ", check, check, check, check, " "),
-                  SDP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " "),
-                  EXP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " "),
-                  MIP = c(" ", check, " ", check, " ", check, " ", check, " ", check, check, " ", " ")
+                                  '<a href="https://cran.r-project.org/package=piqp">piqp</a>',
+                                  '<a href="https://www.scipopt.org">scip</a>',
+                                  '<a href="https://www.fico.com/en/products/fico-xpress-optimization">xpress</a>'),
+                  LP = c(check, check, check, check, check, " ", check, check, check, check, check, check, check, check, check),
+                  QP = c(check, check, check, check, check, " ", " ", " ", check, check, check, " ", check, " ", check),
+                  SOCP = c(check, check, " ", " ", check, " ", " ", " ", check, check, check, check, " ", check, check),
+                  SDP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " ", " ", " "),
+                  EXP = c(check, check, " ", " ", " ", " ", " ", " ", " ", " ", check, " ", " ", " ", " "),
+                  MIP = c(" ", check, " ", check, " ", check, " ", check, " ", check, check, " ", " ", check, check)
               )
 knitr::kable(d, format = "html", escape = FALSE) |>
     kableExtra::kable_styling("striped") |>
@@ -88,11 +91,11 @@ For the latest news, please see the [Package
 Documentation](https://www.cvxgrp.org/CVXR).
 
 `CVXR` continues to be developed on
-[Github](https://github.com/cvxgrp/CVXR). Version 1.8.x is a major
+[Github](https://github.com/cvxgrp/CVXR). The 1.8.x series was a major
 release implementing a complete rewrite using R's S7 class system,
-making `CVXR` isomorphic with CVXPY 1.8.2 and adding support for DGP,
-DPP, and DQCP. More details can be found in [What's New in
-1.8.x](whatsnew.qmd).
+making `CVXR` isomorphic with CVXPY and adding support for DGP, DPP, and
+DQCP; the 1.9.x series adds disciplined nonlinear programming (DNLP).
+More details can be found in [What's New](whatsnew.qmd).
 
 ## Installing `CVXR`
 
