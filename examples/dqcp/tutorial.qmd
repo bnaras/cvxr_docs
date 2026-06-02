@@ -63,9 +63,9 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "dqcp_tutorial1.RDS"))
-    expect_equal(result, saved$result, tolerance = 1e-3)
-    expect_equal(value(x), saved$x, tolerance = 1e-3)
-    expect_equal(value(y), saved$y, tolerance = 1e-3)
+    expect_equal(result, saved$result, tolerance = 1e-10)
+    expect_equal(value(x), saved$x, tolerance = 1e-10)
+    expect_equal(value(y), saved$y, tolerance = 1e-10)
 }
 ```
 

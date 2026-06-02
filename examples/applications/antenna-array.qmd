@@ -231,8 +231,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     ant_results <- readRDS(file = file.path(testdata_dir, "antenna.RDS"))
-    expect_equal(halfbeam, ant_results$halfbeam, tolerance = 1e-5)
-    expect_equal(result_final, ant_results$obj_value, tolerance = 1e-5)
+    expect_equal(halfbeam, ant_results$halfbeam, tolerance = 1e-10)
+    expect_equal(result_final, ant_results$obj_value, tolerance = 1e-10)
 }
 ```
 

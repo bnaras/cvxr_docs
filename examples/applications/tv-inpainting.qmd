@@ -124,7 +124,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     tv_results <- readRDS(file = file.path(testdata_dir, "tv_gray.RDS"))
-    expect_equal(result, tv_results$value, tolerance = 1e-5)
+    expect_equal(result, tv_results$value, tolerance = 1e-10)
 }
 ```
 
@@ -239,7 +239,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     tv_color_results <- readRDS(file = file.path(testdata_dir, "tv_color.RDS"))
-    expect_equal(result_color, tv_color_results$value, tolerance = 1e-5)
+    expect_equal(result_color, tv_color_results$value, tolerance = 1e-10)
 }
 ```
 

@@ -101,8 +101,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     miqp_data <- readRDS(file = file.path(testdata_dir, "miqp.RDS"))
-    expect_equal(result, miqp_data$optimal_value, tolerance = 1e-3)
-    expect_equal(value(x), miqp_data$x_value, tolerance = 1e-3)
+    expect_equal(result, miqp_data$optimal_value, tolerance = 1e-10)
+    expect_equal(value(x), miqp_data$x_value, tolerance = 1e-10)
 }
 ```
 

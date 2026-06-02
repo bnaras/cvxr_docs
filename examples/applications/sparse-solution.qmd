@@ -134,8 +134,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "sparse_l1.RDS"))
-    expect_equal(result_l1, saved$objective_l1, tolerance = 1e-5)
-    expect_equal(nnz_l1, saved$nnz_l1)
+    expect_equal(result_l1, saved$objective_l1, tolerance = 1e-10)
+    expect_equal(nnz_l1, saved$nnz_l1, tolerance = 1e-10)
 }
 ```
 
@@ -185,7 +185,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "sparse_log.RDS"))
-    expect_equal(nnzs_log, saved$nnzs_log, tolerance = 1e-5)
+    expect_equal(nnzs_log, saved$nnzs_log, tolerance = 1e-10)
 }
 ```
 

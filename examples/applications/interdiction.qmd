@@ -198,7 +198,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "smuggler_lp.RDS"))
-    expect_equal(result_smuggler, saved$objective, tolerance = 1e-3)
+    expect_equal(result_smuggler, saved$objective, tolerance = 1e-10)
 }
 ```
 
@@ -324,7 +324,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "security.RDS"))
-    expect_equal(result_sec, saved$objective_sec, tolerance = 1e-2)
+    expect_equal(result_sec, saved$objective_sec, tolerance = 1e-10)
 }
 ```
 

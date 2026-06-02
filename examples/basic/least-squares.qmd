@@ -83,8 +83,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     ls_data <- readRDS(file = file.path(testdata_dir, "least-squares.RDS"))
-    expect_equal(result, ls_data$optimal_value, tolerance = 1e-5)
-    expect_equal(value(x), ls_data$x_value, tolerance = 1e-5)
+    expect_equal(result, ls_data$optimal_value, tolerance = 1e-10)
+    expect_equal(value(x), ls_data$x_value, tolerance = 1e-10)
 }
 ```
 

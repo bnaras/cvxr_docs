@@ -5,9 +5,18 @@ params:
   mode: ignore
   testdata_dir: test_data_1.8
   data_dir: deriv_queuing_design
+  min_version: 1.8.2-1
 ---
 
-```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+```{r feature-gate, echo = FALSE}
+## Show feature code regardless of version, but only EVALUATE it when the
+## installed CVXR implements the feature (params$min_version). On an older
+## CVXR the code is displayed but not run, so the page still renders.
+run_ok <- utils::packageVersion("CVXR") >= numeric_version(params$min_version)
+knitr::opts_chunk$set(eval = run_ok)
+```
+
+```{r, echo = FALSE, message = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
 library(here)
 testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
 if (params$mode == "test") {

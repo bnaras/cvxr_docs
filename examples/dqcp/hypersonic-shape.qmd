@@ -154,9 +154,9 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "hypersonic1.RDS"))
-    expect_equal(result, saved$result, tolerance = 1e-2)
-    expect_equal(x_opt, saved$x, tolerance = 1e-2)
-    expect_equal(y_opt, saved$y, tolerance = 1e-2)
+    expect_equal(result, saved$result, tolerance = 1e-10)
+    expect_equal(x_opt, saved$x, tolerance = 1e-10)
+    expect_equal(y_opt, saved$y, tolerance = 1e-10)
 }
 ```
 

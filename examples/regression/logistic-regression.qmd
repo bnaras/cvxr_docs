@@ -133,9 +133,9 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     log_results <- readRDS(file = file.path(testdata_dir, "logistic-regression.RDS"))
-    expect_equal(beta_res, log_results$beta_res)
-    expect_equal(beta_log, log_results$beta_log)
-    expect_equal(log_odds, log_results$log_odds)
+    expect_equal(beta_res, log_results$beta_res, tolerance = 1e-10)
+    expect_equal(beta_log, log_results$beta_log, tolerance = 1e-10)
+    expect_equal(log_odds, log_results$log_odds, tolerance = 1e-10)
 }
 ```
 

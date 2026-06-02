@@ -115,8 +115,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "result1.RDS"))
-    expect_equal(train_error, saved$train_error, tolerance = 1e-5)
-    expect_equal(test_error, saved$test_error, tolerance = 1e-5)
+    expect_equal(train_error, saved$train_error, tolerance = 1e-10)
+    expect_equal(test_error, saved$test_error, tolerance = 1e-10)
 }
 ```
 

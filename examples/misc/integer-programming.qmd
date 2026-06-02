@@ -131,15 +131,13 @@ knitr::kable(solutions, format = "html") |>
     column_spec(1:2, background = "#ececec")
 ```
 
-```{r, echo = FALSE, eval = params$mode %in% c("test", "save"), }
+```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
 if (params$mode == "save") {
-    saveRDS(list(ecos = ecos_solution, glpk = glpk_solution, gurobi = gurobi_solution), file = file.path(testdata_dir, "integer-programming1.RDS"))
+    saveRDS(list(highs = highs_solution), file = file.path(testdata_dir, "integer-programming1.RDS"))
 } else {
     cat("Testthat Results: No output is good\n")
     intprog <- readRDS(file = file.path(testdata_dir, "integer-programming1.RDS"))
-    expect_identical(ecos_solution, intprog$ecos)
-    expect_identical(glpk_solution, intprog$glpk)
-    expect_identical(gurobi_solution, intprog$gurobi)
+    expect_identical(highs_solution, intprog$highs)
 }
 ```
 

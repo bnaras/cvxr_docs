@@ -253,11 +253,11 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     sc_results <- readRDS(file = file.path(testdata_dir, "survey_calibration.RDS"))
-    expect_equal(w_cvxr, sc_results$w_cvxr)
-    expect_equal(w_cvxr_q, sc_results$w_cvxr_q)
-    expect_equal(w_cvxr_l, sc_results$w_cvxr_l)
-    expect_equal(w_cvxr_h, sc_results$w_cvxr_h, tolerance = 1e-04)
-    expect_equal(w_cvxr_s, sc_results$w_cvxr_s)    
+    expect_equal(w_cvxr, sc_results$w_cvxr, tolerance = 1e-10)
+    expect_equal(w_cvxr_q, sc_results$w_cvxr_q, tolerance = 1e-10)
+    expect_equal(w_cvxr_l, sc_results$w_cvxr_l, tolerance = 1e-10)
+    expect_equal(w_cvxr_h, sc_results$w_cvxr_h, tolerance = 1e-10)
+    expect_equal(w_cvxr_s, sc_results$w_cvxr_s, tolerance = 1e-10)
 }
 ```
 

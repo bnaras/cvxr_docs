@@ -255,7 +255,7 @@ if (params$mode == "save") {
     cat("Testthat Results: No output is good\n")
     cm_results <- readRDS(file = file.path(testdata_dir, "clock_mesh.RDS"))
     expect_equal(areas[is.finite(areas)], cm_results$areas[is.finite(cm_results$areas)],
-                 tolerance = 1e-5)
+                 tolerance = 1e-10)
 }
 ```
 

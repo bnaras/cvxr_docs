@@ -183,11 +183,11 @@ if (params$mode == "save") {
     sice_result <- readRDS(file = file.path(testdata_dir, "sparse_inverse_covariance.RDS"))
     sice_result  <- lapply(sice_result, as.matrix)
     sice_result  <- lapply(sice_result, function(x) {dimnames(x)  <- NULL; x })
-    expect_equal(S.est[[1]], sice_result[[1]], 1e-3)
-    expect_equal(S.est[[2]], sice_result[[2]], 1e-3)
-    expect_equal(S.est[[3]], sice_result[[3]], 1e-3)
-    expect_equal(S.est[[4]], sice_result[[4]], 1e-3)
-    expect_equal(S.est[[5]], sice_result[[5]], 1e-3)
+    expect_equal(S.est[[1]], sice_result[[1]], tolerance = 1e-10)
+    expect_equal(S.est[[2]], sice_result[[2]], tolerance = 1e-10)
+    expect_equal(S.est[[3]], sice_result[[3]], tolerance = 1e-10)
+    expect_equal(S.est[[4]], sice_result[[4]], tolerance = 1e-10)
+    expect_equal(S.est[[5]], sice_result[[5]], tolerance = 1e-10)
 }
 ```
 

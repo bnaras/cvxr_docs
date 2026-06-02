@@ -130,8 +130,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "consensus_central.RDS"))
-    expect_equal(x_central_val, saved$x_central, tolerance = 1e-5)
-    expect_equal(result_central, saved$obj_central, tolerance = 1e-5)
+    expect_equal(x_central_val, saved$x_central, tolerance = 1e-10)
+    expect_equal(result_central, saved$obj_central, tolerance = 1e-10)
 }
 ```
 
@@ -187,8 +187,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "consensus_admm.RDS"))
-    expect_equal(xbar, saved$xbar, tolerance = 1e-3)
-    expect_equal(obj_history[MAX_ITER], saved$obj_final, tolerance = 1e-3)
+    expect_equal(xbar, saved$xbar, tolerance = 1e-10)
+    expect_equal(obj_history[MAX_ITER], saved$obj_final, tolerance = 1e-10)
 }
 ```
 

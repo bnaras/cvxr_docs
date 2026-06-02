@@ -263,7 +263,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     kf_results <- readRDS(file = file.path(testdata_dir, "kf.RDS"))
-    expect_equal(result_kf, kf_results$value, tolerance = 1e-5)
+    expect_equal(result_kf, kf_results$value, tolerance = 1e-10)
 }
 ```
 
@@ -325,7 +325,7 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     rkf_results <- readRDS(file = file.path(testdata_dir, "rkf.RDS"))
-    expect_equal(result_rkf, rkf_results$value, tolerance = 1e-5)
+    expect_equal(result_rkf, rkf_results$value, tolerance = 1e-10)
 }
 ```
 

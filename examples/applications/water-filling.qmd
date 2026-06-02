@@ -123,8 +123,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     wf_results <- readRDS(file = file.path(testdata_dir, "water_filling.RDS"))
-    expect_equal(sol$value, wf_results$value, tolerance = 1e-5)
-    expect_equal(sol$x, wf_results$x, tolerance = 1e-5)
+    expect_equal(sol$value, wf_results$value, tolerance = 1e-10)
+    expect_equal(sol$x, wf_results$x, tolerance = 1e-10)
 }
 ```
 
@@ -179,8 +179,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     wf_large_results <- readRDS(file = file.path(testdata_dir, "water_filling_large.RDS"))
-    expect_equal(sol_large$value, wf_large_results$value, tolerance = 1e-5)
-    expect_equal(sol_large$x, wf_large_results$x, tolerance = 1e-5)
+    expect_equal(sol_large$value, wf_large_results$value, tolerance = 1e-10)
+    expect_equal(sol_large$x, wf_large_results$x, tolerance = 1e-10)
 }
 ```
 

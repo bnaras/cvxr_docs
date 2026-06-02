@@ -89,8 +89,8 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     me_results <- readRDS(file = file.path(testdata_dir, "max_entropy.RDS"))
-    expect_equal(result, me_results$value, tolerance = 1e-5)
-    expect_equal(as.vector(value(x)), me_results$x, tolerance = 1e-5)
+    expect_equal(result, me_results$value, tolerance = 1e-10)
+    expect_equal(as.vector(value(x)), me_results$x, tolerance = 1e-10)
 }
 ```
 

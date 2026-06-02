@@ -118,7 +118,7 @@ FMMC <- function(g, verbose = FALSE) {
     list(status = status(prob), value = opt_val, P = value(P))
 }
 
-disp_result <- function(states, P, tolerance = 1e-3) {
+disp_result <- function(states, P, tolerance = 1e-10) {
     if(!("markovchain" %in% rownames(installed.packages()))) {
         rownames(P) <- states
         colnames(P) <- states
@@ -174,10 +174,10 @@ if (params$mode == "save") {
 } else {
     cat("Testthat Results: No output is good\n")
     fmix <- readRDS(file = file.path(testdata_dir, "fast_mixing_mc.RDS"))
-    expect_equal(result1, fmix$result1, tolerance = 1e-4) # small errors ok
-    expect_equal(result2, fmix$result2, tolerance = 1e-4)
-    expect_equal(result3, fmix$result3, tolerance = 1e-4)
-    expect_equal(result4, fmix$result4, tolerance = 1e-4)
+    expect_equal(result1, fmix$result1, tolerance = 1e-10) # small errors ok
+    expect_equal(result2, fmix$result2, tolerance = 1e-10)
+    expect_equal(result3, fmix$result3, tolerance = 1e-10)
+    expect_equal(result4, fmix$result4, tolerance = 1e-10)
 }
 ```
 

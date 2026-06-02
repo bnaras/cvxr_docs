@@ -57,21 +57,22 @@ The solution status is no longer optimal.
 cat("Solution status is", status(prob))
 ```
 
-```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+```{r, echo = FALSE, eval = params$mode == "test"}
 cat("Testthat Results: No output is good\n")
 expect_identical(status(prob), "optimal_inaccurate")
 ```
 
 
 In such cases, using a different solver may give more accurate
-results. Let us try `MOSEK` for example.
+results. Let us try `MOSEK` for example. (MOSEK is a commercial solver; this
+section runs only where it is installed.)
 
-```{r}
+```{r, eval = "MOSEK" %in% CVXR::installed_solvers()}
 result <- psolve(prob, solver = "MOSEK")
 cat("Solution status is", status(prob))
 ```
 
-```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+```{r, echo = FALSE, eval = params$mode == "test" && "MOSEK" %in% CVXR::installed_solvers()}
 cat("Testthat Results: No output is good\n")
 expect_identical(status(prob), "optimal")
 ```

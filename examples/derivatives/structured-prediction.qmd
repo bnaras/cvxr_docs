@@ -5,9 +5,18 @@ params:
   mode: ignore
   testdata_dir: test_data_1.8
   data_dir: deriv_structured_prediction
+  min_version: 1.8.2-1
 ---
 
-```{r, echo = FALSE, message = FALSE, eval = params$mode %in% c("test", "save")}
+```{r feature-gate, echo = FALSE}
+## Show feature code regardless of version, but only EVALUATE it when the
+## installed CVXR implements the feature (params$min_version). On an older
+## CVXR the code is displayed but not run, so the page still renders.
+run_ok <- utils::packageVersion("CVXR") >= numeric_version(params$min_version)
+knitr::opts_chunk$set(eval = run_ok)
+```
+
+```{r, echo = FALSE, message = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
 library(here)
 testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
 if (params$mode == "test") {
@@ -126,14 +135,14 @@ train_inputs  <- train_data$inputs
 train_outputs <- train_data$outputs
 ```
 
-```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+```{r, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
 if (params$mode == "save") {
     saveRDS(list(train_outputs_1 = train_outputs[1, ]),
             file = file.path(testdata_dir, "result1.RDS"))
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "result1.RDS"))
-    expect_equal(train_outputs[1, ], saved$train_outputs_1, tolerance = 1e-4)
+    expect_equal(train_outputs[1, ], saved$train_outputs_1, tolerance = 1e-10)
 }
 ```
 
@@ -175,14 +184,14 @@ lstsq_result <- psolve(lstsq_problem, solver = "OSQP", verbose = TRUE)
 cat(sprintf("Least squares fit: %f\n", lstsq_result))
 ```
 
-```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
+```{r, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
 if (params$mode == "save") {
     saveRDS(list(lstsq_result = lstsq_result),
             file = file.path(testdata_dir, "result2.RDS"))
 } else {
     cat("Testthat Results: No output is good\n")
     saved <- readRDS(file = file.path(testdata_dir, "result2.RDS"))
-    expect_equal(lstsq_result, saved$lstsq_result, tolerance = 1e-3)
+    expect_equal(lstsq_result, saved$lstsq_result, tolerance = 1e-10)
 }
 ```
 
