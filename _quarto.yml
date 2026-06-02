@@ -179,6 +179,10 @@ website:
             href: examples/derivatives/queuing-design.qmd
           - text: "Structured Prediction"
             href: examples/derivatives/structured-prediction.qmd
+      - section: "DNLP"
+        contents:
+          - text: "DNLP Tutorial"
+            href: examples/dnlp/tutorial.qmd
       - section: "Misc"
         contents:
           - text: "2D Ball"

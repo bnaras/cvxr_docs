@@ -1,0 +1,256 @@
+---
+title: Disciplined Nonlinear Programming
+author: "CVXPY Developers and Balasubramanian Narasimhan"
+params:
+  mode: ignore
+  testdata_dir: test_data_1.8
+  data_dir: dnlp_tutorial
+  min_version: 1.9.0
+---
+
+```{r feature-gate, echo = FALSE}
+## Show feature code regardless of version, but only EVALUATE it when the
+## installed CVXR implements DNLP (params$min_version). On an older CVXR the
+## code is displayed but not run, so the page still renders.
+run_ok <- utils::packageVersion("CVXR") >= numeric_version(params$min_version) &&
+          all(vapply(c("sparsediff", "ipopt", "Uno"), requireNamespace,
+                     logical(1), quietly = TRUE))
+knitr::opts_chunk$set(eval = run_ok)
+```
+
+```{r, echo = FALSE, message = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
+library(here)
+testdata_dir  <- here("static", params$testdata_dir, params$data_dir)
+if (params$mode == "test") {
+    library(testthat)
+} else {
+    if (!dir.exists(testdata_dir)) dir.create(testdata_dir)
+}
+```
+
+```{r prereqs, message = FALSE, echo = FALSE}
+library(CVXR)
+```
+
+## Introduction
+
+**Disciplined Nonlinear Programming (DNLP)**, introduced in `CVXR` 1.9.0,
+extends `CVXR` beyond convex optimization to **smooth nonlinear programs** —
+problems whose objective and constraints are built from differentiable atoms,
+but which need not be convex. A DNLP is solved by handing exact first and
+second derivatives to a general nonlinear-programming solver.
+
+The disciplined grammar for DNLP is broader than DCP: any DCP problem is also a
+DNLP, but a DNLP may also use smooth atoms in ways DCP forbids (for example, a
+product of two expressions that each involve a variable). You check membership
+with `is_dnlp()`, and you solve with `psolve(prob, nlp = TRUE)`.
+
+The DNLP path is powered by automatic derivatives from the optional
+[`sparsediff`](https://github.com/bnaras/sparsediff) package and one of the
+nonlinear solvers in the optional [`ipopt`](https://github.com/bnaras/ipopt)
+or [`Uno`](https://github.com/bnaras/Uno) packages.
+
+```{r availability}
+packageVersion("CVXR")
+c(sparsediff = requireNamespace("sparsediff", quietly = TRUE),
+  ipopt      = requireNamespace("ipopt", quietly = TRUE),
+  Uno        = requireNamespace("Uno", quietly = TRUE))
+```
+
+## A first smooth program
+
+Every DCP problem is a DNLP, so the simplest way to meet the NLP path is to send
+a convex problem down it. We minimize a quadratic and confirm the problem is a
+DNLP. We pass `print_level = 0L` and `sb = "yes"` (Ipopt options) to silence the
+solver's iteration log and its one-time startup banner.
+
+```{r first}
+x <- Variable(2)
+prob <- Problem(Minimize(sum_squares(x - c(1, 2))))
+is_dnlp(prob)
+
+opt <- psolve(prob, nlp = TRUE, print_level = 0L, sb = "yes")
+opt                 # optimal value (0)
+value(x)            # (1, 2)
+```
+
+```{r first-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(opt = opt, x = value(x)), file = file.path(testdata_dir, "first.RDS"))
+} else {
+    saved <- readRDS(file.path(testdata_dir, "first.RDS"))
+    expect_equal(opt, saved$opt, tolerance = 1e-10)
+    expect_equal(value(x), saved$x, tolerance = 1e-10)
+}
+```
+
+## Smooth atoms
+
+DNLP adds a family of classically differentiable atoms that are *not* part of
+the convex grammar, so they can appear anywhere in a smooth objective or
+constraint:
+
+| Atom | Meaning |
+|------|---------|
+| `sin(x)`, `cos(x)`, `tan(x)` | Trigonometric functions |
+| `sinh(x)`, `tanh(x)` | Hyperbolic functions |
+| `asinh(x)`, `atanh(x)` | Inverse hyperbolic functions |
+| `normcdf(x)` | Standard normal CDF |
+| `prod(x)` | Product of entries (also `prod_entries(X, axis = ...)`) |
+
+These join the smooth atoms `CVXR` already had — affine maps, `exp`, `log`,
+`entr`, `logistic`, `kl_div`, `rel_entr`, `xexp`, `power` (constant exponent),
+`geo_mean`, `log_sum_exp`, `quad_form`, and `quad_over_lin` — which DNLP can now
+use in either curvature direction.
+
+## Beyond DCP: a nonconvex form of a convex problem
+
+Consider the **maximum-entropy distribution** on $\{1,\dots,K\}$ with a
+prescribed mean. The negative entropy $\sum_i p_i \log p_i$ is convex, but if we
+write it literally as a sum of products `p * log(p)` — rather than with the
+`entr` atom — the expression is *not* DCP, because it multiplies two
+variable-dependent terms. It is, however, a perfectly good **smooth** objective,
+so it is a DNLP.
+
+```{r entropy}
+K <- 5; support <- 1:K; mu <- 2
+p <- Variable(K, nonneg = TRUE)
+
+objective   <- Minimize(sum(p * log(p)))          # not DCP, but smooth
+constraints <- list(sum(p) == 1, sum(support * p) == mu)
+prob <- Problem(objective, constraints)
+
+c(is_dcp = is_dcp(prob), is_dnlp = is_dnlp(prob))
+
+neg_entropy <- psolve(prob, nlp = TRUE, print_level = 0L, sb = "yes")
+round(value(p), 5)
+c(total = sum(value(p)), mean = sum(support * value(p)))
+```
+
+Maximum-entropy theory says the solution is a discrete exponential (Gibbs)
+distribution $p_i \propto e^{-\theta i}$ — equivalently, $\log p_i$ is affine in
+$i$. The solution bears this out: the successive differences of $\log p_i$ are
+constant, and that common value is $-\theta$.
+
+```{r entropy-gibbs}
+log_p <- log(as.numeric(value(p)))
+round(diff(log_p), 5)                 # constant => Gibbs form
+theta <- -mean(diff(log_p))
+cf <- exp(-theta * support); cf <- cf / sum(cf)
+round(cf, 5)                          # matches value(p)
+```
+
+## Duals: IPOPT vs UNO
+
+The two NLP backends differ in one user-visible way: **dual variables**. The
+`IPOPT` path returns *no* duals, matching CVXPY's NLP interface — so after an
+IPOPT solve, `dual_value()` is `NULL`:
+
+```{r dual-ipopt}
+psolve(prob, solver = "IPOPT", nlp = TRUE, print_level = 0L, sb = "yes")
+dual_value(constraints[[2]])          # NULL: IPOPT path exposes no duals
+```
+
+The `UNO` path, as a `CVXR` extension beyond CVXPY, *does* recover the
+constraint duals. The multiplier on the mean constraint is exactly the Gibbs
+parameter $\theta$ we read off the solution above:
+
+```{r dual-uno}
+psolve(prob, solver = "UNO", nlp = TRUE, logger = "SILENT")
+dual_value(constraints[[2]])          # the mean-constraint multiplier (= theta)
+```
+
+```{r dual-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
+uno_theta <- as.numeric(dual_value(constraints[[2]]))
+if (params$mode == "save") {
+    saveRDS(list(theta = theta, uno_theta = uno_theta), file = file.path(testdata_dir, "duals.RDS"))
+} else {
+    saved <- readRDS(file.path(testdata_dir, "duals.RDS"))
+    expect_equal(uno_theta, saved$uno_theta, tolerance = 1e-10)   # same solver/machine: bit-exact
+    ## cross-solver agreement (UNO dual vs theta from the IPOPT solution): two
+    ## different algorithms, so this agrees to ~1e-8, not to 1e-10.
+    expect_equal(uno_theta, theta, tolerance = 1e-6)
+}
+```
+
+```{r entropy-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(val = neg_entropy, p = value(p)), file = file.path(testdata_dir, "entropy.RDS"))
+} else {
+    saved <- readRDS(file.path(testdata_dir, "entropy.RDS"))
+    expect_equal(neg_entropy, saved$val, tolerance = 1e-10)
+    expect_equal(value(p), saved$p, tolerance = 1e-10)
+}
+```
+
+## Nonconvex problems and random restarts
+
+DNLP problems can be genuinely nonconvex, with multiple local minima. A
+nonlinear solver returns a *local* optimum that depends on the starting point.
+For example, minimizing $\sin(x) + \tfrac{1}{10}x^2$ over $[-10, 10]$ has several
+local minima.
+
+`psolve(prob, nlp = TRUE, best_of = n)` solves from `n` random initial points
+and keeps the best result. Each starting point is drawn from the variable's
+finite bounds, or from a sampling region you set with `sample_bounds()`.
+
+```{r bestof}
+set.seed(1)
+x <- Variable(bounds = list(-10, 10))
+prob <- Problem(Minimize(sin(x) + 0.1 * x^2))
+
+best <- psolve(prob, nlp = TRUE, best_of = 5, print_level = 0L, sb = "yes")
+best                                  # best objective over the 5 restarts
+value(x)
+
+## the per-restart objectives are available for inspection
+solver_stats(prob)@extra_stats$all_objs_from_best_of
+```
+
+```{r bestof-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(best = best, x = value(x)), file = file.path(testdata_dir, "bestof.RDS"))
+} else {
+    saved <- readRDS(file.path(testdata_dir, "bestof.RDS"))
+    expect_equal(best, saved$best, tolerance = 1e-10)
+    expect_equal(value(x), saved$x, tolerance = 1e-10)
+}
+```
+
+For a variable with no finite bounds, supply a sampling region explicitly:
+
+```{r samplebounds, eval = FALSE}
+x <- Variable(2)
+sample_bounds(x) <- c(-5, 5)          # draw restarts from [-5, 5]^2
+```
+
+## Choosing an NLP solver
+
+With `nlp = TRUE`, `CVXR` picks an installed NLP solver automatically — `IPOPT`
+first when the `ipopt` package is available, matching CVXPY's preference order.
+You can name one explicitly:
+
+```{r solvers, eval = FALSE}
+psolve(prob, nlp = TRUE, solver = "IPOPT")     # Ipopt (interior point, via MUMPS)
+psolve(prob, nlp = TRUE, solver = "UNO")       # Uno
+psolve(prob, nlp = TRUE, solver = "uno_sqp")   # Uno's filterSQP preset
+```
+
+A note on `UNO`: the `CVXR` interface defaults `UNO` to its interior-point
+`ipopt` preset (with MUMPS), which differs from CVXPY's `filtersqp` default. The
+bundled `Uno` build is HiGHS-only, and HiGHS solves only *convex* quadratic
+subproblems, so `filtersqp` is reliable only for problems whose subproblem
+Hessians stay positive semidefinite; the interior-point preset is robust on
+nonconvex problems too.
+
+## Notes
+
+* DNLP requires the `sparsediff` package (for derivatives) and at least one of
+  `ipopt` or `Uno` (for the solver). With none installed, `psolve(nlp = TRUE)`
+  raises an informative error.
+* `is_dnlp(prob)` reports whether a problem satisfies the disciplined nonlinear
+  grammar; since DCP $\subset$ DNLP, every DCP problem qualifies.
+* Because the problems may be nonconvex, the returned point is a local optimum;
+  use `best_of` to improve the odds of finding the global optimum.
+
+## References
