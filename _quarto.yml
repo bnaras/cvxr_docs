@@ -39,7 +39,7 @@ website:
     contents:
       - text: "Home"
         href: index.qmd
-      - text: "What's New in 1.8.x"
+      - text: "What's New"
         href: whatsnew.qmd
       - section: "Getting Started"
         contents:

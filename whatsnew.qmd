@@ -1,22 +1,141 @@
 ---
-title: "What's New in CVXR 1.8.x"
+title: "What's New in CVXR"
 author: Anqi Fu and Balasubramanian Narasimhan
 ---
+
+This page highlights notable user-facing changes in each release of the S7
+rewrite of `CVXR`, newest first. For the complete, fine-grained list see the
+package `NEWS` file (`news(package = "CVXR")`).
+
+* [CVXR 1.9.x](#cvxr-19x) — disciplined nonlinear programming, bounds
+  propagation, new atoms
+* [CVXR 1.8.2-1](#cvxr-1821) — derivatives and sensitivity analysis
+* [CVXR 1.8.x](#cvxr-18x) — the ground-up S7 rewrite
+
+# CVXR 1.9.x {#cvxr-19x}
+
+## Disciplined Nonlinear Programming (DNLP)
+
+`CVXR` 1.9.0 extends modeling beyond convex optimization to **smooth nonlinear
+programs**, which need not be convex. You build the problem from differentiable
+atoms, check it with `is_dnlp()`, and solve it with `psolve(prob, nlp = TRUE)`.
+Every DCP problem is also a DNLP, and the disciplined nonlinear grammar
+additionally allows smooth atoms in forms DCP forbids (for example, a product of
+two variable-dependent expressions).
+
+```{r dnlp, eval = FALSE}
+x <- Variable(2)
+prob <- Problem(Minimize(sum_squares(x - c(1, 2))))
+is_dnlp(prob)                       # TRUE
+psolve(prob, nlp = TRUE)            # solved through the NLP path
+```
+
+* **New smooth atoms** usable anywhere in a DNLP: `sin()`, `cos()`, `tan()`,
+  `sinh()`, `tanh()`, `asinh()`, `atanh()`, `normcdf()`, and `prod()`.
+* **Nonconvex problems** may have several local optima. `best_of = n` solves from
+  `n` random initial points (drawn from variable bounds or `sample_bounds()`)
+  and keeps the best.
+* The NLP path is powered by automatic derivatives from the optional
+  `sparsediff` package and one of the `ipopt` or `Uno` solver packages. Solver
+  names are `"IPOPT"` (the automatic default when installed) and `"UNO"`. The
+  `IPOPT` path returns no duals (matching CVXPY); the `UNO` path additionally
+  recovers constraint duals via `dual_value()`.
+
+See the [DNLP Tutorial](examples/dnlp/tutorial.qmd) for worked examples.
+
+## Bounds propagation and richer variable bounds
+
+`get_bounds()` now works on **any expression**, not just variables, propagating
+interval bounds through affine, elementwise, and piecewise-linear atoms:
+
+```{r bounds, eval = FALSE}
+x <- Variable(3, bounds = list(-1, 2))
+get_bounds(A %*% x + b)         # bounds propagated through the affine map
+get_bounds(abs(x))             # and through atoms
+```
+
+Variable bounds may also be **sparse `Matrix` objects** or **symbolic bounds**
+involving `Parameter`s; symbolic bounds are enforced at solve time and update on
+DPP re-solves. Positive (DGP) variables accept numeric *and* parametric bounds
+under `gp = TRUE`.
+
+## New atoms and DPP refinements
+
+* **`convolve()`** — the (numpy-style) name for the 1-D discrete-convolution
+  `conv()` atom; falls through to `stats::convolve()` on numeric input.
+* **`is_dpp()` gains a `context` argument** (`"dcp"` or `"dgp"`), matching
+  CVXPY's `is_dpp(context = ...)`.
+
+## Solvers
+
+* **CPLEX** now solves LP / SOCP / MI-LP / MI-SOCP through the conic path.
+* **Native variable bounds**: HiGHS, Gurobi, CPLEX, XPRESS, PIQP, and SCIP now
+  consume dense numeric variable bounds directly (including parametric bounds for
+  HiGHS), avoiding extra bound constraints and speeding up DPP re-solves.
+
+## Bug fixes (also affected 1.8.x)
+
+* `problem_data()` / `get_problem_data()` now take an explicit `gp` argument;
+  previously `gp = TRUE` passed through `...` was silently ignored, compiling a
+  geometric program as a DCP problem.
+* `psolve()` now takes explicit `enforce_dpp` and `ignore_dpp` arguments,
+  matching CVXPY's `solve()`; previously they were silently swallowed by `...`.
+
+## Performance
+
+Canonicalization and solving are now faster than the 1.8.2-1 baseline (roughly
+5–13% lower wall-clock on solve-dominated problems such as many small
+constraints, SOCPs, and Kalman smoothing), with deterministic memory allocation
+unchanged.
+
+# CVXR 1.8.2-1 {#cvxr-1821}
+
+## Derivatives and sensitivity analysis
+
+`CVXR` 1.8.2-1 added the ability to **differentiate the solution map** of a
+disciplined problem — to see how the optimal solution responds to small changes
+in the parameters (sensitivity analysis) and to compute gradients of scalar
+functions of the solution. Request derivatives at solve time with
+`requires_grad = TRUE`.
+
+**Forward mode** (perturb parameters, see the change in the solution):
+
+```{r deriv-fwd, eval = FALSE}
+psolve(problem, requires_grad = TRUE)
+delta(a) <- da                      # perturbation of parameter a
+derivative(problem)                 # propagate forward
+delta(x)                            # resulting change in variable x
+```
+
+**Reverse mode** (gradient of the solution with respect to parameters):
+
+```{r deriv-rev, eval = FALSE}
+psolve(problem, requires_grad = TRUE)
+backward(problem)                   # propagate backward
+gradient(a)                         # d(solution) / d(a)
+```
+
+The chain rule is wired through the `Dgp2Dcp` (log/exp) and `Complex2Real`
+reductions, so geometric and complex problems differentiate too. See the
+[Derivatives](examples/derivatives/fundamentals.qmd) examples and
+[Sensitivity Analysis](examples/dpp/sensitivity-analysis.qmd).
+
+# CVXR 1.8.x {#cvxr-18x}
 
 ## Complete Rewrite Using S7
 
 CVXR 1.8.x is a ground-up rewrite using R's S7 object system, designed
 to be isomorphic with CVXPY 1.8.2 for long-term maintainability. This
-page summarizes the key changes from CVXR 1.x that may affect users.
+section summarizes the key changes from CVXR 1.x that may affect users.
 
 ## New Features
 
 - **S7 class system** replaces S4 for all expression, constraint, and
   problem classes. Significantly faster construction and method dispatch.
-- **13 solvers**: CLARABEL (default), SCS, OSQP, HiGHS, MOSEK, Gurobi,
-  GLPK, GLPK_MI, ECOS, ECOS_BB, CPLEX, CVXOPT, and PIQP.
+- **15 solvers**: CLARABEL (default), SCS, OSQP, HiGHS, MOSEK, Gurobi,
+  GLPK, GLPK_MI, ECOS, ECOS_BB, CPLEX, CVXOPT, PIQP, SCIP, and XPRESS.
 - **Mixed-integer programming** via GLPK_MI, ECOS_BB, Gurobi, CPLEX,
-  or HiGHS (`boolean = TRUE` or `integer = TRUE` in `Variable()`).
+  HiGHS, SCIP, or XPRESS (`boolean = TRUE` or `integer = TRUE` in `Variable()`).
 - **Parameter support** via `Parameter()` class and `EvalParams` reduction.
 - **50+ atom classes** covering LP, QP, SOCP, SDP, exponential cone, and
   power cone problems.
@@ -25,7 +144,8 @@ page summarizes the key changes from CVXR 1.x that may affect users.
 - **DGP** (Disciplined Geometric Programming) via `psolve(prob, gp = TRUE)`.
 - **DQCP** (Disciplined Quasiconvex Programming) via `psolve(prob, qcp = TRUE)`.
 - **Complex variable support** via `Variable(n, complex = TRUE)`.
-- **Warm-start support** for 6 solvers (OSQP, SCS, Gurobi, MOSEK, CLARABEL, HiGHS).
+- **Warm-start support** for several solvers (OSQP, SCS, Gurobi, MOSEK,
+  CLARABEL, HiGHS).
 
 ## Breaking Changes from CVXR 1.x
 
@@ -34,7 +154,7 @@ page summarizes the key changes from CVXR 1.x that may affect users.
 The primary solve function is now `psolve()`, which returns the optimal
 value directly:
 
-```{r, eval = FALSE}
+```{r psolve, eval = FALSE}
 library(CVXR)
 x <- Variable(2)
 prob <- Problem(Minimize(sum_squares(x)), list(x >= 1))
@@ -45,7 +165,7 @@ prob_status <- status(prob)   # check status
 
 The old `solve()` still works but returns a compatibility list:
 
-```{r, eval = FALSE}
+```{r solve, eval = FALSE}
 result <- solve(prob)
 result$value       # optimal value
 result$getValue(x) # variable value (deprecated)
@@ -86,7 +206,7 @@ and `%<<%` operators are still available for backward compatibility).
 
 - **Removed**: CBC
 - **Added**: HiGHS (LP, QP, MILP), Gurobi (LP, QP, SOCP, MIP), CVXOPT
-  (LP, SOCP), PIQP (QP)
+  (LP, SOCP), PIQP (QP), SCIP, and XPRESS
 - **Default solver**: CLARABEL (replaces ECOS)
 
 ### Supported solvers
@@ -104,8 +224,13 @@ and `%<<%` operators are still available for backward compatibility).
 | HIGHS | `highs` (>= 1.12.0.3) | Conic/QP | LP, QP, MILP |
 | CVXOPT | `cccp` (>= 0.3.3) | Conic | LP, SOCP |
 | OSQP | `osqp` (>= 1.0.0) | QP | LP, QP |
-| CPLEX | `Rcplex` (>= 0.3.8) | QP | LP, QP, MI |
+| CPLEX | `Rcplex` (>= 0.3.8) | Conic/QP | LP, QP, SOCP, MI |
 | PIQP | `piqp` (>= 0.6.2) | QP | LP, QP |
+| SCIP | `scip` | Conic | LP, MILP, SOCP, MI-SOCP |
+| XPRESS | `xpress` | Conic/QP | LP, QP, SOCP, MI |
+
+Smooth nonlinear programs additionally use the `IPOPT` and `UNO` NLP solvers
+(see [CVXR 1.9.x](#cvxr-19x)).
 
 ## New Atoms and Functions
 

@@ -84,24 +84,78 @@ if (params$mode == "save") {
 }
 ```
 
+## A nonconvex example: maximizing a quadratic
+
+Unlike DCP, DNLP can express genuinely nonconvex problems. A classic example
+maximizes a quadratic form over the unit sphere,
+$$\text{maximize}\ \ x^\top A x \quad\text{subject to}\quad \lVert x \rVert_2^2 = 1,$$
+whose optimal value is the **largest eigenvalue of $A$**. Maximizing a convex
+quadratic is nonconvex, so this is not a DCP problem — but it *is* a DNLP. We set
+the starting point with `value(x) <- ...`.
+
+```{r quadform}
+set.seed(0)
+n <- 3
+A <- matrix(rnorm(n * n), n); A <- t(A) %*% A      # a random PSD matrix
+
+x <- Variable(n)
+prob <- Problem(Maximize(quad_form(x, A)), list(sum_squares(x) == 1))
+is_dnlp(prob)
+
+value(x) <- rep(1, n)                              # initial point
+opt_nlp <- psolve(prob, nlp = TRUE, print_level = 0L, sb = "yes")
+
+c(dnlp = opt_nlp, max_eigenvalue = max(eigen(A, only.values = TRUE)$values))
+```
+
+```{r quadform-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
+if (params$mode == "save") {
+    saveRDS(list(opt = opt_nlp), file = file.path(testdata_dir, "quadform.RDS"))
+} else {
+    saved <- readRDS(file.path(testdata_dir, "quadform.RDS"))
+    expect_equal(opt_nlp, saved$opt, tolerance = 1e-10)
+    ## cross-check against the analytic optimum (max eigenvalue): different
+    ## computations, so they agree to solver tolerance, not 1e-10.
+    expect_equal(opt_nlp, max(eigen(A, only.values = TRUE)$values), tolerance = 1e-6)
+}
+```
+
+::: {.callout-warning}
+Unlike convex optimization, an NLP solver gives **no global guarantee**. On a
+nonconvex problem it may return a local (not global) optimum, give a result that
+depends on the starting point, or even fail to find a feasible point. Supplying a
+good starting point with `value(x) <- ...` — or trying several with `best_of`
+(below) — improves the odds of finding the global optimum.
+:::
+
 ## Smooth atoms
 
 DNLP adds a family of classically differentiable atoms that are *not* part of
 the convex grammar, so they can appear anywhere in a smooth objective or
-constraint:
+constraint. Each is twice continuously differentiable on the interior of its
+domain:
 
-| Atom | Meaning |
-|------|---------|
-| `sin(x)`, `cos(x)`, `tan(x)` | Trigonometric functions |
-| `sinh(x)`, `tanh(x)` | Hyperbolic functions |
-| `asinh(x)`, `atanh(x)` | Inverse hyperbolic functions |
-| `normcdf(x)` | Standard normal CDF |
-| `prod(x)` | Product of entries (also `prod_entries(X, axis = ...)`) |
+| Atom | Meaning | Domain |
+|------|---------|--------|
+| `sin(x)`, `cos(x)` | Trigonometric functions | all $x$ |
+| `tan(x)` | Tangent | $x \in (-\pi/2,\ \pi/2)$ |
+| `sinh(x)`, `tanh(x)` | Hyperbolic functions | all $x$ |
+| `asinh(x)` | Inverse hyperbolic sine | all $x$ |
+| `atanh(x)` | Inverse hyperbolic tangent | $x \in (-1,\ 1)$ |
+| `normcdf(x)` | Standard normal CDF | all $x$ |
+| `prod(x)` | Product of entries (also `prod_entries(X, axis = ...)`) | all $x$ |
 
 These join the smooth atoms `CVXR` already had — affine maps, `exp`, `log`,
 `entr`, `logistic`, `kl_div`, `rel_entr`, `xexp`, `power` (constant exponent),
 `geo_mean`, `log_sum_exp`, `quad_form`, and `quad_over_lin` — which DNLP can now
 use in either curvature direction.
+
+**Atoms with new meaning.** A few existing atoms become smooth in DNLP and may be
+used in ways DCP forbids: `multiply(x, y)` and `quad_form(x, Q)` accept *two*
+variable arguments (in DCP one argument must be constant). Nonsmooth convex or
+concave atoms (`abs`, `max`, `min`, `norm1`, …) keep their curvature and may
+appear wherever a convex or concave expression is allowed. (When dividing, as in
+`1/x`, DNLP assumes the denominator is nonnegative.)
 
 ## Beyond DCP: a nonconvex form of a convex problem
 
@@ -224,7 +278,18 @@ x <- Variable(2)
 sample_bounds(x) <- c(-5, 5)          # draw restarts from [-5, 5]^2
 ```
 
-## Choosing an NLP solver
+## Solvers
+
+`CVXR` supports two open-source nonlinear-programming solvers for the DNLP path,
+each provided by an optional R package:
+
+| Solver | R package | Notes |
+|--------|-----------|-------|
+| **IPOPT** | [`ipopt`](https://github.com/bnaras/ipopt) | Interior point (via MUMPS); recommended, and the automatic default when installed |
+| **UNO** | [`Uno`](https://github.com/bnaras/Uno) | Unifying Nonlinear Optimization; also exposes `dual_value()` |
+
+(`KNITRO` and `COPT` solver names are registered for CVXPY parity but require
+bindings not yet available in R.)
 
 With `nlp = TRUE`, `CVXR` picks an installed NLP solver automatically — `IPOPT`
 first when the `ipopt` package is available, matching CVXPY's preference order.
