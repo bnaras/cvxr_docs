@@ -33,16 +33,17 @@ solver_tbl <- tibble::tibble(
     QP   = c(check, check, check, " ", " ",
              check, " ", " ", check,
              " ", check, check, check, " ", check),
+    ## CPLEX SOCP is blank: CVXR has no CPLEX SOC path (Rcplex lacks CPXaddqconstr).
     SOCP = c(check, check, check, check, check,
              check, " ", " ", " ",
-             check, " ", check, " ", check, check),
+             check, " ", " ", " ", check, check),
     SDP  = c(check, check, check, " ", " ",
              " ", " ", " ", " ",
              " ", " ", " ", " ", " ", " "),
     EXP  = c(check, check, check, check, check,
              " ", " ", " ", " ",
              " ", " ", " ", " ", " ", " "),
-    MIP  = c(" ", " ", " ", " ", check,
+    MIP  = c(" ", " ", check, " ", check,
              check, " ", check, check,
              " ", " ", check, " ", check, check)
 )
