@@ -285,6 +285,40 @@ prob <- Problem(Minimize(sqrt(x)))
 tryCatch(psolve(prob), error = function(e) conditionMessage(e))
 ```
 
+## Bounds propagation
+
+Since `CVXR` 1.9.0, `get_bounds()` works on **any expression**, not just a
+variable, propagating interval bounds through affine maps, elementwise atoms, and
+piecewise-linear atoms. It returns a `list(lower, upper)` of arrays shaped like
+the expression (entries that cannot be determined come back as infinite).
+
+```{r, eval = utils::packageVersion("CVXR") >= "1.9.0"}
+x <- Variable(3, bounds = list(-1, 2))
+get_bounds(x)            # the variable's own bounds: [-1, 2]
+get_bounds(2 * x + 1)    # propagated through an affine map: [-1, 5]
+get_bounds(abs(x))       # propagated through an atom: [0, 2]
+```
+
+## Parameterized problems (DPP)
+
+Disciplined Parameterized Programming (DPP) is a rule set that lets `CVXR`
+re-solve a parameterized problem quickly when only `Parameter` values change. The
+predicate `is_dpp()` checks compliance and, since 1.9.0, takes a `context`
+argument (`"dcp"`, the default, or `"dgp"`) so you can check DPP for geometric
+programs as well:
+
+```{r, eval = utils::packageVersion("CVXR") >= "1.9.0"}
+a <- Parameter(pos = TRUE)
+b <- Parameter(pos = TRUE)
+z <- Variable(pos = TRUE)
+prob <- Problem(Minimize(z), list(z >= a * b))
+
+cat("is_dpp (dcp):", is_dpp(prob, context = "dcp"), "\n")  # product of params: not DCP-DPP
+cat("is_dpp (dgp):", is_dpp(prob, context = "dgp"), "\n")  # but log-log-affine: DGP-DPP
+```
+
+See the [DPP Tutorial](../examples/dpp/tutorial.qmd) for more.
+
 ## Session Info
 
 ```{r, echo = FALSE}
