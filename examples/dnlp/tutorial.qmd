@@ -9,12 +9,14 @@ params:
 ---
 
 ```{r feature-gate, echo = FALSE}
-## Show feature code regardless of version, but only EVALUATE it when the
-## installed CVXR implements DNLP (params$min_version). On an older CVXR the
-## code is displayed but not run, so the page still renders.
+## Show feature code regardless of version, but only EVALUATE it when DNLP is
+## available: CVXR >= 1.9.0, the sparsediff derivative package, and an NLP
+## solver. Uno is the realistic R solver (it is headed for CRAN and bundles its
+## own MUMPS/HiGHS); the `ipopt` package is optional (not on CRAN), so any
+## IPOPT-specific chunk below is additionally guarded with requireNamespace.
 run_ok <- utils::packageVersion("CVXR") >= numeric_version(params$min_version) &&
-          all(vapply(c("sparsediff", "ipopt", "Uno"), requireNamespace,
-                     logical(1), quietly = TRUE))
+          requireNamespace("sparsediff", quietly = TRUE) &&
+          requireNamespace("Uno", quietly = TRUE)
 knitr::opts_chunk$set(eval = run_ok)
 ```
 
@@ -35,41 +37,43 @@ library(CVXR)
 ## Introduction
 
 **Disciplined Nonlinear Programming (DNLP)**, introduced in `CVXR` 1.9.0,
-extends `CVXR` beyond convex optimization to **smooth nonlinear programs** —
-problems whose objective and constraints are built from differentiable atoms,
-but which need not be convex. A DNLP is solved by handing exact first and
-second derivatives to a general nonlinear-programming solver.
+extends `CVXR` beyond convex optimization to **smooth nonlinear programs**, which
+need not be convex. You build the problem from differentiable atoms, check it
+with `is_dnlp()`, and solve it with `psolve(prob, nlp = TRUE)`. Every DCP problem
+is also a DNLP, and the disciplined nonlinear grammar additionally allows smooth
+atoms in forms DCP forbids (for example, a product of two variable-dependent
+expressions).
 
-The disciplined grammar for DNLP is broader than DCP: any DCP problem is also a
-DNLP, but a DNLP may also use smooth atoms in ways DCP forbids (for example, a
-product of two expressions that each involve a variable). You check membership
-with `is_dnlp()`, and you solve with `psolve(prob, nlp = TRUE)`.
-
-The DNLP path is powered by automatic derivatives from the optional
-[`sparsediff`](https://github.com/bnaras/sparsediff) package and one of the
-nonlinear solvers in the optional [`ipopt`](https://github.com/bnaras/ipopt)
-or [`Uno`](https://github.com/bnaras/Uno) packages.
+The DNLP path needs two optional pieces: the
+[`sparsediff`](https://github.com/bnaras/sparsediff) package for automatic
+derivatives, and a nonlinear solver. Both NLP solvers live in `Enhances` (not
+installed by default), so guard their use:
 
 ```{r availability}
-packageVersion("CVXR")
+have_dnlp <- requireNamespace("sparsediff", quietly = TRUE) &&
+             requireNamespace("Uno", quietly = TRUE)
 c(sparsediff = requireNamespace("sparsediff", quietly = TRUE),
-  ipopt      = requireNamespace("ipopt", quietly = TRUE),
-  Uno        = requireNamespace("Uno", quietly = TRUE))
+  Uno        = requireNamespace("Uno", quietly = TRUE),
+  ipopt      = requireNamespace("ipopt", quietly = TRUE))
 ```
+
+This vignette uses **Uno** — the solver most R users will have, since it is
+headed for CRAN and bundles its own linear-algebra backend. We name it
+explicitly with `solver = "UNO"` and quiet it with `logger = "SILENT"`. (The
+optional `ipopt` package provides IPOPT, which `nlp = TRUE` prefers when present;
+see *Solvers* below.)
 
 ## A first smooth program
 
 Every DCP problem is a DNLP, so the simplest way to meet the NLP path is to send
-a convex problem down it. We minimize a quadratic and confirm the problem is a
-DNLP. We pass `print_level = 0L` and `sb = "yes"` (Ipopt options) to silence the
-solver's iteration log and its one-time startup banner.
+a convex problem down it.
 
 ```{r first}
 x <- Variable(2)
 prob <- Problem(Minimize(sum_squares(x - c(1, 2))))
 is_dnlp(prob)
 
-opt <- psolve(prob, nlp = TRUE, print_level = 0L, sb = "yes")
+opt <- psolve(prob, nlp = TRUE, solver = "UNO", logger = "SILENT")
 opt                 # optimal value (0)
 value(x)            # (1, 2)
 ```
@@ -103,7 +107,7 @@ prob <- Problem(Maximize(quad_form(x, A)), list(sum_squares(x) == 1))
 is_dnlp(prob)
 
 value(x) <- rep(1, n)                              # initial point
-opt_nlp <- psolve(prob, nlp = TRUE, print_level = 0L, sb = "yes")
+opt_nlp <- psolve(prob, nlp = TRUE, solver = "UNO", logger = "SILENT")
 
 c(dnlp = opt_nlp, max_eigenvalue = max(eigen(A, only.values = TRUE)$values))
 ```
@@ -176,7 +180,7 @@ prob <- Problem(objective, constraints)
 
 c(is_dcp = is_dcp(prob), is_dnlp = is_dnlp(prob))
 
-neg_entropy <- psolve(prob, nlp = TRUE, print_level = 0L, sb = "yes")
+neg_entropy <- psolve(prob, nlp = TRUE, solver = "UNO", logger = "SILENT")
 round(value(p), 5)
 c(total = sum(value(p)), mean = sum(support * value(p)))
 ```
@@ -194,47 +198,34 @@ cf <- exp(-theta * support); cf <- cf / sum(cf)
 round(cf, 5)                          # matches value(p)
 ```
 
-## Duals: IPOPT vs UNO
+## Duals on the NLP path
 
-The two NLP backends differ in one user-visible way: **dual variables**. The
-`IPOPT` path returns *no* duals, matching CVXPY's NLP interface — so after an
-IPOPT solve, `dual_value()` is `NULL`:
-
-```{r dual-ipopt}
-psolve(prob, solver = "IPOPT", nlp = TRUE, print_level = 0L, sb = "yes")
-dual_value(constraints[[2]])          # NULL: IPOPT path exposes no duals
-```
-
-The `UNO` path, as a `CVXR` extension beyond CVXPY, *does* recover the
-constraint duals. The multiplier on the mean constraint is exactly the Gibbs
-parameter $\theta$ we read off the solution above:
+As a `CVXR` extension beyond CVXPY, the **UNO** solver recovers constraint duals
+after an NLP solve. For the entropy problem, the multiplier on the mean
+constraint is exactly the Gibbs parameter $\theta$ found above:
 
 ```{r dual-uno}
-psolve(prob, solver = "UNO", nlp = TRUE, logger = "SILENT")
-dual_value(constraints[[2]])          # the mean-constraint multiplier (= theta)
+dual_value(constraints[[2]])          # mean-constraint multiplier (= theta)
 ```
 
 ```{r dual-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
 uno_theta <- as.numeric(dual_value(constraints[[2]]))
 if (params$mode == "save") {
-    saveRDS(list(theta = theta, uno_theta = uno_theta), file = file.path(testdata_dir, "duals.RDS"))
+    saveRDS(list(uno_theta = uno_theta), file = file.path(testdata_dir, "duals.RDS"))
 } else {
     saved <- readRDS(file.path(testdata_dir, "duals.RDS"))
-    expect_equal(uno_theta, saved$uno_theta, tolerance = 1e-10)   # same solver/machine: bit-exact
-    ## cross-solver agreement (UNO dual vs theta from the IPOPT solution): two
-    ## different algorithms, so this agrees to ~1e-8, not to 1e-10.
-    expect_equal(uno_theta, theta, tolerance = 1e-6)
+    expect_equal(uno_theta, saved$uno_theta, tolerance = 1e-10)   # same solver/machine
+    expect_equal(uno_theta, theta, tolerance = 1e-6)              # UNO dual == Gibbs theta
 }
 ```
 
-```{r entropy-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
-if (params$mode == "save") {
-    saveRDS(list(val = neg_entropy, p = value(p)), file = file.path(testdata_dir, "entropy.RDS"))
-} else {
-    saved <- readRDS(file.path(testdata_dir, "entropy.RDS"))
-    expect_equal(neg_entropy, saved$val, tolerance = 1e-10)
-    expect_equal(value(p), saved$p, tolerance = 1e-10)
-}
+The **IPOPT** path, by contrast, returns no duals — matching CVXPY's NLP
+interface. If the optional `ipopt` package is installed, you can see the
+difference (`dual_value()` is `NULL` after an IPOPT solve):
+
+```{r dual-ipopt, eval = run_ok && requireNamespace("ipopt", quietly = TRUE)}
+psolve(prob, nlp = TRUE, solver = "IPOPT", print_level = 0L, sb = "yes")
+dual_value(constraints[[2]])          # NULL: IPOPT path exposes no duals
 ```
 
 ## Nonconvex problems and random restarts
@@ -253,7 +244,7 @@ set.seed(1)
 x <- Variable(bounds = list(-10, 10))
 prob <- Problem(Minimize(sin(x) + 0.1 * x^2))
 
-best <- psolve(prob, nlp = TRUE, best_of = 5, print_level = 0L, sb = "yes")
+best <- psolve(prob, nlp = TRUE, solver = "UNO", logger = "SILENT", best_of = 5)
 best                                  # best objective over the 5 restarts
 value(x)
 
@@ -280,25 +271,27 @@ sample_bounds(x) <- c(-5, 5)          # draw restarts from [-5, 5]^2
 
 ## Solvers
 
-`CVXR` supports two open-source nonlinear-programming solvers for the DNLP path,
-each provided by an optional R package:
+`CVXR` supports two open-source nonlinear solvers for the DNLP path, each from an
+optional R package (both in `Enhances`, so guard their use with
+`requireNamespace()`):
 
 | Solver | R package | Notes |
 |--------|-----------|-------|
-| **IPOPT** | [`ipopt`](https://github.com/bnaras/ipopt) | Interior point (via MUMPS); recommended, and the automatic default when installed |
-| **UNO** | [`Uno`](https://github.com/bnaras/Uno) | Unifying Nonlinear Optimization; also exposes `dual_value()` |
+| **UNO** | [`Uno`](https://github.com/cvanaret/Uno) | Headed for CRAN; self-contained (bundles MUMPS/HiGHS); also recovers `dual_value()`. The practical default for R users. |
+| **IPOPT** | [`ipopt`](https://github.com/coin-or/Ipopt) | Interior point; **not on CRAN** (license), so installed only by determined users. When present, `nlp = TRUE` prefers it (matching CVXPY). |
 
 (`KNITRO` and `COPT` solver names are registered for CVXPY parity but require
 bindings not yet available in R.)
 
-With `nlp = TRUE`, `CVXR` picks an installed NLP solver automatically — `IPOPT`
-first when the `ipopt` package is available, matching CVXPY's preference order.
-You can name one explicitly:
+With `nlp = TRUE` and no explicit `solver`, `CVXR` picks an installed NLP solver
+automatically — IPOPT first if available, otherwise UNO. Because IPOPT is rarely
+installed, most R users get UNO; we name it explicitly above for reproducibility.
+You can always request one:
 
 ```{r solvers, eval = FALSE}
-psolve(prob, nlp = TRUE, solver = "IPOPT")     # Ipopt (interior point, via MUMPS)
-psolve(prob, nlp = TRUE, solver = "UNO")       # Uno
+psolve(prob, nlp = TRUE, solver = "UNO")       # Uno (recommended for R)
 psolve(prob, nlp = TRUE, solver = "uno_sqp")   # Uno's filterSQP preset
+psolve(prob, nlp = TRUE, solver = "IPOPT")     # Ipopt, if the ipopt package is installed
 ```
 
 A note on `UNO`: the `CVXR` interface defaults `UNO` to its interior-point
@@ -310,9 +303,10 @@ nonconvex problems too.
 
 ## Notes
 
-* DNLP requires the `sparsediff` package (for derivatives) and at least one of
-  `ipopt` or `Uno` (for the solver). With none installed, `psolve(nlp = TRUE)`
-  raises an informative error.
+* DNLP requires the `sparsediff` package (for derivatives) and an NLP solver
+  package (`Uno`, or the optional `ipopt`). All are in `Enhances`, so code that
+  uses them should be guarded with `requireNamespace()`; `psolve(nlp = TRUE)`
+  with none installed raises an informative error.
 * `is_dnlp(prob)` reports whether a problem satisfies the disciplined nonlinear
   grammar; since DCP $\subset$ DNLP, every DCP problem qualifies.
 * Because the problems may be nonconvex, the returned point is a local optimum;

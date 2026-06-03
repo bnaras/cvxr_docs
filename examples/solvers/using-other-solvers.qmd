@@ -57,12 +57,15 @@ open-source solvers and optional commercial ones, plus two nonlinear-programming
 
 For smooth nonlinear programs — see the [DNLP Tutorial](../dnlp/tutorial.qmd),
 solved with `psolve(prob, nlp = TRUE)` — `CVXR` supports two open-source NLP
-solvers, each via an optional R package:
+solvers, each via an optional R package in `Enhances` (guard their use with
+`requireNamespace()`):
 
+- [Uno](https://github.com/cvanaret/Uno) (the `Uno` package), Unifying Nonlinear
+  Optimization. Headed for CRAN and self-contained (bundles its own MUMPS/HiGHS),
+  so it is the practical default for R users; it also recovers `dual_value()`.
 - [IPOPT](https://github.com/coin-or/Ipopt) (the `ipopt` package), an
-  interior-point solver, and the recommended default.
-- [Uno](https://github.com/cvanaret/Uno) (the `Uno` package), Unifying
-  Nonlinear Optimization.
+  interior-point solver. Not on CRAN owing to licensing, so installed only by
+  determined users; when present, `nlp = TRUE` prefers it (matching CVXPY).
 
 ## Solver Capabilities
 

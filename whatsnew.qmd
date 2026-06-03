@@ -36,10 +36,14 @@ psolve(prob, nlp = TRUE)            # solved through the NLP path
   `n` random initial points (drawn from variable bounds or `sample_bounds()`)
   and keeps the best.
 * The NLP path is powered by automatic derivatives from the optional
-  `sparsediff` package and one of the `ipopt` or `Uno` solver packages. Solver
-  names are `"IPOPT"` (the automatic default when installed) and `"UNO"`. The
-  `IPOPT` path returns no duals (matching CVXPY); the `UNO` path additionally
-  recovers constraint duals via `dual_value()`.
+  `sparsediff` package and a nonlinear solver. Two are supported, both in
+  `Enhances` (so guard their use with `requireNamespace()`): **UNO** (the `Uno`
+  package — headed for CRAN, self-contained, and the practical default for R
+  users) and **IPOPT** (the `ipopt` package — not on CRAN owing to licensing, so
+  rarely installed). With `nlp = TRUE`, IPOPT is preferred when present
+  (matching CVXPY), otherwise UNO is used. The `UNO` path also recovers
+  constraint duals via `dual_value()`; the `IPOPT` path returns none, matching
+  CVXPY.
 
 See the [DNLP Tutorial](examples/dnlp/tutorial.qmd) for worked examples.
 
