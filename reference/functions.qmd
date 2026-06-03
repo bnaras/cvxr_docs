@@ -372,7 +372,7 @@ d <- data.frame(
         "<code>loggamma(x)</code>",
         "<code>max_elemwise(x, y, ...)</code>",
         "<code>min_elemwise(x, y, ...)</code>",
-        "<code>multiply(c, x)</code>",
+        "<code>c * x</code>",
         "<code>neg(x)</code>",
         "<code>pos(x)</code>",
         "<code>diff_pos(x, y)</code>",
@@ -625,8 +625,9 @@ with `psolve(prob, nlp = TRUE)`.
 | `prod(x)` | Product of entries | all $x$ |
 | `convolve(x, y)` | 1-D discrete convolution (numpy-style alias for `conv`) | all $x$ |
 
-In a DNLP, `multiply(x, y)` and `quad_form(x, Q)` also become smooth and may take
-*two* variable arguments (in DCP one argument must be constant).
+In a DNLP, elementwise multiplication `x * y` and `quad_form(x, Q)` also become
+smooth and may take *two* variable arguments (in DCP, `x * y` requires one
+operand to be constant).
 
 Use `is_dnlp(prob)` to check whether a problem satisfies the DNLP grammar (every
 DCP problem qualifies). For nonconvex DNLPs, `psolve(prob, nlp = TRUE, best_of =

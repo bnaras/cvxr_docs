@@ -269,7 +269,8 @@ For mixed-integer programming: `Not()`, `And()`, `Or()`, `Xor()`,
 
 - `tv()` is an alias for `total_variation()`
 - `norm2(x)` is an alias for `p_norm(x, 2)`
-- `multiply(x, y)` is an alias for elementwise multiplication
+- `multiply(x, y)` is **deprecated**; use `x * y` for elementwise multiplication
+  (`multiply()` still works but warns once per session)
 - `installed_solvers()` lists available solver packages
 - Old `solve()` still works and returns a compatibility list
 - Old function names (`problem_status`, `getValue`, etc.) still work

@@ -155,8 +155,9 @@ These join the smooth atoms `CVXR` already had — affine maps, `exp`, `log`,
 use in either curvature direction.
 
 **Atoms with new meaning.** A few existing atoms become smooth in DNLP and may be
-used in ways DCP forbids: `multiply(x, y)` and `quad_form(x, Q)` accept *two*
-variable arguments (in DCP one argument must be constant). Nonsmooth convex or
+used in ways DCP forbids: elementwise multiplication `x * y` and `quad_form(x, Q)`
+accept *two* variable arguments (in DCP, `x * y` requires one operand to be
+constant). Nonsmooth convex or
 concave atoms (`abs`, `max`, `min`, `norm1`, …) keep their curvature and may
 appear wherever a convex or concave expression is allowed. (When dividing, as in
 `1/x`, DNLP assumes the denominator is nonnegative.)
