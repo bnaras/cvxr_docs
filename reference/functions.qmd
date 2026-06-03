@@ -73,9 +73,13 @@ These dispatch to the corresponding `CVXR` atoms (e.g., `abs(x)`
 calls `Abs`, `sum(x)` calls `SumEntries`).
 
 ::: {.callout-note}
-R Math group functions not listed above (e.g., `sign()`, `round()`,
-`sin()`, `cos()`) are **not** supported and will produce a clear
-error message if used on `CVXR` expressions.
+As of `CVXR` 1.9.0, the trigonometric and hyperbolic functions `sin()`,
+`cos()`, `tan()`, `sinh()`, `tanh()`, `asinh()`, and `atanh()` are supported as
+**smooth atoms** for disciplined nonlinear programs (see [Smooth functions for
+DNLP](#smooth-functions-for-dnlp)); they are *not* part of the convex (DCP)
+grammar. Other R Math group functions not listed above (e.g., `sign()`,
+`round()`) remain **not** supported and produce a clear error message if used on
+`CVXR` expressions.
 :::
 
 #### Indexing and slicing
@@ -601,6 +605,34 @@ knitr::kable(d, "html", escape = FALSE,
     kable_styling("striped") |>
     column_spec(1:2, background = "#ececec")
 ```
+
+### Smooth functions for DNLP {#smooth-functions-for-dnlp}
+
+The functions below are **smooth atoms** added in `CVXR` 1.9.0 for
+[disciplined nonlinear programming](../examples/dnlp/tutorial.qmd) (DNLP). They
+are twice continuously differentiable but are *not* part of the convex (DCP)
+grammar, so they may be used only in smooth (possibly nonconvex) problems solved
+with `psolve(prob, nlp = TRUE)`.
+
+| Function | Meaning | Domain |
+|----------|---------|--------|
+| `sin(x)`, `cos(x)` | Trigonometric functions | all $x$ |
+| `tan(x)` | Tangent | $x \in (-\pi/2,\ \pi/2)$ |
+| `sinh(x)`, `tanh(x)` | Hyperbolic functions | all $x$ |
+| `asinh(x)` | Inverse hyperbolic sine | all $x$ |
+| `atanh(x)` | Inverse hyperbolic tangent | $x \in (-1,\ 1)$ |
+| `normcdf(x)` | Standard normal CDF | all $x$ |
+| `prod(x)` | Product of entries | all $x$ |
+| `convolve(x, y)` | 1-D discrete convolution (numpy-style alias for `conv`) | all $x$ |
+
+In a DNLP, `multiply(x, y)` and `quad_form(x, Q)` also become smooth and may take
+*two* variable arguments (in DCP one argument must be constant).
+
+Use `is_dnlp(prob)` to check whether a problem satisfies the DNLP grammar (every
+DCP problem qualifies). For nonconvex DNLPs, `psolve(prob, nlp = TRUE, best_of =
+n)` runs `n` random restarts, drawing initial points from variable bounds or from
+a region set with `sample_bounds(x) <- c(low, high)`. See the
+[DNLP Tutorial](../examples/dnlp/tutorial.qmd).
 
 ## Session Info
 
