@@ -45,9 +45,11 @@ atoms in forms DCP forbids (for example, a product of two variable-dependent
 expressions).
 
 The DNLP path needs two optional pieces: the
-[`sparsediff`](https://github.com/bnaras/sparsediff) package for automatic
-derivatives, and a nonlinear solver. Both NLP solvers live in `Enhances` (not
-installed by default), so guard their use:
+[`sparsediff`](https://cran.r-project.org/package=sparsediff) package for automatic
+derivatives, and a nonlinear solver. These live in `Enhances` (not installed by
+default); `CVXR` checks for them at solve time and errors informatively if one is
+missing, so you do not need to guard your own calls. You can still see what is
+available:
 
 ```{r availability}
 have_dnlp <- requireNamespace("sparsediff", quietly = TRUE) &&
@@ -309,13 +311,12 @@ sample_bounds(x) <- c(-5, 5)          # draw restarts from [-5, 5]^2
 ## Solvers
 
 `CVXR` supports two open-source nonlinear solvers for the DNLP path, each from an
-optional R package (both in `Enhances`, so guard their use with
-`requireNamespace()`):
+optional R package (both in `Enhances`, so not installed by default):
 
 | Solver | R package | Notes |
 |--------|-----------|-------|
-| **UNO** | [`Uno`](https://github.com/cvanaret/Uno) | Headed for CRAN; self-contained (bundles MUMPS/HiGHS); also recovers `dual_value()`. The practical default for R users. |
-| **IPOPT** | [`ipopt`](https://github.com/coin-or/Ipopt) | Interior point; **not on CRAN** (license), so installed only by determined users. When present, `nlp = TRUE` prefers it (matching CVXPY). |
+| **UNO** | [`Uno`](https://cran.r-project.org/package=Uno) | On CRAN; self-contained (bundles MUMPS/HiGHS); also recovers `dual_value()`. The practical default for R users. |
+| **IPOPT** | [`ipopt`](https://bnaras.github.io/ipopt/) | Interior point; **not on CRAN** (license), so installed only by determined users. When present, `nlp = TRUE` prefers it (matching CVXPY). |
 
 (`KNITRO` and `COPT` solver names are registered for CVXPY parity but require
 bindings not yet available in R.)
@@ -340,10 +341,12 @@ nonconvex problems too.
 
 ## Notes
 
-* DNLP requires the `sparsediff` package (for derivatives) and an NLP solver
-  package (`Uno`, or the optional `ipopt`). All are in `Enhances`, so code that
-  uses them should be guarded with `requireNamespace()`; `psolve(nlp = TRUE)`
-  with none installed raises an informative error.
+* DNLP needs the `sparsediff` package (for derivatives) and an NLP solver —
+  `Uno` or the optional `ipopt`. All are in `Enhances` (not installed by
+  default). `CVXR` checks for them at solve time, so you need not guard your own
+  calls: if anything is missing, `psolve(nlp = TRUE)` raises an informative error
+  naming exactly what to install (`sparsediff` and `Uno` from CRAN; `ipopt` from
+  <https://bnaras.github.io/ipopt/>).
 * `is_dnlp(prob)` reports whether a problem satisfies the disciplined nonlinear
   grammar; since DCP $\subset$ DNLP, every DCP problem qualifies.
 * Because the problems may be nonconvex, the returned point is a local optimum;
