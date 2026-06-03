@@ -635,6 +635,15 @@ n)` runs `n` random restarts, drawing initial points from variable bounds or fro
 a region set with `sample_bounds(x) <- c(low, high)`. See the
 [DNLP Tutorial](../examples/dnlp/tutorial.qmd).
 
+Individual expressions can also be classified directly, mirroring CVXPY's
+`expr.is_smooth()` family: `is_smooth(e)` is `TRUE` when `e` is twice
+continuously differentiable, while `is_linearizable_convex(e)` and
+`is_linearizable_concave(e)` report whether `e` becomes convex (respectively
+concave) once every smooth subexpression is linearized. For instance,
+`is_smooth(sin(x))` is `TRUE` and `is_smooth(abs(x))` is `FALSE`, while
+`is_linearizable_convex(abs(x))` is `TRUE`. These are the per-expression rules
+that `is_dnlp()` composes over a whole problem.
+
 ## Session Info
 
 ```{r, echo = FALSE}

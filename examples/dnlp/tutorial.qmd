@@ -162,6 +162,42 @@ concave atoms (`abs`, `max`, `min`, `norm1`, …) keep their curvature and may
 appear wherever a convex or concave expression is allowed. (When dividing, as in
 `1/x`, DNLP assumes the denominator is nonnegative.)
 
+### Inspecting an expression
+
+Three predicates classify an individual expression under the DNLP grammar,
+mirroring CVXPY's `expr.is_smooth()` family. `is_smooth(e)` is `TRUE` when `e`
+is twice continuously differentiable on the interior of its domain;
+`is_linearizable_convex(e)` and `is_linearizable_concave(e)` report whether `e`
+becomes convex (respectively concave) once every smooth subexpression is
+linearized — the composition rule `is_dnlp()` applies problem-wide.
+
+```{r predicates}
+x <- Variable()
+classify <- function(e) c(smooth      = is_smooth(e),
+                          lin_convex  = is_linearizable_convex(e),
+                          lin_concave = is_linearizable_concave(e))
+rbind(`sin(x)`  = classify(sin(x)),    # smooth atom
+      `abs(x)`  = classify(abs(x)),    # nonsmooth, convex only
+      `-abs(x)` = classify(-abs(x)))   # nonsmooth, concave only
+```
+
+A smooth atom such as `sin(x)` is linearizable in *both* directions (it
+linearizes to an affine expression), so it may appear anywhere in a smooth
+objective or constraint. A nonsmooth convex atom like `abs(x)` is
+linearizable-convex only, and its negation is linearizable-concave only — they
+keep the curvature DCP assigns them.
+
+```{r predicates-test, echo = FALSE, eval = run_ok && params$mode %in% c("test", "save")}
+pred_tbl <- rbind(`sin(x)`  = classify(sin(x)),
+                  `abs(x)`  = classify(abs(x)),
+                  `-abs(x)` = classify(-abs(x)))
+if (params$mode == "save") {
+    saveRDS(pred_tbl, file = file.path(testdata_dir, "predicates.RDS"))
+} else {
+    expect_identical(pred_tbl, readRDS(file.path(testdata_dir, "predicates.RDS")))
+}
+```
+
 ## Beyond DCP: a nonconvex form of a convex problem
 
 Consider the **maximum-entropy distribution** on $\{1,\dots,K\}$ with a
