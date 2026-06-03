@@ -73,45 +73,8 @@ The table below shows each solver, its R package dependency, and the
 problem classes it supports.
 
 ```{r, echo = FALSE}
-check <- "\U2713"
-d <- tibble::tibble(
-    Solver = c("CLARABEL", "SCS", "MOSEK", "ECOS", "ECOS_BB",
-               "GUROBI", "GLPK", "GLPK_MI", "HIGHS",
-               "CVXOPT", "OSQP", "CPLEX", "PIQP", "SCIP", "XPRESS"),
-    `R Package` = c(
-        '<a href="https://cran.r-project.org/package=clarabel"><code>clarabel</code></a>',
-        '<a href="https://cran.r-project.org/package=scs"><code>scs</code></a>',
-        '<a href="https://docs.mosek.com/latest/rmosek/index.html"><code>Rmosek</code></a>',
-        '<a href="https://cran.r-project.org/package=ECOSolveR"><code>ECOSolveR</code></a>',
-        '<a href="https://cran.r-project.org/package=ECOSolveR"><code>ECOSolveR</code></a>',
-        '<a href="https://www.gurobi.com/"><code>gurobi</code></a>',
-        '<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>',
-        '<a href="https://cran.r-project.org/package=Rglpk"><code>Rglpk</code></a>',
-        '<a href="https://cran.r-project.org/package=highs"><code>highs</code></a>',
-        '<a href="https://cran.r-project.org/package=cccp"><code>cccp</code></a>',
-        '<a href="https://cran.r-project.org/package=osqp"><code>osqp</code></a>',
-        '<a href="https://cran.r-project.org/package=Rcplex"><code>Rcplex</code></a>',
-        '<a href="https://cran.r-project.org/package=piqp"><code>piqp</code></a>',
-        '<a href="https://www.scipopt.org/"><code>scip</code></a>',
-        '<a href="https://www.fico.com/en/products/fico-xpress-optimization"><code>xpress</code></a>'),
-    LP   = rep(check, 15),
-    QP   = c(check, check, check, " ", " ",
-             check, " ", " ", check,
-             " ", check, check, check, " ", check),
-    SOCP = c(check, check, check, check, check,
-             check, " ", " ", " ",
-             check, " ", check, " ", check, check),
-    SDP  = c(check, check, check, " ", " ",
-             " ", " ", " ", " ",
-             " ", " ", " ", " ", " ", " "),
-    EXP  = c(check, check, check, check, check,
-             " ", " ", " ", " ",
-             " ", " ", " ", " ", " ", " "),
-    MIP  = c(" ", " ", " ", " ", check,
-             check, " ", check, check,
-             " ", " ", check, " ", check, check)
-)
-knitr::kable(d, format = "html", escape = FALSE,
+source(here::here("_solver_table.R"))
+knitr::kable(solver_tbl, format = "html", escape = FALSE,
              caption = "Solver Capabilities") |>
     kable_styling("striped") |>
     column_spec(1:8, background = "#ececec")

@@ -127,7 +127,20 @@ disp_result <- function(states, P, tolerance = 1e-10) {
         P[P < tolerance] <- 0
         P <- P/apply(P, 1, sum)   ## Normalize so rows sum to exactly 1
         mc <- new("markovchain", states = states, transitionMatrix = P)
-        plot(mc)
+        ## Plot igraph directly with padding so self-loops aren't clipped
+        g <- methods::as(mc, "igraph")
+        set.seed(42)
+        lay <- igraph::layout_nicely(g)
+        lay <- igraph::norm_coords(lay)
+        pad <- 1.6
+        par(mar = c(1, 1, 1, 1))
+        igraph::plot.igraph(g, layout = lay, rescale = FALSE,
+             xlim = c(-pad, pad), ylim = c(-pad, pad),
+             edge.arrow.size = 0.5, vertex.size = 20,
+             edge.label = round(igraph::E(g)$prob, 2),
+             edge.label.color = "navy", edge.label.cex = 0.9,
+             vertex.color = "orange", vertex.frame.color = "darkgoldenrod",
+             vertex.label.color = "navy", vertex.label.font = 2)
     }
 }
 ```
@@ -143,25 +156,25 @@ Table 1 from @FMMC is reproduced below.
 
 We reproduce the results for various rows of the table.
 
-```{r, fig.cap="Row 1, line graph", out.width="100%"}
+```{r, fig.cap="Row 1, line graph", out.width="100%", fig.width=8, fig.height=6}
 g <- list("1" = 2, "2" = c(1,3), "3" = c(2,4), "4" = 3)
 result1 <- FMMC(g, verbose = TRUE)
 disp_result(names(g), result1$P)
 ```
 
-```{r, fig.cap="Row 2, triangle plus one edge", out.width="100%"}
+```{r, fig.cap="Row 2, triangle plus one edge", out.width="100%", fig.width=8, fig.height=6}
 g <- list("1" = 2, "2" = c(1,3,4), "3" = c(2,4), "4" = c(2,3))
 result2 <- FMMC(g, verbose = TRUE)
 disp_result(names(g), result2$P)
 ```
 
-```{r, fig.cap="Bipartite 2 plus 3", out.width="100%"}
+```{r, fig.cap="Bipartite 2 plus 3", out.width="100%", fig.width=8, fig.height=6}
 g <- list("1" = c(2,4,5), "2" = c(1,3), "3" = c(2,4,5), "4" = c(1,3), "5" = c(1,3))
 result3 <- FMMC(g, verbose = TRUE)
 disp_result(names(g), result3$P)
 ```
 
-```{r, fig.cap="Square plus central point", out.width="100%"}
+```{r, fig.cap="Square plus central point", out.width="100%", fig.width=8, fig.height=6}
 g <- list("1" = c(2,3,5), "2" = c(1,4,5), "3" = c(1,4,5), "4" = c(2,3,5), "5" = c(1,2,3,4,5))
 result4 <- FMMC(g, verbose = TRUE)
 disp_result(names(g), result4$P)

@@ -314,7 +314,7 @@ for (t in 1:N) {
 }
 
 prob_rkf <- Problem(obj_rkf, constr)
-result_rkf <- psolve(prob_rkf, solver = "ECOS", verbose = TRUE)
+result_rkf <- psolve(prob_rkf, solver = "SCS", verbose = TRUE)
 check_solver_status(prob_rkf)
 cat("Optimal objective value:", result_rkf, "\n")
 ```
