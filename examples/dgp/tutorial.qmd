@@ -244,7 +244,7 @@ convex in both its arguments.
 | `log(x)` (domain $x > 1$) | log-log concave | increasing |
 | `power(x, p)` | log-log affine | incr. for $p > 0$; decr. for $p < 0$ |
 | `sqrt(x)` | log-log affine | increasing |
-| `multiply(x, y)` | log-log affine | increasing |
+| `x * y` | log-log affine | increasing |
 | `maximum(x, y)` | log-log convex | increasing |
 | `minimum(x, y)` | log-log concave | increasing |
 | `one_minus_pos(x)` | log-log concave | decreasing |

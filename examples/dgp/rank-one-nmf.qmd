@@ -90,8 +90,8 @@ outer_product <- vstack(t(x[1] * y), t(x[2] * y), t(x[3] * y))
 
 # Relative deviations (without the -1): max(X/outer_product, outer_product/X)
 relative_deviations <- max_elemwise(
-  multiply(X, power(outer_product, -1)),
-  multiply(power(X, -1), outer_product)
+  X * power(outer_product, -1),
+  power(X, -1) * outer_product
 )
 
 objective <- sum_entries(relative_deviations)

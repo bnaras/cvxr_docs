@@ -76,7 +76,7 @@ We next formulate the optimization problem using `CVXR`.
 ```{r}
 beta  <- Variable(n)
 v     <- Variable()
-loss  <- sum_entries(pos(1 - multiply(Y, X %*% beta - v)))
+loss  <- sum_entries(pos(1 - Y * (X %*% beta - v)))
 reg   <- p_norm(beta, 1)
 ```
 

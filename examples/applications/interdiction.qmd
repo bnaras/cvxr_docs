@@ -298,7 +298,7 @@ R_max <- 5
 nu <- Variable(n)
 r <- Variable(m)
 constraints_sec <- list(
-    t(A_inc) %*% nu >= -multiply(a, r),
+    t(A_inc) %*% nu >= -(a * r),
     sum(r) == m,
     r >= 0,
     B %*% r == 0,

@@ -110,7 +110,7 @@ use the SCS solver, which scales well to larger problems.
 ```{r}
 U <- Variable(c(rows, cols))
 obj <- Minimize(tv(U))
-constraints <- list(multiply(known, U) == multiply(known, u_corr))
+constraints <- list(known * U == known * u_corr)
 prob <- Problem(obj, constraints)
 
 result <- psolve(prob, solver = "SCS", verbose = TRUE)
@@ -219,8 +219,8 @@ grid.arrange(p5, p6, ncol = 2)
 ## Solve the TV in-painting problem for each channel
 channels <- lapply(seq_len(colors), function(k) {
     U_k <- Variable(c(rows_c, cols_c))
-    constr <- multiply(known_color[, , k], U_k) ==
-              multiply(known_color[, , k], u_corr_color[, , k])
+    constr <- known_color[, , k] * U_k ==
+              known_color[, , k] * u_corr_color[, , k]
     list(var = U_k, constr = constr)
 })
 variables <- lapply(channels, `[[`, "var")

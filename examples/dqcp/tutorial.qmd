@@ -97,8 +97,8 @@ cat("Curvature of ceil_expr(x):", curvature(w), "\n")
 
 y <- Variable(nonneg = TRUE)
 z <- Variable(nonneg = TRUE)
-product <- multiply(y, z)
-cat("Curvature of multiply(y, z) (nonneg):", curvature(product), "\n")
+product <- y * z
+cat("Curvature of y * z (nonneg):", curvature(product), "\n")
 ```
 
 You can also check the curvature of an Expression by calling
@@ -150,7 +150,7 @@ If an Expression satisfies the above rules, we say that the Expression
 x <- Variable(pos = TRUE)
 y <- Variable(pos = TRUE)
 
-product <- multiply(x, y)
+product <- x * y
 
 cat("Is quasiconcave?", is_quasiconcave(product), "\n")
 cat("Is DQCP?", is_dqcp(product), "\n")

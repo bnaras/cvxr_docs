@@ -91,7 +91,7 @@ use to express the log-likelihood.
 ```{r}
 beta <- Variable(n)
 log_likelihood <- sum_entries(
-    multiply(Y, X %*% beta) - logistic(X %*% beta)
+    Y * (X %*% beta) - logistic(X %*% beta)
 )
 ```
 
