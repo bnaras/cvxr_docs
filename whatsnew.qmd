@@ -267,8 +267,8 @@ For mixed-integer programming: `Not()`, `And()`, `Or()`, `Xor()`,
 
 ## Backward-Compatibility Aliases
 
-- `tv()` is an alias for `total_variation()`
-- `norm2(x)` is an alias for `p_norm(x, 2)`
+- `tv()` is **deprecated**; use `total_variation()` (still works but warns once)
+- `norm2(x)` is **deprecated**; use `p_norm(x, 2)` (still works but warns once)
 - `multiply(x, y)` is **deprecated**; use `x * y` for elementwise multiplication
   (`multiply()` still works but warns once per session)
 - `installed_solvers()` lists available solver packages

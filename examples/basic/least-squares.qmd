@@ -94,7 +94,7 @@ cat(sprintf("The optimal value is %f\n", result))
 cat("The optimal x is\n")
 print(value(x))
 cat(sprintf("The norm of the residual is %f\n",
-            value(norm2(A %*% x - b))))
+            value(p_norm(A %*% x - b, 2))))
 ```
 
 

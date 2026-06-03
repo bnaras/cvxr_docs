@@ -73,7 +73,7 @@ optimal value.
 
 In the following code, we solve a SOCP with `CVXR`. The second-order
 cone constraint $\|Ax + b\|_2 \leq t$ is expressed as
-`norm2(A %*% x + b) <= t` in `CVXR`.
+`p_norm(A %*% x + b, 2) <= t` in `CVXR`.
 
 ```{r}
 ## Problem dimensions
@@ -104,7 +104,7 @@ g <- F_mat %*% x0
 ## Define and solve the CVXR problem
 x <- Variable(n)
 soc_constraints <- lapply(soc_data, function(s) {
-    norm2(s$A %*% x + s$b) <= sum(s$c * x) + s$d
+    p_norm(s$A %*% x + s$b, 2) <= sum(s$c * x) + s$d
 })
 prob <- Problem(Minimize(t(f) %*% x),
                 constraints = c(soc_constraints, list(F_mat %*% x == g)))

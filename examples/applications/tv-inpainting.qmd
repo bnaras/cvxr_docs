@@ -109,7 +109,7 @@ use the SCS solver, which scales well to larger problems.
 
 ```{r}
 U <- Variable(c(rows, cols))
-obj <- Minimize(tv(U))
+obj <- Minimize(total_variation(U))
 constraints <- list(known * U == known * u_corr)
 prob <- Problem(obj, constraints)
 
@@ -226,7 +226,7 @@ channels <- lapply(seq_len(colors), function(k) {
 variables <- lapply(channels, `[[`, "var")
 constraints_c <- lapply(channels, `[[`, "constr")
 
-prob_color <- Problem(Minimize(tv(variables[[1]], variables[[2]], variables[[3]])),
+prob_color <- Problem(Minimize(total_variation(variables[[1]], variables[[2]], variables[[3]])),
                       constraints_c)
 result_color <- psolve(prob_color, solver = "SCS", verbose = TRUE)
 check_solver_status(prob_color)

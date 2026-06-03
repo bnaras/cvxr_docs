@@ -123,7 +123,7 @@ library(kableExtra)
 d <- data.frame(
     Function = c(
         "<code>norm1(x)</code>",
-        "<code>norm2(x)</code>",
+        "<code>p_norm(x, 2)</code> (<code>norm2()</code> deprecated)",
         "<code>norm_inf(x)</code>",
         "<code>p_norm(x, p)</code>, \\(p \\geq 1\\)",
         "<code>p_norm(x, p)</code>, \\(0 < p < 1\\)",
@@ -230,7 +230,7 @@ d <- data.frame(
         "<code>log_sum_exp(x)</code>",
         "<code>scalar_product(x, c)</code>",
         "<code>vdot(x, y)</code>",
-        "<code>tv(x)</code> / <code>total_variation(x)</code>",
+        "<code>total_variation(x)</code> (<code>tv()</code> deprecated)",
         "<code>inv_prod(x)</code>",
         "<code>perspective(f, s)</code>"
     ),
@@ -291,7 +291,7 @@ respectively. Similarly, $\mathbf{S}^n_{++}$ and $\mathbf{S}^n_{--}$
 refer to the set of positive definite and negative definite matrices,
 respectively.
 
-For a vector expression `x`, `norm2(x)` gives the
+For a vector expression `x`, `p_norm(x, 2)` gives the
 Euclidean norm. For a matrix expression `X`, `cvxr_norm(X, 2)` and
 `sigma_max(X)` give the spectral norm (largest singular value).
 
