@@ -287,12 +287,12 @@ tryCatch(psolve(prob), error = function(e) conditionMessage(e))
 
 ## Bounds propagation
 
-Since `CVXR` 1.9.0, `get_bounds()` works on **any expression**, not just a
+Since `CVXR` 1.9.1, `get_bounds()` works on **any expression**, not just a
 variable, propagating interval bounds through affine maps, elementwise atoms, and
 piecewise-linear atoms. It returns a `list(lower, upper)` of arrays shaped like
 the expression (entries that cannot be determined come back as infinite).
 
-```{r, eval = utils::packageVersion("CVXR") >= "1.9.0"}
+```{r, eval = utils::packageVersion("CVXR") >= "1.9.1"}
 x <- Variable(3, bounds = list(-1, 2))
 get_bounds(x)            # the variable's own bounds: [-1, 2]
 get_bounds(2 * x + 1)    # propagated through an affine map: [-1, 5]
@@ -303,11 +303,11 @@ get_bounds(abs(x))       # propagated through an atom: [0, 2]
 
 Disciplined Parameterized Programming (DPP) is a rule set that lets `CVXR`
 re-solve a parameterized problem quickly when only `Parameter` values change. The
-predicate `is_dpp()` checks compliance and, since 1.9.0, takes a `context`
+predicate `is_dpp()` checks compliance and, since 1.9.1, takes a `context`
 argument (`"dcp"`, the default, or `"dgp"`) so you can check DPP for geometric
 programs as well:
 
-```{r, eval = utils::packageVersion("CVXR") >= "1.9.0"}
+```{r, eval = utils::packageVersion("CVXR") >= "1.9.1"}
 a <- Parameter(pos = TRUE)
 b <- Parameter(pos = TRUE)
 z <- Variable(pos = TRUE)

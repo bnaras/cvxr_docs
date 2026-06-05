@@ -73,7 +73,7 @@ These dispatch to the corresponding `CVXR` atoms (e.g., `abs(x)`
 calls `Abs`, `sum(x)` calls `SumEntries`).
 
 ::: {.callout-note}
-As of `CVXR` 1.9.0, the trigonometric and hyperbolic functions `sin()`,
+As of `CVXR` 1.9.1, the trigonometric and hyperbolic functions `sin()`,
 `cos()`, `tan()`, `sinh()`, `tanh()`, `asinh()`, and `atanh()` are supported as
 **smooth atoms** for disciplined nonlinear programs (see [Smooth functions for
 DNLP](#smooth-functions-for-dnlp)); they are *not* part of the convex (DCP)
@@ -608,7 +608,7 @@ knitr::kable(d, "html", escape = FALSE,
 
 ### Smooth functions for DNLP {#smooth-functions-for-dnlp}
 
-The functions below are **smooth atoms** added in `CVXR` 1.9.0 for
+The functions below are **smooth atoms** added in `CVXR` 1.9.1 for
 [disciplined nonlinear programming](../examples/dnlp/tutorial.qmd) (DNLP). They
 are twice continuously differentiable but are *not* part of the convex (DCP)
 grammar, so they may be used only in smooth (possibly nonconvex) problems solved

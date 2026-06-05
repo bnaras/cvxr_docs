@@ -26,7 +26,7 @@ if installed.
 ## Recent Releases
 
 CVXR 1.8.x was a ground-up rewrite using R's S7 class system, making the R
-implementation isomorphic with CVXPY. CVXR 1.9.x adds disciplined nonlinear
+implementation isomorphic with CVXPY. CVXR 1.9.1 adds disciplined nonlinear
 programming (DNLP) and more. See [What's New](whatsnew.qmd) for a
 version-by-version summary, the new API, and the migration guide.
 :::
@@ -70,7 +70,7 @@ Documentation](https://www.cvxgrp.org/CVXR).
 [Github](https://github.com/cvxgrp/CVXR). The 1.8.x series was a major
 release implementing a complete rewrite using R's S7 class system,
 making `CVXR` isomorphic with CVXPY and adding support for DGP, DPP, and
-DQCP; the 1.9.x series adds disciplined nonlinear programming (DNLP).
+DQCP; the 1.9.1 release adds disciplined nonlinear programming (DNLP).
 More details can be found in [What's New](whatsnew.qmd).
 
 ## Installing `CVXR`

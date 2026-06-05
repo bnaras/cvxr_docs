@@ -5,12 +5,12 @@ params:
   mode: ignore
   testdata_dir: test_data_1.8
   data_dir: dnlp_tutorial
-  min_version: 1.9.0
+  min_version: 1.9.1
 ---
 
 ```{r feature-gate, echo = FALSE}
 ## Show feature code regardless of version, but only EVALUATE it when DNLP is
-## available: CVXR >= 1.9.0, the sparsediff derivative package, and an NLP
+## available: CVXR >= 1.9.1, the sparsediff derivative package, and an NLP
 ## solver. Uno is the realistic R solver (it is headed for CRAN and bundles its
 ## own MUMPS/HiGHS); the `ipopt` package is optional (not on CRAN), so any
 ## IPOPT-specific chunk below is additionally guarded with requireNamespace.
@@ -36,7 +36,7 @@ library(CVXR)
 
 ## Introduction
 
-**Disciplined Nonlinear Programming (DNLP)**, introduced in `CVXR` 1.9.0,
+**Disciplined Nonlinear Programming (DNLP)**, introduced in `CVXR` 1.9.1,
 extends `CVXR` beyond convex optimization to **smooth nonlinear programs**, which
 need not be convex. You build the problem from differentiable atoms, check it
 with `is_dnlp()`, and solve it with `psolve(prob, nlp = TRUE)`. Every DCP problem

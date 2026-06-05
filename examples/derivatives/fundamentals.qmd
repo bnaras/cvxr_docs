@@ -5,7 +5,7 @@ params:
   mode: ignore
   testdata_dir: test_data_1.8
   data_dir: deriv_fundamentals
-  min_version: 1.8.2-1
+  min_version: 1.9.1
 ---
 
 ```{r feature-gate, echo = FALSE}

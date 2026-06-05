@@ -7,16 +7,20 @@ This page highlights notable user-facing changes in each release of the S7
 rewrite of `CVXR`, newest first. For the complete, fine-grained list see the
 package `NEWS` file (`news(package = "CVXR")`).
 
-* [CVXR 1.9.x](#cvxr-19x) — disciplined nonlinear programming, bounds
-  propagation, new atoms
-* [CVXR 1.8.2-1](#cvxr-1821) — derivatives and sensitivity analysis
+* [CVXR 1.9.1](#cvxr-19x) — disciplined nonlinear programming, derivatives,
+  bounds propagation, new atoms
 * [CVXR 1.8.x](#cvxr-18x) — the ground-up S7 rewrite
 
-# CVXR 1.9.x {#cvxr-19x}
+# CVXR 1.9.1 {#cvxr-19x}
+
+`CVXR` 1.9.1 is the first CRAN release since 1.8.2 and is a large one: it folds
+in the internal 1.8.2-1 and 1.9.0 development cycles. Its headline additions are
+disciplined nonlinear programming, a derivative / sensitivity-analysis API, and
+interval-bounds propagation with native solver-bound support.
 
 ## Disciplined Nonlinear Programming (DNLP)
 
-`CVXR` 1.9.0 extends modeling beyond convex optimization to **smooth nonlinear
+`CVXR` 1.9.1 extends modeling beyond convex optimization to **smooth nonlinear
 programs**, which need not be convex. You build the problem from differentiable
 atoms, check it with `is_dnlp()`, and solve it with `psolve(prob, nlp = TRUE)`.
 Every DCP problem is also a DNLP, and the disciplined nonlinear grammar
@@ -46,6 +50,36 @@ psolve(prob, nlp = TRUE)            # solved through the NLP path
   CVXPY.
 
 See the [DNLP Tutorial](examples/dnlp/tutorial.qmd) for worked examples.
+
+## Derivatives and sensitivity analysis
+
+`CVXR` 1.9.1 adds the ability to **differentiate the solution map** of a
+disciplined problem — to see how the optimal solution responds to small changes
+in the parameters (sensitivity analysis) and to compute gradients of scalar
+functions of the solution. Request derivatives at solve time with
+`requires_grad = TRUE`.
+
+**Forward mode** (perturb parameters, see the change in the solution):
+
+```{r deriv-fwd, eval = FALSE}
+psolve(problem, requires_grad = TRUE)
+delta(a) <- da                      # perturbation of parameter a
+derivative(problem)                 # propagate forward
+delta(x)                            # resulting change in variable x
+```
+
+**Reverse mode** (gradient of the solution with respect to parameters):
+
+```{r deriv-rev, eval = FALSE}
+psolve(problem, requires_grad = TRUE)
+backward(problem)                   # propagate backward
+gradient(a)                         # d(solution) / d(a)
+```
+
+The chain rule is wired through the `Dgp2Dcp` (log/exp) and `Complex2Real`
+reductions, so geometric and complex problems differentiate too. See the
+[Derivatives](examples/derivatives/fundamentals.qmd) examples and
+[Sensitivity Analysis](examples/dpp/sensitivity-analysis.qmd).
 
 ## Bounds propagation and richer variable bounds
 
@@ -87,42 +121,10 @@ under `gp = TRUE`.
 
 ## Performance
 
-Canonicalization and solving are now faster than the 1.8.2-1 baseline (roughly
-5–13% lower wall-clock on solve-dominated problems such as many small
+Canonicalization and solving are now faster than the 1.8.2 CRAN release
+(roughly 5–13% lower wall-clock on solve-dominated problems such as many small
 constraints, SOCPs, and Kalman smoothing), with deterministic memory allocation
 unchanged.
-
-# CVXR 1.8.2-1 {#cvxr-1821}
-
-## Derivatives and sensitivity analysis
-
-`CVXR` 1.8.2-1 added the ability to **differentiate the solution map** of a
-disciplined problem — to see how the optimal solution responds to small changes
-in the parameters (sensitivity analysis) and to compute gradients of scalar
-functions of the solution. Request derivatives at solve time with
-`requires_grad = TRUE`.
-
-**Forward mode** (perturb parameters, see the change in the solution):
-
-```{r deriv-fwd, eval = FALSE}
-psolve(problem, requires_grad = TRUE)
-delta(a) <- da                      # perturbation of parameter a
-derivative(problem)                 # propagate forward
-delta(x)                            # resulting change in variable x
-```
-
-**Reverse mode** (gradient of the solution with respect to parameters):
-
-```{r deriv-rev, eval = FALSE}
-psolve(problem, requires_grad = TRUE)
-backward(problem)                   # propagate backward
-gradient(a)                         # d(solution) / d(a)
-```
-
-The chain rule is wired through the `Dgp2Dcp` (log/exp) and `Complex2Real`
-reductions, so geometric and complex problems differentiate too. See the
-[Derivatives](examples/derivatives/fundamentals.qmd) examples and
-[Sensitivity Analysis](examples/dpp/sensitivity-analysis.qmd).
 
 # CVXR 1.8.x {#cvxr-18x}
 
@@ -241,7 +243,7 @@ and `%<<%` operators are still available for backward compatibility).
 | XPRESS | `xpress` | Conic/QP | LP, QP, SOCP, MI |
 
 Smooth nonlinear programs additionally use the `IPOPT` and `UNO` NLP solvers
-(see [CVXR 1.9.x](#cvxr-19x)).
+(see [CVXR 1.9.1](#cvxr-19x)).
 
 ## New Atoms and Functions
 
