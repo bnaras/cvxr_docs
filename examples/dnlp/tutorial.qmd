@@ -11,7 +11,7 @@ params:
 ```{r feature-gate, echo = FALSE}
 ## Show feature code regardless of version, but only EVALUATE it when DNLP is
 ## available: CVXR >= 1.9.1, the sparsediff derivative package, and an NLP
-## solver. Uno is the realistic R solver (it is headed for CRAN and bundles its
+## solver. Uno is the realistic R solver (it is on CRAN and bundles its
 ## own MUMPS/HiGHS); the `ipopt` package is optional (not on CRAN), so any
 ## IPOPT-specific chunk below is additionally guarded with requireNamespace.
 run_ok <- utils::packageVersion("CVXR") >= numeric_version(params$min_version) &&
@@ -60,7 +60,7 @@ c(sparsediff = requireNamespace("sparsediff", quietly = TRUE),
 ```
 
 This vignette uses **Uno** — the solver most R users will have, since it is
-headed for CRAN and bundles its own linear-algebra backend. We name it
+installable from CRAN and bundles its own linear-algebra backend. We name it
 explicitly with `solver = "UNO"` and quiet it with `logger = "SILENT"`. (The
 optional `ipopt` package provides IPOPT, which `nlp = TRUE` prefers when present;
 see *Solvers* below.)

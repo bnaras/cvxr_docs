@@ -42,8 +42,7 @@ psolve(prob, nlp = TRUE)            # solved through the NLP path
 * The NLP path is powered by automatic derivatives from the optional
   `sparsediff` package and a nonlinear solver. Two are supported, both in
   `Enhances` (so guard their use with `requireNamespace()`): **UNO** (the `Uno`
-  package — headed for CRAN, self-contained, and the practical default for R
-  users) and **IPOPT** (the `ipopt` package — not on CRAN owing to licensing, so
+  package — installable from CRAN and the default for R users) and **IPOPT** (the `ipopt` package — not on CRAN owing to licensing, so
   rarely installed). With `nlp = TRUE`, IPOPT is preferred when present
   (matching CVXPY), otherwise UNO is used. The `UNO` path also recovers
   constraint duals via `dual_value()`; the `IPOPT` path returns none, matching

@@ -59,8 +59,8 @@ is a tuning parameters. As $\alpha \rightarrow 1$ (but $<1$), the
 solution approaches the lasso solution. The default value used is
 $\alpha = 0.5.$
 
-An R package for the pliable lasso is forthcoming from the
-authors. Nevertheless, the pliable lasso is an excellent example to
+See [Tibshirani and Friedman (2020)](https://doi.org/10.1080/10618600.2019.1648271)
+for details on the pliable lasso. It is an excellent example to
 highlight the prototyping capabilities of `CVXR` in research. Along
 the way, we also illustrate some additional atoms that are actually
 needed in this example. 
