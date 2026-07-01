@@ -9,6 +9,9 @@ project:
     - "examples/**/*.qmd"
     - "reference/**/*.qmd"
 
+execute:
+  freeze: auto
+
 website:
   title: "CVXR"
   description: "Disciplined Convex Programming in R"
@@ -155,6 +158,8 @@ website:
             href: examples/dgp/pf-matrix-completion.qmd
           - text: "Rank-One NMF"
             href: examples/dgp/rank-one-nmf.qmd
+          - text: "Stochastically Ordered Survival Functions"
+            href: examples/dgp/survival-ordering.qmd
       - section: "DPP"
         contents:
           - text: "DPP Tutorial"
