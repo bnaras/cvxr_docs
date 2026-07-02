@@ -61,7 +61,7 @@ Faster Results](/cvxr_examples/speed/).
 neariso_fit <- function(y, lambda) {
     m <- length(y)
     beta <- Variable(m)
-    obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta)))
+    obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(-diff(beta)))
     prob <- Problem(Minimize(obj))
     psolve(prob)
     check_solver_status(prob)
@@ -117,19 +117,20 @@ in the same paper:
 $$
 \begin{array}{ll}
 \underset{\beta}{\mbox{minimize}} & \frac{1}{2}\sum_{i=1}^m (y_i -
-\beta_i)^2 + \lambda \sum_{i=1}^{m-2}(\beta_i - 2\beta_{i+1} + \beta_{i+2})_+ \end{array} 
+\beta_i)^2 + \lambda \sum_{i=1}^{m-2}(2\beta_{i+1} - \beta_i - \beta_{i+2})_+ \end{array}
 $$
 
-This replaces the first difference term with an approximation to the
-second derivative at $\beta_{i+1}$. In `CVXR`, the only change
-necessary is the penalty line: replacing `diff(x)` by 
+This replaces the first-difference term with a second difference at
+$\beta_{i+1}$ (an approximation to the second derivative), whose positive
+part penalizes concavity and so nudges the fit toward convex. In `CVXR`,
+the only change necessary is the penalty line: replacing `diff(x)` by
 `diff(x, differences = 2)`.
 
 ```{r}
 nearconvex_fit <- function(y, lambda) {
     m <- length(y)
     beta <- Variable(m)
-    obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(diff(beta, differences = 2)))
+    obj <- 0.5 * sum((y - beta)^2) + lambda * sum(pos(-diff(beta, differences = 2)))
     prob <- Problem(Minimize(obj))
     psolve(prob)
     check_solver_status(prob)
