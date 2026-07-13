@@ -87,6 +87,12 @@ install.packages("CVXR")
 An introductory vignette is installed with the package and can be
 viewed using `vignette("cvxr_intro", package = "CVXR")`.
 
+A full [hands-on tutorial book](https://bnaras.github.io/cvxr_tutorial/),
+*Convex Optimization in R Using CVXR* (prepared for useR! 2026), walks
+through the package step by step---from your first model through DCP,
+regression, portfolio optimization, and mixed-integer and nonlinear
+problems---with worked examples and exercises in every chapter.
+
 A large set of examples, many ported from `CVXPY`, are available on
 this site:
 

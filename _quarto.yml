@@ -31,6 +31,9 @@ website:
         href: index.qmd
       - text: "What's New"
         href: whatsnew.qmd
+      - text: "Tutorial"
+        href: "https://bnaras.github.io/cvxr_tutorial/"
+        target: "_blank"
       - text: "Package Docs"
         href: "https://www.cvxgrp.org/CVXR"
     right:
