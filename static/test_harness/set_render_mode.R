@@ -18,10 +18,16 @@ library(fs)
 #'     testthat tests.
 #' @param mode which should be one of `"ignore"` (default), `"save"`
 #'     or `"test"`
-#' @param testdata_dir a directory under static directory of the
-#'     site for test data
+#' @param testdata_dir a directory under the site's static directory
+#'     holding baselines for ONE CVXR version, named for that version:
+#'     `test_data/1.8.2`, `test_data/1.9.1`, ... The default is the
+#'     newest set, so `set_params("test")` checks against the most
+#'     recent baseline; pass an older one explicitly to reach further
+#'     back. NOTE that the save-mode chunks in the documents call
+#'     `dir.create()` NON-recursively, so `static/<testdata_dir>` must
+#'     already exist before a save pass or every save errors.
 #'
-set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test_data_1.8") {
+set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test_data/1.9.1") {
     mode  <- match.arg(mode)
     ## Find all .qmd files in the examples/ and reference/ directories
     qmds  <- c(

@@ -3,7 +3,7 @@ title: "Dealing with Solver-Specific Parameters"
 author: Anqi Fu, David Kang and Balasubramanian Narasimhan
 params:
   mode: ignore
-  testdata_dir: test_data_1.8
+  testdata_dir: test_data/1.9.1
   data_dir: solver_specific
 ---
 

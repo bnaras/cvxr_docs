@@ -3,7 +3,7 @@ title: DGP Fundamentals
 author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
-  testdata_dir: test_data_1.8
+  testdata_dir: test_data/1.9.1
   data_dir: dgp_fundamentals
 ---
 

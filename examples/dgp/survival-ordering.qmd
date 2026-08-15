@@ -3,7 +3,7 @@ title: Stochastically Ordered Survival Functions
 author: "Balasubramanian Narasimhan"
 params:
   mode: ignore
-  testdata_dir: test_data_1.8
+  testdata_dir: test_data/1.9.1
   data_dir: dgp_survival_ordering
 ---
 

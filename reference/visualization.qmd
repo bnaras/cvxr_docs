@@ -3,7 +3,7 @@ title: Visualization
 author: "Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
 params:
   mode: ignore
-  testdata_dir: test_data_1.8
+  testdata_dir: test_data/1.9.1
   data_dir: visualization
 ---
 
