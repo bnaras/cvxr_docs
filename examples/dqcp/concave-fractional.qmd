@@ -66,11 +66,19 @@ x <- Variable()
 concave_fractional_fn <- sqrt(x) / exp(x)
 problem <- Problem(Maximize(concave_fractional_fn))
 cat("Is DQCP?", is_dqcp(problem), "\n")
-result <- psolve(problem, qcp = TRUE)
+result <- psolve(problem, qcp = TRUE, solver = "SCS")
 check_solver_status(problem)
 cat("Optimal value:", result, "\n")
 cat("x:", value(x), "\n")
 ```
+
+Note the explicit `solver = "SCS"`. DQCP bisection necessarily generates
+feasibility subproblems that are *marginally* infeasible as the query
+point approaches the optimal ratio, and interior-point solvers can fail
+to certify infeasibility there: with the default solver (Clarabel), this
+example stalls and errors with "Max iterations hit during bisection" —
+in CVXPY just as in `CVXR`. First-order solvers such as SCS certify the
+near-boundary subproblems cleanly, so the bisection converges.
 
 ```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}
 if (params$mode == "save") {

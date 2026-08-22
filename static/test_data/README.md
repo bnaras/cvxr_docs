@@ -12,16 +12,20 @@ static/test_data/
   1.9.2/    64 documents   CVXR 1.9.2 + clarabel 0.11.3   (2026-08-22)
 ```
 
-`1.9.2/` holds 81 `.RDS` against `1.9.1/`'s 82. The one absent is
-`dqcp_concave_fractional/concave_fractional1.RDS`: that document
-(`maximize sqrt(x)/exp(x)`) errors with "Max iterations hit during bisection"
-before reaching its save chunk. That is not a CVXR fault — **CVXPY 1.9.1 and
-1.9.2 both fail on the same problem with the same message**, and CVXR 1.9.1 was
-the outlier for succeeding. The document needs a note or a different example.
+`1.9.2/` holds 82 `.RDS`, matching `1.9.1/`. The last one,
+`dqcp_concave_fractional/concave_fractional1.RDS`, was generated 2026-08-22
+after the document pinned `solver = "SCS"`: with the default solver that
+example (`maximize sqrt(x)/exp(x)`) errors with "Max iterations hit during
+bisection" — **CVXPY 1.9.1 and 1.9.2 fail identically with their default**,
+and CVXR 1.9.1 was the outlier for succeeding. The cause is that bisection's
+feasibility subproblems become marginally infeasible near the optimal ratio,
+where Clarabel ends in `NumericalError` instead of certifying; SCS and ECOS
+certify cleanly. The document now says so.
 
-Verified after generation: a `test` pass against `1.9.2/` renders 71/72, the
-one failure being that same document. A baseline set that has not been checked
-against itself has not been checked.
+Verified after generation: a `test` pass against `1.9.2/` renders clean —
+71/72 in the bulk run plus the regenerated document individually (its two
+`expect_equal` at 1e-10 observed passing in the rendered output). A baseline
+set that has not been checked against itself has not been checked.
 
 ## Provenance
 
