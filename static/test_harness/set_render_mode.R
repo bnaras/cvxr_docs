@@ -20,15 +20,40 @@ library(fs)
 #'     or `"test"`
 #' @param testdata_dir a directory under the site's static directory
 #'     holding baselines for ONE CVXR version, named for that version:
-#'     `test_data/1.8.2`, `test_data/1.9.1`, ... The default is the
-#'     newest set, so `set_params("test")` checks against the most
-#'     recent baseline; pass an older one explicitly to reach further
-#'     back. NOTE that the save-mode chunks in the documents call
+#'     `test_data/1.8.2`, `test_data/1.9.1`, ... For `mode = "test"`
+#'     this argument is REQUIRED: name the set you are checking
+#'     against. For `mode = "save"` it defaults to a directory named
+#'     for the installed CVXR version, which is the set being
+#'     produced. For `mode = "ignore"` it is not used and each
+#'     document's existing value is left untouched. NOTE that the save-mode chunks in the documents call
 #'     `dir.create()` NON-recursively, so `static/<testdata_dir>` must
 #'     already exist before a save pass or every save errors.
 #'
-set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test_data/1.9.1") {
+set_params  <- function(mode = c("ignore", "save", "test"),
+                        testdata_dir = NULL) {
     mode  <- match.arg(mode)
+    if (is.null(testdata_dir)) {
+        if (mode == "test") {
+            ## No default on purpose: checking against an unstated baseline
+            ## is how a stale default silently tested the wrong version
+            ## (the previous hard-coded "test_data/1.9.1"). Say what you
+            ## are comparing against.
+            stop("mode = \"test\" requires an explicit `testdata_dir` ",
+                 "naming the baseline set to check against, e.g. ",
+                 "set_params(\"test\", \"test_data/1.9.2\").")
+        }
+        if (mode == "save") {
+            ## Baselines belong to the CVXR that produced them (see
+            ## static/test_data/README.md), so the save default is named
+            ## for the INSTALLED version.
+            testdata_dir  <- file.path(
+                "test_data", as.character(utils::packageVersion("CVXR")))
+            message("Saving baselines to static/", testdata_dir,
+                    " (installed CVXR version)")
+        }
+        ## mode "ignore": documents never read testdata_dir, so each
+        ## file's existing value is left untouched.
+    }
     ## Find all .qmd files in the examples/ and reference/ directories
     qmds  <- c(
         list.files(file.path(here(), "examples"), pattern = "\\.qmd$",
@@ -46,7 +71,7 @@ set_params  <- function(mode = c("ignore", "save", "test"), testdata_dir = "test
         if (length(mode_line) == 0) next
         yaml[mode_line]  <- paste("  mode:", mode)
         testdata_dir_line  <- grep("^  testdata_dir:", yaml)
-        if (length(testdata_dir_line) > 0) {
+        if (!is.null(testdata_dir) && length(testdata_dir_line) > 0) {
             yaml[testdata_dir_line]  <- paste("  testdata_dir:", testdata_dir)
         }
         lines[yaml_lines]  <- yaml
