@@ -163,6 +163,8 @@ website:
             href: examples/dgp/rank-one-nmf.qmd
           - text: "Stochastically Ordered Survival Functions"
             href: examples/dgp/survival-ordering.qmd
+          - text: "When It Isn't a GP"
+            href: examples/dgp/when-its-not-a-gp.qmd
       - section: "DPP"
         contents:
           - text: "DPP Tutorial"
