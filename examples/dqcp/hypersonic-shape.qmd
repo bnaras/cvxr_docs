@@ -3,7 +3,7 @@ title: "Aerospace Design via Quasiconvex Optimization"
 author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
-  testdata_dir: test_data/1.9.1
+  testdata_dir: test_data/1.9.2
   data_dir: dqcp_hypersonic_shape
 ---
 

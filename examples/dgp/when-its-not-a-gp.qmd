@@ -3,7 +3,7 @@ title: When It Isn't a Geometric Program
 author: "Balasubramanian Narasimhan"
 params:
   mode: ignore
-  testdata_dir: test_data/1.9.1
+  testdata_dir: test_data/1.9.2
   data_dir: dgp_not_a_gp
 ---
 

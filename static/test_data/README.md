@@ -9,11 +9,19 @@ document's own `data_dir` YAML parameter.
 static/test_data/
   1.8.2/    63 documents   CVXR 1.8.2
   1.9.1/    64 documents   CVXR 1.9.1 + clarabel 0.11.2   (2026-08-14)
-  1.9.2/    64 documents   CVXR 1.9.2 + clarabel 0.11.3   (2026-08-22)
+  1.9.2/    65 documents   CVXR 1.9.2 + clarabel 0.11.3   (2026-08-22)
 ```
 
-`1.9.2/` holds 82 `.RDS`, matching `1.9.1/`. The last one,
-`dqcp_concave_fractional/concave_fractional1.RDS`, was generated 2026-08-22
+`1.9.2/` is the set the documents check against: every `.qmd` carries
+`testdata_dir: test_data/1.9.2` as of 2026-08-25. It holds 83 `.RDS`, one more
+than `1.9.1/` — the extra is `dgp_not_a_gp/not_a_gp1.RDS`, added 2026-08-25
+with the `examples/dgp/when-its-not-a-gp.qmd` example, generated under the same
+CVXR 1.9.2 + clarabel 0.11.3 pairing and verified by a `test` pass. `1.9.1/`
+has no counterpart for it, so that set is now one document short of the
+documents in the tree.
+
+Of the 82 shared with `1.9.1/`, the last to be generated was
+`dqcp_concave_fractional/concave_fractional1.RDS`, written 2026-08-22
 after the document pinned `solver = "SCS"`: with the default solver that
 example (`maximize sqrt(x)/exp(x)`) errors with "Max iterations hit during
 bisection" — **CVXPY 1.9.1 and 1.9.2 fail identically with their default**,
