@@ -3,7 +3,7 @@ title: Disciplined Nonlinear Programming
 author: "CVXPY Developers and Balasubramanian Narasimhan"
 params:
   mode: ignore
-  testdata_dir: test_data/1.9.2
+  testdata_dir: test_data/1.9.3
   data_dir: dnlp_tutorial
   min_version: 1.9.1
 ---
