@@ -1,13 +1,18 @@
 ## Canonical solver-capabilities table — single source of truth, sourced by
 ## index.qmd and examples/solvers/using-other-solvers.qmd so the two pages can
 ## never drift apart. Each page supplies its own knitr::kable() styling; this
-## file only defines the data frame `solver_tbl`.
+## file defines the data frame `solver_tbl` and its footnote `solver_tbl_note`.
 ##
-## Provenance: the capability values are those of the dedicated solver page
-## (examples/solvers/using-other-solvers.qmd), the authoritative reference.
-## Columns: Solver, R Package (HTML links), LP, QP, SOCP, SDP, EXP, MIP.
+## Provenance: measured, not transcribed. Each cell is a named-solver solve
+## (`psolve(prob, solver = <name>)`) of a small problem of that class in the
+## CVXR 1.9.2.9300 solver-selection matrix (2026-10-15); POW is a genuine
+## PowCone3D constraint (power(x, p) with rational p reduces to SOC, so it does
+## not test the power cone). A check means the solve returned an optimal status.
+## Columns: Solver, R Package (HTML links), LP, QP, SOCP, SDP, EXP, POW, MILP,
+## MIQP, MISOCP.
 
 check <- "\U2713"
+no <- " "
 
 solver_tbl <- tibble::tibble(
     Solver = c("CLARABEL", "SCS", "MOSEK", "ECOS", "ECOS_BB",
@@ -29,21 +34,38 @@ solver_tbl <- tibble::tibble(
         '<a href="https://cran.r-project.org/package=piqp"><code>piqp</code></a>',
         '<a href="https://www.scipopt.org/"><code>scip</code></a>',
         '<a href="https://www.fico.com/en/products/fico-xpress-optimization"><code>xpress</code></a>'),
-    LP   = rep(check, 15),
-    QP   = c(check, check, check, " ", " ",
-             check, " ", " ", check,
-             " ", check, check, check, " ", check),
-    ## CPLEX SOCP is blank: CVXR has no CPLEX SOC path (Rcplex lacks CPXaddqconstr).
-    SOCP = c(check, check, check, check, check,
-             check, " ", " ", " ",
-             check, " ", " ", " ", check, check),
-    SDP  = c(check, check, check, " ", " ",
-             " ", " ", " ", " ",
-             " ", " ", " ", " ", " ", " "),
-    EXP  = c(check, check, check, check, check,
-             " ", " ", " ", " ",
-             " ", " ", " ", " ", " ", " "),
-    MIP  = c(" ", " ", check, " ", check,
-             check, " ", check, check,
-             " ", " ", check, " ", check, check)
+    ##          CLARABEL SCS    MOSEK  ECOS   ECOS_BB
+    ##          GUROBI   GLPK   GLPK_MI HIGHS
+    ##          CVXOPT   OSQP   CPLEX  PIQP   SCIP   XPRESS
+    LP     = rep(check, 15),
+    QP     = c(check, check, check, check, check,
+               check, no,    no,    check,
+               check, check, check, check, check, check),
+    SOCP   = c(check, check, check, check, check,
+               check, no,    no,    no,
+               check, no,    check, no,    check, check),
+    SDP    = c(check, check, check, no,    no,
+               no,    no,    no,    no,
+               check, no,    no,    no,    no,    no),
+    EXP    = c(check, check, check, check, check,
+               no,    no,    no,    no,
+               no,    no,    no,    no,    no,    no),
+    POW    = c(check, check, check, no,    no,
+               no,    no,    no,    no,
+               no,    no,    no,    no,    no,    no),
+    MILP   = c(no,    no,    check, no,    check,
+               check, no,    check, check,
+               no,    no,    check, no,    check, check),
+    MIQP   = c(no,    no,    check, no,    check,
+               check, no,    no,    no,
+               no,    no,    check, no,    check, check),
+    MISOCP = c(no,    no,    check, no,    check,
+               check, no,    no,    no,
+               no,    no,    check, no,    check, check)
+)
+
+solver_tbl_note <- c(
+    "QP: solvers with a quadratic-objective interface receive the objective directly; the other conic solvers solve a second-order-cone reformulation.",
+    "Without a commercial solver, mixed-integer problems can use HIGHS or GLPK_MI (MILP only), SCIP (MILP, MIQP, MISOCP) or ECOS_BB.",
+    "ECOS_BB is used only when named, as in psolve(prob, solver = \"ECOS_BB\")."
 )

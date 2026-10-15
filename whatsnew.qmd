@@ -88,6 +88,8 @@ handle this problem."
   rejects is now an error rather than being dropped.
 * **Gurobi** `warm_start = TRUE` seeds the start point from the variables'
   values.
+* **CPLEX** returns dual values for continuous problems with second-order
+  cones; they were all missing.
 * **SCS** exposes the infeasibility certificate of an infeasible solve
   through `dual_value()`.
 * `solver_stats(prob)@extra_stats` now carries the raw solver result for
@@ -405,23 +407,10 @@ and `%<<%` operators are still available for backward compatibility).
 
 ### Supported solvers
 
-| Solver | R Package | Type | Problem Classes |
-|--------|-----------|------|-----------------|
-| CLARABEL | `clarabel` (>= 0.11.2) | Conic | LP, QP, SOCP, SDP, ExpCone, PowCone |
-| SCS | `scs` (>= 3.2.7) | Conic | LP, QP, SOCP, SDP, ExpCone, PowCone |
-| MOSEK | `Rmosek` (>= 11.1.1) | Conic | LP, QP, SOCP, SDP, ExpCone, PowCone |
-| ECOS | `ECOSolveR` (>= 0.6) | Conic | LP, SOCP, ExpCone |
-| ECOS_BB | `ECOSolveR` (>= 0.6) | Conic | LP, SOCP, ExpCone + MI |
-| GUROBI | `gurobi` (>= 13.0.1) | Conic/QP | LP, QP, SOCP, MI |
-| GLPK | `Rglpk` (>= 0.6.5.1) | Conic | LP |
-| GLPK_MI | `Rglpk` (>= 0.6.5.1) | Conic | LP, MILP |
-| HIGHS | `highs` (>= 1.12.0.3) | Conic/QP | LP, QP, MILP |
-| CVXOPT | `cccp` (>= 0.3.3) | Conic | LP, SOCP |
-| OSQP | `osqp` (>= 1.0.0) | QP | LP, QP |
-| CPLEX | `Rcplex` (>= 0.3.8) | Conic/QP | LP, QP, SOCP, MI |
-| PIQP | `piqp` (>= 0.6.2) | QP | LP, QP |
-| SCIP | `scip` | Conic | LP, MILP, SOCP, MI-SOCP |
-| XPRESS | `xpress` | Conic/QP | LP, QP, SOCP, MI |
+The current table of solvers and the problem classes each one handles is
+kept on the
+[Solver Capabilities](examples/solvers/using-other-solvers.qmd#solver-capabilities)
+page.
 
 Smooth nonlinear programs additionally use the `IPOPT` and `UNO` NLP solvers
 (see [CVXR 1.9.1](#cvxr-19x)).

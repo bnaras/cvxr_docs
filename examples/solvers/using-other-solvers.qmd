@@ -29,23 +29,25 @@ open-source solvers and optional commercial ones, plus two nonlinear-programming
   splitting, effective for large-scale problems.
 - [OSQP](https://www.osqp.org), for quadratic and linear programs.
 - [HiGHS](https://highs.dev/), for linear, quadratic, and
-  mixed-integer programs.
+  mixed-integer linear programs.
 - [ECOS / ECOS_BB](https://github.com/embotech/ecos), an interior-point
-  solver for second-order cone programs (ECOS_BB adds
-  mixed-integer support).
+  solver for second-order and exponential cone programs (ECOS_BB adds
+  mixed-integer support and is used only when named).
 - [GLPK / GLPK_MI](https://www.gnu.org/software/glpk/), for linear
   programs and mixed-integer linear programs.
-- [CVXOPT](https://cvxopt.org/), for linear and second-order cone programs.
+- [CVXOPT](https://cvxopt.org/), for linear, second-order cone, and
+  semidefinite programs.
 - [PIQP](https://predict-epfl.github.io/piqp/), a proximal
   interior-point solver for quadratic programs.
-- [SCIP](https://www.scipopt.org/), for LP, mixed-integer LP, and
-  (mixed-integer) second-order cone programs. Free for academic and
+- [SCIP](https://www.scipopt.org/), for (mixed-integer) LP, QP, and
+  second-order cone programs. Free for academic and
   non-commercial use; installed from r-universe.
 
 ### Commercial Solvers
 
-- [MOSEK](https://www.mosek.com/), supporting LP, QP, SOCP, SDP, and
-  exponential/power cone programs. Free academic licenses available.
+- [MOSEK](https://www.mosek.com/), supporting LP, QP, SOCP, SDP,
+  exponential/power cone, and mixed-integer programs. Free academic licenses
+  available.
 - [Gurobi](https://www.gurobi.com/), supporting LP, QP, SOCP, and
   mixed-integer programs. Free academic licenses available.
 - [CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio),
@@ -77,7 +79,8 @@ source(here::here("_solver_table.R"))
 knitr::kable(solver_tbl, format = "html", escape = FALSE,
              caption = "Solver Capabilities") |>
     kable_styling("striped") |>
-    column_spec(1:8, background = "#ececec")
+    column_spec(seq_along(solver_tbl), background = "#ececec") |>
+    footnote(general = solver_tbl_note, general_title = "")
 ```
 
 ## Installing Commercial Solvers
