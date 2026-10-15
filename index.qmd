@@ -25,12 +25,12 @@ if installed.
 ::: {.callout-note}
 ## Recent Releases
 
-CVXR 1.8.x was a ground-up rewrite using R's S7 class system, making the R
-implementation isomorphic with CVXPY. CVXR 1.9.1 adds disciplined nonlinear
-programming (DNLP) and more; CVXR 1.9.2 is a correctness release that also
-overhauls solver options and speeds up solves; CVXR 1.9.3 fixes further
-wrong answers, makes matrix norms agree with base R, and chooses solvers as
-CVXPY 1.9 does. See
+CVXR 1.9.3 fixes further wrong answers, makes matrix norms agree with base
+R, and chooses solvers as CVXPY 1.9 does. CVXR 1.9.2 is a correctness
+release that also overhauls solver options and speeds up solves. CVXR 1.9.1
+adds disciplined nonlinear programming (DNLP) and more. CVXR 1.8.x was a
+ground-up rewrite using R's S7 class system, making the R implementation
+isomorphic with CVXPY. See
 [What's New](whatsnew.qmd) for a version-by-version summary, the new API,
 and the migration guide.
 :::
@@ -71,13 +71,13 @@ For the latest news, please see the [Package
 Documentation](https://www.cvxgrp.org/CVXR).
 
 `CVXR` continues to be developed on
-[Github](https://github.com/cvxgrp/CVXR). The 1.8.x series was a major
-release implementing a complete rewrite using R's S7 class system,
-making `CVXR` isomorphic with CVXPY and adding support for DGP, DPP, and
-DQCP; the 1.9.1 release adds disciplined nonlinear programming (DNLP); the
-1.9.2 release fixes correctness issues, overhauls solver options, and speeds
-up solves; and the 1.9.3 release fixes further wrong answers, makes matrix
-norms agree with base R, and chooses solvers as CVXPY 1.9 does. More details can be found in [What's New](whatsnew.qmd).
+[Github](https://github.com/cvxgrp/CVXR). The 1.9.3 release fixes further
+wrong answers, makes matrix norms agree with base R, and chooses solvers as
+CVXPY 1.9 does; the 1.9.2 release fixes correctness issues, overhauls solver
+options, and speeds up solves; the 1.9.1 release adds disciplined nonlinear
+programming (DNLP); and the 1.8.x series was a major release implementing a
+complete rewrite using R's S7 class system, making `CVXR` isomorphic with
+CVXPY and adding support for DGP, DPP, and DQCP. More details can be found in [What's New](whatsnew.qmd).
 
 ## Installing `CVXR`
 

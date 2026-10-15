@@ -132,6 +132,8 @@ d <- data.frame(
         "<code>norm_nuc(X)</code>",
         "<code>cvxr_norm(X, 2)</code>",
         "<code>sigma_max(X)</code>",
+        "<code>cvxr_norm(X, 1)</code>",
+        "<code>cvxr_norm(X, Inf)</code>",
         "<code>mixed_norm(X, p, q)</code>"
     ),
     Meaning = c(
@@ -145,12 +147,15 @@ d <- data.frame(
         "\\(\\sum_i \\sigma_i(X)\\)",
         "\\(\\sigma_{\\max}(X)\\)",
         "\\(\\sigma_{\\max}(X)\\)",
+        "\\(\\max_j \\sum_i |X_{ij}|\\) (largest column sum)",
+        "\\(\\max_i \\sum_j |X_{ij}|\\) (largest row sum)",
         "\\(\\left(\\sum_k \\left(\\sum_j |X_{jk}|^p\\right)^{q/p}\\right)^{1/q}\\)"
     ),
     Curvature = c("convex", "convex", "convex", "convex", "concave",
-                  "convex", "convex", "convex", "convex", "convex", "convex"),
-    Sign = c(rep("\\(\\geq 0\\)", 11)),
-    Domain = c(rep("", 4), "\\(x \\geq 0\\)", "", "", "", "", "", ""),
+                  "convex", "convex", "convex", "convex", "convex", "convex",
+                  "convex", "convex"),
+    Sign = c(rep("\\(\\geq 0\\)", 13)),
+    Domain = c(rep("", 4), "\\(x \\geq 0\\)", rep("", 8)),
     stringsAsFactors = FALSE
 )
 knitr::kable(d, "html", escape = FALSE,
@@ -295,6 +300,15 @@ For a vector expression `x`, `p_norm(x, 2)` gives the
 Euclidean norm. For a matrix expression `X`, `cvxr_norm(X, 2)` and
 `sigma_max(X)` give the spectral norm (largest singular value).
 
+With no `axis`, the matrix norms agree with base R's `norm()` and with
+CVXPY: `cvxr_norm(X, 1)` is the largest absolute column sum and
+`cvxr_norm(X, Inf)` the largest absolute row sum. The masked `norm(X, type)`
+accepts base R's types, so `norm(X, "O")`, `norm(X, "I")`, `norm(X, "F")`,
+`norm(X, "M")` and `norm(X, "2")` mean what they mean in base R. Any other `p`
+on a matrix is an error. For the entrywise norms of a matrix use `norm1(X)`
+(sum of absolute entries), `cvxr_norm(X, "fro")`, or `p_norm(X, p)`. A row
+vector is a 1 by n matrix, as in base R.
+
 The function `cvxr_norm(X, "fro")` is called
 the
 [Frobenius norm](https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm) and
@@ -321,8 +335,9 @@ expr_sum <- sum(expr1, expr2, expr3)
 
 ### Functions along an axis
 
-The functions `sum_entries`, `cvxr_norm`, `max_entries`, and `min_entries`
-can be applied along an axis.  Given an `m` by `n` expression `expr`,
+The functions `sum_entries`, `cvxr_norm`, `max_entries`, `min_entries`,
+`cvxr_mean`, `cvxr_var`, `cvxr_std` and `geo_mean` can be applied along an
+axis, and accept `keepdims` as in CVXPY.  Given an `m` by `n` expression `expr`,
 the syntax `func(expr, axis=1)` applies `func` to each row,
 returning a `m` by 1 expression.  The syntax `func(expr, axis=2)`
 applies `func` to each column, returning a 1 by `n` expression. For
@@ -456,18 +471,32 @@ knitr::kable(d, "html", escape = FALSE,
     column_spec(1:5, background = "#ececec")
 ```
 
-#### DQCP elementwise functions
+#### DQCP functions
 
 The following functions are quasiconvex or quasiconcave. They can be
-used in DQCP problems (pass `qcp = TRUE` to `psolve()`).
+used in DQCP problems (pass `qcp = TRUE` to `psolve()`). The first two
+are elementwise; the others return a scalar.
 
 ```{r, echo = FALSE}
 d <- data.frame(
-    Function = c("<code>ceil_expr(x)</code>", "<code>floor_expr(x)</code>"),
-    Meaning = c("\\(\\lceil x \\rceil\\)", "\\(\\lfloor x \\rfloor\\)"),
-    Curvature = c("quasiconvex", "quasiconcave"),
-    Sign = c("unknown", "unknown"),
-    Domain = c("", ""),
+    Function = c("<code>ceil_expr(x)</code>", "<code>floor_expr(x)</code>",
+                 "<code>condition_number(A)</code>",
+                 "<code>gen_lambda_max(A, B)</code>",
+                 "<code>dist_ratio(x, a, b)</code>",
+                 "<code>length_expr(x)</code>"),
+    Meaning = c("\\(\\lceil x \\rceil\\)", "\\(\\lfloor x \\rfloor\\)",
+                "\\(\\lambda_{\\max}(A) / \\lambda_{\\min}(A)\\)",
+                "largest generalized eigenvalue: \\(\\max \\lambda\\) with \\(Av = \\lambda Bv\\)",
+                "\\(\\|x - a\\|_2 / \\|x - b\\|_2\\)",
+                "index of the last nonzero entry of \\(x\\)"),
+    Curvature = c("quasiconvex", "quasiconcave", "quasiconvex", "quasiconvex",
+                  "quasiconvex", "quasiconvex"),
+    Sign = c("unknown", "unknown", "\\(\\geq 0\\)", "unknown", "\\(\\geq 0\\)",
+             "\\(\\geq 0\\)"),
+    Domain = c("", "", "\\(A \\in \\mathbf{S}^n_+\\)",
+               "\\(A \\in \\mathbf{S}^n\\), \\(B \\in \\mathbf{S}^n_+\\)",
+               "\\(a, b\\) constant, \\(\\|x - a\\|_2 \\leq \\|x - b\\|_2\\)",
+               "\\(x\\) a vector"),
     stringsAsFactors = FALSE
 )
 knitr::kable(d, "html", escape = FALSE,
@@ -490,9 +519,12 @@ d <- data.frame(
         "<code>cummax_expr(x, axis)</code>",
         "<code>cvxr_diff(x)</code>",
         "<code>cvxr_outer(x, y)</code>",
+        "<code>deep_flatten(x)</code>",
         "<code>diag(x)</code> / <code>diag(X)</code>",
         "<code>hstack(x, y, ...)</code>",
-        "<code>kronecker(X, Y)</code>",
+        "<code>kron(X, Y)</code>",
+        "<code>partial_trace(X, dims, axis)</code>",
+        "<code>partial_transpose(X, dims, axis)</code>",
         "<code>reshape_expr(x, c(m, n))</code>",
         "<code>upper_tri(X)</code>",
         "<code>vec(X)</code>",
@@ -506,9 +538,12 @@ d <- data.frame(
         "cumulative max along axis",
         "\\(k\\)th order differences",
         "\\(x y^T\\) (outer product)",
+        "flatten to a column vector (column-major)",
         "diagonal vector \\(\\leftrightarrow\\) diagonal matrix",
         "horizontal stack",
         "\\(X \\otimes Y\\) (Kronecker product)",
+        "trace out subsystem <code>axis</code> of a tensor product with factor sizes <code>dims</code>",
+        "transpose subsystem <code>axis</code> of a tensor product with factor sizes <code>dims</code>",
         "reshape to \\(m \\times n\\)",
         "upper triangular elements as vector",
         "vectorize (column-major)",
@@ -517,12 +552,14 @@ d <- data.frame(
     ),
     Curvature = c(
         "affine", "affine", "affine", "convex", "affine",
-        "affine (one arg constant)", "affine", "affine", "affine",
-        "affine", "affine", "affine", "affine", "affine"
+        "affine (one arg constant)", "affine", "affine", "affine", "affine",
+        "affine", "affine", "affine", "affine", "affine", "affine", "affine"
     ),
-    Sign = rep("unknown", 14),
+    Sign = rep("unknown", 17),
     Domain = c("", "\\(c\\) constant", "axis required", "axis required",
-               "", "one arg must be constant", "", "", "one arg must be constant",
+               "", "one arg must be constant", "", "", "", "one arg must be constant",
+               "\\(X\\) square, <code>nrow(X) == prod(dims)</code>",
+               "\\(X\\) square, <code>nrow(X) == prod(dims)</code>",
                "", "\\(X\\) square", "", "", ""),
     stringsAsFactors = FALSE
 )
@@ -590,13 +627,52 @@ These create constraint objects directly.
 ```{r, echo = FALSE}
 d <- data.frame(
     Function = c("<code>SOC(t, x)</code>", "<code>PSD(X)</code>", "<code>ExpCone(x, y, z)</code>",
-                 "<code>PowCone3D(x, y, z, alpha)</code>", "<code>FiniteSet(x, S)</code>"),
+                 "<code>PowCone3D(x, y, z, alpha)</code>",
+                 "<code>PowConeND(W, z, alpha, axis)</code>",
+                 "<code>FiniteSet(x, S)</code>",
+                 "<code>NonNeg(x)</code>", "<code>Zero(x)</code>",
+                 "<code>NonPos(x)</code> (deprecated)"),
     Meaning = c(
         "\\(\\|x\\|_2 \\leq t\\) (second-order cone)",
         "\\(X \\succeq 0\\) (positive semidefinite)",
         "\\(y e^{x/y} \\leq z,\\; y > 0\\) (exponential cone)",
         "\\(\\|z\\| \\leq x^\\alpha y^{1-\\alpha}\\) (power cone)",
-        "\\(x \\in S\\) (finite set membership)"
+        "\\(|z| \\leq \\prod_i W_i^{\\alpha_i}\\), \\(W \\geq 0\\), \\(\\sum_i \\alpha_i = 1\\), along <code>axis</code> (\\(n\\)-dimensional power cone)",
+        "\\(x \\in S\\) (finite set membership)",
+        "\\(x \\geq 0\\) elementwise",
+        "\\(x = 0\\) elementwise",
+        "\\(x \\leq 0\\) elementwise; use <code>x <= 0</code> or <code>NonNeg(-x)</code> instead"
+    ),
+    stringsAsFactors = FALSE
+)
+knitr::kable(d, "html", escape = FALSE,
+             col.names = c("Function", "Meaning")) |>
+    kable_styling("striped") |>
+    column_spec(1:2, background = "#ececec")
+```
+
+### Transforms
+
+Transforms build a new expression or objective out of a problem,
+constraints or several objectives. The `scalarize` functions take a list of
+`Minimize`/`Maximize` objectives and return one objective, for
+multi-objective problems.
+
+```{r, echo = FALSE}
+d <- data.frame(
+    Function = c("<code>indicator(constraints)</code>",
+                 "<code>partial_optimize(prob, opt_vars)</code>",
+                 "<code>scalarize$weighted_sum(objectives, weights)</code>",
+                 "<code>scalarize$max(objectives, weights)</code>",
+                 "<code>scalarize$log_sum_exp(objectives, weights, gamma)</code>",
+                 "<code>scalarize$targets_and_priorities(objectives, priorities, targets)</code>"),
+    Meaning = c(
+        "0 if every constraint holds, \\(+\\infty\\) otherwise (convex)",
+        "optimal value of <code>prob</code> over <code>opt_vars</code>, as an expression in the remaining variables",
+        "\\(\\sum_i w_i f_i\\)",
+        "\\(\\max_i w_i f_i\\)",
+        "\\(\\frac{1}{\\gamma}\\log \\sum_i e^{\\gamma w_i f_i}\\)",
+        "each objective penalized with weight |priority| beyond its target, optionally held within <code>limits</code>; a negative priority flips its sense"
     ),
     stringsAsFactors = FALSE
 )
@@ -643,6 +719,33 @@ concave) once every smooth subexpression is linearized. For instance,
 `is_smooth(sin(x))` is `TRUE` and `is_smooth(abs(x))` is `FALSE`, while
 `is_linearizable_convex(abs(x))` is `TRUE`. These are the per-expression rules
 that `is_dnlp()` composes over a whole problem.
+
+### Curvature queries
+
+`curvature(e)` returns the curvature of an expression as a string, checking,
+as CVXPY does, in this order: `"CONSTANT"`, `"AFFINE"`, `"CONVEX"`,
+`"CONCAVE"`, then the log-log curvatures (`"LOG-LOG AFFINE"`,
+`"LOG-LOG CONVEX"`, `"LOG-LOG CONCAVE"`), then the quasi curvatures
+(`"QUASILINEAR"`, `"QUASICONVEX"`, `"QUASICONCAVE"`), and `"UNKNOWN"` if
+none applies. `curvatures(e)` returns every curvature that applies, and
+`log_log_curvature(e)` returns only the log-log one. `is_diag(x)` reports
+whether a leaf was declared `diag = TRUE`.
+
+Each curvature also has a predicate returning `TRUE` or `FALSE`:
+`is_constant()`, `is_affine()`, `is_convex()`, `is_concave()`,
+`is_log_log_affine()`, `is_log_log_convex()`, `is_log_log_concave()`,
+`is_quasilinear()`, `is_quasiconvex()` and `is_quasiconcave()`. A whole
+problem is checked with `is_dcp()`, `is_dgp()`, `is_dqcp()`, `is_dpp()` and
+`is_dnlp()`.
+
+```{r, eval = FALSE}
+x <- Variable(pos = TRUE)
+y <- Variable(pos = TRUE)
+curvature(x * y)                # "LOG-LOG AFFINE"
+curvature(ceiling(Variable()))  # "QUASILINEAR"
+curvatures(sqrt(x))             # "CONCAVE", "LOG-LOG AFFINE", ...
+log_log_curvature(x + y)        # "LOG-LOG CONVEX"
+```
 
 ## Session Info
 
