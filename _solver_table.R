@@ -15,9 +15,10 @@ check <- "\U2713"
 no <- " "
 
 solver_tbl <- tibble::tibble(
-    Solver = c("CLARABEL", "SCS", "MOSEK", "ECOS", "ECOS_BB",
-               "GUROBI", "GLPK", "GLPK_MI", "HIGHS",
-               "CVXOPT", "OSQP", "CPLEX", "PIQP", "SCIP", "XPRESS"),
+    ## * = commercial, free academic license available (first footnote).
+    Solver = c("CLARABEL", "SCS", "MOSEK*", "ECOS", "ECOS_BB",
+               "GUROBI*", "GLPK", "GLPK_MI", "HIGHS",
+               "CVXOPT", "OSQP", "CPLEX*", "PIQP", "SCIP", "XPRESS*"),
     `R Package` = c(
         '<a href="https://cran.r-project.org/package=clarabel"><code>clarabel</code></a>',
         '<a href="https://cran.r-project.org/package=scs"><code>scs</code></a>',
@@ -65,7 +66,9 @@ solver_tbl <- tibble::tibble(
 )
 
 solver_tbl_note <- c(
+    "* Commercial solver; free academic licenses are available.",
     "QP: solvers with a quadratic-objective interface receive the objective directly; the other conic solvers solve a second-order-cone reformulation.",
     "Without a commercial solver, mixed-integer problems can use HIGHS or GLPK_MI (MILP only), SCIP (MILP, MIQP, MISOCP) or ECOS_BB.",
-    "ECOS_BB is used only when named, as in psolve(prob, solver = \"ECOS_BB\")."
+    "ECOS_BB is used only when named, as in psolve(prob, solver = \"ECOS_BB\").",
+    "Smooth nonlinear programs, psolve(prob, nlp = TRUE), use the separate NLP solvers Uno or IPOPT; see Using Other Solvers."
 )
