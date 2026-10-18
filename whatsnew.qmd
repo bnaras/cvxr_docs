@@ -42,13 +42,25 @@ you wrote.
 * `psolve(solver = "CLARABEL", warm_start = TRUE)` returned the previous
   optimum when the cones had changed.
 * A complex variable declared `PSD` or `NSD` lost its cone.
-* A matrix product by a 1 x 1 constant, as in `sum_entries(x, axis = 2)` of
-  a one-row expression, gave wrong answers or crashed R. Present in 1.9.2.
+* `sum_entries(x, axis = 2)` of a one-row expression gave wrong answers or
+  crashed R. Present in 1.9.2.
+* `%*%` with a scalar operand that does not conform, as in `2 %*% x` for a
+  2 x 3 `x`, or with a 1 x 1 operand that does not conform, built a product
+  that gave a scalar product or crashed R. Both are now errors, as in base R;
+  use `*` to multiply by a scalar. A scalar operand that conforms, as in
+  `x %*% 2` for a 3 x 1 `x`, is a product, as in base R.
 * `sum()`, `max()`, `min()` and `prod()` of an expression took a named `axis`
   as one more operand, so `sum(x, axis = 2)` was `sum(x + 2)`. They now
   honor `axis` and `keepdims`.
 * `x / A` with a matrix or vector `A` divided every entry of `x` by
   `A[1, 1]`. It is now entrywise, as in CVXPY. Present in 1.9.2.
+* `x / d` with shapes that do not broadcast, such as a 2 x 3 `x` and a
+  length-3 `d`, recycled the divisor silently. It is now an error, as in
+  CVXPY; a row or column divisor still broadcasts.
+* `value()` of a sum, a product or an index of a sparse-matrix constant failed
+  with "non-conformable arrays" or "subscript out of bounds", and a sum of two
+  sparse constants came back flattened to one column. These now evaluate; a
+  mixed sparse and dense result is a base matrix, a sparse one stays sparse.
 * Constants from Matrix classes other than `dgCMatrix` were misread: a unit
   `Diagonal(n)` was all zeros, so `quad_form(x, Diagonal(n))` was unbounded.
   Present in 1.9.2.
