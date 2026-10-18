@@ -57,6 +57,12 @@ you wrote.
   in 1.9.2.
 * A CLARABEL or OSQP warm re-solve after a parameter became zero, or
   nonzero, returned the previous optimum as optimal. Present in 1.9.2.
+* `conv()`, `cumsum()` and `kron()` were treated as log-log affine, so a
+  geometric program containing them was accepted and could solve to a wrong
+  value. Such a problem is now rejected, as in CVXPY.
+* Calling `problem_data()` on a geometric program between two solves made
+  the next solve after a parameter change return the previous optimum.
+  `problem_data()` now goes through the same compile cache as `psolve()`.
 
 ## Matrix norms follow base R
 
@@ -109,6 +115,11 @@ handle this problem."
   through `dual_value()`.
 * `solver_stats(prob)@extra_stats` now carries the raw solver result for
   OSQP, ECOS, Gurobi, HiGHS and PIQP as well.
+* **GLPK_MI** reports an infeasible mixed-integer problem as `infeasible`;
+  it was a solver error.
+* Solving no longer advances R's random number stream, so `set.seed()`
+  followed by a solve and then random draws gives the same draws as without
+  the solve. Present in every earlier version.
 
 ## New features
 
