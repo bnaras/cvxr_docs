@@ -68,7 +68,7 @@ directly to expressions:
 - **Summary**: `sum()`, `max()`, `min()`, `prod()`, `mean()`
 - **Complex**: `Re()`, `Im()`, `Conj()`, `Mod()`
 - **Masked from base/stats**: `diag()`, `norm()`, `outer()`, `sd()`,
-  `var()`, `power()`, `convolve()`
+  `var()`, `convolve()`
 
 These dispatch to the corresponding `CVXR` atoms (e.g., `abs(x)`
 calls `Abs`, `sum(x)` calls `SumEntries`). On an expression they follow
@@ -109,8 +109,10 @@ The transpose of any expression can be obtained using the syntax
 #### Power
 
 For any `CVXR` expression `expr`, the power operator `expr^p` is
-equivalent to the function `power(expr, p)`. The exponent argument of
-`power()` is named `lambda`, as in `stats::power()`.
+equivalent to the function `power(expr, p)`, also available as
+`cvxr_power(expr, p)`. `power()` masks the unrelated `stats::power()`, a
+`glm()` link, so with `CVXR` attached write `stats::power()` in a `glm()`
+family.
 
 ### Scalar functions
 

@@ -118,13 +118,16 @@ value(norm1(Constant(X)))          # 10, the entrywise 1-norm
 
 ## Base R functions keep their meaning
 
-`CVXR` masks `diag()`, `norm()`, `outer()`, `sd()`, `var()`, `power()` and
+`CVXR` masks `diag()`, `norm()`, `outer()`, `sd()`, `var()` and
 `convolve()` so that they also work on expressions. On anything that is not
 an expression, each is now exactly the base R or stats function, called as
 written. On an expression each follows CVXPY, and an argument meant only for
-ordinary data, such as `na.rm`, is an error. The exponent argument of
-`power()` is now `lambda`, as in `stats::power()`; write `power(x, 2)` or
-`x^2`.
+ordinary data, such as `na.rm`, is an error.
+
+`power()` is different: it is CVXPY's `power(x, p)` for any argument, as
+before, and the new `cvxr_power()` is the same function. It masks the
+unrelated `stats::power()`, a `glm()` link, so with `CVXR` attached write
+`stats::power()` in a `glm()` family.
 
 ## Solver selection
 
