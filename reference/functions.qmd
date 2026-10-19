@@ -63,22 +63,25 @@ x | y    # equivalent to Or(x, y)
 directly to expressions:
 
 - **Math**: `abs()`, `exp()`, `log()`, `sqrt()`, `cumsum()`,
-  `cummax()`, `cumprod()`, `ceiling()`, `floor()`, `log2()`,
+  `cummax()`, `cumprod()`, `ceiling()`, `floor()`, `sign()`, `log2()`,
   `log10()`, `log1p()`
 - **Summary**: `sum()`, `max()`, `min()`, `prod()`, `mean()`
 - **Complex**: `Re()`, `Im()`, `Conj()`, `Mod()`
-- **Masked from base/stats**: `norm()`, `outer()`, `sd()`, `var()`
+- **Masked from base/stats**: `diag()`, `norm()`, `outer()`, `sd()`,
+  `var()`, `power()`, `convolve()`
 
 These dispatch to the corresponding `CVXR` atoms (e.g., `abs(x)`
-calls `Abs`, `sum(x)` calls `SumEntries`).
+calls `Abs`, `sum(x)` calls `SumEntries`). On an expression they follow
+CVXPY; a masked function given anything that is not an expression is
+exactly the base R or stats function, called as written.
 
 ::: {.callout-note}
 As of `CVXR` 1.9.1, the trigonometric and hyperbolic functions `sin()`,
 `cos()`, `tan()`, `sinh()`, `tanh()`, `asinh()`, and `atanh()` are supported as
 **smooth atoms** for disciplined nonlinear programs (see [Smooth functions for
 DNLP](#smooth-functions-for-dnlp)); they are *not* part of the convex (DCP)
-grammar. Other R Math group functions not listed above (e.g., `sign()`,
-`round()`) remain **not** supported and produce a clear error message if used on
+grammar. Other R Math group functions not listed above (e.g., `round()`,
+`trunc()`) remain **not** supported and produce a clear error message if used on
 `CVXR` expressions.
 :::
 
@@ -106,7 +109,8 @@ The transpose of any expression can be obtained using the syntax
 #### Power
 
 For any `CVXR` expression `expr`, the power operator `expr^p` is
-equivalent to the function `power(expr, p)`.
+equivalent to the function `power(expr, p)`. The exponent argument of
+`power()` is named `lambda`, as in `stats::power()`.
 
 ### Scalar functions
 
@@ -304,7 +308,9 @@ With no `axis`, the matrix norms agree with base R's `norm()` and with
 CVXPY: `cvxr_norm(X, 1)` is the largest absolute column sum and
 `cvxr_norm(X, Inf)` the largest absolute row sum. The masked `norm(X, type)`
 accepts base R's types, so `norm(X, "O")`, `norm(X, "I")`, `norm(X, "F")`,
-`norm(X, "M")` and `norm(X, "2")` mean what they mean in base R. Any other `p`
+`norm(X, "M")` and `norm(X, "2")` mean what they mean in base R. With no
+`type`, `norm(X)` of an expression is the spectral norm, as in CVXPY; on an
+ordinary R matrix it is base R's one-norm. Any other `p`
 on a matrix is an error. For the entrywise norms of a matrix use `norm1(X)`
 (sum of absolute entries), `cvxr_norm(X, "fro")`, or `p_norm(X, p)`. A row
 vector is a 1 by n matrix, as in base R.
@@ -354,8 +360,10 @@ Note that the use of `axis` differs from its use in `CVXPY` where
 `axis=0` implies the rows. In `CVXR`, we align our implementation
 with the `base::apply` function. The default in most cases is `axis =
 NULL`, which treats a matrix as one long vector, basically the same as
-apply with `c(1,2)`. The exception is `cumsum_axis` (see below), which cannot take
-`axis = NULL`; it will throw an error.
+apply with `c(1,2)`. The exceptions are `cumsum()`, `cumprod()` and
+`cummax()` (and `cumsum_axis()`, `cummax_expr()`), which default to
+`axis = 2`, down each column, as in CVXPY; `cumsum_axis(x, axis = NULL)` gives
+all entries in column-major order as a column.
 
 ### Elementwise functions {#elementwise-functions}
 
@@ -489,7 +497,7 @@ d <- data.frame(
                 "largest generalized eigenvalue: \\(\\max \\lambda\\) with \\(Av = \\lambda Bv\\)",
                 "\\(\\|x - a\\|_2 / \\|x - b\\|_2\\)",
                 "index of the last nonzero entry of \\(x\\)"),
-    Curvature = c("quasiconvex", "quasiconcave", "quasiconvex", "quasiconvex",
+    Curvature = c("quasilinear", "quasilinear", "quasiconvex", "quasiconvex",
                   "quasiconvex", "quasiconvex"),
     Sign = c("unknown", "unknown", "\\(\\geq 0\\)", "unknown", "\\(\\geq 0\\)",
              "\\(\\geq 0\\)"),
@@ -504,6 +512,12 @@ knitr::kable(d, "html", escape = FALSE,
     kable_styling("striped") |>
     column_spec(1:5, background = "#ececec")
 ```
+
+`ceiling(x)` and `floor(x)` of an expression are these atoms. As in CVXPY,
+their value rounds `x` to 4 decimal places first, so `floor(-3e-10)` of an
+expression is 0, not -1. `sign(x)` of a scalar expression is also
+quasilinear and, as in CVXPY, is -1 for `x <= 0`, so `sign(0)` of an
+expression is -1, not 0.
 
 ### Vector/matrix functions
 
@@ -699,7 +713,7 @@ with `psolve(prob, nlp = TRUE)`.
 | `atanh(x)` | Inverse hyperbolic tangent | $x \in (-1,\ 1)$ |
 | `normcdf(x)` | Standard normal CDF | all $x$ |
 | `prod(x)` | Product of entries | all $x$ |
-| `convolve(x, y)` | 1-D discrete convolution (numpy-style alias for `conv`) | all $x$ |
+| `convolve(x, y)` | 1-D discrete convolution (numpy-style alias for `conv`; on numeric vectors it is `stats::convolve()`) | all $x$ |
 
 In a DNLP, elementwise multiplication `x * y` and `quad_form(x, Q)` also become
 smooth and may take *two* variable arguments (in DCP, `x * y` requires one

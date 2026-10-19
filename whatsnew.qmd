@@ -52,6 +52,16 @@ you wrote.
 * `sum()`, `max()`, `min()` and `prod()` of an expression took a named `axis`
   as one more operand, so `sum(x, axis = 2)` was `sum(x + 2)`. They now
   honor `axis` and `keepdims`.
+* `sum()`, `prod()`, `max()` and `min()` with more than one operand now mean
+  what they mean in base R: `sum(x, 2)` is `sum(x) + 2` and `max(x, y)` is
+  one scalar, the largest entry of either. They were `sum(x + 2)`,
+  `prod(x * y)` and the elementwise maximum and minimum; use
+  `max_elemwise()` and `min_elemwise()` for those.
+* `max_elemwise()` and `min_elemwise()` take `na.rm`, and `hstack()` and
+  `vstack()` take `deparse.level`, as `pmax()` and `rbind()` do, with no
+  effect. `max_elemwise(u, v, na.rm = TRUE)` used to take `TRUE` as a third
+  operand. Named operands, as from `do.call(vstack, split(...))`, are
+  accepted as before.
 * `x / A` with a matrix or vector `A` divided every entry of `x` by
   `A[1, 1]`. It is now entrywise, as in CVXPY. Present in 1.9.2.
 * `x / d` with shapes that do not broadcast, such as a 2 x 3 `x` and a
@@ -75,6 +85,15 @@ you wrote.
 * Calling `problem_data()` on a geometric program between two solves made
   the next solve after a parameter change return the previous optimum.
   `problem_data()` now goes through the same compile cache as `psolve()`.
+* `max_elemwise()` and `min_elemwise()` of a column and a row recycled
+  instead of broadcasting, so `psolve()` returned a wrong objective.
+* On an expression, `log(x, base)` ignored `base`, `outer(x, y, FUN)` ignored
+  `FUN` and `diag(x, nrow)` ignored `nrow`. `base` is now honored; a `FUN`
+  other than `"*"`, or a `nrow`, is an error.
+* `x[NULL, ]` of an expression returned all of `x`, and
+  `x[c(TRUE, NA, FALSE), ]` dropped the `NA`. Both are now errors.
+* `cumsum(X)` of a matrix expression is now column-wise, as in CVXPY and as
+  `cumprod()` and `cummax()` already were.
 
 ## Matrix norms follow base R
 
@@ -88,13 +107,24 @@ with base R's `norm()` and with CVXPY:
 They used to be entrywise. A row vector is a 1 x n matrix, as in base R. Any
 other `p` on a matrix is now an error. For the entrywise norms use
 `cvxr_norm(X, "fro")`, `norm1(X)` or `p_norm(X, p)`. `cvxr_norm(X, "nuc")`
-now gives the nuclear norm.
+now gives the nuclear norm. With no `type`, `norm(X)` of an expression is the
+spectral norm, as in CVXPY; on an ordinary R matrix it is base R's one-norm.
 
 ```{r norms, eval = FALSE}
 X <- matrix(c(1, -2, 3, 4), 2, 2)
 value(cvxr_norm(Constant(X), 1))   # 7, as norm(X, "1")
 value(norm1(Constant(X)))          # 10, the entrywise 1-norm
 ```
+
+## Base R functions keep their meaning
+
+`CVXR` masks `diag()`, `norm()`, `outer()`, `sd()`, `var()`, `power()` and
+`convolve()` so that they also work on expressions. On anything that is not
+an expression, each is now exactly the base R or stats function, called as
+written. On an expression each follows CVXPY, and an argument meant only for
+ordinary data, such as `na.rm`, is an error. The exponent argument of
+`power()` is now `lambda`, as in `stats::power()`; write `power(x, 2)` or
+`x^2`.
 
 ## Solver selection
 
