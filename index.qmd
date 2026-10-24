@@ -56,12 +56,8 @@ and the migration guide.
 ## Supported Solvers
 
 ```{r, echo = FALSE}
-library(kableExtra)
 source(here::here("_solver_table.R"))
-knitr::kable(solver_tbl, format = "html", escape = FALSE) |>
-    kableExtra::kable_styling("striped") |>
-    kableExtra::column_spec(seq_along(solver_tbl), background = "#ececec") |>
-    kableExtra::footnote(general = solver_tbl_note, general_title = "")
+solver_tbl_html()
 ```
 
 For more detail, see [Using Other Solvers](examples/solvers/using-other-solvers.qmd).

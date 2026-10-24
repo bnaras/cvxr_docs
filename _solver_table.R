@@ -1,7 +1,8 @@
 ## Canonical solver-capabilities table — single source of truth, sourced by
 ## index.qmd and examples/solvers/using-other-solvers.qmd so the two pages can
-## never drift apart. Each page supplies its own knitr::kable() styling; this
-## file defines the data frame `solver_tbl` and its footnote `solver_tbl_note`.
+## never drift apart. This file defines the data frame `solver_tbl`, its
+## footnote `solver_tbl_note`, and `solver_tbl_html()`, which both pages call
+## to render them, so the styling is shared too.
 ##
 ## Provenance: measured, not transcribed. Each cell is a named-solver solve
 ## (`psolve(prob, solver = <name>)`) of a small problem of that class in the
@@ -72,3 +73,19 @@ solver_tbl_note <- c(
     "ECOS_BB is used only when named, as in psolve(prob, solver = \"ECOS_BB\").",
     "Smooth nonlinear programs, psolve(prob, nlp = TRUE), use the separate NLP solvers Uno or IPOPT; see Using Other Solvers."
 )
+
+## Render the table inside a horizontally scrollable `div.solver-table`
+## (styles.css keeps cells from wrapping). The notes go in a block below the
+## table rather than in kableExtra::footnote(): Quarto re-parses kable HTML and
+## drops that footer's colspan, squeezing every note into the first column.
+solver_tbl_html <- function(caption = NULL) {
+    tbl <- knitr::kable(solver_tbl, format = "html", escape = FALSE,
+                        caption = caption) |>
+        kableExtra::kable_styling("striped") |>
+        kableExtra::column_spec(seq_along(solver_tbl), background = "#ececec")
+    notes <- paste0("<p>", htmltools::htmlEscape(solver_tbl_note), "</p>",
+                    collapse = "\n")
+    knitr::asis_output(paste0(
+        '<div class="solver-table">\n', tbl, "\n</div>\n",
+        '<div class="solver-table-note">\n', notes, "\n</div>\n"))
+}

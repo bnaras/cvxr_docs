@@ -12,3 +12,26 @@
   padding: 1em;
   border-radius: 3px;
 }
+
+/* Solver table (_solver_table.R): scroll sideways instead of wrapping */
+.solver-table {
+  overflow-x: auto;
+}
+
+.solver-table th,
+.solver-table td,
+.solver-table a,
+.solver-table code {
+  white-space: nowrap;
+  word-wrap: normal;
+  word-break: normal;
+}
+
+.solver-table-note {
+  font-size: 0.85rem;
+  margin-bottom: 1em;
+}
+
+.solver-table-note p {
+  margin-bottom: 0.25em;
+}

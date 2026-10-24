@@ -76,11 +76,7 @@ problem classes it supports.
 
 ```{r, echo = FALSE}
 source(here::here("_solver_table.R"))
-knitr::kable(solver_tbl, format = "html", escape = FALSE,
-             caption = "Solver Capabilities") |>
-    kable_styling("striped") |>
-    column_spec(seq_along(solver_tbl), background = "#ececec") |>
-    footnote(general = solver_tbl_note, general_title = "")
+solver_tbl_html(caption = "Solver Capabilities")
 ```
 
 ## Installing Commercial Solvers
