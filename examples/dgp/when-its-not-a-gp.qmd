@@ -3,7 +3,7 @@ title: When It Isn't a Geometric Program
 author: "Balasubramanian Narasimhan"
 params:
   mode: ignore
-  testdata_dir: test_data/1.9.3
+  testdata_dir: test_data/1.9.3-1
   data_dir: dgp_not_a_gp
 ---
 
@@ -26,10 +26,10 @@ source(here::here("_check_status.R"))
 
 The other examples in this section all share a property worth making
 explicit: they are geometric programs, and `psolve(..., gp = TRUE)`
-accepts them. This one is about the boundary. It works through a
-problem published under the heading "geometric programming" that CVXR
-correctly refuses, explains why the refusal is right, and shows how to
-solve it anyway using a sequence of genuine geometric programs.
+accepts them. This one is not. CVXR rejects it with `gp = TRUE`, and
+rightly so. We explain why, solve it anyway with a sequence of genuine
+geometric programs, and then check that the answer is the global
+optimum.
 
 Disciplined geometric programming [@AgrawalDiamondBoyd:2019] admits an
 inequality constraint in one direction only: *posynomial* $\leq$

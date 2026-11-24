@@ -5,7 +5,7 @@ categories: []
 tags: []
 params:
   mode: ignore
-  testdata_dir: test_data/1.9.3
+  testdata_dir: test_data/1.9.3-1
   data_dir: miqp
 ---
 
@@ -61,14 +61,16 @@ in $\mathbf{Z}^n$ that minimizes $\|Ax-b\|_2^2$.
 ## Example
 
 In the following code, we solve a mixed-integer least-squares problem
-with `CVXR`. We use the `GUROBI` solver which supports
-mixed-integer quadratic programs. (Alternatively, `CPLEX` can also
-be used.)
+with `CVXR`. We use `SCIP`, a freely available open-source solver
+(the R package `scip`, on CRAN), which supports mixed-integer
+quadratic programs. Commercial solvers such as `GUROBI` or `CPLEX` can
+also be used.
 
 ::: {.callout-note}
-MIQP problems require a commercial solver such as GUROBI or CPLEX.
-Free solvers like GLPK_MI support mixed-integer _linear_ programs but
-not mixed-integer _quadratic_ programs.
+MIQP problems need a solver that handles integer variables together
+with a quadratic objective, such as the open-source SCIP or the
+commercial GUROBI or CPLEX. GLPK_MI supports mixed-integer _linear_
+programs but not mixed-integer _quadratic_ programs.
 :::
 
 ```{r}
@@ -82,15 +84,11 @@ b <- rnorm(m)
 ```
 
 ```{r}
-#| message: false
 ## Construct and solve a CVXR problem
-## (message: false suppresses a deprecation warning from the gurobi R
-## package which calls as(x, "dgCMatrix") on a dtCMatrix internally;
-## see gurobi::to_triplets — needs fix in the gurobi package)
 x <- Variable(n, integer = TRUE)
 objective <- Minimize(sum_squares(A %*% x - b))
 prob <- Problem(objective)
-result <- psolve(prob, solver = "GUROBI")
+result <- psolve(prob, solver = "SCIP")
 ```
 
 ```{r, echo = FALSE, eval = params$mode %in% c("test", "save")}

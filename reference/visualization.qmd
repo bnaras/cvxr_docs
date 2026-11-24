@@ -3,7 +3,7 @@ title: Visualization
 author: "Anqi Fu, Balasubramanian Narasimhan, Steven Diamond, Stephen Boyd"
 params:
   mode: ignore
-  testdata_dir: test_data/1.9.3
+  testdata_dir: test_data/1.9.3-1
   data_dir: visualization
 ---
 
@@ -13,6 +13,9 @@ params:
 #| message: false
 suppressWarnings(suppressMessages(library(CVXR)))
 source(here::here("_check_status.R"))
+## The visualize() calls below write their HTML into viz/, which is git-ignored,
+## so a fresh clone does not have it.
+dir.create("viz", showWarnings = FALSE)
 ```
 
 The `visualize()` function generates interactive visualizations of
