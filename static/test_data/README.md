@@ -157,10 +157,17 @@ documents' 1e-10 comparisons:
   sdp and sparse-inverse-covariance-estimation. Relative to each value's
   largest entry, the differences run from 2e-7 to 3e-4, except two: in
   clock-mesh an area is 12.88 against 13.10, and in log-concave a pmf entry is
-  0.0197 against 0.0220. CRAN CVXR 1.9.3 under today's libraries fails the
-  same documents against `1.9.3/`, and scs 3.3.2 changes nothing, so the
-  change is not CVXR's. What changed since `1.9.3/` was last verified
-  (2026-10-17) has not been traced.
+  0.0197 against 0.0220. Two changes are mixed in these files, and they have
+  not been separated file by file:
+  * CVXR 1.9.3-1 leaves SCS's `acceleration_interval` at SCS's own default,
+    5, where 1.9.3 set 10. That alone moves SCS's results within its
+    tolerance. On the TV in-painting example of the useR! 2026 tutorial,
+    1.9.3 gives 740.1373 and 1.9.3-1 gives 740.1372, and passing either
+    value to the other version reproduces the other's result exactly.
+  * CRAN CVXR 1.9.3, which still sets 10, also fails these documents against
+    `1.9.3/` under today's libraries, and scs 3.3.2 changes nothing. So part
+    of the change came from outside CVXR after `1.9.3/` was last verified
+    (2026-10-17), and that part has not been traced.
 * `miqp/miqp.RDS`: the move to SCIP, above.
 * `dnlp_tutorial/duals.RDS` and `quadform.RDS`: 8e-16 and 3e-11, within the
   documents' tolerances.
