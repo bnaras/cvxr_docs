@@ -763,6 +763,44 @@ curvatures(sqrt(x))             # "CONCAVE", "LOG-LOG AFFINE", ...
 log_log_curvature(x + y)        # "LOG-LOG CONVEX"
 ```
 
+### Sign and property queries
+
+`expr_sign(e)` returns the sign of an expression as a string:
+`"NONNEGATIVE"`, `"NONPOSITIVE"`, `"ZERO"` or `"UNKNOWN"`. (It is not
+called `sign()`, which is base R's.) The predicates `is_nonneg()`,
+`is_nonpos()` and `is_zero()` answer the same question one sign at a
+time, and `is_psd()` and `is_nsd()` ask whether a matrix expression is
+known to be positive or negative semidefinite. Like curvature, these
+come from the DCP rules and the attributes of the leaves, not from
+values: for a nonnegative `x`, `x - 1` has sign `"UNKNOWN"` whatever
+value `x` holds.
+
+Other predicates describe the form of an expression: `is_pwl()`
+(piecewise linear), `is_quadratic()` and `is_symmetric()`, and, for
+its shape, `is_scalar()`, `is_vector()` (at
+most one dimension greater than 1) and `is_matrix()` (both dimensions
+greater than 1). For a whole problem, `is_lp()` and `is_qp()` report
+whether it is a linear or quadratic program (every LP is also a QP),
+and `is_mixed_integer()` whether any variable is `boolean` or
+`integer`. `get_bounds(x)` returns the lower and upper bounds implied
+by a leaf's `bounds`, sign and `boolean` attributes.
+
+```{r, eval = FALSE}
+x <- Variable(3, nonneg = TRUE)
+expr_sign(-x)                    # "NONPOSITIVE"
+expr_sign(x - 1)                 # "UNKNOWN"
+is_nonneg(square(Variable()))    # TRUE
+is_pwl(abs(x))                   # TRUE
+is_pwl(square(x))                # FALSE
+X <- Variable(c(3, 3), PSD = TRUE)
+is_psd(X)                        # TRUE
+is_nsd(-X)                       # TRUE
+p <- Problem(Minimize(sum_squares(x)), list(sum(x) == 1))
+is_qp(p)                         # TRUE
+is_lp(p)                         # FALSE
+get_bounds(Variable(2, bounds = list(-1, 2)))  # lower -1, -1; upper 2, 2
+```
+
 ## Session Info
 
 ```{r, echo = FALSE}

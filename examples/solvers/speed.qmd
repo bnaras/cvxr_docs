@@ -40,6 +40,31 @@ can be significantly faster.
 See the [DPP tutorial](../dpp/tutorial.qmd) for a detailed example
 showing roughly a 2x speed-up on a regularized least-squares problem.
 
+## Large Parameters: the COO Backend {#coo-backend}
+
+Compiling a problem turns its affine expressions into a sparse tensor
+of problem data. `CVXR` has two backends for this step: `"CPP"`, the
+default, and `"COO"`, a port of `CVXPY`'s COO backend, which is far
+faster and smaller in memory when parameters are large. `psolve()` and
+`problem_data()` choose with their `canon_backend` argument. Its
+default, `"AUTO"`, compiles a DPP problem whose parameters have 1000
+or more entries in total with `"COO"`, and every other problem with
+the session default. To name the backend for one problem:
+
+```r
+psolve(prob, canon_backend = "COO")
+```
+
+To change the session default, before the problems are first solved:
+
+```r
+options(CVXR.default_canon_backend = "COO")
+```
+
+or set the environment variable `CVXR_DEFAULT_CANON_BACKEND`. A
+problem keeps the backend of its first compilation for a solver. See
+`?CVXR-options` for this and `CVXR`'s other global options.
+
 ## Advanced: Directly Calling the Solver
 
 If DPP is not sufficient for your performance needs, you can bypass

@@ -236,6 +236,11 @@ for (i in seq_along(gamma_vals)) {
 The first DPP solve is slower because it includes the one-time cost of
 compiling the problem and caching the parameter-to-data mapping.
 Subsequent DPP solves are faster because they skip re-compilation.
+When the parameters of a DPP problem have 1000 or more entries in
+total (here `gamma` has one), `CVXR` compiles it with its `"COO"`
+backend, which is much faster and smaller in memory for large
+parameters; see [Getting Faster
+Results](../solvers/speed.qmd#coo-backend).
 
 ```{r, results = "hold"}
 cat("DPP first solve:", round(dpp_times[1], 3), "s\n")
