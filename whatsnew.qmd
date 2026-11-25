@@ -7,6 +7,8 @@ This page highlights notable user-facing changes in each release of the S7
 rewrite of `CVXR`, newest first. For the complete, fine-grained list see the
 package `NEWS` file (`news(package = "CVXR")`).
 
+* [CVXR 1.9.3-1](#cvxr-193-1) — faster solves, far less memory with
+  parameters, a second canonicalization backend
 * [CVXR 1.9.3](#cvxr-193) — correctness fixes, matrix norms as in base R,
   CVXPY 1.9 solver selection
 * [CVXR 1.9.2](#cvxr-192) — correctness fixes, solver-options overhaul,
@@ -14,6 +16,85 @@ package `NEWS` file (`news(package = "CVXR")`).
 * [CVXR 1.9.1](#cvxr-19x) — disciplined nonlinear programming, derivatives,
   bounds propagation, new atoms
 * [CVXR 1.8.x](#cvxr-18x) — the ground-up S7 rewrite
+
+# CVXR 1.9.3-1 {#cvxr-193-1}
+
+`CVXR` 1.9.3-1 tracks CVXPY 1.9.3, as 1.9.3 does. It is chiefly a
+**performance release**: `psolve()` is 31% faster than in 1.9.3 on CVXR's 19
+benchmark problems (geometric mean), and a problem with parameters needs far
+less memory. It requires S7 1.0.0 or later and scs 3.3.1 or later.
+
+## Performance
+
+* Compiling a problem is 17–27% faster: CVXR's own generics find their
+  methods directly in S7's method tables. `options(CVXR.fast_dispatch = FALSE)`,
+  set before `CVXR` is loaded, keeps S7's dispatch.
+* A problem without parameters is now cached when it is first solved, as in
+  CVXPY: solving it again takes 36–89% less time.
+* Problems with `geo_mean()` compile faster: on CVXR's benchmark problem
+  (30 weights), a solve takes 57% less time and 67% less memory.
+
+## Problems with parameters
+
+* A problem with a `Parameter` no longer needs memory that grows with the
+  square of the problem size: one scalar `Parameter` and 23,575 variables took
+  15 GB and now takes 0.6 GB. Such problems are also no longer limited to
+  2^31 - 1 rows in the parameter tensor.
+* The matrices of a DPP problem keep one sparsity pattern at every parameter
+  value, as in CVXPY: an entry whose parameter is zero is a stored zero.
+
+## A second canonicalization backend
+
+`psolve()` and `problem_data()` gain the argument `canon_backend`, as in
+CVXPY. It is `"AUTO"` (the default, CVXPY's `None`), `"CPP"` or `"COO"`.
+`"COO"` is a C++ port of CVXPY's COO backend: it builds the same problem
+data, and is far faster and smaller in memory when parameters are large.
+
+Under `"AUTO"`, `"COO"` is selected for a DPP problem whose parameters have
+1000 or more entries in total. For other problems the default stays `"CPP"`;
+change it with `options(CVXR.default_canon_backend = "COO")` or the
+environment variable `CVXR_DEFAULT_CANON_BACKEND`.
+
+```{r backend, eval = FALSE}
+psolve(prob, canon_backend = "COO")
+```
+
+Under `"COO"`, dividing by a constant that contains a zero is an error, as in
+CVXPY. See
+[Getting Faster Results](examples/solvers/speed.qmd#coo-backend) for more.
+
+## Solvers
+
+* **CPLEX** and **HiGHS** no longer receive a quadratic objective when every
+  entry of it is zero, as in CVXPY. CPLEX solved such a problem as a QP, and
+  on an LP with several optimal points it could return a different one.
+* **MOSEK** no longer warm-starts, as in CVXPY: `warm_start = TRUE` is
+  ignored. The warm start changed no solve, and it made MOSEK fail when a
+  re-solve changed the size of a cone (for example `quad_form(x, P)` after the
+  rank of the parameter `P` changed).
+* **SCS** now runs with SCS's own acceleration defaults, as in CVXPY (`CVXR`
+  had set `acceleration_interval = 10`; SCS's default is 5).
+* **Uno** could fail at the starting point, for example on
+  `sum(p * log(p))`: with its default `"ipopt"` preset, Uno asks for a
+  gradient before the objective has been evaluated there. Fixed.
+* **Uno** is now silent unless `verbose = TRUE` (CVXPY prints Uno's log
+  either way), and no longer prints the solution vectors when verbose, as in
+  CVXPY. Uno's `logger` and `print_solution` options, if given, win.
+* `psolve(..., nlp = TRUE, verbose = TRUE)` now prints CVXR's header, as in
+  CVXPY.
+* `problem_data()$data` now always holds `param_prob`, the compiled
+  `ParamConeProg`, as in CVXPY. Conic solvers that do not handle integer
+  variables no longer receive `bool_idx` and `int_idx`, as in CVXPY.
+
+## Other changes
+
+* A label set on a constraint after the constraint is in a problem now shows
+  in the problem too, as in CVXPY. It used to change only the caller's copy.
+* `max_denom` in `geo_mean()`, `power()` and `p_norm()` can now exceed 2^30,
+  as in CVXPY. Larger values used to fail with an error.
+* The new help page `?CVXR-options` lists CVXR's global options.
+* Printing an atom whose data holds a `NULL`, a vector or a matrix no longer
+  fails with "values must be length 1".
 
 # CVXR 1.9.3 {#cvxr-193}
 
